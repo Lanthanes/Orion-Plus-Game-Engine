@@ -1381,7 +1381,8 @@ newlist:
                 tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Index = Index
                 tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Text1 = FrmEditor_Events.txtChatbubbleText.Text
 
-                tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Data1 = FrmEditor_Events.cmbChatBubbleTargetType.SelectedIndex
+                tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Data1 = FrmEditor_Events.cmbChatBubbleTargetType.SelectedIndex + 1
+                tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Data2 = FrmEditor_Events.cmbChatBubbleTarget.SelectedIndex + 1
 
             Case EventType.evLabel
                 tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Index = Index
@@ -1896,7 +1897,8 @@ newlist:
             Case EventType.evShowChatBubble
                 isEdit = True
                 FrmEditor_Events.txtChatbubbleText.Text = tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Text1
-                FrmEditor_Events.cmbChatBubbleTargetType.SelectedIndex = tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Data1
+                FrmEditor_Events.cmbChatBubbleTargetType.SelectedIndex = tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Data1 - 1
+                FrmEditor_Events.cmbChatBubbleTarget.SelectedIndex = tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Data2 - 1
 
                 FrmEditor_Events.fraDialogue.Visible = True
                 FrmEditor_Events.fraShowChatBubble.Visible = True
@@ -2247,7 +2249,9 @@ newlist:
             Case EventType.evShowChatBubble
                 tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Text1 = FrmEditor_Events.txtChatbubbleText.Text
 
-                tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Data1 = FrmEditor_Events.cmbChatBubbleTargetType.SelectedIndex
+                tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Data1 = FrmEditor_Events.cmbChatBubbleTargetType.SelectedIndex + 1
+                tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Data2 = FrmEditor_Events.cmbChatBubbleTarget.SelectedIndex + 1
+
             Case EventType.evLabel
                 tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Text1 = FrmEditor_Events.txtLabelName.Text
             Case EventType.evGotoLabel
