@@ -42,10 +42,10 @@ Public Module EditorEventSystem
     Public AnotherChat As Integer 'Determines if another showtext/showchoices is comming up, if so, dont close the event chatbox...
 
     'constants
-    Public Switches(0 To MAX_SWITCHES) As String
-    Public Variables(0 To MAX_VARIABLES) As String
-    Public Const MAX_SWITCHES As Integer = 1000
-    Public Const MAX_VARIABLES As Integer = 1000
+    Public Switches(MAX_SWITCHES) As String
+    Public Variables(MAX_VARIABLES) As String
+    Public Const MAX_SWITCHES As Integer = 500
+    Public Const MAX_VARIABLES As Integer = 500
 
     Public cpEvent As EventRec
     Public EventList() As EventListRec

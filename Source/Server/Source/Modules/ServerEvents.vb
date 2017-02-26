@@ -1,5 +1,4 @@
-﻿
-Imports System.IO
+﻿Imports System.IO
 
 Public Module ServerEvents
 #Region "Globals"
@@ -7,8 +6,8 @@ Public Module ServerEvents
     Public Switches() As String
     Public Variables() As String
 
-    Public Const MAX_SWITCHES As Integer = 1000
-    Public Const MAX_VARIABLES As Integer = 1000
+    Public Const MAX_SWITCHES As Integer = 500
+    Public Const MAX_VARIABLES As Integer = 500
 
     Public Const PathfindingType As Integer = 1
 
