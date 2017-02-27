@@ -1716,7 +1716,7 @@ Module ServerDatabase
     Sub SaveAllPlayersOnline()
         Dim i As Integer
 
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
                 SavePlayer(i)
                 SaveBank(i)

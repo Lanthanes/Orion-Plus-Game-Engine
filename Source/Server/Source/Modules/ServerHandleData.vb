@@ -106,7 +106,6 @@ Module ServerHandleData
         Packets.Add(ClientPackets.CEvent, AddressOf Packet_Event)
         Packets.Add(ClientPackets.CRequestSwitchesAndVariables, AddressOf Packet_RequestSwitchesAndVariables)
         Packets.Add(ClientPackets.CSwitchesAndVariables, AddressOf Packet_SwitchesAndVariables)
-        Packets.Add(ClientPackets.CEventTouch, AddressOf Packet_EventTouch)
 
         'projectiles
 
@@ -178,9 +177,9 @@ Module ServerHandleData
     End Sub
 
     Public Sub HandleDataPackets(ByVal index As Integer, ByVal data() As Byte)
-        Dim packetnum As Integer, buffer As ByteBuffer, Packet As Packet_
+        Dim packetnum As Integer, buffer As New ByteBuffer, Packet As Packet_
         Packet = Nothing
-        buffer = New ByteBuffer
+
         buffer.WriteBytes(data)
         packetnum = buffer.ReadInteger
         buffer = Nothing
@@ -193,76 +192,71 @@ Module ServerHandleData
     End Sub
 
     Private Sub Packet_NewAccount(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        Dim username As String
-        Dim password As String
-        Dim i As Integer
-        Dim n As Integer
-        buffer = New ByteBuffer
+        Dim buffer As New ByteBuffer
+        Dim username As String, password As String
+        Dim i As Integer, n As Integer
+
         buffer.WriteBytes(data)
         'Make Sure that it is correct
         If buffer.ReadInteger <> ClientPackets.CNewAccount Then Exit Sub
 
-        If Not IsPlaying(index) Then
-            If Not IsLoggedIn(index) Then
-                'Get the Data
-                username = buffer.ReadString
-                password = buffer.ReadString
-                ' Prevent hacking
-                If Len(Trim$(username)) < 3 Or Len(Trim$(password)) < 3 Then
-                    AlertMsg(index, "Your username and password must be at least three characters in length")
+        If Not IsPlaying(index) AndAlso Not IsLoggedIn(index) Then
+            'Get the Data
+            username = buffer.ReadString
+            password = buffer.ReadString
+            ' Prevent hacking
+            If Len(Trim$(username)) < 3 Or Len(Trim$(password)) < 3 Then
+                AlertMsg(index, "Your username and password must be at least three characters in length")
+                Exit Sub
+            End If
+
+            ' Prevent hacking
+            For i = 1 To Len(username)
+                n = AscW(Mid$(username, i, 1))
+
+                If Not IsNameLegal(n) Then
+                    AlertMsg(index, "Invalid username, only letters, numbers, spaces, and _ allowed in usernames.")
                     Exit Sub
                 End If
+            Next
 
-                ' Prevent hacking
-                For i = 1 To Len(username)
-                    n = AscW(Mid$(username, i, 1))
+            ' Check to see if account already exists
+            If Not AccountExist(username) Then
+                AddAccount(index, username, password)
 
-                    If Not IsNameLegal(n) Then
-                        AlertMsg(index, "Invalid username, only letters, numbers, spaces, and _ allowed in usernames.")
-                        Exit Sub
-                    End If
+                TextAdd("Account " & username & " has been created.")
+                Addlog("Account " & username & " has been created.", PLAYER_LOG)
 
-                Next
+                ' Load the player
+                LoadPlayer(index, username)
 
-                ' Check to see if account already exists
-                If Not AccountExist(username) Then
-                    AddAccount(index, username, password)
-
-                    TextAdd("Account " & username & " has been created.")
-                    Addlog("Account " & username & " has been created.", PLAYER_LOG)
-
-                    ' Load the player
-                    LoadPlayer(index, username)
-
-                    ' Check if character data has been created
-                    If Len(Trim$(Player(index).Character(TempPlayer(index).CurChar).Name)) > 0 Then
-                        ' we have a char!
-                        HandleUseChar(index)
-                    Else
-                        ' send new char shit
-                        If Not IsPlaying(index) Then
-                            SendNewCharClasses(index)
-                        End If
-                    End If
-
-                    ' Show the player up on the socket status
-                    Addlog(GetPlayerLogin(index) & " has logged in from " & GetPlayerIP(index) & ".", PLAYER_LOG)
-                    TextAdd(GetPlayerLogin(index) & " has logged in from " & GetPlayerIP(index) & ".")
+                ' Check if character data has been created
+                If Len(Trim$(Player(index).Character(TempPlayer(index).CurChar).Name)) > 0 Then
+                    ' we have a char!
+                    HandleUseChar(index)
                 Else
-                    AlertMsg(index, "Sorry, that account username is already taken!")
+                    ' send new char shit
+                    If Not IsPlaying(index) Then
+                        SendNewCharClasses(index)
+                    End If
                 End If
 
-                buffer = Nothing
+                ' Show the player up on the socket status
+                Addlog(GetPlayerLogin(index) & " has logged in from " & GetPlayerIP(index) & ".", PLAYER_LOG)
+                TextAdd(GetPlayerLogin(index) & " has logged in from " & GetPlayerIP(index) & ".")
+            Else
+                AlertMsg(index, "Sorry, that account username is already taken!")
             End If
+
+            buffer = Nothing
         End If
     End Sub
 
     Private Sub Packet_DeleteAccount(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
+        Dim Buffer As New ByteBuffer
         Dim Name As String
         'Dim Password As String
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CDelChar Then Exit Sub
@@ -275,7 +269,7 @@ Module ServerHandleData
             Exit Sub
         End If
 
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
                 If Trim$(Player(i).Login) = Trim$(Name) Then
                     AlertMsg(i, "Your account has been removed by an admin!")
@@ -744,7 +738,7 @@ Module ServerHandleData
         End If
 
         ' Try to attack a player
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             TempIndex = i
 
             ' Make sure we dont try to attack ourselves
@@ -1198,7 +1192,7 @@ Module ServerHandleData
         SpawnMapNpcs(MapNum)
         SpawnGlobalEvents(MapNum)
 
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
                 If Player(i).Character(TempPlayer(i).CurChar).Map = MapNum Then
                     SpawnMapEventsFor(i, MapNum)
@@ -1219,7 +1213,7 @@ Module ServerHandleData
         CacheResources(MapNum)
 
         ' Refresh map for everyone online
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) And GetPlayerMap(i) = MapNum Then
                 PlayerWarp(i, MapNum, GetPlayerX(i), GetPlayerY(i))
                 ' Send map
@@ -1853,7 +1847,7 @@ Module ServerHandleData
         If x < 0 Or x > Map(GetPlayerMap(index)).MaxX Or y < 0 Or y > Map(GetPlayerMap(index)).MaxY Then Exit Sub
 
         ' Check for a player
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
 
             If IsPlaying(i) Then
                 If GetPlayerMap(index) = GetPlayerMap(i) Then
@@ -2003,8 +1997,8 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_QuitGame(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
+        Dim buffer As New ByteBuffer
+
         buffer.WriteBytes(data)
         If buffer.ReadInteger <> ClientPackets.CQuit Then Exit Sub
 
@@ -2015,9 +2009,9 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_SwapInvSlots(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
+        Dim buffer As New ByteBuffer
         Dim oldSlot As Integer, newSlot As Integer
-        buffer = New ByteBuffer
+
         buffer.WriteBytes(data)
         If buffer.ReadInteger <> ClientPackets.CSwapInvSlots Then Exit Sub
 
@@ -2034,14 +2028,15 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_EditResource(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
+        Dim buffer As New ByteBuffer
+
         buffer.WriteBytes(data)
 
         If buffer.ReadInteger <> EditorPackets.RequestEditResource Then Exit Sub
 
         ' Prevent hacking
         If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
+        buffer = Nothing
 
         buffer = New ByteBuffer
         buffer.WriteInteger(ServerPackets.SResourceEditor)
@@ -2051,9 +2046,9 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_SaveResource(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
+        Dim buffer As New ByteBuffer
         Dim resourcenum As Integer
-        buffer = New ByteBuffer
+
         buffer.WriteBytes(data)
 
         If buffer.ReadInteger <> EditorPackets.SaveResource Then Exit Sub
@@ -3395,7 +3390,7 @@ Module ServerHandleData
         SpawnMapNpcs(MapNum)
         SpawnGlobalEvents(MapNum)
 
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
                 If Player(i).Character(TempPlayer(i).CurChar).Map = MapNum Then
                     SpawnMapEventsFor(i, MapNum)
@@ -3416,7 +3411,7 @@ Module ServerHandleData
         CacheResources(MapNum)
 
         ' Refresh map for everyone online
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) And GetPlayerMap(i) = MapNum Then
                 PlayerWarp(i, MapNum, GetPlayerX(i), GetPlayerY(i))
                 ' Send map

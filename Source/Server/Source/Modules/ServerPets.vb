@@ -447,7 +447,7 @@
         If x < 0 Or x > Map(GetPlayerMap(Index)).MaxX Or y < 0 Or y > Map(GetPlayerMap(Index)).MaxY Then Exit Sub
 
         ' Check for a player
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
 
             If IsPlaying(i) Then
                 If GetPlayerMap(Index) = GetPlayerMap(i) AndAlso GetPlayerX(i) = x AndAlso GetPlayerY(i) = y Then
@@ -657,7 +657,7 @@
         Dim Target As Integer, TargetTypes As Byte, TargetX As Integer, TargetY As Integer, target_verify As Boolean
 
         For MapNum = 1 To MAX_CACHED_MAPS
-            For PlayerIndex = 1 To GetTotalPlayersOnline()
+            For PlayerIndex = 1 To GetPlayersOnline()
                 TickCount = GetTickCount()
 
                 If GetPlayerMap(PlayerIndex) = MapNum AndAlso PetAlive(PlayerIndex) Then
@@ -1129,7 +1129,7 @@
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 1 To GetTotalPlayersOnline()
+                    For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = GetPetX(Index) + 1) And (GetPlayerY(i) = GetPetY(Index) - 1) Then
                                 CanPetMove = False
@@ -1170,7 +1170,7 @@
                         Exit Function
                     End If
 
-                    For i = 1 To GetTotalPlayersOnline()
+                    For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = GetPetX(Index)) And (GetPlayerY(i) = GetPetY(Index) + 1) Then
                                 CanPetMove = False
@@ -1211,7 +1211,7 @@
                         Exit Function
                     End If
 
-                    For i = 1 To GetTotalPlayersOnline()
+                    For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = GetPetX(Index) - 1) And (GetPlayerY(i) = GetPetY(Index)) Then
                                 CanPetMove = False
@@ -1252,7 +1252,7 @@
                         Exit Function
                     End If
 
-                    For i = 1 To GetTotalPlayersOnline()
+                    For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = GetPetX(Index) + 1) And (GetPlayerY(i) = GetPetY(Index)) Then
                                 CanPetMove = False
@@ -2591,7 +2591,7 @@
                     Case SkillType.DamageHp
                         DidCast = True
 
-                        For i = 1 To GetTotalPlayersOnline()
+                        For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) AndAlso i <> Index Then
                                 If GetPlayerMap(i) = GetPlayerMap(Index) Then
                                     If isInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
@@ -2640,7 +2640,7 @@
 
                         DidCast = True
 
-                        For i = 1 To GetTotalPlayersOnline()
+                        For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(Index) Then
                                 If isInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
                                     SpellPlayer_Effect(VitalType, increment, i, Vital, Skillnum)
@@ -3565,7 +3565,7 @@
             End If
 
             ' purge target info of anyone who targetted dead guy
-            For i = 1 To GetTotalPlayersOnline()
+            For i = 1 To GetPlayersOnline()
                 If IsPlaying(i) And IsConnected(i) AndAlso GetPlayerMap(i) = GetPlayerMap(Attacker) Then
                     If TempPlayer(i).Target = TargetType.Pet AndAlso TempPlayer(i).Target = Victim Then
                         TempPlayer(i).Target = 0

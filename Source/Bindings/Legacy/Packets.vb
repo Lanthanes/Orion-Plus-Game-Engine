@@ -266,7 +266,6 @@
         CEvent
         CSwitchesAndVariables
         CRequestSwitchesAndVariables
-        CEventTouch
 
         CRequestProjectiles
         CClearProjectile

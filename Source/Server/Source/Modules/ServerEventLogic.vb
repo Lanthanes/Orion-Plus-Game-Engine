@@ -2,7 +2,7 @@
     Public Sub RemoveDeadEvents()
         Dim i As Integer, MapNum As Integer, Buffer As ByteBuffer, x As Integer, id As Integer, page As Integer, compare As Integer
 
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If Gettingmap = True Then Exit Sub
 
             If IsPlaying(i) = False Then
@@ -130,7 +130,7 @@
 
         'That was only removing events... now we gotta worry about spawning them again, luckily, it is almost the same exact thing, but backwards!
 
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If Gettingmap = True Then Exit Sub
 
             If TempPlayer(i).EventMap.CurrentEvents > 0 Then
@@ -723,7 +723,7 @@
         Dim isglobal As Boolean, MapNum As Integer, actualmovespeed As Integer, Buffer As ByteBuffer, z As Integer, sendupdate As Boolean
         Dim donotprocessmoveroute As Boolean
 
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
 
             If Gettingmap = True Then Exit Sub
 
@@ -1121,7 +1121,7 @@
 
         'Now, we process the damn things for commands :P
 
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If Gettingmap = True Then Exit Sub
 
             If IsPlaying(i) AndAlso TempPlayer(i).GettingMap = 0 Then
@@ -1166,7 +1166,7 @@
         Next
 
         'That is it for starting parallel processes :D now we just have to make the code that actually processes the events to their fullest
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If Gettingmap = True Then Exit Sub
 
             If IsPlaying(i) AndAlso TempPlayer(i).GettingMap = 0 Then

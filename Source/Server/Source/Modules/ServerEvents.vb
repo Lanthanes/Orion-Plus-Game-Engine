@@ -1698,10 +1698,9 @@ Public Module ServerEvents
 
 #Region "Incoming Packets"
     Sub Packet_EventChatReply(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
+        Dim Buffer As New ByteBuffer
         Dim eventID As Integer, pageID As Integer, reply As Integer, i As Integer
 
-        Buffer = New ByteBuffer
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CEventChatReply Then Exit Sub
@@ -1709,7 +1708,7 @@ Public Module ServerEvents
         eventID = Buffer.ReadInteger
         pageID = Buffer.ReadInteger
         reply = Buffer.ReadInteger
-        'Think I saved. Anyways... lol  This sub is broken because that line should be called when okay is pressed in a dialog
+
         If TempPlayer(index).EventProcessingCount > 0 Then
             For i = 1 To TempPlayer(index).EventProcessingCount
                 If TempPlayer(index).EventProcessing(i).EventID = eventID And TempPlayer(index).EventProcessing(i).PageID = pageID Then
@@ -1816,15 +1815,21 @@ Public Module ServerEvents
     End Sub
 
     Sub Packet_RequestSwitchesAndVariables(ByVal index As Integer, ByVal data() As Byte)
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(data)
+
+        If Buffer.ReadInteger <> ClientPackets.CRequestSwitchesAndVariables Then Exit Sub
+
+        Buffer = Nothing
 
         SendSwitchesAndVariables(index)
 
     End Sub
 
     Sub Packet_SwitchesAndVariables(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer, i As Integer
+        Dim Buffer As New ByteBuffer, i As Integer
 
-        Buffer = New ByteBuffer
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CSwitchesAndVariables Then Exit Sub
@@ -1846,45 +1851,12 @@ Public Module ServerEvents
 
     End Sub
 
-    Sub Packet_EventTouch(ByVal Index As Integer, ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer, i As Integer
-        Dim mapnr As Integer, tmpeventid As Integer, tmppageid As Integer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CEventTouch Then Exit Sub
-
-        i = Buffer.ReadInteger
-
-        mapnr = GetPlayerMap(Index)
-        tmpeventid = TempPlayer(Index).EventMap.EventPages(i).EventID
-        tmppageid = TempPlayer(Index).EventMap.EventPages(i).PageID
-
-        If Map(mapnr).Events(tmpeventid).Pages(tmppageid).Trigger = 1 Then
-            'Process this event, it is on-touch and everything checks out.
-            If Map(mapnr).Events(tmpeventid).Pages(TempPlayer(Index).EventMap.EventPages(tmpeventid).PageID).CommandListCount > 0 Then
-
-                TempPlayer(Index).EventProcessing(tmpeventid).CurList = 1
-                TempPlayer(Index).EventProcessing(tmpeventid).CurSlot = 1
-                TempPlayer(Index).EventProcessing(tmpeventid).EventID = TempPlayer(Index).EventMap.EventPages(i).EventID
-                TempPlayer(Index).EventProcessing(tmpeventid).PageID = TempPlayer(Index).EventMap.EventPages(i).PageID
-                TempPlayer(Index).EventProcessing(tmpeventid).WaitingForResponse = 0
-                ReDim TempPlayer(Index).EventProcessing(tmpeventid).ListLeftOff(Map(mapnr).Events(tmpeventid).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
-
-                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 1
-                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTickCount()
-            End If
-        End If
-        Buffer = Nothing
-
-    End Sub
 #End Region
 
 #Region "Outgoing Packets"
     Sub SendSpecialEffect(ByVal Index As Integer, EffectType As Integer, Optional Data1 As Integer = 0, Optional Data2 As Integer = 0, Optional Data3 As Integer = 0, Optional Data4 As Integer = 0)
-        Dim Buffer As ByteBuffer
+        Dim Buffer As New ByteBuffer
 
-        Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SSpecialEffect)
 
         Select Case EffectType
@@ -1916,24 +1888,9 @@ Public Module ServerEvents
 
     End Sub
 
-    'Sub SendChatBubble(ByVal MapNum As Integer, ByVal Target As Integer, ByVal TargetType As Integer, ByVal message As String, ByVal Colour As Integer)
-    '    Dim Buffer As ByteBuffer
+    Sub SendSwitchesAndVariables(ByVal Index As Integer, Optional everyone As Boolean = False)
+        Dim Buffer As New ByteBuffer, i As Integer
 
-    '    Buffer = New ByteBuffer
-    '    Buffer.WriteInteger(ServerPackets.SChatBubble)
-    '    Buffer.WriteInteger(Target)
-    '    Buffer.WriteInteger(TargetType)
-    '    Buffer.WriteString(message)
-    '    Buffer.WriteInteger(Colour)
-    '    SendDataToMap(MapNum, Buffer.ToArray)
-    '    Buffer = Nothing
-
-    'End Sub
-
-    Sub SendSwitchesAndVariables(Index As Integer, Optional everyone As Boolean = False)
-        Dim Buffer As ByteBuffer, i As Integer
-
-        Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SSwitchesAndVariables)
 
         For i = 1 To MAX_SWITCHES
@@ -1955,11 +1912,12 @@ Public Module ServerEvents
     End Sub
 
     Sub SendMapEventData(Index As Integer)
-        Dim Buffer As ByteBuffer, i As Integer, x As Integer, y As Integer, z As Integer, MapNum As Integer, w As Integer
+        Dim Buffer As New ByteBuffer, i As Integer, x As Integer, y As Integer
+        Dim z As Integer, MapNum As Integer, w As Integer
 
-        Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SMapEventData)
         MapNum = GetPlayerMap(Index)
+
         'Event Data
         Buffer.WriteInteger(Map(MapNum).EventCount)
 

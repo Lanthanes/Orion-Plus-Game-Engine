@@ -16,7 +16,7 @@
 
     Sub CheckAttack()
         Dim attackspeed As Integer, X As Integer, Y As Integer
-        Dim Buffer As ByteBuffer
+        Dim Buffer As New ByteBuffer
 
         If VbKeyControl Then
             If InEvent = True Then Exit Sub
@@ -355,7 +355,6 @@
 
         ' Check to see if the key door is open or not
         If Map.Tile(X, Y).Type = TileType.Key Then
-
             ' This actually checks if its open or not
             If TempTile(X, Y).DoorOpen = False Then
                 CheckDirection = True
@@ -363,20 +362,18 @@
             End If
         End If
 
-        If FurnitureHouse > 0 Then
-            If FurnitureHouse = Player(MyIndex).InHouse Then
-                If FurnitureCount > 0 Then
-                    For i = 1 To FurnitureCount
-                        If Item(Furniture(i).ItemNum).Data3 = 0 Then
-                            If X >= Furniture(i).X And X <= Furniture(i).X + Item(Furniture(i).ItemNum).FurnitureWidth - 1 Then
-                                If Y <= Furniture(i).Y And Y >= Furniture(i).Y - Item(Furniture(i).ItemNum).FurnitureHeight Then
-                                    z = Item(Furniture(i).ItemNum).FurnitureBlocks(X - Furniture(i).X, ((Furniture(i).Y - Y) * -1) + Item(Furniture(i).ItemNum).FurnitureHeight)
-                                    If z = 1 Then CheckDirection = True : Exit Function
-                                End If
+        If FurnitureHouse > 0 AndAlso FurnitureHouse = Player(MyIndex).InHouse Then
+            If FurnitureCount > 0 Then
+                For i = 1 To FurnitureCount
+                    If Item(Furniture(i).ItemNum).Data3 = 0 Then
+                        If X >= Furniture(i).X And X <= Furniture(i).X + Item(Furniture(i).ItemNum).FurnitureWidth - 1 Then
+                            If Y <= Furniture(i).Y And Y >= Furniture(i).Y - Item(Furniture(i).ItemNum).FurnitureHeight Then
+                                z = Item(Furniture(i).ItemNum).FurnitureBlocks(X - Furniture(i).X, ((Furniture(i).Y - Y) * -1) + Item(Furniture(i).ItemNum).FurnitureHeight)
+                                If z = 1 Then CheckDirection = True : Exit Function
                             End If
                         End If
-                    Next
-                End If
+                    End If
+                Next
             End If
         End If
 
@@ -394,11 +391,9 @@
                                 Exit Function
                             End If
                         End If
-                    ElseIf Player(i).Pet.X = X And Player(i).Pet.Alive = True Then
-                        If Player(i).Pet.Y = Y Then
-                            CheckDirection = True
-                            Exit Function
-                        End If
+                    ElseIf Player(i).Pet.X = X AndAlso Player(i).Pet.Y = Y AndAlso Player(i).Pet.Alive = True Then
+                        CheckDirection = True
+                        Exit Function
                     End If
                 End If
             End If
@@ -406,32 +401,18 @@
 
         ' Check to see if a npc is already on that tile
         For i = 1 To MAX_MAP_NPCS
-
-            If MapNpc(i).Num > 0 Then
-                If MapNpc(i).X = X Then
-                    If MapNpc(i).Y = Y Then
-                        CheckDirection = True
-                        Exit Function
-                    End If
-                End If
+            If MapNpc(i).Num > 0 AndAlso MapNpc(i).X = X AndAlso MapNpc(i).Y = Y Then
+                CheckDirection = True
+                Exit Function
             End If
-
         Next
 
         For i = 1 To Map.CurrentEvents
             If Map.MapEvents(i).Visible = 1 Then
-                If Map.MapEvents(i).X = X Then
-                    If Map.MapEvents(i).Y = Y Then
-                        'We are walking on top of OR tried to touch an event. Time to Handle the commands
-                        'Buffer = New ByteBuffer
-                        'Buffer.WriteInteger(ClientPackets.CEventTouch)
-                        'Buffer.WriteInteger(i)
-                        'SendData(Buffer.ToArray)
-                        'Buffer = Nothing
-                        If Map.MapEvents(i).WalkThrough = 0 Then
-                            CheckDirection = True
-                            Exit Function
-                        End If
+                If Map.MapEvents(i).X = X AndAlso Map.MapEvents(i).Y = Y Then
+                    If Map.MapEvents(i).WalkThrough = 0 Then
+                        CheckDirection = True
+                        Exit Function
                     End If
                 End If
             End If
@@ -526,9 +507,7 @@
         Dim Buffer As New ByteBuffer
 
         ' Check for subscript out of range
-        If skillslot < 1 Or skillslot > MAX_PLAYER_SKILLS Then
-            Exit Sub
-        End If
+        If skillslot < 1 Or skillslot > MAX_PLAYER_SKILLS Then Exit Sub
 
         If SkillCD(skillslot) > 0 Then
             AddText("Skill has not cooled down yet!", QColorType.AlertColor)
@@ -575,7 +554,6 @@
     End Function
 
     Sub SetPlayerName(ByVal Index As Integer, ByVal Name As String)
-
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Name = Name
     End Sub
@@ -586,13 +564,11 @@
     End Sub
 
     Sub SetPlayerPOINTS(ByVal Index As Integer, ByVal POINTS As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).POINTS = POINTS
     End Sub
 
     Sub SetPlayerStat(ByVal Index As Integer, ByVal Stat As Stats, ByVal Value As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         If Value <= 0 Then Value = 1
         If Value > Byte.MaxValue Then Value = Byte.MaxValue
@@ -600,7 +576,6 @@
     End Sub
 
     Sub SetPlayerInvItemNum(ByVal Index As Integer, ByVal invslot As Integer, ByVal itemnum As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         PlayerInv(invslot).Num = itemnum
     End Sub
@@ -612,7 +587,6 @@
     End Function
 
     Sub SetPlayerInvItemValue(ByVal Index As Integer, ByVal invslot As Integer, ByVal ItemValue As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         PlayerInv(invslot).Value = ItemValue
     End Sub
@@ -624,26 +598,22 @@
     End Function
 
     Sub SetPlayerAccess(ByVal Index As Integer, ByVal Access As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Access = Access
     End Sub
 
     Sub SetPlayerPK(ByVal Index As Integer, ByVal PK As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).PK = PK
     End Sub
 
     Sub SetPlayerVital(ByVal Index As Integer, ByVal Vital As Vitals, ByVal Value As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Vital(Vital) = Value
 
         If GetPlayerVital(Index, Vital) > GetPlayerMaxVital(Index, Vital) Then
             Player(Index).Vital(Vital) = GetPlayerMaxVital(Index, Vital)
         End If
-
     End Sub
 
     Function GetPlayerMaxVital(ByVal Index As Integer, ByVal Vital As Vitals) As Integer
@@ -662,37 +632,31 @@
     End Function
 
     Sub SetPlayerX(ByVal Index As Integer, ByVal X As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).X = X
     End Sub
 
     Sub SetPlayerY(ByVal Index As Integer, ByVal Y As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Y = Y
     End Sub
 
     Sub SetPlayerSprite(ByVal Index As Integer, ByVal Sprite As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Sprite = Sprite
     End Sub
 
     Sub SetPlayerExp(ByVal Index As Integer, ByVal EXP As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).EXP = EXP
     End Sub
 
     Sub SetPlayerLevel(ByVal Index As Integer, ByVal Level As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Level = Level
     End Sub
 
     Sub SetPlayerDir(ByVal Index As Integer, ByVal Dir As Integer)
-
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Dir = Dir
     End Sub
@@ -740,7 +704,6 @@
     End Function
 
     Function GetPlayerExp(ByVal Index As Integer) As Integer
-
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerExp = Player(Index).EXP
     End Function
@@ -770,7 +733,6 @@
     End Function
 
     Sub SetPlayerEquipment(ByVal Index As Integer, ByVal InvNum As Integer, ByVal EquipmentSlot As EquipmentType)
-
         If Index < 1 Or Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Equipment(EquipmentSlot) = InvNum
     End Sub

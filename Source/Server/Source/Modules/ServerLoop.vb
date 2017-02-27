@@ -152,18 +152,18 @@ Module ServerLoop
         Loop
     End Sub
 
-    Function GetTotalPlayersOnline() As Integer
-        GetTotalPlayersOnline = TempPlayer.Where(Function(x) x.InGame).ToArray().Length
-    End Function
+    'Function GetTotalPlayersOnline() As Integer
+    '    GetTotalPlayersOnline = TempPlayer.Where(Function(x) x.InGame).ToArray().Length
+    'End Function
 
     Sub UpdateSavePlayers()
         Dim i As Integer
 
-        If GetTotalPlayersOnline() > 0 Then
+        If GetPlayersOnline() > 0 Then
             TextAdd("Saving all online players...")
             GlobalMsg("Saving all online players...")
 
-            For i = 1 To GetTotalPlayersOnline()
+            For i = 1 To GetPlayersOnline()
                 If IsPlaying(i) Then
                     SavePlayer(i)
                     SaveBank(i)
@@ -205,7 +205,7 @@ Module ServerLoop
     Private Sub UpdatePlayerVitals()
         Dim i As Integer
 
-        For i = 1 To GetTotalPlayersOnline()
+        For i = 1 To GetPlayersOnline()
 
             If IsPlaying(i) Then
                 If GetPlayerVital(i, Vitals.HP) <> GetPlayerMaxVital(i, Vitals.HP) Then
@@ -309,13 +309,13 @@ Module ServerLoop
                                 ' make sure it's not stunned
                                 If Not MapNpc(MapNum).Npc(x).StunDuration > 0 Then
 
-                                    For i = 1 To GetTotalPlayersOnline()
+                                    For i = 1 To GetPlayersOnline()
                                         If IsPlaying(i) Then
                                             If GetPlayerMap(i) = MapNum And MapNpc(MapNum).Npc(x).Target = 0 And GetPlayerAccess(i) <= AdminType.Monitor Then
                                                 If PetAlive(i) Then
                                                     n = Npc(NpcNum).Range
-                                                    DistanceX = MapNpc(MapNum).Npc(x).X - Player(i).Character(TempPlayer(i).CurChar).Pet.x
-                                                    DistanceY = MapNpc(MapNum).Npc(x).Y - Player(i).Character(TempPlayer(i).CurChar).Pet.y
+                                                    DistanceX = MapNpc(MapNum).Npc(x).X - Player(i).Character(TempPlayer(i).CurChar).Pet.X
+                                                    DistanceY = MapNpc(MapNum).Npc(x).Y - Player(i).Character(TempPlayer(i).CurChar).Pet.Y
 
                                                     ' Make sure we get a positive value
                                                     If DistanceX < 0 Then DistanceX = DistanceX * -1
@@ -1282,7 +1282,7 @@ Module ServerLoop
                 Select Case Skill(skillnum).Type
                     Case SkillType.DamageHp
                         DidCast = True
-                        For i = 1 To GetTotalPlayersOnline()
+                        For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) Then
                                 If GetPlayerMap(i) = MapNum Then
                                     If isInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
@@ -1323,7 +1323,7 @@ Module ServerLoop
                         End If
 
                         DidCast = True
-                        For i = 1 To GetTotalPlayersOnline()
+                        For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) Then
                                 If GetPlayerMap(i) = GetPlayerMap(NpcNum) Then
                                     If isInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then

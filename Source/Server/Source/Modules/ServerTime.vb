@@ -38,7 +38,7 @@ Public Module ServerTime
     Sub SendGameClockToAll()
         Dim I As Integer
 
-        For I = 1 To GetTotalPlayersOnline()
+        For I = 1 To GetPlayersOnline()
             If IsPlaying(I) Then
                 SendGameClockTo(I)
             End If
@@ -58,7 +58,7 @@ Public Module ServerTime
     Sub SendTimeToAll()
         Dim I As Integer
 
-        For I = 1 To GetTotalPlayersOnline()
+        For I = 1 To GetPlayersOnline()
             If IsPlaying(I) Then
                 SendTimeTo(I)
             End If

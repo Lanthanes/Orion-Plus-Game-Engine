@@ -187,7 +187,7 @@ Module ServerPlayers
 
         ' send equipment of all people on new map
         If GetTotalMapPlayers(MapNum) > 0 Then
-            For i = 1 To GetTotalPlayersOnline()
+            For i = 1 To GetPlayersOnline()
                 If IsPlaying(i) Then
                     If GetPlayerMap(i) = MapNum Then
                         SendMapEquipmentTo(i, Index)
@@ -366,6 +366,7 @@ Module ServerPlayers
         Dim tradeTarget As Integer
 
         If TempPlayer(Index).InGame Then
+            SendLeftMap(Index)
             TempPlayer(Index).InGame = False
 
             ' Check if player was the only player on the map and stop npc processing if so
@@ -404,7 +405,7 @@ Module ServerPlayers
 
             'pet
             'ReleasePet(Index)
-            RecallPet(Index)
+            ReCallPet(Index)
 
             SavePlayer(Index)
             SaveBank(Index)
@@ -413,7 +414,7 @@ Module ServerPlayers
             GlobalMsg(String.Format("{0} has left {1}!", GetPlayerName(Index), Options.GameName))
 
             TextAdd(String.Format("{0} has left {1}!", GetPlayerName(Index), Options.GameName))
-            SendLeftMap(Index)
+
 
             TempPlayer(Index) = Nothing
             ReDim TempPlayer(i).SkillCD(MAX_PLAYER_SKILLS)
