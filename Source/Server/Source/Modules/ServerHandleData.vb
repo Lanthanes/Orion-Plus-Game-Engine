@@ -2855,7 +2855,7 @@ Module ServerHandleData
             End If
 
             ' Check for packet flooding
-            If TempPlayer(index).DataPackets > 25 Then
+            If TempPlayer(index).DataPackets > 30 Then
                 HackingAttempt(index, "Packet Flooding")
                 Exit Sub
             End If
@@ -2877,20 +2877,18 @@ Module ServerHandleData
 
     Sub HackingAttempt(ByVal Index As Integer, ByVal Reason As String)
 
-        If Index > 0 Then
-            If IsPlaying(Index) Then
-                Call GlobalMsg(GetPlayerLogin(Index) & "/" & GetPlayerName(Index) & " has been booted for (" & Reason & ")")
-            End If
+        If Index > 0 AndAlso IsPlaying(Index) Then
+            GlobalMsg(GetPlayerLogin(Index) & "/" & GetPlayerName(Index) & " has been booted for (" & Reason & ")")
 
-            Call AlertMsg(Index, "You have lost your connection with " & Options.GameName & ".")
+            AlertMsg(Index, "You have lost your connection with " & Options.GameName & ".")
         End If
 
     End Sub
 
     'Mapreport
     Sub Packet_MapReport(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
+        Dim buffer As New ByteBuffer
+
         buffer.WriteBytes(data)
 
         If buffer.ReadInteger <> ClientPackets.CMapReport Then Exit Sub

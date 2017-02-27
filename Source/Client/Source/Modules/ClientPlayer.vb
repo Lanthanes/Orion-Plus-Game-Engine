@@ -423,10 +423,11 @@
                 If Map.MapEvents(i).X = X Then
                     If Map.MapEvents(i).Y = Y Then
                         'We are walking on top of OR tried to touch an event. Time to Handle the commands
-                        Buffer.WriteInteger(ClientPackets.CEventTouch)
-                        Buffer.WriteInteger(i)
-                        SendData(Buffer.ToArray)
-                        Buffer = Nothing
+                        'Buffer = New ByteBuffer
+                        'Buffer.WriteInteger(ClientPackets.CEventTouch)
+                        'Buffer.WriteInteger(i)
+                        'SendData(Buffer.ToArray)
+                        'Buffer = Nothing
                         If Map.MapEvents(i).WalkThrough = 0 Then
                             CheckDirection = True
                             Exit Function

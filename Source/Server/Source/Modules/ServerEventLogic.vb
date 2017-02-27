@@ -1116,7 +1116,7 @@
     End Sub
 
     Public Sub ProcessEventCommands()
-        Dim Buffer As ByteBuffer, i As Integer, x As Integer, removeEventProcess As Boolean, w As Integer, v As Integer, p As Integer
+        Dim Buffer As New ByteBuffer, i As Integer, x As Integer, removeEventProcess As Boolean, w As Integer, v As Integer, p As Integer
         Dim restartlist As Boolean, restartloop As Boolean, endprocess As Boolean
 
         'Now, we process the damn things for commands :P
@@ -2345,7 +2345,7 @@
 
     Public Sub SpawnMapEventsFor(ByVal Index As Integer, ByVal MapNum As Integer)
         Dim i As Integer, z As Integer, spawncurrentevent As Boolean, p As Integer, compare As Integer
-        Dim Buffer As ByteBuffer
+        Dim Buffer As New ByteBuffer
 
         TempPlayer(Index).EventMap.CurrentEvents = 0
         ReDim TempPlayer(Index).EventMap.EventPages(0)

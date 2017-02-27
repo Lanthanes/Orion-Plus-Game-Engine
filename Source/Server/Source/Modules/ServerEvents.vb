@@ -1751,11 +1751,9 @@ Public Module ServerEvents
     End Sub
 
     Sub Packet_Event(ByVal index As Integer, ByVal data() As Byte)
-        Dim i As Integer
+        Dim i As Integer, begineventprocessing As Boolean, z As Integer, Buffer As New ByteBuffer
+        Dim x As Integer, y As Integer
 
-        Dim x As Integer, y As Integer, begineventprocessing As Boolean, z As Integer, Buffer As ByteBuffer
-
-        Buffer = New ByteBuffer
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CEvent Then Exit Sub
@@ -1785,8 +1783,6 @@ Public Module ServerEvents
                 x = GetPlayerX(index) + 1
                 y = GetPlayerY(index)
         End Select
-
-
 
         If TempPlayer(index).EventMap.CurrentEvents > 0 Then
             For z = 1 To TempPlayer(index).EventMap.CurrentEvents
@@ -1851,26 +1847,32 @@ Public Module ServerEvents
     End Sub
 
     Sub Packet_EventTouch(ByVal Index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer, i As Integer
+        Dim Buffer As New ByteBuffer, i As Integer
+        Dim mapnr As Integer, tmpeventid As Integer, tmppageid As Integer
 
-        Buffer = New ByteBuffer
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CEventTouch Then Exit Sub
 
         i = Buffer.ReadInteger
-        If i > TempPlayer(Index).EventMap.EventPages.Length - 1 Then Exit Sub
-        If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 Then
+
+        mapnr = GetPlayerMap(Index)
+        tmpeventid = TempPlayer(Index).EventMap.EventPages(i).EventID
+        tmppageid = TempPlayer(Index).EventMap.EventPages(i).PageID
+
+        If Map(mapnr).Events(tmpeventid).Pages(tmppageid).Trigger = 1 Then
             'Process this event, it is on-touch and everything checks out.
-            If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(TempPlayer(Index).EventMap.EventPages(i).EventID).PageID).CommandListCount > 0 Then
+            If Map(mapnr).Events(tmpeventid).Pages(TempPlayer(Index).EventMap.EventPages(tmpeventid).PageID).CommandListCount > 0 Then
+
+                TempPlayer(Index).EventProcessing(tmpeventid).CurList = 1
+                TempPlayer(Index).EventProcessing(tmpeventid).CurSlot = 1
+                TempPlayer(Index).EventProcessing(tmpeventid).EventID = TempPlayer(Index).EventMap.EventPages(i).EventID
+                TempPlayer(Index).EventProcessing(tmpeventid).PageID = TempPlayer(Index).EventMap.EventPages(i).PageID
+                TempPlayer(Index).EventProcessing(tmpeventid).WaitingForResponse = 0
+                ReDim TempPlayer(Index).EventProcessing(tmpeventid).ListLeftOff(Map(mapnr).Events(tmpeventid).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
+
                 TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 1
                 TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTickCount()
-                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).CurList = 1
-                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).CurSlot = 1
-                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).EventID = TempPlayer(Index).EventMap.EventPages(i).EventID
-                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).PageID = TempPlayer(Index).EventMap.EventPages(i).PageID
-                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).WaitingForResponse = 0
-                ReDim TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
             End If
         End If
         Buffer = Nothing

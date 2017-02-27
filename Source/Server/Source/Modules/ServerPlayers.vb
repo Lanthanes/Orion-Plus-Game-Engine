@@ -463,6 +463,29 @@ Module ServerPlayers
                                     SendPlayerMove(Index, Movement)
                                     Moved = True
                                 End If
+
+                                'check for event
+                                For i = 1 To TempPlayer(Index).EventMap.CurrentEvents
+                                    If TempPlayer(Index).EventMap.EventPages(i).X = GetPlayerX(Index) And TempPlayer(Index).EventMap.EventPages(i).Y = GetPlayerY(Index) - 1 Then
+                                        If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 Then
+                                            'PlayerMsg(Index, "OnTouch event", ColorType.Red)
+                                            'Process this event, it is on-touch and everything checks out.
+                                            If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount > 0 Then
+
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).CurList = 1
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).CurSlot = 1
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).EventID = TempPlayer(Index).EventMap.EventPages(i).EventID
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).PageID = TempPlayer(Index).EventMap.EventPages(i).PageID
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).WaitingForResponse = 0
+                                                ReDim TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
+
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 1
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTickCount()
+                                            End If
+                                        End If
+                                    End If
+                                Next
+
                             End If
                         End If
                     End If
@@ -494,6 +517,28 @@ Module ServerPlayers
                                     SendPlayerMove(Index, Movement)
                                     Moved = True
                                 End If
+
+                                'check for event
+                                For i = 1 To TempPlayer(Index).EventMap.CurrentEvents
+                                    If TempPlayer(Index).EventMap.EventPages(i).X = GetPlayerX(Index) And TempPlayer(Index).EventMap.EventPages(i).Y = GetPlayerY(Index) + 1 Then
+                                        If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 Then
+                                            'PlayerMsg(Index, "OnTouch event", ColorType.Red)
+                                            'Process this event, it is on-touch and everything checks out.
+                                            If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount > 0 Then
+
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).CurList = 1
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).CurSlot = 1
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).EventID = TempPlayer(Index).EventMap.EventPages(i).EventID
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).PageID = TempPlayer(Index).EventMap.EventPages(i).PageID
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).WaitingForResponse = 0
+                                                ReDim TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
+
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 1
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTickCount()
+                                            End If
+                                        End If
+                                    End If
+                                Next
                             End If
                         End If
                     End If
@@ -524,6 +569,28 @@ Module ServerPlayers
                                     SendPlayerMove(Index, Movement)
                                     Moved = True
                                 End If
+
+                                'check for event
+                                For i = 1 To TempPlayer(Index).EventMap.CurrentEvents
+                                    If TempPlayer(Index).EventMap.EventPages(i).X = GetPlayerX(Index) - 1 And TempPlayer(Index).EventMap.EventPages(i).Y = GetPlayerY(Index) Then
+                                        If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 Then
+                                            'PlayerMsg(Index, "OnTouch event", ColorType.Red)
+                                            'Process this event, it is on-touch and everything checks out.
+                                            If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount > 0 Then
+
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).CurList = 1
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).CurSlot = 1
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).EventID = TempPlayer(Index).EventMap.EventPages(i).EventID
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).PageID = TempPlayer(Index).EventMap.EventPages(i).PageID
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).WaitingForResponse = 0
+                                                ReDim TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
+
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 1
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTickCount()
+                                            End If
+                                        End If
+                                    End If
+                                Next
                             End If
                         End If
                     End If
@@ -555,6 +622,28 @@ Module ServerPlayers
                                     SendPlayerMove(Index, Movement)
                                     Moved = True
                                 End If
+
+                                'check for event
+                                For i = 1 To TempPlayer(Index).EventMap.CurrentEvents
+                                    If TempPlayer(Index).EventMap.EventPages(i).X = GetPlayerX(Index) And TempPlayer(Index).EventMap.EventPages(i).Y = GetPlayerY(Index) Then
+                                        If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 Then
+                                            'PlayerMsg(Index, "OnTouch event", ColorType.Red)
+                                            'Process this event, it is on-touch and everything checks out.
+                                            If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount > 0 Then
+
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).CurList = 1
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).CurSlot = 1
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).EventID = TempPlayer(Index).EventMap.EventPages(i).EventID
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).PageID = TempPlayer(Index).EventMap.EventPages(i).PageID
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).WaitingForResponse = 0
+                                                ReDim TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
+
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 1
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTickCount()
+                                            End If
+                                        End If
+                                    End If
+                                Next
                             End If
                         End If
                     End If
