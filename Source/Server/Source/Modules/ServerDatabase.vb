@@ -102,17 +102,17 @@ Module ServerDatabase
             Classes(i).Stat(Stats.Intelligence) = Val(myXml.ReadString("CLASS" & i, "Int"))
             Classes(i).Stat(Stats.Spirit) = Val(myXml.ReadString("CLASS" & i, "Speed"))
 
-            ' loop for items & values
-            For x = 1 To 5
-                Classes(i).StartItem(x) = Val(myXml.ReadString("CLASS" & i, "StartItem" & x))
-                Classes(i).StartValue(x) = Val(myXml.ReadString("CLASS" & i, "StartValue" & x))
-            Next
+            Classes(i).BaseExp = Val(myXml.ReadString("CLASS" & i, "BaseExp"))
 
             Classes(i).StartMap = Val(myXml.ReadString("CLASS" & i, "StartMap"))
             Classes(i).StartX = Val(myXml.ReadString("CLASS" & i, "StartX"))
             Classes(i).StartY = Val(myXml.ReadString("CLASS" & i, "StartY"))
 
-            Classes(i).BaseExp = Val(myXml.ReadString("CLASS" & i, "BaseExp"))
+            ' loop for items & values
+            For x = 1 To 5
+                Classes(i).StartItem(x) = Val(myXml.ReadString("CLASS" & i, "StartItem" & x))
+                Classes(i).StartValue(x) = Val(myXml.ReadString("CLASS" & i, "StartValue" & x))
+            Next
 
             DoEvents()
         Next
@@ -158,15 +158,20 @@ Module ServerDatabase
             myXml.WriteString("CLASS" & i, "Luck", Str(Classes(i).Stat(Stats.Luck)))
             myXml.WriteString("CLASS" & i, "Int", Str(Classes(i).Stat(Stats.Intelligence)))
             myXml.WriteString("CLASS" & i, "Speed", Str(Classes(i).Stat(Stats.Spirit)))
+
+            myXml.WriteString("CLASS" & i, "BaseExp", Str(Classes(i).BaseExp))
+
+            myXml.WriteString("CLASS" & i, "StartMap", Str(Classes(i).StartMap))
+            myXml.WriteString("CLASS" & i, "StartX", Str(Classes(i).StartX))
+            myXml.WriteString("CLASS" & i, "StartY", Str(Classes(i).StartY))
+
             ' loop for items & values
             For x = 1 To 5
                 myXml.WriteString("CLASS" & i, "StartItem" & x, Str(Classes(i).StartItem(x)))
                 myXml.WriteString("CLASS" & i, "StartValue" & x, Str(Classes(i).StartValue(x)))
             Next
 
-            myXml.WriteString("CLASS" & i, "StartMap", Str(Classes(i).StartMap))
-            myXml.WriteString("CLASS" & i, "StartX", Str(Classes(i).StartX))
-            myXml.WriteString("CLASS" & i, "StartY", Str(Classes(i).StartY))
+
 
             DoEvents()
         Next
