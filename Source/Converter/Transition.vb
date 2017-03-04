@@ -2,17 +2,6 @@
 
 Module Transition
 
-    Public Sub Main()
-        Console.WriteLine("Converting Maps...")
-        ConvertMaps()
-        'Console.WriteLine("Converting Npcs...")
-        'ConvertNpcs()
-        'Console.WriteLine("Converting Items...")
-        'ConvertItems()
-        Console.WriteLine("Done!")
-        Console.ReadKey()
-    End Sub
-
     Public Sub ChangeMapData()
         NewMap.Name = OldMap.Name
         NewMap.Music = OldMap.Music
@@ -77,6 +66,7 @@ Module Transition
         NewNpc.Name = OldNpc.Name
         NewNpc.AttackSay = OldNpc.AttackSay
         NewNpc.Sprite = OldNpc.Sprite
+        NewNpc.SpawnTime = 0
         NewNpc.SpawnSecs = OldNpc.SpawnSecs
         NewNpc.Behaviour = OldNpc.Behaviour
         NewNpc.Range = OldNpc.Range

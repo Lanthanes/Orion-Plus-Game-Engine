@@ -174,19 +174,19 @@
     Public Structure OldNpcRec
         Dim Name As String
         Dim AttackSay As String
-        Dim Sprite As Long
-        Dim SpawnSecs As Long
+        Dim Sprite As Integer
+        Dim SpawnSecs As Integer
         Dim Behaviour As Byte
         Dim Range As Byte
-        Dim DropChance() As Long
-        Dim DropItem() As Long
-        Dim DropItemValue() As Long
+        Dim DropChance() As Integer
+        Dim DropItem() As Integer
+        Dim DropItemValue() As Integer
         Dim Stat() As Byte
         Dim Faction As Byte
-        Dim HP As Long
-        Dim Exp As Long
-        Dim Animation As Long
-        Dim QuestNum As Long
+        Dim HP As Integer
+        Dim Exp As Integer
+        Dim Animation As Integer
+        Dim QuestNum As Integer
         Dim Skill() As Byte
     End Structure
 
@@ -204,41 +204,37 @@
     End Sub
 
     Sub LoadOldNpc(ByVal filename As String)
-        Dim F As Long
-        Dim n As Long
+        Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
 
-        F = FreeFile()
-        FileOpen(F, filename, OpenMode.Binary, OpenAccess.Read, OpenShare.Default)
-
-        FileGetObject(F, OldNpc.Name)
-        FileGetObject(F, OldNpc.AttackSay)
-        FileGetObject(F, OldNpc.Sprite)
-        FileGetObject(F, OldNpc.SpawnSecs)
-        FileGetObject(F, OldNpc.Behaviour)
-        FileGetObject(F, OldNpc.Range)
+        reader.Read(OldNpc.Name)
+        reader.Read(OldNpc.AttackSay)
+        reader.Read(OldNpc.Sprite)
+        reader.Read(OldNpc.SpawnSecs)
+        reader.Read(OldNpc.Behaviour)
+        reader.Read(OldNpc.Range)
 
         For i = 1 To 5
-            FileGetObject(F, OldNpc.DropChance(i))
-            FileGetObject(F, OldNpc.DropItem(i))
-            FileGetObject(F, OldNpc.DropItemValue(i))
+            reader.Read(OldNpc.DropChance(i))
+            reader.Read(OldNpc.DropItem(i))
+            reader.Read(OldNpc.DropItemValue(i))
         Next
 
         For n = 0 To Stats.Count - 1
-            FileGetObject(F, OldNpc.Stat(n))
+            reader.Read(OldNpc.Stat(n))
         Next
 
-        FileGetObject(F, OldNpc.Faction)
-        FileGetObject(F, OldNpc.HP)
-        FileGetObject(F, OldNpc.Exp)
-        FileGetObject(F, OldNpc.Animation)
+        reader.Read(OldNpc.Faction)
+        reader.Read(OldNpc.HP)
+        reader.Read(OldNpc.Exp)
+        reader.Read(OldNpc.Animation)
 
-        FileGetObject(F, OldNpc.QuestNum)
+        reader.Read(OldNpc.QuestNum)
 
         For i = 1 To MAX_NPC_SKILLS
-            FileGetObject(F, OldNpc.Skill(i))
+            reader.Read(OldNpc.Skill(i))
         Next
 
-        FileClose(F)
+        reader = Nothing
 
         If OldNpc.Name Is Nothing Then OldNpc.Name = ""
         If OldNpc.AttackSay Is Nothing Then OldNpc.AttackSay = ""
@@ -362,4 +358,5 @@
 
     End Sub
 #End Region
+
 End Module

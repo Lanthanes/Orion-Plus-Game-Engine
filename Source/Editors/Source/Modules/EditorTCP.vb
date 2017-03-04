@@ -438,6 +438,7 @@ Module EditorTCP
         Buffer.WriteInteger(Npc(NpcNum).HP)
         Buffer.WriteString(Npc(NpcNum).Name)
         Buffer.WriteInteger(Npc(NpcNum).Range)
+        Buffer.WriteInteger(Npc(NpcNum).SpawnTime)
         Buffer.WriteInteger(Npc(NpcNum).SpawnSecs)
         Buffer.WriteInteger(Npc(NpcNum).Sprite)
 

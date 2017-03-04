@@ -103,13 +103,13 @@
         Npc(EditorIndex).Hp = nudHp.Value
     End Sub
 
-    Private Sub TxtEXP_TextChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudExp.ValueChanged
+    Private Sub NudExp_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudExp.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Exp = nudExp.Value
     End Sub
 
-    Private Sub ScrlQuest_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbQuest.SelectedIndexChanged
+    Private Sub CmbQuest_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbQuest.SelectedIndexChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).QuestNum = cmbQuest.SelectedIndex
@@ -125,6 +125,12 @@
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Damage = nudDamage.Value
+    End Sub
+
+    Private Sub CmbSpawnPeriod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSpawnPeriod.SelectedIndexChanged
+        If EditorIndex <= 0 Then Exit Sub
+
+        Npc(EditorIndex).SpawnTime = cmbSpawnPeriod.SelectedIndex
     End Sub
 #End Region
 
@@ -232,7 +238,6 @@
 
         Npc(EditorIndex).Skill(6) = cmbSkill6.SelectedIndex
     End Sub
-
 
 #End Region
 

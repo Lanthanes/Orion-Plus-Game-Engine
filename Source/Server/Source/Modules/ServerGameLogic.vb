@@ -1,4 +1,6 @@
-﻿Module ServerGameLogic
+﻿Imports Orion
+
+Module ServerGameLogic
     Function GetTotalMapPlayers(ByVal MapNum As Integer) As Integer
         Dim i As Integer
         Dim n As Integer
@@ -37,7 +39,7 @@
 
         Select Case Vital
             Case Vitals.HP
-                GetNpcMaxVital = Npc(NpcNum).HP
+                GetNpcMaxVital = Npc(NpcNum).Hp
             Case Vitals.MP
                 GetNpcMaxVital = Npc(NpcNum).Stat(Stats.Intelligence) * 2
             Case Vitals.SP
@@ -94,8 +96,8 @@
             If itemNum >= 0 And itemNum <= MAX_ITEMS Then
                 MapItem(MapNum, i).Num = itemNum
                 MapItem(MapNum, i).Value = ItemVal
-                MapItem(MapNum, i).x = x
-                MapItem(MapNum, i).y = y
+                MapItem(MapNum, i).X = x
+                MapItem(MapNum, i).Y = y
 
                 Buffer = New ByteBuffer
                 Buffer.WriteInteger(ServerPackets.SSpawnItem)
@@ -184,6 +186,8 @@
 
         If NpcNum > 0 Then
 
+            If Not Npc(NpcNum).SpawnTime = Time.Instance.TimeOfDay Then Exit Sub
+
             MapNpc(MapNum).Npc(MapNpcNum).Num = NpcNum
             MapNpc(MapNum).Npc(MapNpcNum).Target = 0
             MapNpc(MapNum).Npc(MapNpcNum).TargetType = 0 ' clear
@@ -199,8 +203,8 @@
                 For y = 0 To Map(MapNum).MaxY
                     If Map(MapNum).Tile(x, y).Type = TileType.NpcSpawn Then
                         If Map(MapNum).Tile(x, y).Data1 = MapNpcNum Then
-                            MapNpc(MapNum).Npc(MapNpcNum).x = x
-                            MapNpc(MapNum).Npc(MapNpcNum).y = y
+                            MapNpc(MapNum).Npc(MapNpcNum).X = x
+                            MapNpc(MapNum).Npc(MapNpcNum).Y = y
                             MapNpc(MapNum).Npc(MapNpcNum).Dir = Map(MapNum).Tile(x, y).Data2
                             Spawned = True
                             Exit For
@@ -221,8 +225,8 @@
 
                     ' Check if the tile is walkable
                     If NpcTileIsOpen(MapNum, x, y) Then
-                        MapNpc(MapNum).Npc(MapNpcNum).x = x
-                        MapNpc(MapNum).Npc(MapNpcNum).y = y
+                        MapNpc(MapNum).Npc(MapNpcNum).X = x
+                        MapNpc(MapNum).Npc(MapNpcNum).Y = y
                         Spawned = True
                         Exit For
                     End If
@@ -238,8 +242,8 @@
                     For y = 0 To Map(MapNum).MaxY
 
                         If NpcTileIsOpen(MapNum, x, y) Then
-                            MapNpc(MapNum).Npc(MapNpcNum).x = x
-                            MapNpc(MapNum).Npc(MapNpcNum).y = y
+                            MapNpc(MapNum).Npc(MapNpcNum).X = x
+                            MapNpc(MapNum).Npc(MapNpcNum).Y = y
                             Spawned = True
                         End If
 
@@ -254,8 +258,8 @@
                 Buffer.WriteInteger(ServerPackets.SSpawnNpc)
                 Buffer.WriteInteger(MapNpcNum)
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Num)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).x)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).y)
+                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).X)
+                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
 
                 For i = 1 To Vitals.Count - 1
@@ -300,8 +304,8 @@
         For LoopI = 1 To MAX_MAP_NPCS
 
             If MapNpc(MapNum).Npc(LoopI).Num > 0 Then
-                If MapNpc(MapNum).Npc(LoopI).x = x Then
-                    If MapNpc(MapNum).Npc(LoopI).y = y Then
+                If MapNpc(MapNum).Npc(LoopI).X = x Then
+                    If MapNpc(MapNum).Npc(LoopI).Y = y Then
                         NpcTileIsOpen = False
                         Exit Function
                     End If
@@ -347,8 +351,8 @@
             Exit Function
         End If
 
-        x = MapNpc(MapNum).Npc(MapNpcNum).x
-        y = MapNpc(MapNum).Npc(MapNpcNum).y
+        x = MapNpc(MapNum).Npc(MapNpcNum).X
+        y = MapNpc(MapNum).Npc(MapNpcNum).Y
         CanNpcMove = True
 
         Select Case Dir
@@ -368,7 +372,7 @@
                     For i = 1 To MAX_PLAYERS
 
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).x) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).y - 1) Then
+                            If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y - 1) Then
                                 CanNpcMove = False
                                 Exit Function
                             End If
@@ -379,7 +383,7 @@
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
 
-                        If (i <> MapNpcNum) And (MapNpc(MapNum).Npc(i).Num > 0) And (MapNpc(MapNum).Npc(i).x = MapNpc(MapNum).Npc(MapNpcNum).x) And (MapNpc(MapNum).Npc(i).y = MapNpc(MapNum).Npc(MapNpcNum).y - 1) Then
+                        If (i <> MapNpcNum) And (MapNpc(MapNum).Npc(i).Num > 0) And (MapNpc(MapNum).Npc(i).X = MapNpc(MapNum).Npc(MapNpcNum).X) And (MapNpc(MapNum).Npc(i).Y = MapNpc(MapNum).Npc(MapNpcNum).Y - 1) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -406,7 +410,7 @@
                     For i = 1 To MAX_PLAYERS
 
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).x) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).y + 1) Then
+                            If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y + 1) Then
                                 CanNpcMove = False
                                 Exit Function
                             End If
@@ -417,7 +421,7 @@
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
 
-                        If (i <> MapNpcNum) And (MapNpc(MapNum).Npc(i).Num > 0) And (MapNpc(MapNum).Npc(i).x = MapNpc(MapNum).Npc(MapNpcNum).x) And (MapNpc(MapNum).Npc(i).y = MapNpc(MapNum).Npc(MapNpcNum).y + 1) Then
+                        If (i <> MapNpcNum) And (MapNpc(MapNum).Npc(i).Num > 0) And (MapNpc(MapNum).Npc(i).X = MapNpc(MapNum).Npc(MapNpcNum).X) And (MapNpc(MapNum).Npc(i).Y = MapNpc(MapNum).Npc(MapNpcNum).Y + 1) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -444,7 +448,7 @@
                     For i = 1 To MAX_PLAYERS
 
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).x - 1) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).y) Then
+                            If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X - 1) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
                                 CanNpcMove = False
                                 Exit Function
                             End If
@@ -455,7 +459,7 @@
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
 
-                        If (i <> MapNpcNum) And (MapNpc(MapNum).Npc(i).Num > 0) And (MapNpc(MapNum).Npc(i).x = MapNpc(MapNum).Npc(MapNpcNum).x - 1) And (MapNpc(MapNum).Npc(i).y = MapNpc(MapNum).Npc(MapNpcNum).y) Then
+                        If (i <> MapNpcNum) And (MapNpc(MapNum).Npc(i).Num > 0) And (MapNpc(MapNum).Npc(i).X = MapNpc(MapNum).Npc(MapNpcNum).X - 1) And (MapNpc(MapNum).Npc(i).Y = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -482,7 +486,7 @@
                     For i = 1 To MAX_PLAYERS
 
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).x + 1) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).y) Then
+                            If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X + 1) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
                                 CanNpcMove = False
                                 Exit Function
                             End If
@@ -493,7 +497,7 @@
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
 
-                        If (i <> MapNpcNum) And (MapNpc(MapNum).Npc(i).Num > 0) And (MapNpc(MapNum).Npc(i).x = MapNpc(MapNum).Npc(MapNpcNum).x + 1) And (MapNpc(MapNum).Npc(i).y = MapNpc(MapNum).Npc(MapNpcNum).y) Then
+                        If (i <> MapNpcNum) And (MapNpc(MapNum).Npc(i).Num > 0) And (MapNpc(MapNum).Npc(i).X = MapNpc(MapNum).Npc(MapNpcNum).X + 1) And (MapNpc(MapNum).Npc(i).Y = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -524,45 +528,45 @@
 
         Select Case Dir
             Case Direction.Up
-                MapNpc(MapNum).Npc(MapNpcNum).y = MapNpc(MapNum).Npc(MapNpcNum).y - 1
+                MapNpc(MapNum).Npc(MapNpcNum).Y = MapNpc(MapNum).Npc(MapNpcNum).Y - 1
                 Buffer = New ByteBuffer
                 Buffer.WriteInteger(ServerPackets.SNpcMove)
                 Buffer.WriteInteger(MapNpcNum)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).x)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).y)
+                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).X)
+                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
                 Buffer.WriteInteger(movement)
                 SendDataToMap(MapNum, Buffer.ToArray())
                 Buffer = Nothing
             Case Direction.Down
-                MapNpc(MapNum).Npc(MapNpcNum).y = MapNpc(MapNum).Npc(MapNpcNum).y + 1
+                MapNpc(MapNum).Npc(MapNpcNum).Y = MapNpc(MapNum).Npc(MapNpcNum).Y + 1
                 Buffer = New ByteBuffer
                 Buffer.WriteInteger(ServerPackets.SNpcMove)
                 Buffer.WriteInteger(MapNpcNum)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).x)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).y)
+                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).X)
+                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
                 Buffer.WriteInteger(movement)
                 SendDataToMap(MapNum, Buffer.ToArray())
                 Buffer = Nothing
             Case Direction.Left
-                MapNpc(MapNum).Npc(MapNpcNum).x = MapNpc(MapNum).Npc(MapNpcNum).x - 1
+                MapNpc(MapNum).Npc(MapNpcNum).X = MapNpc(MapNum).Npc(MapNpcNum).X - 1
                 Buffer = New ByteBuffer
                 Buffer.WriteInteger(ServerPackets.SNpcMove)
                 Buffer.WriteInteger(MapNpcNum)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).x)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).y)
+                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).X)
+                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
                 Buffer.WriteInteger(movement)
                 SendDataToMap(MapNum, Buffer.ToArray())
                 Buffer = Nothing
             Case Direction.Right
-                MapNpc(MapNum).Npc(MapNpcNum).x = MapNpc(MapNum).Npc(MapNpcNum).x + 1
+                MapNpc(MapNum).Npc(MapNpcNum).X = MapNpc(MapNum).Npc(MapNpcNum).X + 1
                 Buffer = New ByteBuffer
                 Buffer.WriteInteger(ServerPackets.SNpcMove)
                 Buffer.WriteInteger(MapNpcNum)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).x)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).y)
+                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).X)
+                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
                 Buffer.WriteInteger(movement)
                 SendDataToMap(MapNum, Buffer.ToArray())
@@ -615,8 +619,8 @@
 
         For i = 1 To MAX_MAP_NPCS
             Buffer.WriteInteger(MapNpc(MapNum).Npc(i).Num)
-            Buffer.WriteInteger(MapNpc(MapNum).Npc(i).x)
-            Buffer.WriteInteger(MapNpc(MapNum).Npc(i).y)
+            Buffer.WriteInteger(MapNpc(MapNum).Npc(i).X)
+            Buffer.WriteInteger(MapNpc(MapNum).Npc(i).Y)
             Buffer.WriteInteger(MapNpc(MapNum).Npc(i).Dir)
             Buffer.WriteInteger(MapNpc(MapNum).Npc(i).Vital(Vitals.HP))
             Buffer.WriteInteger(MapNpc(MapNum).Npc(i).Vital(Vitals.MP))

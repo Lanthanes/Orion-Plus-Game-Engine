@@ -298,7 +298,7 @@ Module ServerGeneral
         SetStatus("Clearing Map Items...")
         ClearMapItems()
         SetStatus("Clearing Map Npc's...")
-        ClearMapNpcs()
+        ClearAllMapNpcs()
         SetStatus("Clearing Npc's...")
         ClearNpcs()
         SetStatus("Clearing Resources...")

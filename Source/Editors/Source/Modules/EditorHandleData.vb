@@ -687,6 +687,7 @@
         Npc(i).HP = Buffer.ReadInteger()
         Npc(i).Name = Trim(Buffer.ReadString())
         Npc(i).Range = Buffer.ReadInteger()
+        Npc(i).SpawnTime = Buffer.ReadInteger()
         Npc(i).SpawnSecs = Buffer.ReadInteger()
         Npc(i).Sprite = Buffer.ReadInteger()
 
@@ -1111,6 +1112,7 @@
             Npc(n).HP = buffer.ReadInteger()
             Npc(n).Name = Trim(buffer.ReadString())
             Npc(n).Range = buffer.ReadInteger()
+            Npc(n).SpawnTime = buffer.ReadInteger()
             Npc(n).SpawnSecs = buffer.ReadInteger()
             Npc(n).Sprite = buffer.ReadInteger()
 

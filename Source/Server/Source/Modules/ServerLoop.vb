@@ -796,9 +796,7 @@ Module ServerLoop
                             SpawnNpc(x, MapNum)
                         End If
                     End If
-
                 Next
-
             End If
 
         Next

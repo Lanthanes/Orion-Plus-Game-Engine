@@ -894,21 +894,22 @@
 
             If Npc(EditorIndex).Sprite < 0 Or Npc(EditorIndex).Sprite > .nudSprite.Maximum Then Npc(EditorIndex).Sprite = 0
             .nudSprite.Value = Npc(EditorIndex).Sprite
-            .nudSpawnSecs.Text = Npc(EditorIndex).SpawnSecs
+            .nudSpawnSecs.Value = Npc(EditorIndex).SpawnSecs
             .cmbBehaviour.SelectedIndex = Npc(EditorIndex).Behaviour
             .cmbFaction.SelectedIndex = Npc(EditorIndex).Faction
             .nudRange.Value = Npc(EditorIndex).Range
-            .nudChance.Text = Npc(EditorIndex).DropChance(FrmEditor_Npc.cmbDropSlot.SelectedIndex + 1)
+            .nudChance.Value = Npc(EditorIndex).DropChance(FrmEditor_Npc.cmbDropSlot.SelectedIndex + 1)
             .cmbItem.SelectedIndex = Npc(EditorIndex).DropItem(FrmEditor_Npc.cmbDropSlot.SelectedIndex + 1)
 
             .nudAmount.Value = Npc(EditorIndex).DropItemValue(FrmEditor_Npc.cmbDropSlot.SelectedIndex + 1)
 
-            .nudHp.Text = Npc(EditorIndex).HP
-            .nudExp.Text = Npc(EditorIndex).EXP
-            .nudLevel.Text = Npc(EditorIndex).Level
-            .nudDamage.Text = Npc(EditorIndex).Damage
+            .nudHp.Value = Npc(EditorIndex).Hp
+            .nudExp.Value = Npc(EditorIndex).Exp
+            .nudLevel.Value = Npc(EditorIndex).Level
+            .nudDamage.Value = Npc(EditorIndex).Damage
 
             .cmbQuest.SelectedIndex = Npc(EditorIndex).QuestNum
+            .cmbSpawnPeriod.SelectedIndex = Npc(EditorIndex).SpawnTime
 
             .nudStrength.Value = Npc(EditorIndex).Stat(Stats.Strength)
             .nudEndurance.Value = Npc(EditorIndex).Stat(Stats.Endurance)

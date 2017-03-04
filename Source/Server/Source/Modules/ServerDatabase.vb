@@ -1030,6 +1030,7 @@ Module ServerDatabase
         writer.Write(Npc(NpcNum).Name)
         writer.Write(Npc(NpcNum).AttackSay)
         writer.Write(Npc(NpcNum).Sprite)
+        writer.Write(Npc(NpcNum).SpawnTime)
         writer.Write(Npc(NpcNum).SpawnSecs)
         writer.Write(Npc(NpcNum).Behaviour)
         writer.Write(Npc(NpcNum).Range)
@@ -1083,6 +1084,7 @@ Module ServerDatabase
         reader.Read(Npc(NpcNum).Name)
         reader.Read(Npc(NpcNum).AttackSay)
         reader.Read(Npc(NpcNum).Sprite)
+        reader.Read(Npc(NpcNum).SpawnTime)
         reader.Read(Npc(NpcNum).SpawnSecs)
         reader.Read(Npc(NpcNum).Behaviour)
         reader.Read(Npc(NpcNum).Range)
@@ -1119,7 +1121,6 @@ Module ServerDatabase
         Dim i As Integer
 
         For i = 1 To MAX_NPCS
-
             If Not FileExist(Path.Combine(Application.StartupPath, "data", "npcs", String.Format("npc{0}.dat", i))) Then
                 SaveNpc(i)
                 DoEvents()
@@ -1136,15 +1137,23 @@ Module ServerDatabase
         ReDim MapNpc(MapNum).Npc(Index).SkillCD(MAX_NPC_SKILLS)
     End Sub
 
-    Sub ClearMapNpcs()
-        Dim x As Integer
+    Sub ClearAllMapNpcs()
         Dim y As Integer
 
         For y = 1 To MAX_CACHED_MAPS
-            For x = 1 To MAX_MAP_NPCS
-                ClearMapNpc(x, y)
-                DoEvents()
-            Next
+            ClearMapNpcs(y)
+            DoEvents()
+        Next
+
+    End Sub
+
+    Sub ClearMapNpcs(ByVal MapNum As Integer)
+        Dim x As Integer
+        Dim y As Integer
+
+        For x = 1 To MAX_MAP_NPCS
+            ClearMapNpc(x, y)
+            DoEvents()
         Next
 
     End Sub
@@ -2795,6 +2804,7 @@ Module ServerDatabase
         Buffer.WriteInteger(Npc(NpcNum).Hp)
         Buffer.WriteString(Npc(NpcNum).Name)
         Buffer.WriteInteger(Npc(NpcNum).Range)
+        Buffer.WriteInteger(Npc(NpcNum).SpawnTime)
         Buffer.WriteInteger(Npc(NpcNum).SpawnSecs)
         Buffer.WriteInteger(Npc(NpcNum).Sprite)
 

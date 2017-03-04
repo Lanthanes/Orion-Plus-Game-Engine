@@ -189,6 +189,7 @@
         Dim Name As String
         Dim AttackSay As String
         Dim Sprite As Integer
+        Dim SpawnTime As Byte
         Dim SpawnSecs As Integer
         Dim Behaviour As Byte
         Dim Range As Byte

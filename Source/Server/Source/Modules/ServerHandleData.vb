@@ -1601,6 +1601,7 @@ Module ServerHandleData
         Npc(NpcNum).Hp = buffer.ReadInteger()
         Npc(NpcNum).Name = buffer.ReadString()
         Npc(NpcNum).Range = buffer.ReadInteger()
+        Npc(NpcNum).SpawnTime = buffer.ReadInteger()
         Npc(NpcNum).SpawnSecs = buffer.ReadInteger()
         Npc(NpcNum).Sprite = buffer.ReadInteger()
 

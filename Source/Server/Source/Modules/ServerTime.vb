@@ -18,6 +18,8 @@ Public Module ServerTime
 
     Sub HandleTimeOfDayChanged(ByRef source As Time)
         SendTimeToAll()
+        ClearAllMapNpcs()
+        SpawnAllMapNpcs()
     End Sub
 
     Sub HandleTimeSync(ByRef source As Time)
