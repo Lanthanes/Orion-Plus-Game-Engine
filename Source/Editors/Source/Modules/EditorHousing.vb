@@ -172,8 +172,11 @@ Public Module EditorHousing
 
         With House(EditorIndex)
             FrmEditor_House.txtName.Text = Trim$(.ConfigName)
+            If .BaseMap = 0 Then .BaseMap = 1
             FrmEditor_House.nudBaseMap.Value = .BaseMap
+            If .X = 0 Then .X = 1
             FrmEditor_House.nudX.Value = .X
+            If .Y = 0 Then .Y = 1
             FrmEditor_House.nudY.Value = .Y
             FrmEditor_House.nudPrice.Value = .Price
             FrmEditor_House.nudFurniture.Value = .MaxFurniture
