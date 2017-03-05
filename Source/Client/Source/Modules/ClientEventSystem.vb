@@ -678,6 +678,17 @@ newlist:
                                             Case Sex.Female
                                                 FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Conditional Branch: Player's  Gender is Female")
                                         End Select
+                                    Case 9
+                                        Select Case tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).ConditionalBranch.Data1
+                                            Case Orion.TimeOfDay.Day
+                                                FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Conditional Branch: Time of Day is Day")
+                                            Case Orion.TimeOfDay.Night
+                                                FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Conditional Branch: Time of Day is Night")
+                                            Case Orion.TimeOfDay.Dawn
+                                                FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Conditional Branch: Time of Day is Dawn")
+                                            Case Orion.TimeOfDay.Dusk
+                                                FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Conditional Branch: Time of Day is Dusk")
+                                        End Select
                                 End Select
                                 indent = indent & "       "
                                 listleftoff(curlist) = i
@@ -1131,6 +1142,7 @@ newlist:
                 If FrmEditor_Events.optCondition6.Checked = True Then X = 6
                 If FrmEditor_Events.optCondition7.Checked = True Then X = 7
                 If FrmEditor_Events.optCondition8.Checked = True Then X = 8
+                If FrmEditor_Events.optCondition9.Checked = True Then X = 9
 
                 Select Case X
                     Case 0 'Player Var
@@ -1173,6 +1185,9 @@ newlist:
                     Case 8 'Gender
                         tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).ConditionalBranch.Condition = 8
                         tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).ConditionalBranch.Data1 = FrmEditor_Events.cmbCondition_Gender.SelectedIndex
+                    Case 9 'Time
+                        tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).ConditionalBranch.Condition = 9
+                        tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).ConditionalBranch.Data1 = FrmEditor_Events.cmbCondition_Time.SelectedIndex
                 End Select
 
             Case EventType.evShowText
@@ -1514,6 +1529,8 @@ newlist:
                         FrmEditor_Events.optCondition7.Checked = True
                     Case 8
                         FrmEditor_Events.optCondition8.Checked = True
+                    Case 9
+                        FrmEditor_Events.optCondition9.Checked = True
                 End Select
 
                 Select Case tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).ConditionalBranch.Condition
@@ -1566,6 +1583,9 @@ newlist:
                     Case 8
                         FrmEditor_Events.cmbCondition_Gender.Enabled = True
                         FrmEditor_Events.cmbCondition_Gender.SelectedIndex = tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).ConditionalBranch.Data1
+                    Case 9
+                        FrmEditor_Events.cmbCondition_Time.Enabled = True
+                        FrmEditor_Events.cmbCondition_Time.SelectedIndex = tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).ConditionalBranch.Data1
                 End Select
             Case EventType.evShowText
                 isEdit = True
@@ -2124,6 +2144,9 @@ newlist:
                 ElseIf FrmEditor_Events.optCondition8.Checked = True Then
                     tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).ConditionalBranch.Condition = 8
                     tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).ConditionalBranch.Data1 = FrmEditor_Events.cmbCondition_Gender.SelectedIndex
+                ElseIf FrmEditor_Events.optCondition9.Checked = True Then
+                    tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).ConditionalBranch.Condition = 9
+                    tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).ConditionalBranch.Data1 = FrmEditor_Events.cmbCondition_Time.SelectedIndex
                 End If
             Case EventType.evShowText
                 tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(curslot).Text1 = FrmEditor_Events.txtShowText.Text

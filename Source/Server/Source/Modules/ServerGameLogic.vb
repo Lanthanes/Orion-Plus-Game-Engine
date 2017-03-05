@@ -186,7 +186,7 @@ Module ServerGameLogic
 
         If NpcNum > 0 Then
 
-            If Not Npc(NpcNum).SpawnTime = Time.Instance.TimeOfDay Then Exit Sub
+            If Not Npc(NpcNum).SpawnTime = Time.Instance.TimeOfDay And Not Npc(NpcNum).SpawnTime = 5 Then Exit Sub
 
             MapNpc(MapNum).Npc(MapNpcNum).Num = NpcNum
             MapNpc(MapNum).Npc(MapNpcNum).Target = 0

@@ -1,4 +1,5 @@
-﻿Imports System.Windows.Forms
+﻿Imports System.Drawing
+Imports System.Windows.Forms
 
 Public Class FrmEditor_Events
 #Region "Frm Code"
@@ -39,7 +40,7 @@ Public Class FrmEditor_Events
         cmbCondition_ClassIs.Items.Clear()
 
         For i = 1 To Max_Classes
-            cmbCondition_ClassIs.Items.Add(i & ". " & Classes(i).Name)
+            cmbCondition_ClassIs.Items.Add(i & ". " & CStr(Classes(i).Name))
         Next
         cmbCondition_ClassIs.SelectedIndex = 0
         cmbCondition_LearntSkill.Enabled = False
@@ -72,8 +73,9 @@ Public Class FrmEditor_Events
         cmbCondition_General.SelectedIndex = 0
         nudCondition_QuestTask.Value = 1
 
-
         cmbCondition_Gender.Enabled = False
+
+        cmbCondition_Time.Enabled = False
     End Sub
 
     Public Sub InitEventEditorForm()
@@ -216,8 +218,6 @@ Public Class FrmEditor_Events
         fraGraphic.Height = Height
         fraGraphic.Top = 0
         fraGraphic.Left = 0
-
-        tvCommands.ExpandAll()
     End Sub
 
     Private Sub BtnOK_Click(sender As Object, e As EventArgs) Handles btnOk.Click
@@ -739,15 +739,15 @@ Public Class FrmEditor_Events
 #Region "Conditions"
     Private Sub ChkPlayerVar_CheckedChanged(sender As Object, e As EventArgs) Handles chkPlayerVar.CheckedChanged
         If chkPlayerVar.Checked = True Then
-            cmbPlayerVar.Enabled = True
-            nudPlayerVariable.Enabled = True
-            cmbPlayervarCompare.Enabled = True
-            tmpEvent.Pages(curPageNum).chkVariable = 1
-        Else
             cmbPlayerVar.Enabled = False
             nudPlayerVariable.Enabled = False
             cmbPlayervarCompare.Enabled = False
             tmpEvent.Pages(curPageNum).chkVariable = 0
+        Else
+            cmbPlayerVar.Enabled = True
+            nudPlayerVariable.Enabled = True
+            cmbPlayervarCompare.Enabled = True
+            tmpEvent.Pages(curPageNum).chkVariable = 1
         End If
     End Sub
 
@@ -1065,6 +1065,7 @@ Public Class FrmEditor_Events
         tmpEvent.Pages(curPageNum).MoveFreq = cmbMoveFreq.SelectedIndex
     End Sub
 
+
 #End Region
 
 #Region "Positioning"
@@ -1194,13 +1195,13 @@ Public Class FrmEditor_Events
         lstSwitches.Items.Clear()
 
         For i = 1 To MAX_SWITCHES
-            lstSwitches.Items.Add(i & ". " & Trim$(Switches(i)))
+            lstSwitches.Items.Add(CStr(i) & ". " & Trim$(Switches(i)))
         Next
         lstSwitches.SelectedIndex = 0
         lstVariables.Items.Clear()
 
         For i = 1 To MAX_VARIABLES
-            lstVariables.Items.Add(i & ". " & Trim$(Variables(i)))
+            lstVariables.Items.Add(CStr(i) & ". " & Trim$(Variables(i)))
         Next
         lstVariables.SelectedIndex = 0
 
@@ -1230,32 +1231,31 @@ Public Class FrmEditor_Events
         lstSwitches.Items.Clear()
 
         For i = 1 To MAX_SWITCHES
-            lstSwitches.Items.Add(i & ". " & Trim$(Switches(i)))
+            lstSwitches.Items.Add(CStr(i) & ". " & Trim$(Switches(i)))
         Next
         lstSwitches.SelectedIndex = 0
         lstVariables.Items.Clear()
 
         For i = 1 To MAX_VARIABLES
-            lstVariables.Items.Add(i & ". " & Trim$(Variables(i)))
+            lstVariables.Items.Add(CStr(i) & ". " & Trim$(Variables(i)))
         Next
         lstVariables.SelectedIndex = 0
     End Sub
 
     Private Sub BtnRename_Cancel_Click(sender As Object, e As EventArgs) Handles btnRename_Cancel.Click
         FraRenaming.Visible = False
-        fraLabeling.Visible = True
         RenameType = 0
         RenameIndex = 0
         lstSwitches.Items.Clear()
 
         For i = 1 To MAX_SWITCHES
-            lstSwitches.Items.Add(i & ". " & Trim$(Switches(i)))
+            lstSwitches.Items.Add(CStr(i) & ". " & Trim$(Switches(i)))
         Next
         lstSwitches.SelectedIndex = 0
         lstVariables.Items.Clear()
 
         For i = 1 To MAX_VARIABLES
-            lstVariables.Items.Add(i & ". " & Trim$(Variables(i)))
+            lstVariables.Items.Add(CStr(i) & ". " & Trim$(Variables(i)))
         Next
         lstVariables.SelectedIndex = 0
     End Sub
@@ -1268,7 +1268,7 @@ Public Class FrmEditor_Events
         If lstVariables.SelectedIndex > -1 And lstVariables.SelectedIndex < MAX_VARIABLES Then
             FraRenaming.Visible = True
             fraLabeling.Visible = False
-            lblEditing.Text = "Editing Variable #" & lstVariables.SelectedIndex + 1
+            lblEditing.Text = "Editing Variable #" & CStr(lstVariables.SelectedIndex + 1)
             txtRename.Text = Variables(lstVariables.SelectedIndex + 1)
             RenameType = 1
             RenameIndex = lstVariables.SelectedIndex + 1
@@ -1279,7 +1279,7 @@ Public Class FrmEditor_Events
         If lstSwitches.SelectedIndex > -1 And lstSwitches.SelectedIndex < MAX_SWITCHES Then
             FraRenaming.Visible = True
             fraLabeling.Visible = False
-            lblEditing.Text = "Editing Switch #" & lstSwitches.SelectedIndex + 1
+            lblEditing.Text = "Editing Switch #" & CStr(lstSwitches.SelectedIndex + 1)
             txtRename.Text = Switches(lstSwitches.SelectedIndex + 1)
             RenameType = 2
             RenameIndex = lstSwitches.SelectedIndex + 1
@@ -1290,7 +1290,7 @@ Public Class FrmEditor_Events
         If lstVariables.SelectedIndex > -1 And lstVariables.SelectedIndex < MAX_VARIABLES Then
             FraRenaming.Visible = True
             fraLabeling.Visible = False
-            lblEditing.Text = "Editing Variable #" & lstVariables.SelectedIndex + 1
+            lblEditing.Text = "Editing Variable #" & CStr(lstVariables.SelectedIndex + 1)
             txtRename.Text = Variables(lstVariables.SelectedIndex + 1)
             RenameType = 1
             RenameIndex = lstVariables.SelectedIndex + 1
@@ -1300,8 +1300,7 @@ Public Class FrmEditor_Events
     Private Sub BtnRenameSwitch_Click(sender As Object, e As EventArgs) Handles btnRenameSwitch.Click
         If lstSwitches.SelectedIndex > -1 And lstSwitches.SelectedIndex < MAX_SWITCHES Then
             FraRenaming.Visible = True
-            fraLabeling.Visible = False
-            lblEditing.Text = "Editing Switch #" & lstSwitches.SelectedIndex + 1
+            lblEditing.Text = "Editing Switch #" & CStr(lstSwitches.SelectedIndex + 1)
             txtRename.Text = Switches(lstSwitches.SelectedIndex + 1)
             RenameType = 2
             RenameIndex = lstSwitches.SelectedIndex + 1
@@ -1553,7 +1552,7 @@ Public Class FrmEditor_Events
     Private Sub NudShowTextFace_ValueChanged(sender As Object, e As EventArgs) Handles nudShowTextFace.ValueChanged
         If nudShowTextFace.Value > 0 Then
             If FileExist(Application.StartupPath & GFX_PATH & "Faces\" & nudShowTextFace.Value & GFX_EXT) Then
-                picShowTextFace.BackgroundImage = Drawing.Image.FromFile(Application.StartupPath & GFX_PATH & "Faces\" & nudShowTextFace.Value & GFX_EXT)
+                picShowTextFace.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_PATH & "Faces\" & nudShowTextFace.Value & GFX_EXT)
             End If
         Else
             picShowTextFace.BackgroundImage = Nothing
@@ -1604,7 +1603,7 @@ Public Class FrmEditor_Events
     Private Sub NudShowChoicesFace_ValueChanged(sender As Object, e As EventArgs) Handles nudShowChoicesFace.ValueChanged
         If nudShowChoicesFace.Value > 0 Then
             If FileExist(Application.StartupPath & GFX_PATH & "Faces\" & nudShowChoicesFace.Value & GFX_EXT) Then
-                picShowChoicesFace.BackgroundImage = Drawing.Image.FromFile(Application.StartupPath & GFX_PATH & "Faces\" & nudShowChoicesFace.Value & GFX_EXT)
+                picShowChoicesFace.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_PATH & "Faces\" & nudShowChoicesFace.Value & GFX_EXT)
             End If
         Else
             picShowChoicesFace.Text = "Face: None"
@@ -1880,6 +1879,14 @@ Public Class FrmEditor_Events
         cmbCondition_Gender.Enabled = True
     End Sub
 
+    Private Sub OptCondition9_CheckedChanged(sender As Object, e As EventArgs) Handles optCondition9.CheckedChanged
+        If Not optCondition9.Checked Then Exit Sub
+
+        ClearConditionFrame()
+
+        cmbCondition_Time.Enabled = True
+    End Sub
+
     Private Sub BtnConditionalBranchOk_Click(sender As Object, e As EventArgs) Handles btnConditionalBranchOk.Click
         If isEdit = False Then
             AddCommand(EventType.evCondition)
@@ -2032,6 +2039,7 @@ Public Class FrmEditor_Events
         fraDialogue.Visible = False
         fraChangeClass.Visible = False
     End Sub
+
 
 #End Region
 
@@ -2539,6 +2547,10 @@ Public Class FrmEditor_Events
         If Not isEdit Then fraCommands.Visible = True Else fraCommands.Visible = False
         fraDialogue.Visible = False
         fraOpenShop.Visible = False
+    End Sub
+
+    Private Sub PicGraphicSel_Click(sender As Object, e As EventArgs) Handles picGraphicSel.Click
+
     End Sub
 
 #End Region

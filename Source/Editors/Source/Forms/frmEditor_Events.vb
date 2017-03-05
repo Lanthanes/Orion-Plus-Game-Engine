@@ -70,8 +70,9 @@
         cmbCondition_General.SelectedIndex = 0
         nudCondition_QuestTask.Value = 1
 
-
         cmbCondition_Gender.Enabled = False
+
+        cmbCondition_Time.Enabled = False
     End Sub
 
     Public Sub InitEventEditorForm()
@@ -1873,6 +1874,14 @@
         ClearConditionFrame()
 
         cmbCondition_Gender.Enabled = True
+    End Sub
+
+    Private Sub OptCondition9_CheckedChanged(sender As Object, e As EventArgs) Handles optCondition9.CheckedChanged
+        If Not optCondition9.Checked Then Exit Sub
+
+        ClearConditionFrame()
+
+        cmbCondition_Time.Enabled = True
     End Sub
 
     Private Sub BtnConditionalBranchOk_Click(sender As Object, e As EventArgs) Handles btnConditionalBranchOk.Click

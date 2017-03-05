@@ -1,4 +1,6 @@
-﻿Public Module ServerEventLogic
+﻿Imports Orion
+
+Public Module ServerEventLogic
     Public Sub RemoveDeadEvents()
         Dim i As Integer, MapNum As Integer, Buffer As ByteBuffer, x As Integer, id As Integer, page As Integer, compare As Integer
 
@@ -1638,6 +1640,16 @@
                                                                     End If
                                                                 Case 8
                                                                     If Player(i).Character(TempPlayer(i).CurChar).Sex = Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.Data1 Then
+                                                                        .ListLeftOff(.CurList) = .CurSlot
+                                                                        .CurList = Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.CommandList
+                                                                        .CurSlot = 1
+                                                                    Else
+                                                                        .ListLeftOff(.CurList) = .CurSlot
+                                                                        .CurList = Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.ElseCommandList
+                                                                        .CurSlot = 1
+                                                                    End If
+                                                                Case 9
+                                                                    If Time.Instance.TimeOfDay = Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.Data1 Then
                                                                         .ListLeftOff(.CurList) = .CurSlot
                                                                         .CurList = Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.CommandList
                                                                         .CurSlot = 1
