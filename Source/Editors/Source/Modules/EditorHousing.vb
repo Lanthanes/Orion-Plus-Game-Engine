@@ -1,8 +1,8 @@
-﻿Imports System.Windows.Forms
-Imports SFML.Graphics
+﻿Imports SFML.Graphics
 Imports SFML.Window
 
 Public Module EditorHousing
+
 #Region "Globals & Types"
     Public MAX_HOUSES As Integer = 100
 
@@ -42,9 +42,8 @@ Public Module EditorHousing
 
 #Region "Incoming Packets"
     Sub Packet_HouseConfigurations(ByVal Data() As Byte)
-        Dim buffer As ByteBuffer, i As Integer
+        Dim buffer As New ByteBuffer, i As Integer
 
-        buffer = New ByteBuffer
         buffer.WriteBytes(Data)
 
         ' Confirm it is the right packet
@@ -61,9 +60,7 @@ Public Module EditorHousing
     End Sub
 
     Sub Packet_Furniture(ByVal Data() As Byte)
-        Dim buffer As ByteBuffer, i As Integer
-
-        buffer = New ByteBuffer
+        Dim buffer As New ByteBuffer, i As Integer
 
         buffer.WriteBytes(Data)
 
@@ -87,10 +84,9 @@ Public Module EditorHousing
     End Sub
 
     Sub Packet_EditHouses(ByVal data() As Byte)
-        Dim buffer As ByteBuffer
+        Dim buffer As New ByteBuffer
         Dim i As Integer
 
-        buffer = New ByteBuffer
         buffer.WriteBytes(data)
 
         ' Confirm it is the right packet
@@ -163,12 +159,10 @@ Public Module EditorHousing
 
 #Region "Editor"
     Public Sub HouseEditorInit()
-        Dim i As Integer
 
         If FrmEditor_House.Visible = False Then Exit Sub
 
         EditorIndex = FrmEditor_House.lstIndex.SelectedIndex + 1
-        i = EditorIndex
 
         With House(EditorIndex)
             FrmEditor_House.txtName.Text = Trim$(.ConfigName)

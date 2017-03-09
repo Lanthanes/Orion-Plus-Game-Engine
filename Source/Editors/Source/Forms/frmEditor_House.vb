@@ -7,7 +7,7 @@
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
         Dim tmpIndex As Integer
 
-        If EditorIndex = 0 Then Exit Sub
+        If EditorIndex <= 0 Then Exit Sub
 
         tmpIndex = lstIndex.SelectedIndex
         House(EditorIndex).ConfigName = Trim$(txtName.Text)
@@ -17,38 +17,38 @@
 
     End Sub
 
-    Private Sub TxtBaseMap_TextChanged(sender As Object, e As EventArgs) Handles nudBaseMap.ValueChanged
+    Private Sub NudBaseMap_ValueChanged(sender As Object, e As EventArgs) Handles nudBaseMap.Click
         If EditorIndex <= 0 Then Exit Sub
 
         If nudBaseMap.Value < 1 Or nudBaseMap.Value > MAX_MAPS Then Exit Sub
         House(EditorIndex).BaseMap = nudBaseMap.Value
     End Sub
 
-    Private Sub TxtXEntrance_TextChanged(sender As Object, e As EventArgs) Handles nudX.ValueChanged
-        If EditorIndex = 0 Then Exit Sub
+    Private Sub NudX_ValueChanged(sender As Object, e As EventArgs) Handles nudX.Click
+        If EditorIndex <= 0 Then Exit Sub
 
         If nudX.Value < 0 Or nudX.Value > 255 Then Exit Sub
         House(EditorIndex).X = nudX.Value
 
     End Sub
 
-    Private Sub TxtYEntrance_TextChanged(sender As Object, e As EventArgs) Handles nudY.ValueChanged
-        If EditorIndex = 0 Then Exit Sub
+    Private Sub NudY_ValueChanged(sender As Object, e As EventArgs) Handles nudY.Click
+        If EditorIndex <= 0 Then Exit Sub
 
         If nudY.Value < 0 Or nudY.Value > 255 Then Exit Sub
         House(EditorIndex).Y = nudY.Value
 
     End Sub
 
-    Private Sub TxtHousePrice_TextChanged(sender As Object, e As EventArgs) Handles nudPrice.ValueChanged
-        If EditorIndex = 0 Then Exit Sub
+    Private Sub NudPrice_ValueChanged(sender As Object, e As EventArgs) Handles nudPrice.Click
+        If EditorIndex <= 0 Then Exit Sub
 
         House(EditorIndex).Price = nudPrice.Value
 
     End Sub
 
-    Private Sub TxtHouseFurniture_TextChanged(sender As Object, e As EventArgs) Handles nudFurniture.ValueChanged
-        If EditorIndex = 0 Then Exit Sub
+    Private Sub NudFurniture_ValueChanged(sender As Object, e As EventArgs) Handles nudFurniture.ChangeUICues
+        If EditorIndex <= 0 Then Exit Sub
 
         If nudFurniture.Value < 0 Then Exit Sub
         House(EditorIndex).MaxFurniture = nudFurniture.Value

@@ -101,8 +101,8 @@
         Packets.Add(ServerPackets.SUpdateQuest, AddressOf Packet_UpdateQuest)
 
         'Housing
-        Packets.Add(ServerPackets.SHouseConfigs, AddressOf Packet_HouseConfigurations)
-        Packets.Add(ServerPackets.SFurniture, AddressOf Packet_Furniture)
+        'Packets.Add(ServerPackets.SHouseConfigs, AddressOf Packet_HouseConfigurations)
+        'Packets.Add(ServerPackets.SFurniture, AddressOf Packet_Furniture)
         Packets.Add(ServerPackets.SHouseEdit, AddressOf Packet_EditHouses)
 
         'Events

@@ -84,9 +84,8 @@ Public Module ServerHousing
 
 #Region "Incoming Packets"
     Sub Packet_BuyHouse(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer, i As Integer, price As Integer
+        Dim Buffer As New ByteBuffer, i As Integer, price As Integer
 
-        Buffer = New ByteBuffer
         Buffer.WriteBytes(data)
 
         ' Confirm it is the right packet
@@ -121,9 +120,8 @@ Public Module ServerHousing
     End Sub
 
     Sub Packet_InviteToHouse(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer, invitee As Integer, Name As String
+        Dim Buffer As New ByteBuffer, invitee As Integer, Name As String
 
-        Buffer = New ByteBuffer
         Buffer.WriteBytes(data)
 
         ' Confirm it is the right packet
@@ -182,9 +180,8 @@ Public Module ServerHousing
     End Sub
 
     Sub Packet_AcceptInvite(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer, response As Integer
+        Dim Buffer As New ByteBuffer, response As Integer
 
-        Buffer = New ByteBuffer
         Buffer.WriteBytes(data)
 
         ' Confirm it is the right packet
@@ -211,8 +208,6 @@ Public Module ServerHousing
                 Else
                     PlayerMsg(index, "Your invitation has expired, have your friend re-invite you.", ColorType.Yellow)
                 End If
-            Else
-
             End If
         Else
             If IsPlaying(TempPlayer(index).InvitationIndex) Then
@@ -224,10 +219,9 @@ Public Module ServerHousing
     End Sub
 
     Sub Packet_PlaceFurniture(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer, i As Integer, x As Integer, y As Integer, invslot As Integer
+        Dim Buffer As New ByteBuffer, i As Integer, x As Integer, y As Integer, invslot As Integer
         Dim ItemNum As Integer, x1 As Integer, y1 As Integer, widthoffset As Integer
 
-        Buffer = New ByteBuffer
         Buffer.WriteBytes(data)
 
         ' Confirm it is the right packet
@@ -241,9 +235,7 @@ Public Module ServerHousing
         ItemNum = Player(index).Character(TempPlayer(index).CurChar).Inv(invslot).Num
 
         ' Prevent hacking
-        If ItemNum < 1 Or ItemNum > MAX_ITEMS Then
-            Exit Sub
-        End If
+        If ItemNum < 1 Or ItemNum > MAX_ITEMS Then Exit Sub
 
         If Player(index).Character(TempPlayer(index).CurChar).InHouse = index Then
             If Item(ItemNum).Type = ItemType.Furniture Then
@@ -311,14 +303,10 @@ Public Module ServerHousing
                             If Map(GetPlayerMap(index)).Tile(x, y).Type = TileType.Blocked Then Exit Sub
 
                             For i = 1 To GetPlayersOnline()
-                                If IsPlaying(i) Then
-                                    If i <> index Then
-                                        If GetPlayerMap(i) = GetPlayerMap(index) Then
-                                            If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(index).Character(TempPlayer(index).CurChar).InHouse Then
-                                                If Player(i).Character(TempPlayer(i).CurChar).X = x And Player(i).Character(TempPlayer(i).CurChar).Y = y Then
-                                                    Exit Sub
-                                                End If
-                                            End If
+                                If IsPlaying(i) AndAlso i <> index AndAlso GetPlayerMap(i) = GetPlayerMap(index) Then
+                                    If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(index).Character(TempPlayer(index).CurChar).InHouse Then
+                                        If Player(i).Character(TempPlayer(i).CurChar).X = x And Player(i).Character(TempPlayer(i).CurChar).Y = y Then
+                                            Exit Sub
                                         End If
                                     End If
                                 End If
@@ -342,14 +330,10 @@ Public Module ServerHousing
                             If Map(GetPlayerMap(index)).Tile(x, y).Type = TileType.Blocked Then Exit Sub
 
                             For i = 1 To GetPlayersOnline()
-                                If IsPlaying(i) Then
-                                    If i <> index Then
-                                        If GetPlayerMap(i) = GetPlayerMap(index) Then
-                                            If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(index).Character(TempPlayer(index).CurChar).InHouse Then
-                                                If Player(i).Character(TempPlayer(i).CurChar).X = x And Player(i).Character(TempPlayer(i).CurChar).Y = y Then
-                                                    Exit Sub
-                                                End If
-                                            End If
+                                If IsPlaying(i) AndAlso i <> index AndAlso GetPlayerMap(i) = GetPlayerMap(index) Then
+                                    If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(index).Character(TempPlayer(index).CurChar).InHouse Then
+                                        If Player(i).Character(TempPlayer(i).CurChar).X = x And Player(i).Character(TempPlayer(i).CurChar).Y = y Then
+                                            Exit Sub
                                         End If
                                     End If
                                 End If
@@ -373,14 +357,10 @@ Public Module ServerHousing
                             If Map(GetPlayerMap(index)).Tile(x, y).Type = TileType.Blocked Then Exit Sub
 
                             For i = 1 To GetPlayersOnline()
-                                If IsPlaying(i) Then
-                                    If i <> index Then
-                                        If GetPlayerMap(i) = GetPlayerMap(index) Then
-                                            If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(index).Character(TempPlayer(index).CurChar).InHouse Then
-                                                If Player(i).Character(TempPlayer(i).CurChar).X = x And Player(i).Character(TempPlayer(i).CurChar).Y = y Then
-                                                    Exit Sub
-                                                End If
-                                            End If
+                                If IsPlaying(i) AndAlso i <> index AndAlso GetPlayerMap(i) = GetPlayerMap(index) Then
+                                    If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(index).Character(TempPlayer(index).CurChar).InHouse Then
+                                        If Player(i).Character(TempPlayer(i).CurChar).X = x And Player(i).Character(TempPlayer(i).CurChar).Y = y Then
+                                            Exit Sub
                                         End If
                                     End If
                                 End If
@@ -423,9 +403,8 @@ Public Module ServerHousing
     End Sub
 
     Sub Packet_RequestEditHouse(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer, i As Integer
+        Dim Buffer As New ByteBuffer, i As Integer
 
-        Buffer = New ByteBuffer
         Buffer.WriteBytes(data)
 
         ' Confirm it is the right packet
@@ -434,9 +413,7 @@ Public Module ServerHousing
         Buffer = Nothing
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
 
         Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SHouseEdit)
@@ -454,14 +431,11 @@ Public Module ServerHousing
     End Sub
 
     Sub Packet_SaveHouses(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer, i As Integer, x As Integer, Count As Integer, z As Integer
+        Dim Buffer As New ByteBuffer, i As Integer, x As Integer, Count As Integer, z As Integer
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
 
-        Buffer = New ByteBuffer
         Buffer.WriteBytes(data)
 
         ' Confirm it is the right packet
@@ -480,10 +454,8 @@ Public Module ServerHousing
                 SaveHouse(i)
 
                 For x = 1 To GetPlayersOnline()
-                    If IsPlaying(x) Then
-                        If Player(x).Character(TempPlayer(x).CurChar).InHouse = i Then
-
-                        End If
+                    If IsPlaying(x) AndAlso Player(x).Character(TempPlayer(x).CurChar).InHouse = i Then
+                        SendFurnitureToHouse(i)
                     End If
                 Next
             Next
@@ -494,9 +466,9 @@ Public Module ServerHousing
     End Sub
 
     Sub Packet_SellHouse(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer, i As Integer, refund As Integer
+        Dim Buffer As New ByteBuffer, i As Integer, refund As Integer
         Dim TmpIndex As Integer
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(data)
 
         ' Confirm it is the right packet
@@ -537,9 +509,8 @@ Public Module ServerHousing
 
 #Region "OutGoing Packets"
     Sub SendHouseConfigs(ByVal Index As Integer)
-        Dim Buffer As ByteBuffer, i As Integer
+        Dim Buffer As New ByteBuffer, i As Integer
 
-        Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SHouseConfigs)
 
         For i = 1 To MAX_HOUSES
@@ -555,9 +526,8 @@ Public Module ServerHousing
     End Sub
 
     Sub SendFurnitureToHouse(ByVal HouseIndex As Integer)
-        Dim Buffer As ByteBuffer, i As Integer
+        Dim Buffer As New ByteBuffer, i As Integer
 
-        Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SFurniture)
         Buffer.WriteInteger(HouseIndex)
         Buffer.WriteInteger(Player(HouseIndex).Character(TempPlayer(HouseIndex).CurChar).House.FurnitureCount)

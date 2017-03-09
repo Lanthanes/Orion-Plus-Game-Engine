@@ -1497,8 +1497,8 @@ Module EditorGraphics
         ElseIf frmEditor_Item.optSetFringe.Checked = True Then
             For X = 0 To 3
                 For Y = 0 To 3
-                    If X <= Item(EditorIndex).FurnitureWidth - 1 Then
-                        If Y <= Item(EditorIndex).FurnitureHeight Then
+                    If X <= (FurnitureGFXInfo(Furniturenum).width / 32) - 1 Then
+                        If Y <= (FurnitureGFXInfo(Furniturenum).height / 32) Then
                             If Item(EditorIndex).FurnitureFringe(X, Y) = 1 Then
                                 DrawText(X * 32 + 8, Y * 32 + 8, "O", Color.Blue, Color.Black, EditorItem_Furniture)
                             End If
