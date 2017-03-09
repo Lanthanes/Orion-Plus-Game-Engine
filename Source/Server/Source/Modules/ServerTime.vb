@@ -5,7 +5,7 @@ Public Module ServerTime
         ' Add handlers to time events
         AddHandler Time.Instance.OnTimeChanged, AddressOf HandleTimeChanged
         AddHandler Time.Instance.OnTimeOfDayChanged, AddressOf HandleTimeOfDayChanged
-        AddHandler Time.Instance.OnTimeSync, AddressOf HandleTimeOfDayChanged
+        AddHandler Time.Instance.OnTimeSync, AddressOf HandleTimeSync
 
         ' Prepare the time instance
         Time.Instance.Time = Date.Now

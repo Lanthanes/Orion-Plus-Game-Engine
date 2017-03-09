@@ -163,7 +163,7 @@ Module ServerConsole
     End Sub
 
     Sub HandleCommandTimeSpeed(ByVal Line As String, ByVal Command As String, ByVal Parts As String())
-        Dim speed As Byte
+        Dim speed As Double
 
         If Parts.Length < 1 Then Exit Sub
 

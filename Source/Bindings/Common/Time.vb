@@ -20,6 +20,8 @@
 ' OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ' SOFTWARE.
 
+Imports System.Timers
+
 Namespace Global.Orion
     Public Enum TimeOfDay As Byte
         Day = 0
@@ -46,6 +48,8 @@ Namespace Global.Orion
         Public Event OnTimeOfDayChanged As HandleTimeEvent
         Public Event OnTimeSync As HandleTimeEvent
 
+        Private mTimer As Timer
+
         Private mTime As Date
         Public Property Time As Date
             Get
@@ -54,28 +58,64 @@ Namespace Global.Orion
             Set(value As Date)
                 mTime = value
 
-                RaiseEvent OnTimeChanged(Me)
-
-                If (Time.Second < GameSpeed) Then
-                    If (Time.Ticks Mod TimeSpan.TicksPerMillisecond * SyncInterval = 0) Then
-                        RaiseEvent OnTimeSync(Me)
-                    End If
-                End If
-
                 Dim newTimeOfDay As TimeOfDay = GetTimeOfDay(Time.Hour)
                 If (TimeOfDay <> newTimeOfDay) Then
                     TimeOfDay = newTimeOfDay
-                    RaiseEvent OnTimeOfDayChanged(Me)
                 End If
+
+                RaiseEvent OnTimeChanged(Me)
             End Set
         End Property
 
+        Private mGameSpeed As Double
+        Public Property GameSpeed As Double
+            Get
+                Return mGameSpeed
+            End Get
+            Set(value As Double)
+                mGameSpeed = value
+                RaiseEvent OnTimeSync(Me)
+            End Set
+        End Property
+
+        Private mSyncInterval As Integer
         Public Property SyncInterval As Integer
-        Public Property GameSpeed As Integer
+            Get
+                Return mSyncInterval
+            End Get
+            Set(value As Integer)
+                mSyncInterval = value
+
+                mTimer.Stop()
+                mTimer.Interval = mSyncInterval
+                mTimer.Start()
+                RaiseEvent OnTimeSync(Me)
+            End Set
+        End Property
+
+        Private mTimeOfDay As TimeOfDay
         Public Property TimeOfDay As TimeOfDay
+            Get
+                Return mTimeOfDay
+            End Get
+            Set(value As TimeOfDay)
+                mTimeOfDay = value
+                RaiseEvent OnTimeOfDayChanged(Me)
+            End Set
+        End Property
 
         Public Sub New()
-            SyncInterval = 600000
+            mSyncInterval = 6000.0
+
+            mTimer = New Timer(SyncInterval)
+
+            AddHandler mTimer.Elapsed, AddressOf Me.HandleTimerElapsed
+
+            mTimer.Start()
+        End Sub
+
+        Private Sub HandleTimerElapsed(sender As Object, e As ElapsedEventArgs)
+            RaiseEvent OnTimeSync(Me)
         End Sub
 
         Public Overrides Function ToString() As String
