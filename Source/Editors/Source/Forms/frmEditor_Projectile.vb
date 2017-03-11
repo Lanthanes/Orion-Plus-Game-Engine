@@ -28,25 +28,25 @@
         lstIndex.SelectedIndex = tmpIndex
     End Sub
 
-    Private Sub NudPic_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudPic.ValueChanged
+    Private Sub NudPic_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudPic.Click
         If EditorIndex < 1 Or EditorIndex > MAX_PROJECTILES Then Exit Sub
 
         Projectiles(EditorIndex).Sprite = nudPic.Value
     End Sub
 
-    Private Sub NudRange_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudRange.ValueChanged
+    Private Sub NudRange_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudRange.Click
         If EditorIndex < 1 Or EditorIndex > MAX_PROJECTILES Then Exit Sub
 
         Projectiles(EditorIndex).Range = nudRange.Value
     End Sub
 
-    Private Sub NudSpeed_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSpeed.ValueChanged
+    Private Sub NudSpeed_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSpeed.Click
         If EditorIndex < 1 Or EditorIndex > MAX_PROJECTILES Then Exit Sub
 
         Projectiles(EditorIndex).Speed = nudSpeed.Value
     End Sub
 
-    Private Sub NudDamage_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudDamage.ValueChanged
+    Private Sub NudDamage_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudDamage.Click
         If EditorIndex < 1 Or EditorIndex > MAX_PROJECTILES Then Exit Sub
 
         Projectiles(EditorIndex).Damage = nudDamage.Value
