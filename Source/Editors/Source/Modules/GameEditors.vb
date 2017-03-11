@@ -19,7 +19,7 @@
                 Next
             End If
 
-            If Trim$(Animation(EditorIndex).Sound) = "None" Then
+            If Trim$(Animation(EditorIndex).Sound) = "None" Or Trim$(Animation(EditorIndex).Sound) = "" Then
                 FrmEditor_Animation.cmbSound.SelectedIndex = 0
             Else
                 For i = 1 To FrmEditor_Animation.cmbSound.Items.Count

@@ -579,8 +579,8 @@ Module EditorTCP
             Buffer.WriteInteger(Animation(Animationnum).looptime(i))
         Next
 
-        Buffer.WriteString(Trim(Animation(Animationnum).Name))
-        Buffer.WriteString(Trim(Animation(Animationnum).Sound))
+        Buffer.WriteString(Trim$(Animation(Animationnum).Name))
+        Buffer.WriteString(Trim$(Animation(Animationnum).Sound))
 
         For i = 0 To UBound(Animation(Animationnum).Sprite)
             Buffer.WriteInteger(Animation(Animationnum).Sprite(i))

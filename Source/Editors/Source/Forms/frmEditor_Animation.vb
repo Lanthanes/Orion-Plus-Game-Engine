@@ -74,4 +74,10 @@
         nudSprite1.Maximum = NumAnimations
 
     End Sub
+
+    Private Sub CmbSound_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSound.SelectedIndexChanged
+        If EditorIndex = 0 Or EditorIndex > MAX_ANIMATIONS Then Exit Sub
+
+        Animation(EditorIndex).Sound = cmbSound.SelectedItem.ToString
+    End Sub
 End Class

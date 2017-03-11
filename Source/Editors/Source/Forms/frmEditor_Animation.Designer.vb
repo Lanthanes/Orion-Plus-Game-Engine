@@ -26,6 +26,8 @@ Partial Class FrmEditor_Animation
         Me.DarkGroupBox1 = New DarkUI.Controls.DarkGroupBox()
         Me.lstIndex = New System.Windows.Forms.ListBox()
         Me.DarkGroupBox2 = New DarkUI.Controls.DarkGroupBox()
+        Me.cmbSound = New DarkUI.Controls.DarkComboBox()
+        Me.DarkLabel2 = New DarkUI.Controls.DarkLabel()
         Me.DarkGroupBox4 = New DarkUI.Controls.DarkGroupBox()
         Me.nudLoopTime1 = New DarkUI.Controls.DarkNumericUpDown()
         Me.nudFrameCount1 = New DarkUI.Controls.DarkNumericUpDown()
@@ -51,8 +53,6 @@ Partial Class FrmEditor_Animation
         Me.btnSave = New DarkUI.Controls.DarkButton()
         Me.btnDelete = New DarkUI.Controls.DarkButton()
         Me.btnCancel = New DarkUI.Controls.DarkButton()
-        Me.DarkLabel2 = New DarkUI.Controls.DarkLabel()
-        Me.cmbSound = New DarkUI.Controls.DarkComboBox()
         Me.DarkGroupBox1.SuspendLayout()
         Me.DarkGroupBox2.SuspendLayout()
         Me.DarkGroupBox4.SuspendLayout()
@@ -110,6 +110,37 @@ Partial Class FrmEditor_Animation
         Me.DarkGroupBox2.TabIndex = 1
         Me.DarkGroupBox2.TabStop = False
         Me.DarkGroupBox2.Text = "Animation Properties"
+        '
+        'cmbSound
+        '
+        Me.cmbSound.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
+        Me.cmbSound.BorderColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.cmbSound.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid
+        Me.cmbSound.ButtonColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(43, Byte), Integer), CType(CType(43, Byte), Integer))
+        Me.cmbSound.ButtonIcon = CType(resources.GetObject("cmbSound.ButtonIcon"), System.Drawing.Bitmap)
+        Me.cmbSound.DrawDropdownHoverOutline = False
+        Me.cmbSound.DrawFocusRectangle = False
+        Me.cmbSound.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable
+        Me.cmbSound.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbSound.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.cmbSound.ForeColor = System.Drawing.Color.Gainsboro
+        Me.cmbSound.FormattingEnabled = True
+        Me.cmbSound.Location = New System.Drawing.Point(117, 54)
+        Me.cmbSound.Name = "cmbSound"
+        Me.cmbSound.Size = New System.Drawing.Size(156, 21)
+        Me.cmbSound.TabIndex = 25
+        Me.cmbSound.Text = Nothing
+        Me.cmbSound.TextPadding = New System.Windows.Forms.Padding(2)
+        '
+        'DarkLabel2
+        '
+        Me.DarkLabel2.AutoSize = True
+        Me.DarkLabel2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.DarkLabel2.Location = New System.Drawing.Point(16, 57)
+        Me.DarkLabel2.Name = "DarkLabel2"
+        Me.DarkLabel2.Size = New System.Drawing.Size(90, 13)
+        Me.DarkLabel2.TabIndex = 24
+        Me.DarkLabel2.Text = "Animation Sound:"
         '
         'DarkGroupBox4
         '
@@ -369,36 +400,6 @@ Partial Class FrmEditor_Animation
         Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 4
         Me.btnCancel.Text = "Cancel"
-        '
-        'DarkLabel2
-        '
-        Me.DarkLabel2.AutoSize = True
-        Me.DarkLabel2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
-        Me.DarkLabel2.Location = New System.Drawing.Point(16, 57)
-        Me.DarkLabel2.Name = "DarkLabel2"
-        Me.DarkLabel2.Size = New System.Drawing.Size(90, 13)
-        Me.DarkLabel2.TabIndex = 24
-        Me.DarkLabel2.Text = "Animation Sound:"
-        '
-        'cmbSound
-        '
-        Me.cmbSound.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.cmbSound.BorderColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.cmbSound.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid
-        Me.cmbSound.ButtonColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(43, Byte), Integer), CType(CType(43, Byte), Integer))
-        Me.cmbSound.ButtonIcon = CType(resources.GetObject("cmbSound.ButtonIcon"), System.Drawing.Bitmap)
-        Me.cmbSound.DrawDropdownHoverOutline = False
-        Me.cmbSound.DrawFocusRectangle = False
-        Me.cmbSound.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable
-        Me.cmbSound.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbSound.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.cmbSound.ForeColor = System.Drawing.Color.Gainsboro
-        Me.cmbSound.FormattingEnabled = True
-        Me.cmbSound.Location = New System.Drawing.Point(117, 54)
-        Me.cmbSound.Name = "cmbSound"
-        Me.cmbSound.Size = New System.Drawing.Size(156, 21)
-        Me.cmbSound.TabIndex = 25
-        Me.cmbSound.TextPadding = New System.Windows.Forms.Padding(2)
         '
         'FrmEditor_Animation
         '
