@@ -26,6 +26,7 @@
 
     Public Structure AnimationRec
         Dim Name As String
+        Dim Sound As String
         Dim Sprite() As Integer
         Dim Frames() As Integer
         Dim LoopCount() As Integer

@@ -61,7 +61,7 @@
 #End Region
 
 #Region "Basics"
-    Private Sub NudPic_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudPic.ValueChanged
+    Private Sub NudPic_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudPic.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Pic = nudPic.Value
@@ -74,7 +74,7 @@
         Item(EditorIndex).BindType = cmbBind.SelectedIndex
     End Sub
 
-    Private Sub NudRarity_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudRarity.ValueChanged
+    Private Sub NudRarity_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudRarity.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Rarity = nudRarity.Value
@@ -150,7 +150,7 @@
         Item(EditorIndex).Type = cmbType.SelectedIndex
     End Sub
 
-    Private Sub NudVitalMod_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitalMod.ValueChanged
+    Private Sub NudVitalMod_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitalMod.Click
         If EditorIndex <= 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Data1 = nudVitalMod.Value
@@ -172,7 +172,7 @@
         lstIndex.SelectedIndex = tmpIndex
     End Sub
 
-    Private Sub NudPrice_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudPrice.ValueChanged
+    Private Sub NudPrice_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudPrice.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Price = nudPrice.Value
@@ -204,7 +204,7 @@
         Item(EditorIndex).SubType = cmbSubType.SelectedIndex
     End Sub
 
-    Private Sub NudItemLvl_ValueChanged(sender As Object, e As EventArgs) Handles nudItemLvl.ValueChanged
+    Private Sub NudItemLvl_ValueChanged(sender As Object, e As EventArgs) Handles nudItemLvl.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).ItemLevel = nudItemLvl.Value
@@ -230,43 +230,43 @@
         Item(EditorIndex).AccessReq = cmbAccessReq.SelectedIndex
     End Sub
 
-    Private Sub NudLevelReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLevelReq.ValueChanged
+    Private Sub NudLevelReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLevelReq.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).LevelReq = nudLevelReq.Value
     End Sub
 
-    Private Sub NudStrReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudStrReq.ValueChanged
+    Private Sub NudStrReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudStrReq.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Stat_Req(Stats.Strength) = nudStrReq.Value
     End Sub
 
-    Private Sub NudEndReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudEndReq.ValueChanged
+    Private Sub NudEndReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudEndReq.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Stat_Req(Stats.Endurance) = nudEndReq.Value
     End Sub
 
-    Private Sub NudVitReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitReq.ValueChanged
+    Private Sub NudVitReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitReq.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Stat_Req(Stats.Vitality) = nudVitReq.Value
     End Sub
 
-    Private Sub NudLuckReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLuckReq.ValueChanged
+    Private Sub NudLuckReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLuckReq.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Stat_Req(Stats.Luck) = nudLuckReq.Value
     End Sub
 
-    Private Sub NudIntReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudIntReq.ValueChanged
+    Private Sub NudIntReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudIntReq.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Stat_Req(Stats.Intelligence) = nudIntReq.Value
     End Sub
 
-    Private Sub NudSprReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSprReq.ValueChanged
+    Private Sub NudSprReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSprReq.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Stat_Req(Stats.Spirit) = nudSprReq.Value
@@ -279,56 +279,56 @@
         Item(EditorIndex).Data3 = cmbTool.SelectedIndex
     End Sub
 
-    Private Sub NudDamage_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudDamage.ValueChanged
+    Private Sub NudDamage_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudDamage.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Data2 = nudDamage.Value
     End Sub
 
-    Private Sub NudSpeed_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSpeed.ValueChanged
+    Private Sub NudSpeed_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSpeed.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
         lblSpeed.Text = "Speed: " & nudSpeed.Value / 1000 & " sec"
         Item(EditorIndex).Speed = nudSpeed.Value
     End Sub
 
-    Private Sub NudPaperdoll_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudPaperdoll.ValueChanged
+    Private Sub NudPaperdoll_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudPaperdoll.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Paperdoll = nudPaperdoll.Value
         EditorItem_DrawPaperdoll()
     End Sub
 
-    Private Sub NudStrength_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudStrength.ValueChanged
+    Private Sub NudStrength_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudStrength.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Add_Stat(Stats.Strength) = nudStrength.Value
     End Sub
 
-    Private Sub NudLuck_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLuck.ValueChanged
+    Private Sub NudLuck_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLuck.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Add_Stat(Stats.Luck) = nudLuck.Value
     End Sub
 
-    Private Sub NudEndurance_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudEndurance.ValueChanged
+    Private Sub NudEndurance_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudEndurance.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Add_Stat(Stats.Endurance) = nudEndurance.Value
     End Sub
 
-    Private Sub NudIntelligence_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudIntelligence.ValueChanged
+    Private Sub NudIntelligence_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudIntelligence.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Add_Stat(Stats.Intelligence) = nudIntelligence.Value
     End Sub
 
-    Private Sub NudVitality_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitality.ValueChanged
+    Private Sub NudVitality_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitality.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Add_Stat(Stats.Vitality) = nudVitality.Value
     End Sub
 
-    Private Sub NudSpirit_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSpirit.ValueChanged
+    Private Sub NudSpirit_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSpirit.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Add_Stat(Stats.Spirit) = nudSpirit.Value
@@ -403,7 +403,7 @@
         EditorItem_DrawFurniture()
     End Sub
 
-    Private Sub NudFurniture_ValueChanged(sender As Object, e As EventArgs) Handles nudFurniture.ValueChanged
+    Private Sub NudFurniture_ValueChanged(sender As Object, e As EventArgs) Handles nudFurniture.Click
         If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Data2 = nudFurniture.Value

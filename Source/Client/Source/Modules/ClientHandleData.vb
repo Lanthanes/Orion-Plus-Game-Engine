@@ -1828,9 +1828,11 @@
             Animation(n).looptime(i) = Buffer.ReadInteger()
         Next
 
-        Animation(n).Name = Trim(Buffer.ReadString())
+        Animation(n).Name = Trim$(Buffer.ReadString)
+        Animation(n).Sound = Trim$(Buffer.ReadString)
 
         If Animation(n).Name Is Nothing Then Animation(n).Name = ""
+        If Animation(n).Sound Is Nothing Then Animation(n).Sound = ""
 
         For i = 0 To UBound(Animation(n).Sprite)
             Animation(n).Sprite(i) = Buffer.ReadInteger()
@@ -2294,9 +2296,11 @@
                 Animation(n).looptime(z) = buffer.ReadInteger()
             Next
 
-            Animation(n).Name = Trim(buffer.ReadString())
+            Animation(n).Name = Trim$(buffer.ReadString)
+            Animation(n).Sound = Trim$(buffer.ReadString)
 
             If Animation(n).Name Is Nothing Then Animation(n).Name = ""
+            If Animation(n).Sound Is Nothing Then Animation(n).Sound = ""
 
             For z = 0 To UBound(Animation(n).Sprite)
                 Animation(n).Sprite(z) = buffer.ReadInteger()

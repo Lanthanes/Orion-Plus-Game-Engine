@@ -22,10 +22,15 @@ Partial Class FrmEditor_Animation
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmEditor_Animation))
         Me.DarkGroupBox1 = New DarkUI.Controls.DarkGroupBox()
         Me.lstIndex = New System.Windows.Forms.ListBox()
         Me.DarkGroupBox2 = New DarkUI.Controls.DarkGroupBox()
         Me.DarkGroupBox4 = New DarkUI.Controls.DarkGroupBox()
+        Me.nudLoopTime1 = New DarkUI.Controls.DarkNumericUpDown()
+        Me.nudFrameCount1 = New DarkUI.Controls.DarkNumericUpDown()
+        Me.nudLoopCount1 = New DarkUI.Controls.DarkNumericUpDown()
+        Me.nudSprite1 = New DarkUI.Controls.DarkNumericUpDown()
         Me.lblLoopTime1 = New DarkUI.Controls.DarkLabel()
         Me.lblFrameCount1 = New DarkUI.Controls.DarkLabel()
         Me.lblLoopCount1 = New DarkUI.Controls.DarkLabel()
@@ -46,13 +51,15 @@ Partial Class FrmEditor_Animation
         Me.btnSave = New DarkUI.Controls.DarkButton()
         Me.btnDelete = New DarkUI.Controls.DarkButton()
         Me.btnCancel = New DarkUI.Controls.DarkButton()
-        Me.nudSprite1 = New DarkUI.Controls.DarkNumericUpDown()
-        Me.nudLoopCount1 = New DarkUI.Controls.DarkNumericUpDown()
-        Me.nudFrameCount1 = New DarkUI.Controls.DarkNumericUpDown()
-        Me.nudLoopTime1 = New DarkUI.Controls.DarkNumericUpDown()
+        Me.DarkLabel2 = New DarkUI.Controls.DarkLabel()
+        Me.cmbSound = New DarkUI.Controls.DarkComboBox()
         Me.DarkGroupBox1.SuspendLayout()
         Me.DarkGroupBox2.SuspendLayout()
         Me.DarkGroupBox4.SuspendLayout()
+        CType(Me.nudLoopTime1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nudFrameCount1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nudLoopCount1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nudSprite1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.picSprite1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DarkGroupBox3.SuspendLayout()
         CType(Me.nudLoopTime0, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -60,10 +67,6 @@ Partial Class FrmEditor_Animation
         CType(Me.nudLoopCount0, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nudSprite0, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.picSprite0, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.nudSprite1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.nudLoopCount1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.nudFrameCount1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.nudLoopTime1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'DarkGroupBox1
@@ -74,7 +77,7 @@ Partial Class FrmEditor_Animation
         Me.DarkGroupBox1.ForeColor = System.Drawing.Color.Gainsboro
         Me.DarkGroupBox1.Location = New System.Drawing.Point(2, 3)
         Me.DarkGroupBox1.Name = "DarkGroupBox1"
-        Me.DarkGroupBox1.Size = New System.Drawing.Size(200, 436)
+        Me.DarkGroupBox1.Size = New System.Drawing.Size(200, 464)
         Me.DarkGroupBox1.TabIndex = 0
         Me.DarkGroupBox1.TabStop = False
         Me.DarkGroupBox1.Text = "Animations List"
@@ -94,6 +97,8 @@ Partial Class FrmEditor_Animation
         '
         Me.DarkGroupBox2.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.DarkGroupBox2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.DarkGroupBox2.Controls.Add(Me.cmbSound)
+        Me.DarkGroupBox2.Controls.Add(Me.DarkLabel2)
         Me.DarkGroupBox2.Controls.Add(Me.DarkGroupBox4)
         Me.DarkGroupBox2.Controls.Add(Me.DarkGroupBox3)
         Me.DarkGroupBox2.Controls.Add(Me.txtName)
@@ -101,7 +106,7 @@ Partial Class FrmEditor_Animation
         Me.DarkGroupBox2.ForeColor = System.Drawing.Color.Gainsboro
         Me.DarkGroupBox2.Location = New System.Drawing.Point(208, 3)
         Me.DarkGroupBox2.Name = "DarkGroupBox2"
-        Me.DarkGroupBox2.Size = New System.Drawing.Size(438, 436)
+        Me.DarkGroupBox2.Size = New System.Drawing.Size(438, 464)
         Me.DarkGroupBox2.TabIndex = 1
         Me.DarkGroupBox2.TabStop = False
         Me.DarkGroupBox2.Text = "Animation Properties"
@@ -120,12 +125,48 @@ Partial Class FrmEditor_Animation
         Me.DarkGroupBox4.Controls.Add(Me.lblSprite1)
         Me.DarkGroupBox4.Controls.Add(Me.picSprite1)
         Me.DarkGroupBox4.ForeColor = System.Drawing.Color.Gainsboro
-        Me.DarkGroupBox4.Location = New System.Drawing.Point(6, 249)
+        Me.DarkGroupBox4.Location = New System.Drawing.Point(6, 278)
         Me.DarkGroupBox4.Name = "DarkGroupBox4"
         Me.DarkGroupBox4.Size = New System.Drawing.Size(426, 180)
         Me.DarkGroupBox4.TabIndex = 23
         Me.DarkGroupBox4.TabStop = False
         Me.DarkGroupBox4.Text = "Layer 1 - Above Player"
+        '
+        'nudLoopTime1
+        '
+        Me.nudLoopTime1.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
+        Me.nudLoopTime1.ForeColor = System.Drawing.Color.Gainsboro
+        Me.nudLoopTime1.Location = New System.Drawing.Point(87, 138)
+        Me.nudLoopTime1.Name = "nudLoopTime1"
+        Me.nudLoopTime1.Size = New System.Drawing.Size(120, 20)
+        Me.nudLoopTime1.TabIndex = 33
+        '
+        'nudFrameCount1
+        '
+        Me.nudFrameCount1.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
+        Me.nudFrameCount1.ForeColor = System.Drawing.Color.Gainsboro
+        Me.nudFrameCount1.Location = New System.Drawing.Point(87, 99)
+        Me.nudFrameCount1.Name = "nudFrameCount1"
+        Me.nudFrameCount1.Size = New System.Drawing.Size(120, 20)
+        Me.nudFrameCount1.TabIndex = 32
+        '
+        'nudLoopCount1
+        '
+        Me.nudLoopCount1.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
+        Me.nudLoopCount1.ForeColor = System.Drawing.Color.Gainsboro
+        Me.nudLoopCount1.Location = New System.Drawing.Point(87, 61)
+        Me.nudLoopCount1.Name = "nudLoopCount1"
+        Me.nudLoopCount1.Size = New System.Drawing.Size(120, 20)
+        Me.nudLoopCount1.TabIndex = 31
+        '
+        'nudSprite1
+        '
+        Me.nudSprite1.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
+        Me.nudSprite1.ForeColor = System.Drawing.Color.Gainsboro
+        Me.nudSprite1.Location = New System.Drawing.Point(87, 24)
+        Me.nudSprite1.Name = "nudSprite1"
+        Me.nudSprite1.Size = New System.Drawing.Size(120, 20)
+        Me.nudSprite1.TabIndex = 30
         '
         'lblLoopTime1
         '
@@ -190,7 +231,7 @@ Partial Class FrmEditor_Animation
         Me.DarkGroupBox3.Controls.Add(Me.lblSprite0)
         Me.DarkGroupBox3.Controls.Add(Me.picSprite0)
         Me.DarkGroupBox3.ForeColor = System.Drawing.Color.Gainsboro
-        Me.DarkGroupBox3.Location = New System.Drawing.Point(6, 63)
+        Me.DarkGroupBox3.Location = New System.Drawing.Point(6, 92)
         Me.DarkGroupBox3.Name = "DarkGroupBox3"
         Me.DarkGroupBox3.Size = New System.Drawing.Size(426, 180)
         Me.DarkGroupBox3.TabIndex = 22
@@ -304,7 +345,7 @@ Partial Class FrmEditor_Animation
         '
         'btnSave
         '
-        Me.btnSave.Location = New System.Drawing.Point(470, 445)
+        Me.btnSave.Location = New System.Drawing.Point(470, 473)
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Padding = New System.Windows.Forms.Padding(5)
         Me.btnSave.Size = New System.Drawing.Size(75, 23)
@@ -313,7 +354,7 @@ Partial Class FrmEditor_Animation
         '
         'btnDelete
         '
-        Me.btnDelete.Location = New System.Drawing.Point(2, 445)
+        Me.btnDelete.Location = New System.Drawing.Point(2, 473)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Padding = New System.Windows.Forms.Padding(5)
         Me.btnDelete.Size = New System.Drawing.Size(75, 23)
@@ -322,55 +363,49 @@ Partial Class FrmEditor_Animation
         '
         'btnCancel
         '
-        Me.btnCancel.Location = New System.Drawing.Point(571, 445)
+        Me.btnCancel.Location = New System.Drawing.Point(571, 473)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Padding = New System.Windows.Forms.Padding(5)
         Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 4
         Me.btnCancel.Text = "Cancel"
         '
-        'nudSprite1
+        'DarkLabel2
         '
-        Me.nudSprite1.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.nudSprite1.ForeColor = System.Drawing.Color.Gainsboro
-        Me.nudSprite1.Location = New System.Drawing.Point(87, 24)
-        Me.nudSprite1.Name = "nudSprite1"
-        Me.nudSprite1.Size = New System.Drawing.Size(120, 20)
-        Me.nudSprite1.TabIndex = 30
+        Me.DarkLabel2.AutoSize = True
+        Me.DarkLabel2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.DarkLabel2.Location = New System.Drawing.Point(16, 57)
+        Me.DarkLabel2.Name = "DarkLabel2"
+        Me.DarkLabel2.Size = New System.Drawing.Size(90, 13)
+        Me.DarkLabel2.TabIndex = 24
+        Me.DarkLabel2.Text = "Animation Sound:"
         '
-        'nudLoopCount1
+        'cmbSound
         '
-        Me.nudLoopCount1.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.nudLoopCount1.ForeColor = System.Drawing.Color.Gainsboro
-        Me.nudLoopCount1.Location = New System.Drawing.Point(87, 61)
-        Me.nudLoopCount1.Name = "nudLoopCount1"
-        Me.nudLoopCount1.Size = New System.Drawing.Size(120, 20)
-        Me.nudLoopCount1.TabIndex = 31
-        '
-        'nudFrameCount1
-        '
-        Me.nudFrameCount1.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.nudFrameCount1.ForeColor = System.Drawing.Color.Gainsboro
-        Me.nudFrameCount1.Location = New System.Drawing.Point(87, 99)
-        Me.nudFrameCount1.Name = "nudFrameCount1"
-        Me.nudFrameCount1.Size = New System.Drawing.Size(120, 20)
-        Me.nudFrameCount1.TabIndex = 32
-        '
-        'nudLoopTime1
-        '
-        Me.nudLoopTime1.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.nudLoopTime1.ForeColor = System.Drawing.Color.Gainsboro
-        Me.nudLoopTime1.Location = New System.Drawing.Point(87, 138)
-        Me.nudLoopTime1.Name = "nudLoopTime1"
-        Me.nudLoopTime1.Size = New System.Drawing.Size(120, 20)
-        Me.nudLoopTime1.TabIndex = 33
+        Me.cmbSound.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
+        Me.cmbSound.BorderColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.cmbSound.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid
+        Me.cmbSound.ButtonColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(43, Byte), Integer), CType(CType(43, Byte), Integer))
+        Me.cmbSound.ButtonIcon = CType(resources.GetObject("cmbSound.ButtonIcon"), System.Drawing.Bitmap)
+        Me.cmbSound.DrawDropdownHoverOutline = False
+        Me.cmbSound.DrawFocusRectangle = False
+        Me.cmbSound.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable
+        Me.cmbSound.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbSound.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.cmbSound.ForeColor = System.Drawing.Color.Gainsboro
+        Me.cmbSound.FormattingEnabled = True
+        Me.cmbSound.Location = New System.Drawing.Point(117, 54)
+        Me.cmbSound.Name = "cmbSound"
+        Me.cmbSound.Size = New System.Drawing.Size(156, 21)
+        Me.cmbSound.TabIndex = 25
+        Me.cmbSound.TextPadding = New System.Windows.Forms.Padding(2)
         '
         'FrmEditor_Animation
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(650, 472)
+        Me.ClientSize = New System.Drawing.Size(650, 508)
         Me.ControlBox = False
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnDelete)
@@ -385,6 +420,10 @@ Partial Class FrmEditor_Animation
         Me.DarkGroupBox2.PerformLayout()
         Me.DarkGroupBox4.ResumeLayout(False)
         Me.DarkGroupBox4.PerformLayout()
+        CType(Me.nudLoopTime1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nudFrameCount1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nudLoopCount1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nudSprite1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.picSprite1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.DarkGroupBox3.ResumeLayout(False)
         Me.DarkGroupBox3.PerformLayout()
@@ -393,10 +432,6 @@ Partial Class FrmEditor_Animation
         CType(Me.nudLoopCount0, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nudSprite0, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.picSprite0, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.nudSprite1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.nudLoopCount1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.nudFrameCount1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.nudLoopTime1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -429,4 +464,6 @@ Partial Class FrmEditor_Animation
     Friend WithEvents nudFrameCount1 As DarkUI.Controls.DarkNumericUpDown
     Friend WithEvents nudLoopCount1 As DarkUI.Controls.DarkNumericUpDown
     Friend WithEvents nudSprite1 As DarkUI.Controls.DarkNumericUpDown
+    Friend WithEvents cmbSound As DarkUI.Controls.DarkComboBox
+    Friend WithEvents DarkLabel2 As DarkUI.Controls.DarkLabel
 End Class

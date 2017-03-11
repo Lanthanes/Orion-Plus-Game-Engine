@@ -2223,8 +2223,10 @@ Module ServerHandleData
         Next
 
         Animation(AnimNum).Name = buffer.ReadString()
+        Animation(AnimNum).Sound = buffer.ReadString()
 
         If Animation(AnimNum).Name Is Nothing Then Animation(AnimNum).Name = ""
+        If Animation(AnimNum).Sound Is Nothing Then Animation(AnimNum).Sound = ""
 
         For i = 0 To UBound(Animation(AnimNum).Sprite)
             Animation(AnimNum).Sprite(i) = buffer.ReadInteger()

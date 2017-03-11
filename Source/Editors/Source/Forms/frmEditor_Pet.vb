@@ -26,7 +26,7 @@
         lstIndex.SelectedIndex = tmpIndex
     End Sub
 
-    Private Sub NudSprite_ValueChanged(sender As Object, e As EventArgs) Handles nudSprite.ValueChanged
+    Private Sub NudSprite_ValueChanged(sender As Object, e As EventArgs) Handles nudSprite.Click
         If EditorIndex <= 0 Or EditorIndex > MAX_PETS Then Exit Sub
 
         Pet(EditorIndex).Sprite = nudSprite.Value
@@ -52,7 +52,7 @@
 
     End Sub
 
-    Private Sub NudRange_ValueChanged(sender As Object, e As EventArgs) Handles nudRange.ValueChanged
+    Private Sub NudRange_ValueChanged(sender As Object, e As EventArgs) Handles nudRange.Click
         If EditorIndex <= 0 Or EditorIndex > MAX_PETS Then Exit Sub
 
         Pet(EditorIndex).Range = nudRange.Value
@@ -136,25 +136,25 @@
 #End Region
 
 #Region "Leveling"
-    Private Sub NudPetExp_ValueChanged(sender As Object, e As EventArgs) Handles nudPetExp.ValueChanged
+    Private Sub NudPetExp_ValueChanged(sender As Object, e As EventArgs) Handles nudPetExp.Click
         If EditorIndex <= 0 Or EditorIndex > MAX_PETS Then Exit Sub
 
         Pet(EditorIndex).ExpGain = nudPetExp.Value
     End Sub
 
-    Private Sub NudPetPnts_ValueChanged(sender As Object, e As EventArgs) Handles nudPetPnts.ValueChanged
+    Private Sub NudPetPnts_ValueChanged(sender As Object, e As EventArgs) Handles nudPetPnts.Click
         If EditorIndex <= 0 Or EditorIndex > MAX_PETS Then Exit Sub
 
         Pet(EditorIndex).LevelPnts = nudPetPnts.Value
     End Sub
 
-    Private Sub NudMaxLevel_ValueChanged(sender As Object, e As EventArgs) Handles nudMaxLevel.ValueChanged
+    Private Sub NudMaxLevel_ValueChanged(sender As Object, e As EventArgs) Handles nudMaxLevel.Click
         If EditorIndex <= 0 Or EditorIndex > MAX_PETS Then Exit Sub
 
         Pet(EditorIndex).MaxLevel = nudMaxLevel.Value
     End Sub
 
-    Private Sub OptLevel_CheckedChanged(sender As Object, e As EventArgs) Handles optLevel.CheckedChanged
+    Private Sub OptLevel_CheckedChanged(sender As Object, e As EventArgs) Handles optLevel.Click
         If EditorIndex <= 0 Or EditorIndex > MAX_PETS Then Exit Sub
 
         If optLevel.Checked = True Then
@@ -163,7 +163,7 @@
         End If
     End Sub
 
-    Private Sub OptDoNotLevel_CheckedChanged(sender As Object, e As EventArgs) Handles optDoNotLevel.CheckedChanged
+    Private Sub OptDoNotLevel_CheckedChanged(sender As Object, e As EventArgs) Handles optDoNotLevel.Click
         If EditorIndex <= 0 Or EditorIndex > MAX_PETS Then Exit Sub
 
         If optDoNotLevel.Checked = True Then

@@ -1566,6 +1566,7 @@ Module ServerDatabase
         Dim writer As New ArchaicIO.File.BinaryStream.Writer()
 
         writer.Write(Animation(AnimationNum).Name)
+        writer.Write(Animation(AnimationNum).Sound)
 
         For x = 0 To UBound(Animation(AnimationNum).Sprite)
             writer.Write(Animation(AnimationNum).Sprite(x))
@@ -1589,7 +1590,7 @@ Module ServerDatabase
     Sub LoadAnimations()
         Dim i As Integer
 
-        Call CheckAnimations()
+        CheckAnimations()
 
         For i = 1 To MAX_ANIMATIONS
             LoadAnimation(i)
@@ -1605,6 +1606,7 @@ Module ServerDatabase
         Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
 
         reader.Read(Animation(AnimationNum).Name)
+        reader.Read(Animation(AnimationNum).Sound)
 
         For x = 0 To UBound(Animation(AnimationNum).Sprite)
             reader.Read(Animation(AnimationNum).Sprite(x))
@@ -1641,6 +1643,7 @@ Module ServerDatabase
     Sub ClearAnimation(ByVal Index As Integer)
         Animation(Index) = Nothing
         Animation(Index).Name = ""
+        Animation(Index).Sound = ""
         ReDim Animation(Index).Sprite(0 To 1)
         ReDim Animation(Index).Frames(0 To 1)
         ReDim Animation(Index).LoopCount(0 To 1)
@@ -2740,9 +2743,7 @@ Module ServerDatabase
     End Function
 
     Function AnimationData(ByVal AnimationNum As Integer) As Byte()
-        Dim Buffer As ByteBuffer
-
-        Buffer = New ByteBuffer
+        Dim Buffer As New ByteBuffer
 
         Buffer.WriteInteger(AnimationNum)
 
@@ -2759,6 +2760,7 @@ Module ServerDatabase
         Next
 
         Buffer.WriteString(Animation(AnimationNum).Name)
+        Buffer.WriteString(Animation(AnimationNum).Sound)
 
         For i = 0 To UBound(Animation(AnimationNum).Sprite)
             Buffer.WriteInteger(Animation(AnimationNum).Sprite(i))

@@ -140,7 +140,7 @@
         LoadClassInfo = True
     End Sub
 
-    Private Sub NudMaleSprite_ValueChanged(sender As Object, e As EventArgs) Handles nudMaleSprite.ValueChanged
+    Private Sub NudMaleSprite_ValueChanged(sender As Object, e As EventArgs) Handles nudMaleSprite.Click
         If cmbMaleSprite.SelectedIndex < 0 Then Exit Sub
 
         Classes(EditorIndex).MaleSprite(cmbMaleSprite.SelectedIndex) = nudMaleSprite.Value
@@ -148,7 +148,7 @@
         DrawPreview()
     End Sub
 
-    Private Sub NudFemaleSprite_ValueChanged(sender As Object, e As EventArgs) Handles nudFemaleSprite.ValueChanged
+    Private Sub NudFemaleSprite_ValueChanged(sender As Object, e As EventArgs) Handles nudFemaleSprite.Click
         If cmbFemaleSprite.SelectedIndex < 0 Then Exit Sub
 
         Classes(EditorIndex).FemaleSprite(cmbFemaleSprite.SelectedIndex) = nudFemaleSprite.Value
@@ -192,43 +192,43 @@
 #End Region
 
 #Region "Stats"
-    Private Sub NumStrength_ValueChanged(sender As Object, e As EventArgs) Handles nudStrength.ValueChanged
+    Private Sub NumStrength_ValueChanged(sender As Object, e As EventArgs) Handles nudStrength.Click
         If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).Stat(Stats.Strength) = nudStrength.Value
     End Sub
 
-    Private Sub NumLuck_ValueChanged(sender As Object, e As EventArgs) Handles nudLuck.ValueChanged
+    Private Sub NumLuck_ValueChanged(sender As Object, e As EventArgs) Handles nudLuck.Click
         If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).Stat(Stats.Luck) = nudLuck.Value
     End Sub
 
-    Private Sub NumEndurance_ValueChanged(sender As Object, e As EventArgs) Handles nudEndurance.ValueChanged
+    Private Sub NumEndurance_ValueChanged(sender As Object, e As EventArgs) Handles nudEndurance.Click
         If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).Stat(Stats.Endurance) = nudEndurance.Value
     End Sub
 
-    Private Sub NumIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nudIntelligence.ValueChanged
+    Private Sub NumIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nudIntelligence.Click
         If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).Stat(Stats.Intelligence) = nudIntelligence.Value
     End Sub
 
-    Private Sub NumVitality_ValueChanged(sender As Object, e As EventArgs) Handles nudVitality.ValueChanged
+    Private Sub NumVitality_ValueChanged(sender As Object, e As EventArgs) Handles nudVitality.Click
         If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).Stat(Stats.Vitality) = nudVitality.Value
     End Sub
 
-    Private Sub NumSpirit_ValueChanged(sender As Object, e As EventArgs) Handles nudSpirit.ValueChanged
+    Private Sub NumSpirit_ValueChanged(sender As Object, e As EventArgs) Handles nudSpirit.Click
         If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).Stat(Stats.Spirit) = nudSpirit.Value
     End Sub
 
-    Private Sub NumBaseExp_ValueChanged(sender As Object, e As EventArgs) Handles nudBaseExp.ValueChanged
+    Private Sub NumBaseExp_ValueChanged(sender As Object, e As EventArgs) Handles nudBaseExp.Click
         If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).BaseExp = nudBaseExp.Value
@@ -249,25 +249,24 @@
 #End Region
 
 #Region "Starting Point"
-    Private Sub NumStartMap_ValueChanged(sender As Object, e As EventArgs) Handles nudStartMap.ValueChanged
+    Private Sub NumStartMap_ValueChanged(sender As Object, e As EventArgs) Handles nudStartMap.Click
         If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).StartMap = nudStartMap.Value
     End Sub
 
-    Private Sub NumStartX_ValueChanged(sender As Object, e As EventArgs) Handles nudStartX.ValueChanged
+    Private Sub NumStartX_ValueChanged(sender As Object, e As EventArgs) Handles nudStartX.Click
         If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).StartX = nudStartX.Value
     End Sub
 
-    Private Sub NumStartY_ValueChanged(sender As Object, e As EventArgs) Handles nudStartY.ValueChanged
+    Private Sub NumStartY_ValueChanged(sender As Object, e As EventArgs) Handles nudStartY.Click
         If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).StartY = nudStartY.Value
     End Sub
 
 #End Region
-
 
 End Class

@@ -47,7 +47,7 @@
 
     End Sub
 
-    Private Sub NudFurniture_ValueChanged(sender As Object, e As EventArgs) Handles nudFurniture.ChangeUICues
+    Private Sub NudFurniture_ValueChanged(sender As Object, e As EventArgs) Handles nudFurniture.Click
         If EditorIndex <= 0 Then Exit Sub
 
         If nudFurniture.Value < 0 Then Exit Sub

@@ -1014,8 +1014,8 @@ Module ServerTCP
     End Sub
 
     Sub SendStats(ByVal Index As Integer)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As New ByteBuffer
+
         Buffer.WriteInteger(ServerPackets.SPlayerStats)
         Buffer.WriteInteger(Index)
         Buffer.WriteInteger(GetPlayerStat(Index, Stats.Strength))
@@ -1029,9 +1029,7 @@ Module ServerTCP
     End Sub
 
     Sub SendUpdateAnimationTo(ByVal Index As Integer, ByVal AnimationNum As Integer)
-        Dim Buffer As ByteBuffer
-
-        Buffer = New ByteBuffer
+        Dim Buffer As New ByteBuffer
 
         Buffer.WriteInteger(ServerPackets.SUpdateAnimation)
         Buffer.WriteInteger(AnimationNum)
@@ -1049,6 +1047,7 @@ Module ServerTCP
         Next
 
         Buffer.WriteString(Animation(AnimationNum).Name)
+        Buffer.WriteString(Animation(AnimationNum).Sound)
 
         For i = 0 To UBound(Animation(AnimationNum).Sprite)
             Buffer.WriteInteger(Animation(AnimationNum).Sprite(i))
@@ -1079,6 +1078,7 @@ Module ServerTCP
         Next
 
         Buffer.WriteString(Animation(AnimationNum).Name)
+        Buffer.WriteString(Animation(AnimationNum).Sound)
 
         For i = 0 To UBound(Animation(AnimationNum).Sprite)
             Buffer.WriteInteger(Animation(AnimationNum).Sprite(i))

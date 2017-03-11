@@ -278,28 +278,31 @@
 
             .cmbSkill4.SelectedIndex = Pet(EditorIndex).Skill(4)
 
-            If Pet(EditorIndex).LevelingType = 0 Then
+            If Pet(EditorIndex).LevelingType = 1 Then
                 .optLevel.Checked = True
+
                 .pnlPetlevel.Visible = True
+                .pnlPetlevel.BringToFront()
                 .nudPetExp.Value = Pet(EditorIndex).ExpGain
                 If Pet(EditorIndex).MaxLevel > 0 Then .nudMaxLevel.Value = Pet(EditorIndex).MaxLevel
                 .nudPetPnts.Value = Pet(EditorIndex).LevelPnts
             Else
                 .optDoNotLevel.Checked = True
+
                 .pnlPetlevel.Visible = False
                 .nudPetExp.Value = Pet(EditorIndex).ExpGain
                 .nudMaxLevel.Value = Pet(EditorIndex).MaxLevel
                 .nudPetPnts.Value = Pet(EditorIndex).LevelPnts
-
-                If Pet(EditorIndex).Evolvable = 1 Then
-                    .chkEvolve.Checked = True
-                Else
-                    .chkEvolve.Checked = False
-                End If
-
-                .nudEvolveLvl.Value = Pet(EditorIndex).EvolveLevel
-                .cmbEvolve.SelectedIndex = Pet(EditorIndex).EvolveNum
             End If
+
+            If Pet(EditorIndex).Evolvable = 1 Then
+                .chkEvolve.Checked = True
+            Else
+                .chkEvolve.Checked = False
+            End If
+
+            .nudEvolveLvl.Value = Pet(EditorIndex).EvolveLevel
+            .cmbEvolve.SelectedIndex = Pet(EditorIndex).EvolveNum
         End With
 
         ClearChanged_Pet()

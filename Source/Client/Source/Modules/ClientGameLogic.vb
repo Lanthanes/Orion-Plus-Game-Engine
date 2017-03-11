@@ -1350,17 +1350,20 @@ Continue1:
 
     Public Sub CheckAnimInstance(ByVal Index As Integer)
         Dim looptime As Integer
-        Dim Layer As Integer
+        Dim Layer As Integer, Sound As String
         Dim FrameCount As Integer
 
         ' if doesn't exist then exit sub
         If AnimInstance(Index).Animation <= 0 Then Exit Sub
         If AnimInstance(Index).Animation >= MAX_ANIMATIONS Then Exit Sub
 
+        Sound = Animation(AnimInstance(Index).Animation).Sound
+
         For Layer = 0 To 1
             If AnimInstance(Index).Used(Layer) Then
                 looptime = Animation(AnimInstance(Index).Animation).looptime(Layer)
                 FrameCount = Animation(AnimInstance(Index).Animation).Frames(Layer)
+
 
                 ' if zero'd then set so we don't have extra loop and/or frame
                 If AnimInstance(Index).FrameIndex(Layer) = 0 Then AnimInstance(Index).FrameIndex(Layer) = 1
@@ -1385,7 +1388,11 @@ Continue1:
         Next
 
         ' if neither layer is used, clear
-        If AnimInstance(Index).Used(0) = False And AnimInstance(Index).Used(1) = False Then ClearAnimInstance(Index)
+        If AnimInstance(Index).Used(0) = False And AnimInstance(Index).Used(1) = False Then
+            ClearAnimInstance(Index)
+        Else
+            If Sound <> "" Then PlaySound(Sound)
+        End If
     End Sub
 
     Public Sub UpdateDrawMapName()
