@@ -72,7 +72,6 @@
     Private Sub FrmEditor_Animation_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         nudSprite0.Maximum = NumAnimations
         nudSprite1.Maximum = NumAnimations
-
     End Sub
 
     Private Sub CmbSound_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSound.SelectedIndexChanged

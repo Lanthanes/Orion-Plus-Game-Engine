@@ -1602,19 +1602,18 @@ Module EditorGraphics
 
         Animationnum = FrmEditor_Animation.nudSprite0.Value
 
-        If AnimationsGFXInfo(Animationnum).IsLoaded = False Then
-            LoadTexture(Animationnum, 6)
-        End If
-
-        'seeying we still use it, lets update timer
-        With AnimationsGFXInfo(Animationnum)
-            .TextureTimer = GetTickCount() + 100000
-        End With
-
         If Animationnum < 1 Or Animationnum > NumAnimations Then
             EditorAnimation_Anim1.Clear(ToSFMLColor(FrmEditor_Animation.picSprite0.BackColor))
             EditorAnimation_Anim1.Display()
         Else
+            If AnimationsGFXInfo(Animationnum).IsLoaded = False Then
+                LoadTexture(Animationnum, 6)
+            End If
+
+            'seeying we still use it, lets update timer
+            With AnimationsGFXInfo(Animationnum)
+                .TextureTimer = GetTickCount() + 100000
+            End With
 
             looptime = FrmEditor_Animation.nudLoopTime0.Value
             FrameCount = FrmEditor_Animation.nudFrameCount0.Value
@@ -1668,6 +1667,15 @@ Module EditorGraphics
             EditorAnimation_Anim2.Clear(ToSFMLColor(FrmEditor_Animation.picSprite1.BackColor))
             EditorAnimation_Anim2.Display()
         Else
+            If AnimationsGFXInfo(Animationnum).IsLoaded = False Then
+                LoadTexture(Animationnum, 6)
+            End If
+
+            'seeying we still use it, lets update timer
+            With AnimationsGFXInfo(Animationnum)
+                .TextureTimer = GetTickCount() + 100000
+            End With
+
             looptime = FrmEditor_Animation.nudLoopTime1.Value
             FrameCount = FrmEditor_Animation.nudFrameCount1.Value
 
