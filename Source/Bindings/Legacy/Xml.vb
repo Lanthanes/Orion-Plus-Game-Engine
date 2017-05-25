@@ -3,6 +3,7 @@ Imports System.IO
 Imports System.Text
 
 Public Class XmlClass
+    Private xmlDoc As New XmlDocument()
     Private m_Filename As String = vbNullString
     Private m_Root As String = "Settings"
 
@@ -32,7 +33,7 @@ Public Class XmlClass
 
         Dim xmlTextWrite As New XmlTextWriter(Me.Filename, Encoding.UTF8)
 
-        'Write blank xml doucment.
+        'Write blank xml document.
         With xmlTextWrite
             .WriteStartDocument(True)
             .WriteStartElement(Root)
@@ -45,7 +46,7 @@ Public Class XmlClass
     End Sub
 
     Public Sub WriteString(ByVal Selection As String, ByVal Name As String, ByVal Value As String)
-        Dim xmlDoc As New XmlDocument()
+        'Dim xmlDoc As New XmlDocument()
 
         'Check if xml filename is here.
         If Not File.Exists(Me.Filename) Then
@@ -54,7 +55,7 @@ Public Class XmlClass
         End If
 
         'Load xml document.
-        xmlDoc.Load(Me.Filename)
+        'xmlDoc.Load(Me.Filename)
 
         'Check for settings selection.
         If xmlDoc.SelectSingleNode(Root & "/" & Selection) Is Nothing Then
@@ -65,7 +66,7 @@ Public Class XmlClass
         'Check for element node
         Dim xmlNode As XmlNode = xmlDoc.SelectSingleNode(Root & "/" & Selection & "/Element[@Name='" & Name & "']")
 
-        If XmlNode Is Nothing Then
+        If xmlNode Is Nothing Then
             Dim element As XmlElement = xmlDoc.CreateElement("Element")
             'Write new element values.
             element.SetAttribute("Name", Name)
@@ -79,19 +80,19 @@ Public Class XmlClass
         End If
         'Save xml data.
 
-        xmlDoc.Save(Me.Filename)
+        'xmlDoc.Save(Me.Filename)
 
-        xmlDoc = Nothing
+        'xmlDoc = Nothing
     End Sub
 
     Public Function ReadString(ByVal Selection As String, ByVal Name As String, Optional ByVal DefaultValue As String = "") As String
-        Dim xmlDoc As New XmlDocument()
+        'Dim xmlDoc As New XmlDocument()
 
         If Not File.Exists(Me.Filename) Then
             Return DefaultValue
         Else
             'Load xml document.
-            xmlDoc.Load(Filename)
+            'xmlDoc.Load(Filename)
             'Read node value.
             Dim XmlNode = xmlDoc.SelectSingleNode(Root & "/" & Selection & "/Element[@Name='" & Name & "']")
 
@@ -102,29 +103,43 @@ Public Class XmlClass
                 'Return xml node value
                 Return (XmlNode.Attributes("Value").Value)
                 'Clean up
-                xmlDoc = Nothing
+                'xmlDoc = Nothing
+
             End If
         End If
     End Function
 
     Public Sub RemoveNode(ByVal Selection As String, ByVal Name As String)
-        Dim xmlDoc As New XmlDocument()
+        'Dim xmlDoc As New XmlDocument()
 
         'Remove xml node
         If File.Exists(Me.Filename) Then
             'Load xml document.
-            xmlDoc.Load(Filename)
+            ' xmlDoc.Load(Filename)
             'Read node value.
             Dim XmlNode = xmlDoc.SelectSingleNode(Root & "/" & Selection & "/Element[@Name='" & Name & "']")
             'Check if node is here.
             If Not XmlNode Is Nothing Then
                 xmlDoc.SelectSingleNode(Root & "/" & Selection).RemoveChild(XmlNode)
-                'Update xml document.
-                xmlDoc.Save(Filename)
+                ''Update xml document.
+                'xmlDoc.Save(Filename)
             End If
         End If
     End Sub
 
+    Public Sub LoadXml()
+        'Load xml document.
+        xmlDoc.Load(Me.Filename)
+    End Sub
+
+    Public Sub CloseXml(Save As Boolean)
+        If Save Then
+            'Update xml document.
+            xmlDoc.Save(Filename)
+        End If
+        'Clean up
+        xmlDoc = Nothing
+    End Sub
 End Class
 
 

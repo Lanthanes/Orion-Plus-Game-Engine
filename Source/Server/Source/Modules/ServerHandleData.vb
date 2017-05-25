@@ -1280,7 +1280,7 @@ Module ServerHandleData
         End If
 
         ' everything worked out fine
-        Call PlayerMapDropItem(index, InvNum, Amount)
+        PlayerMapDropItem(index, InvNum, Amount)
     End Sub
 
     Sub Packet_RespawnMap(ByVal Index As Integer, ByVal Data() As Byte)

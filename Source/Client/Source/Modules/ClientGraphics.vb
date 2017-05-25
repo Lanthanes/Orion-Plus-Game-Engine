@@ -457,9 +457,9 @@ Module ClientGraphics
         End If
 
         ActionPanelGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "ActionBar\panel" & GFX_EXT) Then
+        If FileExist(Application.StartupPath & GFX_GUI_PATH & "ActionBar\ActionBar" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
-            ActionPanelGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "ActionBar\panel" & GFX_EXT)
+            ActionPanelGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "ActionBar\ActionBar" & GFX_EXT)
             ActionPanelSprite = New Sprite(ActionPanelGFX)
 
             'Cache the width and height

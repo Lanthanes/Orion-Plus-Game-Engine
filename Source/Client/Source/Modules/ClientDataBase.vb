@@ -202,6 +202,8 @@ Module ClientDataBase
             .Root = "Options"
         }
 
+        myXml.LoadXml()
+
         myXml.WriteString("UserInfo", "Username", Trim$(Options.Username))
         myXml.WriteString("UserInfo", "Password", Trim$(Options.Password))
         myXml.WriteString("UserInfo", "SavePass", Trim$(Options.SavePass))
@@ -218,6 +220,7 @@ Module ClientDataBase
         myXml.WriteString("Misc", "HighEnd", Trim$(Options.HighEnd))
         myXml.WriteString("Misc", "ShowNpcBar", Trim$(Options.ShowNpcBar))
 
+        myXml.CloseXml(True)
     End Sub
 
     Public Sub LoadOptions()
@@ -225,6 +228,8 @@ Module ClientDataBase
             .Filename = Application.StartupPath & "\Data\Config.xml",
             .Root = "Options"
         }
+
+        myXml.LoadXml()
 
         If Not FileExist(myXml.Filename) Then
             Options.Password = ""
@@ -241,6 +246,7 @@ Module ClientDataBase
             Options.ShowNpcBar = 0
             SaveOptions()
             'SaveXMLOptions()
+            myXml.CloseXml(True)
         Else
             Options.Username = myXml.ReadString("UserInfo", "Username", "") 'Getvar(FileName, "Options", "Username")
             Options.Password = myXml.ReadString("UserInfo", "Password", "") 'Getvar(FileName, "Options", "Password")
@@ -257,6 +263,7 @@ Module ClientDataBase
             Options.ScreenSize = myXml.ReadString("Misc", "ScreenSize", "0") 'Getvar(FileName, "Options", "ScreenSize")
             Options.HighEnd = Val(myXml.ReadString("Misc", "HighEnd", "0")) 'Getvar(FileName, "Options", "HighEnd"))
             Options.ShowNpcBar = Val(myXml.ReadString("Misc", "ShowNpcBar", "1")) 'Getvar(FileName, "Options", "ShowNpcBar"))
+            myXml.CloseXml(True)
         End If
 
         ' show in GUI

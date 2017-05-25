@@ -998,11 +998,11 @@ Public Module ServerCombat
     End Sub
 #End Region
 
-    Function isInRange(ByVal range As Integer, ByVal x1 As Integer, ByVal y1 As Integer, ByVal x2 As Integer, ByVal y2 As Integer) As Boolean
+    Function IsInRange(ByVal range As Integer, ByVal x1 As Integer, ByVal y1 As Integer, ByVal x2 As Integer, ByVal y2 As Integer) As Boolean
         Dim nVal As Integer
-        isInRange = False
+        IsInRange = False
         nVal = Math.Sqrt((x1 - x2) ^ 2 + (y1 - y2) ^ 2)
-        If nVal <= range Then isInRange = True
+        If nVal <= range Then IsInRange = True
     End Function
 
     Public Function CanNpcBlock(ByVal npcnum As Integer) As Boolean

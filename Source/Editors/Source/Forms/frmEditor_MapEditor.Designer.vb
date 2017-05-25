@@ -372,7 +372,7 @@ Partial Class FrmEditor_MapEditor
         Me.cmbAutoTile.Name = "cmbAutoTile"
         Me.cmbAutoTile.Size = New System.Drawing.Size(109, 21)
         Me.cmbAutoTile.TabIndex = 22
-        Me.cmbAutoTile.Text = Nothing
+        Me.cmbAutoTile.Text = "Normal"
         Me.cmbAutoTile.TextPadding = New System.Windows.Forms.Padding(2)
         '
         'cmbTileSets
@@ -417,7 +417,7 @@ Partial Class FrmEditor_MapEditor
         Me.cmbLayers.Name = "cmbLayers"
         Me.cmbLayers.Size = New System.Drawing.Size(130, 21)
         Me.cmbLayers.TabIndex = 20
-        Me.cmbLayers.Text = Nothing
+        Me.cmbLayers.Text = "Ground"
         Me.cmbLayers.TextPadding = New System.Windows.Forms.Padding(2)
         '
         'DarkLabel4

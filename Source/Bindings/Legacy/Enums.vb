@@ -86,7 +86,7 @@
         Count
     End Enum
 
-    ''' <Summary> Direction Constant </Summary>
+    ''' <Summary> Consumable Constant </Summary>
     Enum ConsumableType As Byte
         Hp
         Mp

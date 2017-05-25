@@ -328,6 +328,8 @@ Module ServerDatabase
             .Root = "Data"
         }
 
+        myXml.LoadXml()
+
         'This is for event saving, it is in .xml files because there are non-limited values (strings) that cannot easily be loaded/saved in the normal manner.
         myXml.WriteString("Events", "EventCount", Val(Map(MapNum).EventCount))
 
@@ -541,6 +543,8 @@ Module ServerDatabase
                 DoEvents()
             Next
         End If
+
+        myXml.CloseXml(True)
     End Sub
 
     Sub LoadMapEvent(ByVal MapNum As Integer)
@@ -549,6 +553,7 @@ Module ServerDatabase
             .Root = "Data"
         }
 
+        myXml.LoadXml()
         Map(MapNum).EventCount = Val(myXml.ReadString("Events", "EventCount"))
 
         If Map(MapNum).EventCount > 0 Then
@@ -678,6 +683,7 @@ Module ServerDatabase
             Next
         End If
 
+        myXml.CloseXml(False)
         If FileExist(Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}_eventdata.dat", MapNum))) Then
             File.Delete(Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}_eventdata.dat", MapNum)))
         End If
@@ -2432,7 +2438,7 @@ Module ServerDatabase
             .Filename = Path.Combine(Application.StartupPath, "Data", "Config.xml"),
             .Root = "Options"
         }
-
+        myXml.LoadXml()
         myXml.WriteString("Settings", "Game_Name", Options.GameName)
         myXml.WriteString("Settings", "Port", Str(Options.Port))
         myXml.WriteString("Settings", "MoTd", Options.Motd)
@@ -2442,7 +2448,7 @@ Module ServerDatabase
         myXml.WriteString("Settings", "StartMap", Options.StartMap)
         myXml.WriteString("Settings", "StartX", Options.StartX)
         myXml.WriteString("Settings", "StartY", Options.StartY)
-
+        myXml.CloseXml(True)
     End Sub
 
     Public Sub LoadOptions()
@@ -2450,7 +2456,7 @@ Module ServerDatabase
             .Filename = Path.Combine(Application.StartupPath, "Data", "Config.xml"),
             .Root = "Options"
         }
-
+        myXml.LoadXml()
         Options.GameName = myXml.ReadString("Settings", "Game_Name", "Orion+")
         Options.Port = myXml.ReadString("Settings", "Port", "7001")
         Options.Motd = myXml.ReadString("Settings", "MoTd", "Welcome to the Orion+ Engine")
@@ -2458,7 +2464,7 @@ Module ServerDatabase
         Options.StartMap = myXml.ReadString("Settings", "StartMap", "1")
         Options.StartX = myXml.ReadString("Settings", "StartX", "13+")
         Options.StartY = myXml.ReadString("Settings", "StartY", "7")
-
+        myXml.CloseXml(False)
     End Sub
 
 #End Region

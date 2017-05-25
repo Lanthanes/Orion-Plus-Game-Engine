@@ -468,6 +468,9 @@ Module ClientText
         Dim parts As New List(Of String)()
         Dim startIndex As Integer = 0
         Explode = Nothing
+
+        If str = Nothing Then Exit Function
+
         While True
             Dim index As Integer = str.IndexOfAny(splitChars, startIndex)
 

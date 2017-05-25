@@ -10,9 +10,13 @@ Public Module ServerResources
             .Root = "Data"
         }
 
+        myXml.LoadXml()
+
         For i = 1 To 100
             SkillExpTable(i) = myXml.ReadString("Level", i)
         Next
+
+        myXml.CloseXml(False)
     End Sub
 
     Sub CheckResource(ByVal Index As Integer, ByVal x As Integer, ByVal y As Integer)
