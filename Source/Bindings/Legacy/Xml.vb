@@ -29,7 +29,7 @@ Public Class XmlClass
 
     End Property
 
-    Private Sub NewXmlDocument()
+    Sub NewXmlDocument()
 
         Dim xmlTextWrite As New XmlTextWriter(Me.Filename, Encoding.UTF8)
 

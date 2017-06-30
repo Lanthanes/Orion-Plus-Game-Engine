@@ -74,7 +74,11 @@ Module ClientGeneral
         SetStatus(Strings.Get("loadscreen", "options"))
 
         ' load options
-        LoadOptions()
+        If FileExist(Application.StartupPath & "\Data\Config.xml") Then
+            LoadOptions()
+        Else
+            CreateOptions()
+        End If
 
         ' randomize rnd's seed
         Randomize()

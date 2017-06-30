@@ -6,13 +6,16 @@ Module ServerDatabase
 #Region "Classes"
     Public Sub CreateClasses()
         Dim myXml As New XmlClass With {
-            .Filename = Path.Combine(Application.StartupPath, "data", "classes.xml"),
+            .Filename = Path.Combine(Application.StartupPath, "data", "Classes.xml"),
             .Root = "Data"
         }
 
+        myXml.NewXmlDocument()
+
         Max_Classes = 1
 
-        If Not FileExist(Path.Combine(Application.StartupPath, "data", "classes.xml")) Then
+        myXml.LoadXml()
+
             myXml.WriteString("INIT", "MaxClasses", Max_Classes)
             myXml.WriteString("CLASS1", "Name", "Warrior")
             myXml.WriteString("CLASS1", "Desc", "Warrior Description")
@@ -28,8 +31,9 @@ Module ServerDatabase
 
             myXml.WriteString("CLASS1", "StartMap", Options.StartMap)
             myXml.WriteString("CLASS1", "StartX", Options.StartX)
-            myXml.WriteString("CLASS1", "StartY", Options.StartY)
-        End If
+        myXml.WriteString("CLASS1", "StartY", Options.StartY)
+
+        myXml.CloseXml(True)
     End Sub
 
     Sub ClearClasses()
@@ -57,12 +61,14 @@ Module ServerDatabase
         Dim tmpArray() As String
         Dim x As Integer
 
+        If Not FileExist(Path.Combine(Application.StartupPath, "data", "Classes.xml")) Then CreateClasses()
+
         Dim myXml As New XmlClass With {
-            .Filename = Path.Combine(Application.StartupPath, "data", "classes.xml"),
+            .Filename = Path.Combine(Application.StartupPath, "data", "Classes.xml"),
             .Root = "Data"
         }
 
-        If Not FileExist(Path.Combine(Application.StartupPath, "data", "classes.xml")) Then CreateClasses()
+        myXml.LoadXml()
 
         Max_Classes = Val(myXml.ReadString("INIT", "MaxClasses", "1"))
 
@@ -113,9 +119,9 @@ Module ServerDatabase
                 Classes(i).StartItem(x) = Val(myXml.ReadString("CLASS" & i, "StartItem" & x))
                 Classes(i).StartValue(x) = Val(myXml.ReadString("CLASS" & i, "StartValue" & x))
             Next
-
-            DoEvents()
         Next
+
+        myXml.CloseXml(False)
 
     End Sub
 
@@ -125,7 +131,7 @@ Module ServerDatabase
         Dim x As Integer
 
         Dim myXml As New XmlClass With {
-            .Filename = Path.Combine(Application.StartupPath, "data", "classes.xml"),
+            .Filename = Path.Combine(Application.StartupPath, "data", "Classes.xml"),
             .Root = "Data"
         }
 
@@ -171,10 +177,9 @@ Module ServerDatabase
                 myXml.WriteString("CLASS" & i, "StartValue" & x, Str(Classes(i).StartValue(x)))
             Next
 
-
-
-            DoEvents()
         Next
+
+        myXml.CloseXml(True)
 
     End Sub
 
@@ -204,7 +209,6 @@ Module ServerDatabase
         For i = 1 To MAX_MAPS
             If Not FileExist(Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}.dat", i))) Then
                 SaveMap(i)
-                DoEvents()
             End If
         Next
 
@@ -257,7 +261,7 @@ Module ServerDatabase
 
         For i = 1 To MAX_MAPS
             SaveMap(i)
-            DoEvents()
+            SaveMapEvent(i)
         Next
 
     End Sub
@@ -319,7 +323,6 @@ Module ServerDatabase
 
         writer.Save(filename)
 
-        SaveMapEvent(MapNum)
     End Sub
 
     Sub SaveMapEvent(ByVal MapNum As Integer)
@@ -696,9 +699,8 @@ Module ServerDatabase
 
         For i = 1 To MAX_MAPS
             LoadMap(i)
-            DoEvents()
         Next
-        SaveMaps()
+        'SaveMaps()
     End Sub
 
     Sub LoadMap(ByVal MapNum As Integer)
@@ -2438,6 +2440,13 @@ Module ServerDatabase
             .Filename = Path.Combine(Application.StartupPath, "Data", "Config.xml"),
             .Root = "Options"
         }
+
+        'Check if xml filename is here.
+        If Not File.Exists(myXml.Filename) Then
+            'Create new blank xml file.
+            myXml.NewXmlDocument()
+        End If
+
         myXml.LoadXml()
         myXml.WriteString("Settings", "Game_Name", Options.GameName)
         myXml.WriteString("Settings", "Port", Str(Options.Port))

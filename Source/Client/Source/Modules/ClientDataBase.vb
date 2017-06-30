@@ -195,6 +195,47 @@ Module ClientDataBase
 #End Region
 
 #Region "Options"
+    Public Sub CreateOptions()
+        Dim myXml As New XmlClass With {
+            .Filename = Application.StartupPath & "\Data\Config.xml",
+            .Root = "Options"
+        }
+
+        myXml.NewXmlDocument()
+
+        Options.Password = ""
+        Options.SavePass = False
+        Options.Username = ""
+        Options.IP = "Localhost"
+        Options.Port = 7001
+        Options.MenuMusic = ""
+        Options.Music = 1
+        Options.Sound = 1
+        Options.Volume = 100
+        Options.ScreenSize = 0
+        Options.HighEnd = 0
+        Options.ShowNpcBar = 0
+
+        myXml.LoadXml()
+
+        myXml.WriteString("UserInfo", "Username", Trim$(Options.Username))
+        myXml.WriteString("UserInfo", "Password", Trim$(Options.Password))
+        myXml.WriteString("UserInfo", "SavePass", Trim$(Options.SavePass))
+
+        myXml.WriteString("Connection", "Ip", Trim$(Options.IP))
+        myXml.WriteString("Connection", "Port", Trim$(Options.Port))
+
+        myXml.WriteString("Sfx", "MenuMusic", Trim$(Options.MenuMusic))
+        myXml.WriteString("Sfx", "Music", Trim$(Options.Music))
+        myXml.WriteString("Sfx", "Sound", Trim$(Options.Sound))
+        myXml.WriteString("Sfx", "Volume", Trim$(Options.Volume))
+
+        myXml.WriteString("Misc", "ScreenSize", Trim$(Options.ScreenSize))
+        myXml.WriteString("Misc", "HighEnd", Trim$(Options.HighEnd))
+        myXml.WriteString("Misc", "ShowNpcBar", Trim$(Options.ShowNpcBar))
+
+        myXml.CloseXml(True)
+    End Sub
 
     Public Sub SaveOptions()
         Dim myXml As New XmlClass With {
@@ -230,24 +271,6 @@ Module ClientDataBase
         }
 
         myXml.LoadXml()
-
-        If Not FileExist(myXml.Filename) Then
-            Options.Password = ""
-            Options.SavePass = False
-            Options.Username = ""
-            Options.IP = "Localhost"
-            Options.Port = 7001
-            Options.MenuMusic = ""
-            Options.Music = 1
-            Options.Sound = 1
-            Options.Volume = 100
-            Options.ScreenSize = 0
-            Options.HighEnd = 0
-            Options.ShowNpcBar = 0
-            SaveOptions()
-            'SaveXMLOptions()
-            myXml.CloseXml(True)
-        Else
             Options.Username = myXml.ReadString("UserInfo", "Username", "") 'Getvar(FileName, "Options", "Username")
             Options.Password = myXml.ReadString("UserInfo", "Password", "") 'Getvar(FileName, "Options", "Password")
             Options.SavePass = myXml.ReadString("UserInfo", "SavePass", "False") 'Getvar(FileName, "Options", "SavePass")
@@ -263,8 +286,7 @@ Module ClientDataBase
             Options.ScreenSize = myXml.ReadString("Misc", "ScreenSize", "0") 'Getvar(FileName, "Options", "ScreenSize")
             Options.HighEnd = Val(myXml.ReadString("Misc", "HighEnd", "0")) 'Getvar(FileName, "Options", "HighEnd"))
             Options.ShowNpcBar = Val(myXml.ReadString("Misc", "ShowNpcBar", "1")) 'Getvar(FileName, "Options", "ShowNpcBar"))
-            myXml.CloseXml(True)
-        End If
+        myXml.CloseXml(True)
 
         ' show in GUI
         If Options.Music = 1 Then

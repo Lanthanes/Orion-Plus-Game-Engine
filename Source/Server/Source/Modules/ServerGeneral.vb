@@ -164,7 +164,8 @@ Module ServerGeneral
         vbQuote = Chr(34) ' "
 
         ' load options, set if they dont exist
-        If Not FileExist(Path.Combine(Application.StartupPath, "data", "Config.xml")) Then
+        If Not FileExist(Path.Combine(Application.StartupPath, "Data", "Config.xml")) Then
+
             Options.GameName = "Orion+"
             Options.Port = 7001
             Options.Motd = "Welcome to the Orion+ Engine"
