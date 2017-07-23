@@ -71,7 +71,6 @@ Public Module ServerProjectiles
             reader.Read(Projectiles(i).Speed)
             reader.Read(Projectiles(i).Damage)
 
-            DoEvents()
         Next
 
     End Sub
@@ -372,7 +371,7 @@ Public Module ServerProjectiles
             .Dir = GetPlayerDir(Index)
             .X = GetPlayerX(Index)
             .Y = GetPlayerY(Index)
-            .Timer = GetTickCount() + 60000
+            .Timer = GetTimeMs() + 60000
         End With
 
         SendProjectileToMap(MapNum, ProjectileSlot)

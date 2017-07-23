@@ -357,7 +357,7 @@ Public Module ServerEventLogic
                     For x = 1 To TempEventMap(i).EventCount
                         If TempEventMap(i).Events(x).Active > 0 Then
                             pageNum = 1
-                            If TempEventMap(i).Events(x).MoveTimer <= GetTickCount() Then
+                            If TempEventMap(i).Events(x).MoveTimer <= GetTimeMs() Then
                                 'Real event! Lets process it!
                                 Select Case TempEventMap(i).Events(x).MoveType
                                     Case 0
@@ -526,11 +526,11 @@ Public Module ServerEventLogic
                                                                 End If
                                                             End If
                                                         Case 10
-                                                            .MoveTimer = GetTickCount() + 100
+                                                            .MoveTimer = GetTimeMs() + 100
                                                         Case 11
-                                                            .MoveTimer = GetTickCount() + 500
+                                                            .MoveTimer = GetTimeMs() + 500
                                                         Case 12
-                                                            .MoveTimer = GetTickCount() + 1000
+                                                            .MoveTimer = GetTimeMs() + 1000
                                                         Case 13
                                                             EventDir(playerID, MapNum, eventID, Direction.Up, isglobal)
                                                         Case 14
@@ -700,22 +700,21 @@ Public Module ServerEventLogic
 
                                 Select Case TempEventMap(i).Events(x).MoveFreq
                                     Case 0
-                                        TempEventMap(i).Events(x).MoveTimer = GetTickCount() + 4000
+                                        TempEventMap(i).Events(x).MoveTimer = GetTimeMs() + 4000
                                     Case 1
-                                        TempEventMap(i).Events(x).MoveTimer = GetTickCount() + 2000
+                                        TempEventMap(i).Events(x).MoveTimer = GetTimeMs() + 2000
                                     Case 2
-                                        TempEventMap(i).Events(x).MoveTimer = GetTickCount() + 1000
+                                        TempEventMap(i).Events(x).MoveTimer = GetTimeMs() + 1000
                                     Case 3
-                                        TempEventMap(i).Events(x).MoveTimer = GetTickCount() + 500
+                                        TempEventMap(i).Events(x).MoveTimer = GetTimeMs() + 500
                                     Case 4
-                                        TempEventMap(i).Events(x).MoveTimer = GetTickCount() + 250
+                                        TempEventMap(i).Events(x).MoveTimer = GetTimeMs() + 250
                                 End Select
                             End If
                         End If
                     Next
                 End If
             End If
-            DoEvents()
         Next
 
     End Sub
@@ -738,7 +737,7 @@ Public Module ServerEventLogic
 
                         If Map(GetPlayerMap(i)).Events(TempPlayer(i).EventMap.EventPages(x).EventID).Globals = 0 Then
                             If TempPlayer(i).EventMap.EventPages(x).Visible = 1 Then
-                                If TempPlayer(i).EventMap.EventPages(x).MoveTimer <= GetTickCount() Then
+                                If TempPlayer(i).EventMap.EventPages(x).MoveTimer <= GetTimeMs() Then
                                     'Real event! Lets process it!
                                     Select Case TempPlayer(i).EventMap.EventPages(x).MoveType
                                         Case 0
@@ -849,7 +848,7 @@ Public Module ServerEventLogic
                                                                         If Map(GetPlayerMap(playerID)).Events(eventID).Pages(TempPlayer(playerID).EventMap.EventPages(eventID).PageID).Trigger = 1 Then
                                                                             If Map(MapNum).Events(eventID).Pages(TempPlayer(playerID).EventMap.EventPages(eventID).PageID).CommandListCount > 0 Then
                                                                                 TempPlayer(playerID).EventProcessing(eventID).Active = 1
-                                                                                TempPlayer(playerID).EventProcessing(eventID).ActionTimer = GetTickCount()
+                                                                                TempPlayer(playerID).EventProcessing(eventID).ActionTimer = GetTimeMs()
                                                                                 TempPlayer(playerID).EventProcessing(eventID).CurList = 1
                                                                                 TempPlayer(playerID).EventProcessing(eventID).CurSlot = 1
                                                                                 TempPlayer(playerID).EventProcessing(eventID).EventID = eventID
@@ -923,11 +922,11 @@ Public Module ServerEventLogic
                                                                     End If
                                                                 End If
                                                             Case 10
-                                                                .MoveTimer = GetTickCount() + 100
+                                                                .MoveTimer = GetTimeMs() + 100
                                                             Case 11
-                                                                .MoveTimer = GetTickCount() + 500
+                                                                .MoveTimer = GetTimeMs() + 500
                                                             Case 12
-                                                                .MoveTimer = GetTickCount() + 1000
+                                                                .MoveTimer = GetTimeMs() + 1000
                                                             Case 13
                                                                 EventDir(playerID, MapNum, eventID, Direction.Up, isglobal)
                                                             Case 14
@@ -1096,15 +1095,15 @@ Public Module ServerEventLogic
                                     End Select
                                     Select Case TempPlayer(playerID).EventMap.EventPages(x).MoveFreq
                                         Case 0
-                                            TempPlayer(playerID).EventMap.EventPages(x).MoveTimer = GetTickCount() + 4000
+                                            TempPlayer(playerID).EventMap.EventPages(x).MoveTimer = GetTimeMs() + 4000
                                         Case 1
-                                            TempPlayer(playerID).EventMap.EventPages(x).MoveTimer = GetTickCount() + 2000
+                                            TempPlayer(playerID).EventMap.EventPages(x).MoveTimer = GetTimeMs() + 2000
                                         Case 2
-                                            TempPlayer(playerID).EventMap.EventPages(x).MoveTimer = GetTickCount() + 1000
+                                            TempPlayer(playerID).EventMap.EventPages(x).MoveTimer = GetTimeMs() + 1000
                                         Case 3
-                                            TempPlayer(playerID).EventMap.EventPages(x).MoveTimer = GetTickCount() + 500
+                                            TempPlayer(playerID).EventMap.EventPages(x).MoveTimer = GetTimeMs() + 500
                                         Case 4
-                                            TempPlayer(playerID).EventMap.EventPages(x).MoveTimer = GetTickCount() + 250
+                                            TempPlayer(playerID).EventMap.EventPages(x).MoveTimer = GetTimeMs() + 250
                                     End Select
                                 End If
                             End If
@@ -1112,7 +1111,6 @@ Public Module ServerEventLogic
                     Next
                 End If
             End If
-            DoEvents()
         Next
 
     End Sub
@@ -1136,7 +1134,7 @@ Public Module ServerEventLogic
                                         'start new event processing
                                         TempPlayer(i).EventProcessing(TempPlayer(i).EventMap.EventPages(x).EventID).Active = 1
                                         With TempPlayer(i).EventProcessing(TempPlayer(i).EventMap.EventPages(x).EventID)
-                                            .ActionTimer = GetTickCount()
+                                            .ActionTimer = GetTimeMs()
                                             .CurList = 1
                                             .CurSlot = 1
                                             .EventID = TempPlayer(i).EventMap.EventPages(x).EventID
@@ -1151,7 +1149,7 @@ Public Module ServerEventLogic
                                     'Clearly need to start it!
                                     TempPlayer(i).EventProcessing(TempPlayer(i).EventMap.EventPages(x).EventID).Active = 1
                                     With TempPlayer(i).EventProcessing(TempPlayer(i).EventMap.EventPages(x).EventID)
-                                        .ActionTimer = GetTickCount()
+                                        .ActionTimer = GetTimeMs()
                                         .CurList = 1
                                         .CurSlot = 1
                                         .EventID = TempPlayer(i).EventMap.EventPages(x).EventID
@@ -1205,7 +1203,7 @@ Public Module ServerEventLogic
                                         End If
                                     End If
                                     If .WaitingForResponse = 0 Then
-                                        If .ActionTimer <= GetTickCount() Then
+                                        If .ActionTimer <= GetTimeMs() Then
                                             restartlist = True
                                             endprocess = False
                                             Do While restartlist = True And endprocess = False And .WaitingForResponse = 0
@@ -1855,7 +1853,7 @@ Public Module ServerEventLogic
                                                         Case EventType.evSetTint
                                                             SendSpecialEffect(i, EFFECT_TYPE_TINT, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data2, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data3, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data4)
                                                         Case EventType.evWait
-                                                            .ActionTimer = GetTickCount() + Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1
+                                                            .ActionTimer = GetTimeMs() + Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1
                                                         Case EventType.evOpenMail
                                                             'SendMailBox(i)
                                                         Case EventType.evBeginQuest
@@ -2176,9 +2174,8 @@ Public Module ServerEventLogic
                             End If
                         End If
                     End If
-                    DoEvents()
-                Next i
-            Next j
+                Next
+            Next
 
             'If the reachable is STILL false, then
             If reachable = False Then
@@ -2269,7 +2266,6 @@ Public Module ServerEventLogic
             path(tim).Y = LastY
 
             'Now we loop back and decrease tim, and look for the next square with lower value
-            DoEvents()
         Loop
 
         'Ok we got a path. Now, lets look at the first step and see what direction we should take.
@@ -2289,7 +2285,6 @@ Public Module ServerEventLogic
         Dim i As Integer
 
         For i = 0 To MAX_MAPS
-            DoEvents()
             SpawnGlobalEvents(i)
         Next
 

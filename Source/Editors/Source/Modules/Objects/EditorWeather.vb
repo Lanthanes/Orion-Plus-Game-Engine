@@ -133,7 +133,7 @@ Public Module EditorWeather
 
         'seeying we still use it, lets update timer
         With FogGFXInfo(fogNum)
-            .TextureTimer = GetTickCount() + 100000
+            .TextureTimer = GetTimeMs() + 100000
         End With
 
         Dim tmpSprite As Sprite

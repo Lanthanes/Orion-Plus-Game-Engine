@@ -2,7 +2,7 @@
 
 Module ClientPets
 #Region "Globals etc"
-    Public Pet() As PetRec
+    Public Pet() As PetStruct
 
     Public Const PetbarTop As Byte = 2
     Public Const PetbarLeft As Byte = 2
@@ -23,8 +23,10 @@ Module ClientPets
     Public Const PET_ATTACK_BEHAVIOUR_ATTACKONSIGHT As Byte = 2 'The pet will attack all npcs around
     Public Const PET_ATTACK_BEHAVIOUR_GUARD As Byte = 3 'If attacked, the pet will fight back
     Public Const PET_ATTACK_BEHAVIOUR_DONOTHING As Byte = 4 'The pet will not attack even if attacked
+#End Region
 
-    Public Structure PetRec
+#Region "Structures"
+    Public Structure PetStruct
         Dim Num As Integer
         Dim Name As String
         Dim Sprite As Integer
@@ -49,7 +51,7 @@ Module ClientPets
         Dim EvolveNum As Integer
     End Structure
 
-    Public Structure PlayerPetRec
+    Public Structure PlayerPetStruct
         Dim Num As Integer
         Dim Health As Integer
         Dim Mana As Integer
@@ -79,7 +81,7 @@ Module ClientPets
 #End Region
 
 #Region "Database"
-    Sub ClearPet(ByVal Index As Integer)
+    Sub ClearPet(Index As Integer)
 
         Pet(Index).Name = ""
 
@@ -101,7 +103,7 @@ Module ClientPets
 #End Region
 
 #Region "Outgoing Packets"
-    Public Sub SendPetBehaviour(ByVal Index As Integer)
+    Public Sub SendPetBehaviour(Index As Integer)
         Dim buffer As New ByteBuffer
 
         buffer.WriteInteger(ClientPackets.CSetBehaviour)
@@ -113,7 +115,7 @@ Module ClientPets
 
     End Sub
 
-    Sub SendTrainPetStat(ByVal StatNum As Byte)
+    Sub SendTrainPetStat(StatNum As Byte)
         Dim buffer As New ByteBuffer
 
         buffer.WriteInteger(ClientPackets.CPetUseStatPoint)
@@ -135,7 +137,7 @@ Module ClientPets
 
     End Sub
 
-    Sub SendUsePetSkill(ByVal skill As Integer)
+    Sub SendUsePetSkill(skill As Integer)
         Dim buffer As New ByteBuffer
 
         buffer.WriteInteger(ClientPackets.CPetSkill)
@@ -145,7 +147,7 @@ Module ClientPets
         buffer = Nothing
 
         PetSkillBuffer = skill
-        PetSkillBufferTimer = GetTickCount()
+        PetSkillBufferTimer = GetTimeMs()
     End Sub
 
     Sub SendSummonPet()
@@ -170,7 +172,7 @@ Module ClientPets
 #End Region
 
 #Region "Incoming Packets"
-    Public Sub Packet_UpdatePlayerPet(ByVal Data() As Byte)
+    Public Sub Packet_UpdatePlayerPet(Data() As Byte)
         Dim n As Integer, i As Long
         Dim buffer As New ByteBuffer
 
@@ -212,7 +214,7 @@ Module ClientPets
         buffer = Nothing
     End Sub
 
-    Public Sub Packet_UpdatePet(ByVal Data() As Byte)
+    Public Sub Packet_UpdatePet(Data() As Byte)
         Dim n As Integer, i As Integer
         Dim buffer As New ByteBuffer
 
@@ -251,7 +253,7 @@ Module ClientPets
 
     End Sub
 
-    Public Sub Packet_PetMove(ByVal data() As Byte)
+    Public Sub Packet_PetMove(data() As Byte)
         Dim i As Integer, X As Integer, Y As Integer
         Dim dir As Integer, Movement As Integer
         Dim buffer As New ByteBuffer
@@ -290,7 +292,7 @@ Module ClientPets
         buffer = Nothing
     End Sub
 
-    Public Sub Packet_PetDir(ByVal Data() As Byte)
+    Public Sub Packet_PetDir(Data() As Byte)
         Dim i As Integer
         Dim dir As Integer
         Dim buffer As New ByteBuffer
@@ -308,7 +310,7 @@ Module ClientPets
         buffer = Nothing
     End Sub
 
-    Public Sub Packet_PetVital(ByVal Data() As Byte)
+    Public Sub Packet_PetVital(Data() As Byte)
         Dim i As Integer
         Dim buffer As New ByteBuffer
 
@@ -331,7 +333,7 @@ Module ClientPets
 
     End Sub
 
-    Public Sub Packet_ClearPetSkillBuffer(ByVal Data() As Byte)
+    Public Sub Packet_ClearPetSkillBuffer(Data() As Byte)
         Dim buffer As New ByteBuffer
 
         buffer.WriteBytes(Data)
@@ -345,7 +347,7 @@ Module ClientPets
         buffer = Nothing
     End Sub
 
-    Public Sub Packet_PetAttack(ByVal Data() As Byte)
+    Public Sub Packet_PetAttack(Data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteBuffer
 
@@ -357,12 +359,12 @@ Module ClientPets
 
         ' Set pet to attacking
         Player(i).Pet.Attacking = 1
-        Player(i).Pet.AttackTimer = GetTickCount()
+        Player(i).Pet.AttackTimer = GetTimeMs()
 
         Buffer = Nothing
     End Sub
 
-    Public Sub Packet_PetXY(ByVal Data() As Byte)
+    Public Sub Packet_PetXY(Data() As Byte)
         Dim i As Integer
         Dim buffer As New ByteBuffer
 
@@ -377,7 +379,7 @@ Module ClientPets
         buffer = Nothing
     End Sub
 
-    Public Sub Packet_PetExperience(ByVal Data() As Byte)
+    Public Sub Packet_PetExperience(Data() As Byte)
         Dim buffer As New ByteBuffer
 
         buffer.WriteBytes(Data)
@@ -393,7 +395,7 @@ Module ClientPets
 #End Region
 
 #Region "Movement"
-    Sub ProcessPetMovement(ByVal Index As Integer)
+    Sub ProcessPetMovement(Index As Integer)
 
         ' Check if pet is walking, and if so process moving them over
 
@@ -444,7 +446,7 @@ Module ClientPets
 
     End Sub
 
-    Public Sub PetMove(ByVal X As Integer, ByVal Y As Integer)
+    Public Sub PetMove(X As Integer, Y As Integer)
         Dim buffer As New ByteBuffer
 
         buffer.WriteInteger(ClientPackets.CPetMove)
@@ -460,7 +462,7 @@ Module ClientPets
 #End Region
 
 #Region "Drawing"
-    Public Sub DrawPet(ByVal Index As Integer)
+    Public Sub DrawPet(Index As Integer)
         Dim Anim As Byte, X As Integer, Y As Integer
         Dim Sprite As Integer, spriteleft As Integer
         Dim srcrec As Rectangle
@@ -482,7 +484,7 @@ Module ClientPets
         End If
 
         ' Check for attacking animation
-        If Player(Index).Pet.AttackTimer + (attackspeed / 2) > GetTickCount() Then
+        If Player(Index).Pet.AttackTimer + (attackspeed / 2) > GetTimeMs() Then
             If Player(Index).Pet.Attacking = 1 Then
                 Anim = 3
             End If
@@ -502,7 +504,7 @@ Module ClientPets
 
         ' Check to see if we want to stop making him attack
         With Player(Index).Pet
-            If .AttackTimer + attackspeed < GetTickCount() Then
+            If .AttackTimer + attackspeed < GetTimeMs() Then
                 .Attacking = 0
                 .AttackTimer = 0
             End If
@@ -539,7 +541,7 @@ Module ClientPets
 
     End Sub
 
-    Public Sub DrawPlayerPetName(ByVal Index As Integer)
+    Public Sub DrawPlayerPetName(Index As Integer)
         Dim TextX As Integer
         Dim TextY As Integer
         Dim color As SFML.Graphics.Color, backcolor As SFML.Graphics.Color
@@ -608,7 +610,7 @@ Module ClientPets
 
                     'seeying we still use it, lets update timer
                     With SkillIconsGFXInfo(skillpic)
-                        .TextureTimer = GetTickCount() + 100000
+                        .TextureTimer = GetTimeMs() + 100000
                     End With
 
                     With rec
@@ -678,7 +680,7 @@ Module ClientPets
 #End Region
 
 #Region "Misc"
-    Public Function PetAlive(ByVal index As Integer) As Boolean
+    Public Function PetAlive(index As Integer) As Boolean
         PetAlive = False
 
         If Player(index).Pet.Alive = 1 Then
@@ -687,7 +689,7 @@ Module ClientPets
 
     End Function
 
-    Public Function HasPet(ByVal index As Integer) As Boolean
+    Public Function HasPet(index As Integer) As Boolean
         HasPet = False
 
         If Player(index).Pet.Num > 0 Then
@@ -695,7 +697,7 @@ Module ClientPets
         End If
     End Function
 
-    Public Function IsPetBarSlot(ByVal X As Single, ByVal Y As Single) As Integer
+    Public Function IsPetBarSlot(X As Single, Y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
 
@@ -704,14 +706,14 @@ Module ClientPets
         For i = 1 To MAX_PETBAR
 
             With tempRec
-                .top = PetbarY + PetbarTop
-                .bottom = .top + PIC_Y
-                .left = PetbarX + PetbarLeft + ((PetbarOffsetX + 32) * (((i - 1) Mod MAX_PETBAR)))
-                .right = .left + PIC_X
+                .Top = PetbarY + PetbarTop
+                .Bottom = .Top + PIC_Y
+                .Left = PetbarX + PetbarLeft + ((PetbarOffsetX + 32) * (((i - 1) Mod MAX_PETBAR)))
+                .Right = .Left + PIC_X
             End With
 
-            If X >= tempRec.left And X <= tempRec.right Then
-                If Y >= tempRec.top And Y <= tempRec.bottom Then
+            If X >= tempRec.Left And X <= tempRec.Right Then
+                If Y >= tempRec.Top And Y <= tempRec.Bottom Then
                     IsPetBarSlot = i
                     Exit Function
                 End If

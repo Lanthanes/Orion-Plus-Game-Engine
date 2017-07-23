@@ -1,8 +1,8 @@
-﻿Imports System.Windows.Forms
-Imports SFML.Graphics
+﻿Imports SFML.Graphics
 Imports SFML.Window
 
-Public Module ClientHousing
+Public Module EditorHousing
+
 #Region "Globals & Types"
     Public MAX_HOUSES As Integer = 100
 
@@ -55,60 +55,7 @@ Public Module ClientHousing
             HouseConfig(i).MaxFurniture = buffer.ReadInteger
             HouseConfig(i).Price = buffer.ReadInteger
         Next
-
         buffer = Nothing
-
-    End Sub
-
-    Sub Packet_HouseOffer(ByVal Data() As Byte)
-        Dim buffer As New ByteBuffer, i As Integer
-
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SBuyHouse Then Exit Sub
-
-        i = buffer.ReadInteger
-
-        buffer = Nothing
-
-        DialogType = DIALOGUE_TYPE_BUYHOME
-        If HouseConfig(i).MaxFurniture > 0 Then
-            ' ask to buy house
-            DialogMsg1 = "Would you like to buy the house: " & Trim$(HouseConfig(i).ConfigName)
-            DialogMsg2 = "Cost: " & HouseConfig(i).Price
-            DialogMsg3 = "Furniture Limit: " & HouseConfig(i).MaxFurniture
-        Else
-            DialogMsg1 = "Would you like to buy the house: " & Trim$(HouseConfig(i).ConfigName)
-            DialogMsg2 = "Cost: " & HouseConfig(i).Price
-            DialogMsg3 = "Furniture Limit: None."
-        End If
-
-        UpdateDialog = True
-
-        buffer = Nothing
-
-    End Sub
-
-    Sub Packet_Visit(ByVal Data() As Byte)
-        Dim buffer As New ByteBuffer, i As Integer
-
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SVisit Then Exit Sub
-
-        i = buffer.ReadInteger
-
-        DialogType = DIALOGUE_TYPE_VISIT
-
-        DialogMsg1 = "You have been invited to visit " & Trim$(GetPlayerName(i)) & "'s house."
-        DialogMsg2 = ""
-        DialogMsg3 = ""
-
-        buffer = Nothing
-
-        UpdateDialog = True
 
     End Sub
 
@@ -165,44 +112,127 @@ Public Module ClientHousing
 
 #Region "Outgoing Packets"
     Public Sub SendRequestEditHouse()
-        Dim buffer As New ByteBuffer
+        Dim buffer As ByteBuffer
+
+        buffer = New ByteBuffer
 
         buffer.WriteInteger(EditorPackets.RequestEditHouse)
-
         SendData(buffer.ToArray)
+
         buffer = Nothing
 
     End Sub
 
     Public Sub SendBuyHouse(ByVal Accepted As Byte)
-        Dim buffer As New ByteBuffer
+        Dim buffer As ByteBuffer
+        buffer = New ByteBuffer
 
         buffer.WriteInteger(ClientPackets.CBuyHouse)
         buffer.WriteInteger(Accepted)
-
         SendData(buffer.ToArray)
+
         buffer = Nothing
     End Sub
 
     Public Sub SendInvite(ByVal Name As String)
-        Dim buffer As New ByteBuffer
+        Dim buffer As ByteBuffer
+        buffer = New ByteBuffer
 
         buffer.WriteInteger(ClientPackets.CVisit)
         buffer.WriteString(Name)
-
         SendData(buffer.ToArray)
+
         buffer = Nothing
     End Sub
 
     Public Sub SendVisit(ByVal Accepted As Byte)
-        Dim buffer As New ByteBuffer
+        Dim buffer As ByteBuffer
+        buffer = New ByteBuffer
 
         buffer.WriteInteger(ClientPackets.CAcceptVisit)
         buffer.WriteInteger(Accepted)
+        SendData(buffer.ToArray)
+
+        buffer = Nothing
+    End Sub
+#End Region
+
+#Region "Editor"
+    Public Sub HouseEditorInit()
+
+        If FrmEditor_House.Visible = False Then Exit Sub
+
+        EditorIndex = FrmEditor_House.lstIndex.SelectedIndex + 1
+
+        With House(EditorIndex)
+            FrmEditor_House.txtName.Text = Trim$(.ConfigName)
+            If .BaseMap = 0 Then .BaseMap = 1
+            FrmEditor_House.nudBaseMap.Value = .BaseMap
+            If .X = 0 Then .X = 1
+            FrmEditor_House.nudX.Value = .X
+            If .Y = 0 Then .Y = 1
+            FrmEditor_House.nudY.Value = .Y
+            FrmEditor_House.nudPrice.Value = .Price
+            FrmEditor_House.nudFurniture.Value = .MaxFurniture
+        End With
+
+        House_Changed(EditorIndex) = True
+
+    End Sub
+
+    Public Sub HouseEditorCancel()
+
+        Editor = 0
+        FrmEditor_House.Dispose()
+
+        ClearChanged_House()
+
+    End Sub
+
+    Public Sub HouseEditorOk()
+        Dim i As Integer, buffer As ByteBuffer, count As Integer
+        buffer = New ByteBuffer
+
+        buffer.WriteInteger(EditorPackets.SaveHouses)
+
+        For i = 1 To MAX_HOUSES
+            If House_Changed(i) Then count = count + 1
+        Next
+
+        buffer.WriteInteger(count)
+
+        If count > 0 Then
+            For i = 1 To MAX_HOUSES
+                If House_Changed(i) Then
+                    buffer.WriteInteger(i)
+                    buffer.WriteString(Trim$(House(i).ConfigName))
+                    buffer.WriteInteger(House(i).BaseMap)
+                    buffer.WriteInteger(House(i).X)
+                    buffer.WriteInteger(House(i).Y)
+                    buffer.WriteInteger(House(i).Price)
+                    buffer.WriteInteger(House(i).MaxFurniture)
+                End If
+            Next
+        End If
 
         SendData(buffer.ToArray)
         buffer = Nothing
+        FrmEditor_House.Dispose()
+        Editor = 0
+
+        ClearChanged_House()
+
     End Sub
+
+    Public Sub ClearChanged_House()
+
+        For i = 1 To MAX_HOUSES
+            House_Changed(i) = Nothing
+        Next i
+
+        ReDim House_Changed(0 To MAX_HOUSES)
+    End Sub
+
 #End Region
 
 #Region "Drawing"
@@ -234,7 +264,7 @@ Public Module ClientHousing
 
         'seeying we still use it, lets update timer
         With SkillIconsGFXInfo(i)
-            .TextureTimer = GetTickCount() + 100000
+            .TextureTimer = GetTimeMs() + 100000
         End With
 
         Width = Item(ItemNum).FurnitureWidth

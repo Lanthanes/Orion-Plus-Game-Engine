@@ -1,6 +1,4 @@
-﻿Imports SFML.Graphics
-
-Public Module ClientAutoTiles
+﻿Public Module ClientAutoTiles
 #Region "Globals and Types"
     ' Autotiles
     Public Const AUTO_INNER As Byte = 1
@@ -73,7 +71,7 @@ Public Module ClientAutoTiles
     '\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     '   All of this code is for auto tiles and the math behind generating them.
     '\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    Public Sub PlaceAutotile(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal tileQuarter As Byte, ByVal autoTileLetter As String)
+    Public Sub PlaceAutotile(layerNum As Integer, X As Integer, Y As Integer, tileQuarter As Byte, autoTileLetter As String)
 
         If layerNum > MapLayer.Count - 1 Then
             layerNum = layerNum - (MapLayer.Count - 1)
@@ -311,7 +309,7 @@ Public Module ClientAutoTiles
 
     End Sub
 
-    Public Sub CacheRenderState(ByVal X As Integer, ByVal Y As Integer, ByVal layerNum As Integer)
+    Public Sub CacheRenderState(X As Integer, Y As Integer, layerNum As Integer)
         Dim quarterNum As Integer
 
         ' exit out early
@@ -354,7 +352,7 @@ Public Module ClientAutoTiles
 
     End Sub
 
-    Public Sub CalculateAutotile(ByVal X As Integer, ByVal Y As Integer, ByVal layerNum As Integer)
+    Public Sub CalculateAutotile(X As Integer, Y As Integer, layerNum As Integer)
         ' Right, so we've split the tile block in to an easy to remember
         ' collection of letters. We now need to do the calculations to find
         ' out which little lettered block needs to be rendered. We do this
@@ -406,7 +404,7 @@ Public Module ClientAutoTiles
     End Sub
 
     ' Normal autotiling
-    Public Sub CalculateNW_Normal(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Public Sub CalculateNW_Normal(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -443,7 +441,7 @@ Public Module ClientAutoTiles
 
     End Sub
 
-    Public Sub CalculateNE_Normal(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Public Sub CalculateNE_Normal(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -480,7 +478,7 @@ Public Module ClientAutoTiles
 
     End Sub
 
-    Public Sub CalculateSW_Normal(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Public Sub CalculateSW_Normal(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -517,7 +515,7 @@ Public Module ClientAutoTiles
 
     End Sub
 
-    Public Sub CalculateSE_Normal(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Public Sub CalculateSE_Normal(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -555,7 +553,7 @@ Public Module ClientAutoTiles
     End Sub
 
     ' Waterfall autotiling
-    Public Sub CalculateNW_Waterfall(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Public Sub CalculateNW_Waterfall(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile As Boolean
         ' West
 
@@ -571,7 +569,7 @@ Public Module ClientAutoTiles
 
     End Sub
 
-    Public Sub CalculateNE_Waterfall(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Public Sub CalculateNE_Waterfall(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile As Boolean
         ' East
 
@@ -587,7 +585,7 @@ Public Module ClientAutoTiles
 
     End Sub
 
-    Public Sub CalculateSW_Waterfall(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Public Sub CalculateSW_Waterfall(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile As Boolean
         ' West
 
@@ -603,7 +601,7 @@ Public Module ClientAutoTiles
 
     End Sub
 
-    Public Sub CalculateSE_Waterfall(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Public Sub CalculateSE_Waterfall(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile As Boolean
         ' East
 
@@ -620,7 +618,7 @@ Public Module ClientAutoTiles
     End Sub
 
     ' Cliff autotiling
-    Public Sub CalculateNW_Cliff(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Public Sub CalculateNW_Cliff(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -654,7 +652,7 @@ Public Module ClientAutoTiles
 
     End Sub
 
-    Public Sub CalculateNE_Cliff(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Public Sub CalculateNE_Cliff(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -688,7 +686,7 @@ Public Module ClientAutoTiles
 
     End Sub
 
-    Public Sub CalculateSW_Cliff(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Public Sub CalculateSW_Cliff(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -722,7 +720,7 @@ Public Module ClientAutoTiles
 
     End Sub
 
-    Public Sub CalculateSE_Cliff(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Public Sub CalculateSE_Cliff(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -756,7 +754,7 @@ Public Module ClientAutoTiles
 
     End Sub
 
-    Public Function CheckTileMatch(ByVal layerNum As Integer, ByVal X1 As Integer, ByVal Y1 As Integer, ByVal X2 As Integer, ByVal Y2 As Integer) As Boolean
+    Public Function CheckTileMatch(layerNum As Integer, X1 As Integer, Y1 As Integer, X2 As Integer, Y2 As Integer) As Boolean
         ' we'll exit out early if true
         'Dim exTile As Boolean
 
@@ -800,7 +798,7 @@ Public Module ClientAutoTiles
         End If
     End Function
 
-    Public Sub DrawAutoTile(ByVal layerNum As Integer, ByVal destX As Integer, ByVal destY As Integer, ByVal quarterNum As Integer, ByVal X As Integer, ByVal Y As Integer, Optional forceFrame As Integer = 0, Optional strict As Boolean = True)
+    Public Sub DrawAutoTile(layerNum As Integer, destX As Integer, destY As Integer, quarterNum As Integer, X As Integer, Y As Integer, Optional forceFrame As Integer = 0, Optional strict As Boolean = True)
         Dim YOffset As Integer, XOffset As Integer
         'Dim tmpSprite As Sprite
 
@@ -836,11 +834,6 @@ Public Module ClientAutoTiles
                 YOffset = -32
         End Select
 
-        ' Draw the quarter
-        'TileSetSprite(Map.Tile(X, Y).Layer(layerNum).Tileset).TextureRect = New IntRect(Autotile(X, Y).Layer(layerNum).srcX(quarterNum) + XOffset, Autotile(X, Y).Layer(layerNum).srcY(quarterNum) + YOffset, 16, 16)
-        'TileSetSprite(Map.Tile(X, Y).Layer(layerNum).Tileset).Position = New SFML.Window.Vector2f(destX, destY)
-
-        'GameWindow.Draw(TileSetSprite(Map.Tile(X, Y).Layer(layerNum).Tileset))
         If Map.Tile(X, Y).Layer Is Nothing Then Exit Sub
         RenderSprite(TileSetSprite(Map.Tile(X, Y).Layer(layerNum).Tileset), GameWindow, destX, destY, Autotile(X, Y).Layer(layerNum).srcX(quarterNum) + XOffset, Autotile(X, Y).Layer(layerNum).srcY(quarterNum) + YOffset, 16, 16)
     End Sub

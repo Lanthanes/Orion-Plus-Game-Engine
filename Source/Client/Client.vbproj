@@ -103,7 +103,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Source\Modules\ClientOptions.vb" />
-    <Compile Include="Source\Modules\ClientChat.vb" />
+    <Compile Include="Source\Modules\Gui\ClientChat.vb" />
     <Compile Include="Source\Forms\frmAdmin.Designer.vb">
       <DependentUpon>frmAdmin.vb</DependentUpon>
     </Compile>
@@ -140,29 +140,30 @@
     <Compile Include="Source\Forms\frmOptions.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Source\Modules\ClientAutoTiles.vb" />
-    <Compile Include="Source\Modules\ClientCrafting.vb" />
-    <Compile Include="Source\Modules\ClientEventSystem.vb" />
-    <Compile Include="Source\Modules\ClientGuiFunctions.vb" />
-    <Compile Include="Source\Modules\ClientHandleData.vb" />
+    <Compile Include="Source\Modules\Gui\ClientText.vb" />
+    <Compile Include="Source\Modules\Objects\ClientAutoTiles.vb" />
+    <Compile Include="Source\Modules\Objects\ClientCrafting.vb" />
+    <Compile Include="Source\Modules\Objects\ClientEvents.vb" />
+    <Compile Include="Source\Modules\Gui\ClientGuiFunctions.vb" />
+    <Compile Include="Source\Modules\Networking\ClientHandleData.vb" />
     <Compile Include="Source\Modules\ClientGlobals.vb" />
     <Compile Include="Source\Modules\ClientGeneral.vb" />
     <Compile Include="Source\Modules\ClientGameLogic.vb" />
     <Compile Include="Source\Modules\ClientGraphics.vb" />
-    <Compile Include="Source\Modules\ClientHotBar.vb" />
-    <Compile Include="Source\Modules\ClientHousing.vb" />
-    <Compile Include="Source\Modules\ClientParties.vb" />
-    <Compile Include="Source\Modules\ClientPets.vb" />
-    <Compile Include="Source\Modules\ClientPlayer.vb" />
-    <Compile Include="Source\Modules\ClientProjectiles.vb" />
-    <Compile Include="Source\Modules\ClientQuest.vb" />
+    <Compile Include="Source\Modules\Objects\ClientHotBar.vb" />
+    <Compile Include="Source\Modules\Objects\ClientHousing.vb" />
+    <Compile Include="Source\Modules\Objects\ClientNpc.vb" />
+    <Compile Include="Source\Modules\Objects\ClientParties.vb" />
+    <Compile Include="Source\Modules\Objects\ClientPets.vb" />
+    <Compile Include="Source\Modules\Objects\ClientPlayer.vb" />
+    <Compile Include="Source\Modules\Objects\ClientProjectiles.vb" />
+    <Compile Include="Source\Modules\Objects\ClientQuest.vb" />
     <Compile Include="Source\Modules\ClientSound.vb" />
-    <Compile Include="Source\Modules\ClientTCP.vb" />
+    <Compile Include="Source\Modules\Networking\ClientTCP.vb" />
     <Compile Include="Source\Modules\ClientConstants.vb" />
     <Compile Include="Source\Modules\ClientDataBase.vb" />
     <Compile Include="Source\Modules\ClientTime.vb" />
-    <Compile Include="Source\Modules\ClientUpdateUI.vb" />
-    <Compile Include="Source\Modules\ClientText.vb" />
+    <Compile Include="Source\Modules\Gui\ClientUpdateUI.vb" />
     <Compile Include="Source\Modules\ClientTypes.vb" />
     <Compile Include="Source\Modules\ClientWeather.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -2279,6 +2280,7 @@
     <None Include="Resources\Exit.png" />
     <None Include="Resources\Save.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="..\Bindings\Bindings.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

@@ -63,7 +63,7 @@ Public Module ClientCrafting
 
     End Sub
 
-    Sub ClearRecipe(ByVal Num As Integer)
+    Sub ClearRecipe(Num As Integer)
         Recipe(Num).Name = ""
         Recipe(Num).RecipeType = 0
         Recipe(Num).MakeItemNum = 0
@@ -82,7 +82,7 @@ Public Module ClientCrafting
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_UpdateRecipe(ByVal data() As Byte)
+    Sub Packet_UpdateRecipe(data() As Byte)
         Dim n As Integer, i As Integer
         Dim Buffer As New ByteBuffer
 
@@ -110,7 +110,7 @@ Public Module ClientCrafting
 
     End Sub
 
-    Sub Packet_RecipeEditor(ByVal data() As Byte)
+    Sub Packet_RecipeEditor(data() As Byte)
         Dim Buffer As New ByteBuffer
 
         Buffer.WriteBytes(data)
@@ -122,7 +122,7 @@ Public Module ClientCrafting
         Buffer = Nothing
     End Sub
 
-    Sub Packet_SendPlayerRecipe(ByVal data() As Byte)
+    Sub Packet_SendPlayerRecipe(data() As Byte)
         Dim Buffer As New ByteBuffer, i As Integer
 
         Buffer.WriteBytes(data)
@@ -136,7 +136,7 @@ Public Module ClientCrafting
         Buffer = Nothing
     End Sub
 
-    Sub Packet_OpenCraft(ByVal data() As Byte)
+    Sub Packet_OpenCraft(data() As Byte)
         Dim Buffer As New ByteBuffer
 
         Buffer.WriteBytes(data)
@@ -148,7 +148,7 @@ Public Module ClientCrafting
         Buffer = Nothing
     End Sub
 
-    Sub Packet_UpdateCraft(ByVal data() As Byte)
+    Sub Packet_UpdateCraft(data() As Byte)
         Dim Buffer As New ByteBuffer, done As Byte
 
         Buffer.WriteBytes(data)
@@ -187,7 +187,7 @@ Public Module ClientCrafting
         Buffer = Nothing
     End Sub
 
-    Sub SendSaveRecipe(ByVal RecipeNum As Integer)
+    Sub SendSaveRecipe(RecipeNum As Integer)
         Dim Buffer As New ByteBuffer
 
         Buffer.WriteInteger(EditorPackets.SaveRecipe)
@@ -210,7 +210,7 @@ Public Module ClientCrafting
         Buffer = Nothing
     End Sub
 
-    Public Sub SendCraftIt(ByVal RecipeName As String, ByVal Amount As Integer)
+    Public Sub SendCraftIt(RecipeName As String, Amount As Integer)
         Dim Buffer As New ByteBuffer, i As Integer
         Dim recipeindex As Integer
 
@@ -242,7 +242,7 @@ Public Module ClientCrafting
 
         Buffer = Nothing
 
-        CraftTimer = GetTickCount()
+        CraftTimer = GetTimeMs()
         CraftTimerEnabled = True
 
         btnCraftEnabled = False
@@ -293,7 +293,7 @@ Public Module ClientCrafting
         pnlCraftVisible = True
     End Sub
 
-    Sub LoadRecipe(ByVal RecipeName As String)
+    Sub LoadRecipe(RecipeName As String)
         Dim recipeindex As Integer
 
         recipeindex = GetRecipeIndex(RecipeName)
@@ -318,7 +318,7 @@ Public Module ClientCrafting
 
     End Sub
 
-    Function GetRecipeIndex(ByVal RecipeName As String) As Integer
+    Function GetRecipeIndex(RecipeName As String) As Integer
         Dim i As Integer
 
         GetRecipeIndex = 0
@@ -377,7 +377,7 @@ Public Module ClientCrafting
 
             'seeying we still use it, lets update timer
             With ItemsGFXInfo(picProductIndex)
-                .TextureTimer = GetTickCount() + 100000
+                .TextureTimer = GetTimeMs() + 100000
             End With
 
             RenderSprite(ItemsSprite(picProductIndex), GameWindow, CraftPanelX + 267, CraftPanelY + 20, 0, 0, ItemsGFXInfo(picProductIndex).Width, ItemsGFXInfo(picProductIndex).Height)
@@ -397,7 +397,7 @@ Public Module ClientCrafting
 
                 'seeying we still use it, lets update timer
                 With ItemsGFXInfo(picMaterialIndex(i))
-                    .TextureTimer = GetTickCount() + 100000
+                    .TextureTimer = GetTimeMs() + 100000
                 End With
 
                 RenderSprite(ItemsSprite(picMaterialIndex(i)), GameWindow, CraftPanelX + 275, CraftPanelY + y, 0, 0, ItemsGFXInfo(picMaterialIndex(i)).Width, ItemsGFXInfo(picMaterialIndex(i)).Height)

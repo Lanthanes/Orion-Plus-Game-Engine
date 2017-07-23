@@ -16,7 +16,7 @@ Module ClientGameLogic
         Dim tmr100 As Integer, tmr500 As Integer, tmrconnect As Integer
         Dim rendercount As Integer, Fadetmr As Integer
 
-        starttime = GetTickCount()
+        starttime = GetTimeMs()
         FrmMenu.lblNextChar.Left = lblnextcharleft
 
         Do
@@ -28,7 +28,7 @@ Module ClientGameLogic
             DirRight = VbKeyRight
 
             If frmmenuvisible = True Then
-                If tmrconnect < GetTickCount() Then
+                If tmrconnect < GetTimeMs() Then
                     If IsConnected() = True Then
                         FrmMenu.lblServerStatus.ForeColor = Color.LightGreen
                         FrmMenu.lblServerStatus.Text = Strings.Get("mainmenu", "serveronline")
@@ -44,7 +44,7 @@ Module ClientGameLogic
                             FrmMenu.lblServerStatus.ForeColor = Color.Red
                         End If
                     End If
-                    tmrconnect = GetTickCount() + 500
+                    tmrconnect = GetTimeMs() + 500
                 End If
             End If
 
@@ -52,7 +52,7 @@ Module ClientGameLogic
             UpdateUI()
 
             If GameStarted() = True Then
-                Tick = GetTickCount()
+                Tick = GetTimeMs()
                 ElapsedTime = Tick - FrameTime ' Set the time difference for time-based movement
 
                 FrameTime = Tick
@@ -166,7 +166,7 @@ Module ClientGameLogic
                     For i = 1 To MAX_PLAYER_SKILLS
                         If PlayerSkills(i) > 0 Then
                             If SkillCD(i) > 0 Then
-                                If SkillCD(i) + (Skill(PlayerSkills(i)).CDTime * 1000) < Tick Then
+                                If SkillCD(i) + (Skill(PlayerSkills(i)).CdTime * 1000) < Tick Then
                                     SkillCD(i) = 0
                                     DrawPlayerSkills()
                                 End If
@@ -305,12 +305,12 @@ Module ClientGameLogic
                 Fadetmr = Tick + 30
             End If
 
-            If rendercount < tick Then
+            If rendercount < Tick Then
                 'Actual Game Loop Stuff :/
                 Render_Graphics()
                 tmplps = tmplps + 1
                 rendercount = Tick + 16
-            End if
+            End If
 
             Application.DoEvents()
 
@@ -427,7 +427,7 @@ Module ClientGameLogic
             .message = message
             .color = color
             .Type = MsgType
-            .Created = GetTickCount()
+            .Created = GetTimeMs()
             .Scroll = 1
             .X = X
             .Y = Y
@@ -925,9 +925,9 @@ Continue1:
         Dim Buffer As New ByteBuffer
         Buffer = New ByteBuffer
 
-        If GetTickCount() > Player(MyIndex).MapGetTimer + 250 Then
+        If GetTimeMs() > Player(MyIndex).MapGetTimer + 250 Then
             If Trim$(ChatInput.CurrentMessage) = "" Then
-                Player(MyIndex).MapGetTimer = GetTickCount()
+                Player(MyIndex).MapGetTimer = GetTimeMs()
                 Buffer.WriteInteger(ClientPackets.CMapGetItem)
                 SendData(Buffer.ToArray())
             End If
@@ -1320,7 +1320,7 @@ Continue1:
                 SkillDescType = Strings.Get("skilldescription", "warp")
         End Select
 
-        SkillDescReqMp = Skill(skillnum).MPCost
+        SkillDescReqMp = Skill(skillnum).MpCost
         SkillDescReqLvl = Skill(skillnum).LevelReq
         SkillDescReqAccess = Skill(skillnum).AccessReq
 
@@ -1331,7 +1331,7 @@ Continue1:
         End If
 
         SkillDescCastTime = Skill(skillnum).CastTime & "s"
-        SkillDescCoolDown = Skill(skillnum).CDTime & "s"
+        SkillDescCoolDown = Skill(skillnum).CdTime & "s"
         SkillDescDamage = Skill(skillnum).Vital
 
         If Skill(skillnum).IsAoE Then
@@ -1361,7 +1361,7 @@ Continue1:
 
         For Layer = 0 To 1
             If AnimInstance(Index).Used(Layer) Then
-                looptime = Animation(AnimInstance(Index).Animation).looptime(Layer)
+                looptime = Animation(AnimInstance(Index).Animation).LoopTime(Layer)
                 FrameCount = Animation(AnimInstance(Index).Animation).Frames(Layer)
 
 
@@ -1370,7 +1370,7 @@ Continue1:
                 If AnimInstance(Index).LoopIndex(Layer) = 0 Then AnimInstance(Index).LoopIndex(Layer) = 1
 
                 ' check if frame timer is set, and needs to have a frame change
-                If AnimInstance(Index).Timer(Layer) + looptime <= GetTickCount() Then
+                If AnimInstance(Index).Timer(Layer) + looptime <= GetTimeMs() Then
                     ' check if out of range
                     If AnimInstance(Index).FrameIndex(Layer) >= FrameCount Then
                         AnimInstance(Index).LoopIndex(Layer) = AnimInstance(Index).LoopIndex(Layer) + 1
@@ -1382,7 +1382,7 @@ Continue1:
                     Else
                         AnimInstance(Index).FrameIndex(Layer) = AnimInstance(Index).FrameIndex(Layer) + 1
                     End If
-                    AnimInstance(Index).Timer(Layer) = GetTickCount()
+                    AnimInstance(Index).Timer(Layer) = GetTimeMs()
                 End If
             End If
         Next
@@ -1440,7 +1440,7 @@ Continue1:
             .targetType = targetType
             .Msg = Msg
             .colour = colour
-            .Timer = GetTickCount()
+            .Timer = GetTimeMs()
             .active = True
         End With
 

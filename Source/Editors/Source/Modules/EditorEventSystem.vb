@@ -2913,7 +2913,7 @@ newlist:
 
                         'seeying we still use it, lets update timer
                         With CharacterGFXInfo(Map.Events(i).Pages(1).Graphic)
-                            .TextureTimer = GetTickCount() + 100000
+                            .TextureTimer = GetTimeMs() + 100000
                         End With
                         With rec
                             .Y = (Map.Events(i).Pages(1).GraphicY * (CharacterGFXInfo(Map.Events(i).Pages(1).Graphic).height / 4))
@@ -2954,7 +2954,7 @@ newlist:
                         End If
                         ' we use it, lets update timer
                         With TileSetTextureInfo(Map.Events(i).Pages(1).Graphic)
-                            .TextureTimer = GetTickCount() + 100000
+                            .TextureTimer = GetTimeMs() + 100000
                         End With
 
                         If rec.Height > 32 Then
@@ -3068,7 +3068,7 @@ nextevent:
                 End If
                 ' we use it, lets update timer
                 With TileSetTextureInfo(Map.MapEvents(Id).GraphicNum)
-                    .TextureTimer = GetTickCount() + 100000
+                    .TextureTimer = GetTimeMs() + 100000
                 End With
 
                 X = Map.MapEvents(Id).X * 32

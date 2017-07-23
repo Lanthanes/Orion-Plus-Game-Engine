@@ -3,10 +3,10 @@ Imports System.Windows.Forms
 Imports SFML.Graphics
 Imports SFML.Window
 
-Public Module ClientEventSystem
+Public Module ClientEvents
 #Region "Globals"
     ' Temp event storage
-    Public tmpEvent As EventRec
+    Public tmpEvent As EventStruct
     Public isEdit As Boolean
 
     Public curPageNum As Integer
@@ -23,7 +23,7 @@ Public Module ClientEventSystem
 
     Public GraphicSelType As Integer 'Are we selecting a graphic for a move route? A page sprite? What???
     Public TempMoveRouteCount As Integer
-    Public TempMoveRoute() As MoveRouteRec
+    Public TempMoveRoute() As MoveRouteStruct
     Public IsMoveRouteCommand As Boolean
     Public ListOfEvents() As Integer
 
@@ -49,10 +49,10 @@ Public Module ClientEventSystem
     Public Const MAX_SWITCHES As Integer = 500
     Public Const MAX_VARIABLES As Integer = 500
 
-    Public cpEvent As EventRec
+    Public cpEvent As EventStruct
     Public EventCopy As Boolean
     Public EventPaste As Boolean
-    Public EventList() As EventListRec
+    Public EventList() As EventListStruct
 
     Public InEvent As Boolean
     Public HoldPlayer As Boolean
@@ -60,8 +60,8 @@ Public Module ClientEventSystem
 
 #End Region
 
-#Region "Types"
-    Public Structure EventCommandRec
+#Region "Structures"
+    Public Structure EventCommandStruct
         Dim Index As Integer
         Dim Text1 As String
         Dim Text2 As String
@@ -74,12 +74,12 @@ Public Module ClientEventSystem
         Dim Data4 As Integer
         Dim Data5 As Integer
         Dim Data6 As Integer
-        Dim ConditionalBranch As ConditionalBranchRec
+        Dim ConditionalBranch As ConditionalBranchStruct
         Dim MoveRouteCount As Integer
-        Dim MoveRoute() As MoveRouteRec
+        Dim MoveRoute() As MoveRouteStruct
     End Structure
 
-    Public Structure MoveRouteRec
+    Public Structure MoveRouteStruct
         Dim Index As Integer
         Dim Data1 As Integer
         Dim Data2 As Integer
@@ -89,13 +89,13 @@ Public Module ClientEventSystem
         Dim Data6 As Integer
     End Structure
 
-    Public Structure CommandListRec
+    Public Structure CommandListStruct
         Dim CommandCount As Integer
         Dim ParentList As Integer
-        Dim Commands() As EventCommandRec
+        Dim Commands() As EventCommandStruct
     End Structure
 
-    Public Structure ConditionalBranchRec
+    Public Structure ConditionalBranchStruct
         Dim Condition As Integer
         Dim Data1 As Integer
         Dim Data2 As Integer
@@ -104,7 +104,7 @@ Public Module ClientEventSystem
         Dim ElseCommandList As Integer
     End Structure
 
-    Public Structure EventPageRec
+    Public Structure EventPageStruct
         'These are condition variables that decide if the event even appears to the player.
         Dim chkVariable As Integer
         Dim VariableIndex As Integer
@@ -135,7 +135,7 @@ Public Module ClientEventSystem
         Dim MoveSpeed As Byte
         Dim MoveFreq As Byte
         Dim MoveRouteCount As Integer
-        Dim MoveRoute() As MoveRouteRec
+        Dim MoveRoute() As MoveRouteStruct
         Dim IgnoreMoveRoute As Integer
         Dim RepeatMoveRoute As Integer
 
@@ -150,7 +150,7 @@ Public Module ClientEventSystem
 
         'Commands for the event
         Dim CommandListCount As Integer
-        Dim CommandList() As CommandListRec
+        Dim CommandList() As CommandListStruct
         Dim Position As Byte
         Dim Questnum As Integer
 
@@ -159,16 +159,16 @@ Public Module ClientEventSystem
         Dim Y As Integer
     End Structure
 
-    Public Structure EventRec
+    Public Structure EventStruct
         Dim Name As String
         Dim Globals As Integer
         Dim PageCount As Integer
-        Dim Pages() As EventPageRec
+        Dim Pages() As EventPageStruct
         Dim X As Integer
         Dim Y As Integer
     End Structure
 
-    Public Structure MapEventRec
+    Public Structure MapEventStruct
         Dim Name As String
         Dim dir As Integer
         Dim X As Integer
@@ -194,10 +194,10 @@ Public Module ClientEventSystem
         Dim questnum As Integer
     End Structure
 
-    Public CopyEvent As EventRec
-    Public CopyEventPage As EventPageRec
+    Public CopyEvent As EventStruct
+    Public CopyEventPage As EventPageStruct
 
-    Public Structure EventListRec
+    Public Structure EventListStruct
         Dim CommandList As Integer
         Dim CommandNum As Integer
     End Structure
@@ -318,7 +318,7 @@ Public Module ClientEventSystem
 #Region "EventEditor"
     'Event Editor Stuffz Also includes event functions from the map editor (copy/paste/delete)
 
-    Sub CopyEvent_Map(ByVal X As Integer, ByVal Y As Integer)
+    Sub CopyEvent_Map(X As Integer, Y As Integer)
         Dim count As Integer, i As Integer
 
         count = Map.EventCount
@@ -335,7 +335,7 @@ Public Module ClientEventSystem
 
     End Sub
 
-    Sub PasteEvent_Map(ByVal X As Integer, ByVal Y As Integer)
+    Sub PasteEvent_Map(X As Integer, Y As Integer)
         Dim count As Integer, i As Integer, EventNum As Integer
 
         count = Map.EventCount
@@ -363,7 +363,7 @@ Public Module ClientEventSystem
 
     End Sub
 
-    Sub DeleteEvent(ByVal X As Integer, ByVal Y As Integer)
+    Sub DeleteEvent(X As Integer, Y As Integer)
         Dim count As Integer, i As Integer, lowIndex As Integer
 
         If Not InMapEditor Then Exit Sub
@@ -392,7 +392,7 @@ Public Module ClientEventSystem
 
     End Sub
 
-    Sub AddEvent(ByVal X As Integer, ByVal Y As Integer, Optional ByVal cancelLoad As Boolean = False)
+    Sub AddEvent(X As Integer, Y As Integer, Optional cancelLoad As Boolean = False)
         Dim count As Integer, pageCount As Integer, i As Integer
 
         count = Map.EventCount + 1
@@ -421,7 +421,7 @@ Public Module ClientEventSystem
 
     End Sub
 
-    Sub ClearEvent(ByVal EventNum As Integer)
+    Sub ClearEvent(EventNum As Integer)
         If EventNum > Map.EventCount Or EventNum > UBound(Map.MapEvents) Then Exit Sub
         With Map.Events(EventNum)
             .Name = ""
@@ -458,7 +458,7 @@ Public Module ClientEventSystem
 
     End Sub
 
-    Sub EventEditorInit(ByVal EventNum As Integer)
+    Sub EventEditorInit(EventNum As Integer)
 
         EditorEvent = EventNum
 
@@ -467,7 +467,7 @@ Public Module ClientEventSystem
 
     End Sub
 
-    Sub EventEditorLoadPage(ByVal PageNum As Integer)
+    Sub EventEditorLoadPage(PageNum As Integer)
         ' populate form
 
         With tmpEvent.Pages(PageNum)
@@ -1067,8 +1067,8 @@ newlist:
 
     End Sub
 
-    Sub AddCommand(ByVal Index As Integer)
-        Dim curlist As Integer, i As Integer, X As Integer, curslot As Integer, p As Integer, oldCommandList As CommandListRec
+    Sub AddCommand(Index As Integer)
+        Dim curlist As Integer, i As Integer, X As Integer, curslot As Integer, p As Integer, oldCommandList As CommandListStruct
 
         If tmpEvent.Pages(curPageNum).CommandListCount = 0 Then
             tmpEvent.Pages(curPageNum).CommandListCount = 1
@@ -2019,7 +2019,7 @@ newlist:
     End Sub
 
     Public Sub DeleteEventCommand()
-        Dim i As Integer, X As Integer, curlist As Integer, curslot As Integer, p As Integer, oldCommandList As CommandListRec
+        Dim i As Integer, X As Integer, curlist As Integer, curslot As Integer, p As Integer, oldCommandList As CommandListStruct
 
         i = FrmEditor_Events.lstCommands.SelectedIndex
         If i = -1 Then Exit Sub
@@ -2309,7 +2309,7 @@ newlist:
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_SpawnEvent(ByVal data() As Byte)
+    Sub Packet_SpawnEvent(data() As Byte)
         Dim id As Integer
         Dim buffer As New ByteBuffer
 
@@ -2352,7 +2352,7 @@ newlist:
 
     End Sub
 
-    Sub Packet_EventMove(ByVal data() As Byte)
+    Sub Packet_EventMove(data() As Byte)
         Dim id As Integer
         Dim X As Integer
         Dim Y As Integer
@@ -2398,7 +2398,7 @@ newlist:
 
     End Sub
 
-    Sub Packet_EventDir(ByVal data() As Byte)
+    Sub Packet_EventDir(data() As Byte)
         Dim i As Integer
         Dim dir As Byte
         Dim buffer As New ByteBuffer
@@ -2422,7 +2422,7 @@ newlist:
 
     End Sub
 
-    Sub Packet_SwitchesAndVariables(ByVal data() As Byte)
+    Sub Packet_SwitchesAndVariables(data() As Byte)
         Dim buffer As New ByteBuffer
         Dim i As Integer
 
@@ -2441,7 +2441,7 @@ newlist:
 
     End Sub
 
-    Sub Packet_MapEventData(ByVal data() As Byte)
+    Sub Packet_MapEventData(data() As Byte)
         Dim buffer As New ByteBuffer
         Dim i As Integer, X As Integer, Y As Integer, z As Integer, w As Integer
 
@@ -2565,7 +2565,7 @@ newlist:
 
     End Sub
 
-    Sub Packet_EventChat(ByVal data() As Byte)
+    Sub Packet_EventChat(data() As Byte)
         Dim i As Integer
         Dim buffer As New ByteBuffer
         Dim choices As Integer
@@ -2602,7 +2602,7 @@ newlist:
 
     End Sub
 
-    Sub Packet_EventStart(ByVal data() As Byte)
+    Sub Packet_EventStart(data() As Byte)
         Dim buffer As New ByteBuffer
 
         buffer.WriteBytes(data)
@@ -2614,7 +2614,7 @@ newlist:
         buffer = Nothing
     End Sub
 
-    Sub Packet_EventEnd(ByVal data() As Byte)
+    Sub Packet_EventEnd(data() As Byte)
         Dim buffer As New ByteBuffer
 
         buffer.WriteBytes(data)
@@ -2626,7 +2626,7 @@ newlist:
         buffer = Nothing
     End Sub
 
-    Sub Packet_HoldPlayer(ByVal data() As Byte)
+    Sub Packet_HoldPlayer(data() As Byte)
         Dim buffer As New ByteBuffer
 
         buffer.WriteBytes(data)
@@ -2643,7 +2643,7 @@ newlist:
 
     End Sub
 
-    Sub Packet_PlayBGM(ByVal data() As Byte)
+    Sub Packet_PlayBGM(data() As Byte)
         Dim buffer As New ByteBuffer, music As String
 
         buffer.WriteBytes(data)
@@ -2657,7 +2657,7 @@ newlist:
         buffer = Nothing
     End Sub
 
-    Sub Packet_FadeOutBGM(ByVal data() As Byte)
+    Sub Packet_FadeOutBGM(data() As Byte)
         Dim buffer As New ByteBuffer
 
         buffer.WriteBytes(data)
@@ -2669,7 +2669,7 @@ newlist:
         buffer = Nothing
     End Sub
 
-    Sub Packet_PlaySound(ByVal data() As Byte)
+    Sub Packet_PlaySound(data() As Byte)
         Dim buffer As New ByteBuffer, sound As String
 
         buffer.WriteBytes(data)
@@ -2683,7 +2683,7 @@ newlist:
         buffer = Nothing
     End Sub
 
-    Sub Packet_StopSound(ByVal data() As Byte)
+    Sub Packet_StopSound(data() As Byte)
         Dim buffer As New ByteBuffer
 
         buffer.WriteBytes(data)
@@ -2695,7 +2695,7 @@ newlist:
         buffer = Nothing
     End Sub
 
-    Sub Packet_SpecialEffect(ByVal data() As Byte)
+    Sub Packet_SpecialEffect(data() As Byte)
         Dim buffer As New ByteBuffer, effectType As Integer
 
         buffer.WriteBytes(data)
@@ -2714,7 +2714,7 @@ newlist:
                 FadeType = 0
                 FadeAmount = 255
             Case EFFECT_TYPE_FLASH
-                FlashTimer = GetTickCount() + 150
+                FlashTimer = GetTimeMs() + 150
             Case EFFECT_TYPE_FOG
                 CurrentFog = buffer.ReadInteger
                 CurrentFogSpeed = buffer.ReadInteger
@@ -2811,29 +2811,29 @@ newlist:
                         targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
 
                         If tmpEvent.Pages(curPageNum).GraphicX2 = 0 And tmpEvent.Pages(curPageNum).GraphicY2 = 0 Then
-                            sRect.top = tmpEvent.Pages(curPageNum).GraphicY * 32
-                            sRect.left = tmpEvent.Pages(curPageNum).GraphicX * 32
-                            sRect.bottom = sRect.top + 32
-                            sRect.right = sRect.left + 32
+                            sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
+                            sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
+                            sRect.Bottom = sRect.Top + 32
+                            sRect.Right = sRect.Left + 32
 
                             With dRect
-                                dRect.top = (193 / 2) - ((sRect.bottom - sRect.top) / 2)
-                                dRect.bottom = dRect.top + (sRect.bottom - sRect.top)
-                                dRect.left = (120 / 2) - ((sRect.right - sRect.left) / 2)
-                                dRect.right = dRect.left + (sRect.right - sRect.left)
+                                dRect.Top = (193 / 2) - ((sRect.Bottom - sRect.Top) / 2)
+                                dRect.Bottom = dRect.Top + (sRect.Bottom - sRect.Top)
+                                dRect.Left = (120 / 2) - ((sRect.Right - sRect.Left) / 2)
+                                dRect.Right = dRect.Left + (sRect.Right - sRect.Left)
                             End With
 
                         Else
-                            sRect.top = tmpEvent.Pages(curPageNum).GraphicY * 32
-                            sRect.left = tmpEvent.Pages(curPageNum).GraphicX * 32
-                            sRect.bottom = sRect.top + ((tmpEvent.Pages(curPageNum).GraphicY2 - tmpEvent.Pages(curPageNum).GraphicY) * 32)
-                            sRect.right = sRect.left + ((tmpEvent.Pages(curPageNum).GraphicX2 - tmpEvent.Pages(curPageNum).GraphicX) * 32)
+                            sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
+                            sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
+                            sRect.Bottom = sRect.Top + ((tmpEvent.Pages(curPageNum).GraphicY2 - tmpEvent.Pages(curPageNum).GraphicY) * 32)
+                            sRect.Right = sRect.Left + ((tmpEvent.Pages(curPageNum).GraphicX2 - tmpEvent.Pages(curPageNum).GraphicX) * 32)
 
                             With dRect
-                                dRect.top = (193 / 2) - ((sRect.bottom - sRect.top) / 2)
-                                dRect.bottom = dRect.top + (sRect.bottom - sRect.top)
-                                dRect.left = (120 / 2) - ((sRect.right - sRect.left) / 2)
-                                dRect.right = dRect.left + (sRect.right - sRect.left)
+                                dRect.Top = (193 / 2) - ((sRect.Bottom - sRect.Top) / 2)
+                                dRect.Bottom = dRect.Top + (sRect.Bottom - sRect.Top)
+                                dRect.Left = (120 / 2) - ((sRect.Right - sRect.Left) / 2)
+                                dRect.Right = dRect.Left + (sRect.Right - sRect.Left)
                             End With
 
                         End If
@@ -2894,37 +2894,37 @@ newlist:
                             targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
 
                             If tmpEvent.Pages(curPageNum).GraphicX2 = 0 And tmpEvent.Pages(curPageNum).GraphicY2 = 0 Then
-                                sRect.top = tmpEvent.Pages(curPageNum).GraphicY * 32
-                                sRect.left = tmpEvent.Pages(curPageNum).GraphicX * 32
-                                sRect.bottom = sRect.top + 32
-                                sRect.right = sRect.left + 32
+                                sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
+                                sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
+                                sRect.Bottom = sRect.Top + 32
+                                sRect.Right = sRect.Left + 32
 
                                 With dRect
-                                    dRect.top = 0
-                                    dRect.bottom = PIC_Y
-                                    dRect.left = 0
-                                    dRect.right = PIC_X
+                                    dRect.Top = 0
+                                    dRect.Bottom = PIC_Y
+                                    dRect.Left = 0
+                                    dRect.Right = PIC_X
                                 End With
 
                             Else
-                                sRect.top = tmpEvent.Pages(curPageNum).GraphicY * 32
-                                sRect.left = tmpEvent.Pages(curPageNum).GraphicX * 32
-                                sRect.bottom = tmpEvent.Pages(curPageNum).GraphicY2 * 32
-                                sRect.right = tmpEvent.Pages(curPageNum).GraphicX2 * 32
+                                sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
+                                sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
+                                sRect.Bottom = tmpEvent.Pages(curPageNum).GraphicY2 * 32
+                                sRect.Right = tmpEvent.Pages(curPageNum).GraphicX2 * 32
 
                                 With dRect
-                                    dRect.top = 0
-                                    dRect.bottom = sRect.bottom
-                                    dRect.left = 0
-                                    dRect.right = sRect.right
+                                    dRect.Top = 0
+                                    dRect.Bottom = sRect.Bottom
+                                    dRect.Left = 0
+                                    dRect.Right = sRect.Right
                                 End With
 
                             End If
 
                             g = Graphics.FromImage(targetBitmap)
 
-                            Dim sourceRect As New Rectangle(sRect.left, sRect.top, sRect.right, sRect.bottom)  'This is the section we are pulling from the source graphic
-                            Dim destRect As New Rectangle(dRect.left, dRect.top, dRect.right, dRect.bottom)     'This is the rectangle in the target graphic we want to render to
+                            Dim sourceRect As New Rectangle(sRect.Left, sRect.Top, sRect.Right, sRect.Bottom)  'This is the section we are pulling from the source graphic
+                            Dim destRect As New Rectangle(dRect.Left, dRect.Top, dRect.Right, dRect.Bottom)     'This is the rectangle in the target graphic we want to render to
 
                             g.DrawImage(sourceBitmap, destRect, sourceRect, GraphicsUnit.Pixel)
 
@@ -2985,7 +2985,7 @@ newlist:
 
                         'seeying we still use it, lets update timer
                         With CharacterGFXInfo(Map.Events(i).Pages(1).Graphic)
-                            .TextureTimer = GetTickCount() + 100000
+                            .TextureTimer = GetTimeMs() + 100000
                         End With
                         With rec
                             .Y = (Map.Events(i).Pages(1).GraphicY * (CharacterGFXInfo(Map.Events(i).Pages(1).Graphic).Height / 4))
@@ -3026,7 +3026,7 @@ newlist:
                         End If
                         ' we use it, lets update timer
                         With TileSetTextureInfo(Map.Events(i).Pages(1).Graphic)
-                            .TextureTimer = GetTickCount() + 100000
+                            .TextureTimer = GetTimeMs() + 100000
                         End With
 
                         If rec.Height > 32 Then
@@ -3056,7 +3056,7 @@ nextevent:
 
     End Sub
 
-    Public Sub DrawEvent(ByVal Id As Integer) ' draw on map, outside the editor
+    Public Sub DrawEvent(Id As Integer) ' draw on map, outside the editor
         Dim X As Integer, Y As Integer, Width As Integer, Height As Integer, sRect As Rectangle, Anim As Integer, spritetop As Integer
 
         If Map.MapEvents(Id).Visible = 0 Then Exit Sub
@@ -3140,7 +3140,7 @@ nextevent:
                 End If
                 ' we use it, lets update timer
                 With TileSetTextureInfo(Map.MapEvents(Id).GraphicNum)
-                    .TextureTimer = GetTickCount() + 100000
+                    .TextureTimer = GetTimeMs() + 100000
                 End With
 
                 X = Map.MapEvents(Id).X * 32
@@ -3175,7 +3175,7 @@ nextevent:
 
                 'seeying we still use it, lets update timer
                 With FacesGFXInfo(EventChatFace)
-                    .TextureTimer = GetTickCount() + 100000
+                    .TextureTimer = GetTimeMs() + 100000
                 End With
                 RenderSprite(FacesSprite(EventChatFace), GameWindow, EventChatX + 12, EventChatY + 14, 0, 0, FacesGFXInfo(EventChatFace).Width, FacesGFXInfo(EventChatFace).Height)
                 EventChatTextX = 113
@@ -3230,7 +3230,7 @@ nextevent:
 
 #Region "Misc"
 
-    Sub ProcessEventMovement(ByVal Id As Integer)
+    Sub ProcessEventMovement(Id As Integer)
 
         If Id > Map.EventCount Then Exit Sub
         If Id > Map.MapEvents.Length Then Exit Sub
@@ -3276,7 +3276,7 @@ nextevent:
 
     End Sub
 
-    Public Function GetColorString(ByVal Color As Integer)
+    Public Function GetColorString(Color As Integer)
 
         Select Case Color
             Case 0
@@ -3326,14 +3326,14 @@ nextevent:
             Next
             EventText = ""
             EventChatType = 1
-            EventChatTimer = GetTickCount() + 100
+            EventChatTimer = GetTimeMs() + 100
         ElseIf AnotherChat = 2 Then
             For i = 1 To 4
                 EventChoiceVisible(i) = False
             Next
             EventText = ""
             EventChatType = 1
-            EventChatTimer = GetTickCount() + 100
+            EventChatTimer = GetTimeMs() + 100
         Else
             EventChat = False
         End If

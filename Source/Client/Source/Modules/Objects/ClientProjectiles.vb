@@ -103,7 +103,7 @@ Public Module ClientProjectiles
             .X = buffer.ReadInteger
             .Y = buffer.ReadInteger
             .Range = 0
-            .Timer = GetTickCount() + 60000
+            .Timer = GetTimeMs() + 60000
         End With
 
         buffer = Nothing
@@ -175,7 +175,7 @@ Public Module ClientProjectiles
         Dim Sprite As Integer
 
         ' check to see if it's time to move the Projectile
-        If GetTickCount() > MapProjectiles(ProjectileNum).TravelTime Then
+        If GetTimeMs() > MapProjectiles(ProjectileNum).TravelTime Then
             Select Case MapProjectiles(ProjectileNum).dir
                 Case Direction.Up
                     MapProjectiles(ProjectileNum).Y = MapProjectiles(ProjectileNum).Y - 1
@@ -186,7 +186,7 @@ Public Module ClientProjectiles
                 Case Direction.Right
                     MapProjectiles(ProjectileNum).X = MapProjectiles(ProjectileNum).X + 1
             End Select
-            MapProjectiles(ProjectileNum).TravelTime = GetTickCount() + Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed
+            MapProjectiles(ProjectileNum).TravelTime = GetTimeMs() + Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed
             MapProjectiles(ProjectileNum).Range = MapProjectiles(ProjectileNum).Range + 1
         End If
 
@@ -194,7 +194,7 @@ Public Module ClientProjectiles
         Y = MapProjectiles(ProjectileNum).Y
 
         'Check if its been going for over 1 minute, if so clear.
-        If MapProjectiles(ProjectileNum).Timer < GetTickCount() Then CanClearProjectile = True
+        If MapProjectiles(ProjectileNum).Timer < GetTimeMs() Then CanClearProjectile = True
 
         If X > Map.MaxX Or X < 0 Then CanClearProjectile = True
         If Y > Map.MaxY Or Y < 0 Then CanClearProjectile = True
@@ -255,27 +255,27 @@ Public Module ClientProjectiles
 
         'seeying we still use it, lets update timer
         With ProjectileGFXInfo(Sprite)
-            .TextureTimer = GetTickCount() + 100000
+            .TextureTimer = GetTimeMs() + 100000
         End With
 
         ' src rect
         With rec
-            .top = 0
-            .bottom = ProjectileGFXInfo(Sprite).Height
-            .left = MapProjectiles(ProjectileNum).dir * PIC_X
-            .right = .left + PIC_X
+            .Top = 0
+            .Bottom = ProjectileGFXInfo(Sprite).Height
+            .Left = MapProjectiles(ProjectileNum).dir * PIC_X
+            .Right = .Left + PIC_X
         End With
 
         'Find the offset
         Select Case MapProjectiles(ProjectileNum).dir
             Case Direction.Up
-                YOffset = ((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_Y
+                YOffset = ((MapProjectiles(ProjectileNum).TravelTime - GetTimeMs()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_Y
             Case Direction.Down
-                YOffset = -((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_Y
+                YOffset = -((MapProjectiles(ProjectileNum).TravelTime - GetTimeMs()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_Y
             Case Direction.Left
-                XOffset = ((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_X
+                XOffset = ((MapProjectiles(ProjectileNum).TravelTime - GetTimeMs()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_X
             Case Direction.Right
-                XOffset = -((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_X
+                XOffset = -((MapProjectiles(ProjectileNum).TravelTime - GetTimeMs()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_X
         End Select
 
         X = ConvertMapX(X * PIC_X)

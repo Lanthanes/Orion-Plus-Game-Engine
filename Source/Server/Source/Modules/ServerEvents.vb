@@ -389,7 +389,6 @@ Public Module ServerEvents
         }
 
         For i = 1 To MAX_SWITCHES
-            DoEvents()
             Switches(i) = myXml.ReadString("Switches", "Switch" & i & "Name")
         Next
 
@@ -404,7 +403,6 @@ Public Module ServerEvents
 
         For i = 1 To MAX_VARIABLES
             Variables(i) = myXml.ReadString("Variables", "Variable" & i & "Name")
-            DoEvents()
         Next
 
     End Sub
@@ -461,7 +459,7 @@ Public Module ServerEvents
                                         'Process this event, it is on-touch and everything checks out.
                                         If Map(MapNum).Events(eventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount > 0 Then
                                             TempPlayer(Index).EventProcessing(eventID).Active = 1
-                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTickCount()
+                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTimeMs()
                                             TempPlayer(Index).EventProcessing(eventID).CurList = 1
                                             TempPlayer(Index).EventProcessing(eventID).CurSlot = 1
                                             TempPlayer(Index).EventProcessing(eventID).EventID = eventID
@@ -479,7 +477,7 @@ Public Module ServerEvents
                     If CanEventMove = False Then Exit Function
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNpc(MapNum).Npc(i).x = x) And (MapNpc(MapNum).Npc(i).y = y - 1) Then
+                        If (MapNpc(MapNum).Npc(i).X = x) And (MapNpc(MapNum).Npc(i).Y = y - 1) Then
                             CanEventMove = False
                             Exit Function
                         End If
@@ -548,7 +546,7 @@ Public Module ServerEvents
                                         'Process this event, it is on-touch and everything checks out.
                                         If Map(MapNum).Events(eventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount > 0 Then
                                             TempPlayer(Index).EventProcessing(eventID).Active = 1
-                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTickCount()
+                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTimeMs()
                                             TempPlayer(Index).EventProcessing(eventID).CurList = 1
                                             TempPlayer(Index).EventProcessing(eventID).CurSlot = 1
                                             TempPlayer(Index).EventProcessing(eventID).EventID = eventID
@@ -567,7 +565,7 @@ Public Module ServerEvents
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNpc(MapNum).Npc(i).x = x) And (MapNpc(MapNum).Npc(i).y = y + 1) Then
+                        If (MapNpc(MapNum).Npc(i).X = x) And (MapNpc(MapNum).Npc(i).Y = y + 1) Then
                             CanEventMove = False
                             Exit Function
                         End If
@@ -636,7 +634,7 @@ Public Module ServerEvents
                                         'Process this event, it is on-touch and everything checks out.
                                         If Map(MapNum).Events(eventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount > 0 Then
                                             TempPlayer(Index).EventProcessing(eventID).Active = 1
-                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTickCount()
+                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTimeMs()
                                             TempPlayer(Index).EventProcessing(eventID).CurList = 1
                                             TempPlayer(Index).EventProcessing(eventID).CurSlot = 1
                                             TempPlayer(Index).EventProcessing(eventID).EventID = eventID
@@ -655,7 +653,7 @@ Public Module ServerEvents
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNpc(MapNum).Npc(i).x = x - 1) And (MapNpc(MapNum).Npc(i).y = y) Then
+                        If (MapNpc(MapNum).Npc(i).X = x - 1) And (MapNpc(MapNum).Npc(i).Y = y) Then
                             CanEventMove = False
                             Exit Function
                         End If
@@ -724,7 +722,7 @@ Public Module ServerEvents
                                         'Process this event, it is on-touch and everything checks out.
                                         If Map(MapNum).Events(eventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount > 0 Then
                                             TempPlayer(Index).EventProcessing(eventID).Active = 1
-                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTickCount()
+                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTimeMs()
                                             TempPlayer(Index).EventProcessing(eventID).CurList = 1
                                             TempPlayer(Index).EventProcessing(eventID).CurSlot = 1
                                             TempPlayer(Index).EventProcessing(eventID).EventID = eventID
@@ -743,7 +741,7 @@ Public Module ServerEvents
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNpc(MapNum).Npc(i).x = x + 1) And (MapNpc(MapNum).Npc(i).y = y) Then
+                        If (MapNpc(MapNum).Npc(i).X = x + 1) And (MapNpc(MapNum).Npc(i).Y = y) Then
                             CanEventMove = False
                             Exit Function
                         End If
@@ -1315,9 +1313,8 @@ Public Module ServerEvents
                                 End If
                             End If
                         End If
-                        DoEvents()
-                    Next i
-                Next j
+                    Next
+                Next
 
                 'If the reachable is STILL false, then
                 If reachable = False Then
@@ -1408,7 +1405,6 @@ Public Module ServerEvents
                 path(tim).Y = LastY
 
                 'Now we loop back and decrease tim, and look for the next square with lower value
-                DoEvents()
             Loop
 
             'Ok we got a path. Now, lets look at the first step and see what direction we should take.
@@ -1799,7 +1795,7 @@ Public Module ServerEvents
                 If (TempPlayer(index).EventProcessing(TempPlayer(index).EventMap.EventPages(i).EventID).Active = 0) Then
                     TempPlayer(index).EventProcessing(TempPlayer(index).EventMap.EventPages(i).EventID).Active = 1
                     With TempPlayer(index).EventProcessing(TempPlayer(index).EventMap.EventPages(i).EventID)
-                        .ActionTimer = GetTickCount()
+                        .ActionTimer = GetTimeMs()
                         .CurList = 1
                         .CurSlot = 1
                         .EventID = TempPlayer(index).EventMap.EventPages(i).EventID
