@@ -462,36 +462,6 @@ Module ClientDataBase
     End Sub
 #End Region
 
-#Region "Npc's"
-    Sub ClearNpcs()
-        Dim i As Integer
-
-        ReDim Npc(MAX_NPCS)
-
-        For i = 1 To MAX_NPCS
-            ClearNpc(i)
-        Next
-
-    End Sub
-
-    Sub ClearNpc(ByVal Index As Integer)
-        Npc(Index) = Nothing
-        Npc(Index) = New NpcRec
-
-        Npc(Index).Name = ""
-        Npc(Index).AttackSay = ""
-        For x = 0 To Stats.Count - 1
-            ReDim Npc(Index).Stat(x)
-        Next
-
-        ReDim Npc(Index).DropChance(5)
-        ReDim Npc(Index).DropItem(5)
-        ReDim Npc(Index).DropItemValue(5)
-
-        ReDim Npc(Index).Skill(6)
-    End Sub
-#End Region
-
 #Region "Animations"
     Sub ClearAnimation(ByVal Index As Integer)
         Animation(Index) = Nothing

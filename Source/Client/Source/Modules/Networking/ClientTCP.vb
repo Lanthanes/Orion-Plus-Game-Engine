@@ -501,15 +501,6 @@ Module ClientTCP
         Buffer = Nothing
     End Sub
 
-    Sub SendRequestNPCS()
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteInteger(ClientPackets.CRequestNPCS)
-
-        SendData(Buffer.ToArray())
-        Buffer = Nothing
-    End Sub
-
     Sub SendRequestSkills()
         Dim Buffer As New ByteBuffer
 
@@ -677,50 +668,7 @@ Module ClientTCP
         Buffer = Nothing
     End Sub
 
-    Public Sub DepositItem(ByVal invslot As Integer, ByVal Amount As Integer)
-        Dim Buffer As New ByteBuffer
 
-        Buffer.WriteInteger(ClientPackets.CDepositItem)
-        Buffer.WriteInteger(invslot)
-        Buffer.WriteInteger(Amount)
-
-        SendData(Buffer.ToArray())
-        Buffer = Nothing
-    End Sub
-
-    Public Sub WithdrawItem(ByVal bankslot As Integer, ByVal Amount As Integer)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteInteger(ClientPackets.CWithdrawItem)
-        Buffer.WriteInteger(bankslot)
-        Buffer.WriteInteger(Amount)
-
-        SendData(Buffer.ToArray())
-        Buffer = Nothing
-    End Sub
-
-    Public Sub ChangeBankSlots(ByVal OldSlot As Integer, ByVal NewSlot As Integer)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteInteger(ClientPackets.CChangeBankSlots)
-        Buffer.WriteInteger(OldSlot)
-        Buffer.WriteInteger(NewSlot)
-
-        SendData(Buffer.ToArray())
-        Buffer = Nothing
-    End Sub
-
-    Public Sub CloseBank()
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteInteger(ClientPackets.CCloseBank)
-
-        SendData(Buffer.ToArray())
-        Buffer = Nothing
-
-        InBank = False
-        pnlBankVisible = False
-    End Sub
 
     Sub PlayerSearch(ByVal CurX As Integer, ByVal CurY As Integer, ByVal RClick As Byte)
         Dim Buffer As New ByteBuffer

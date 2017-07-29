@@ -1,4 +1,6 @@
-﻿Module ClientPlayer
+﻿Imports System.Drawing
+
+Module ClientPlayer
 #Region "Globals"
     Public Player(MAX_PLAYERS) As PlayerRec
 #End Region
@@ -1287,6 +1289,160 @@
         myTargetType = Buffer.ReadInteger
 
         Buffer = Nothing
+    End Sub
+#End Region
+
+#Region "Drawing"
+    Public Sub DrawPlayer(ByVal Index As Integer)
+        Dim Anim As Byte, X As Integer, Y As Integer
+        Dim Spritenum As Integer, spriteleft As Integer
+        Dim attackspeed As Integer, AttackSprite As Byte
+        Dim srcrec As Rectangle
+
+        Spritenum = GetPlayerSprite(Index)
+
+        AttackSprite = 0
+
+        If Spritenum < 1 Or Spritenum > NumCharacters Then Exit Sub
+
+        ' speed from weapon
+        If GetPlayerEquipment(Index, EquipmentType.Weapon) > 0 Then
+            attackspeed = Item(GetPlayerEquipment(Index, EquipmentType.Weapon)).Speed
+        Else
+            attackspeed = 1000
+        End If
+
+        ' Reset frame
+        Anim = 0
+
+        ' Check for attacking animation
+        If Player(Index).AttackTimer + (attackspeed / 2) > GetTimeMs() Then
+            If Player(Index).Attacking = 1 Then
+                If AttackSprite = 1 Then
+                    Anim = 4
+                Else
+                    Anim = 3
+                End If
+            End If
+        Else
+            ' If not attacking, walk normally
+            Select Case GetPlayerDir(Index)
+                Case Direction.Up
+
+                    If (Player(Index).YOffset > 8) Then Anim = Player(Index).Steps
+                Case Direction.Down
+
+                    If (Player(Index).YOffset < -8) Then Anim = Player(Index).Steps
+                Case Direction.Left
+
+                    If (Player(Index).XOffset > 8) Then Anim = Player(Index).Steps
+                Case Direction.Right
+
+                    If (Player(Index).XOffset < -8) Then Anim = Player(Index).Steps
+            End Select
+
+        End If
+
+        ' Check to see if we want to stop making him attack
+        With Player(Index)
+            If .AttackTimer + attackspeed < GetTimeMs() Then
+                .Attacking = 0
+                .AttackTimer = 0
+            End If
+
+        End With
+
+        ' Set the left
+        Select Case GetPlayerDir(Index)
+            Case Direction.Up
+                spriteleft = 3
+            Case Direction.Right
+                spriteleft = 2
+            Case Direction.Down
+                spriteleft = 0
+            Case Direction.Left
+                spriteleft = 1
+        End Select
+
+        If AttackSprite = 1 Then
+            srcrec = New Rectangle((Anim) * (CharacterGFXInfo(Spritenum).Width / 5), spriteleft * (CharacterGFXInfo(Spritenum).Height / 4), (CharacterGFXInfo(Spritenum).Width / 5), (CharacterGFXInfo(Spritenum).Height / 4))
+        Else
+            srcrec = New Rectangle((Anim) * (CharacterGFXInfo(Spritenum).Width / 4), spriteleft * (CharacterGFXInfo(Spritenum).Height / 4), (CharacterGFXInfo(Spritenum).Width / 4), (CharacterGFXInfo(Spritenum).Height / 4))
+        End If
+
+        ' Calculate the X
+        If AttackSprite = 1 Then
+            X = GetPlayerX(Index) * PIC_X + Player(Index).XOffset - ((CharacterGFXInfo(Spritenum).Width / 5 - 32) / 2)
+        Else
+            X = GetPlayerX(Index) * PIC_X + Player(Index).XOffset - ((CharacterGFXInfo(Spritenum).Width / 4 - 32) / 2)
+        End If
+
+        ' Is the player's height more than 32..?
+        If (CharacterGFXInfo(Spritenum).Height) > 32 Then
+            ' Create a 32 pixel offset for larger sprites
+            Y = GetPlayerY(Index) * PIC_Y + Player(Index).YOffset - ((CharacterGFXInfo(Spritenum).Height / 4) - 32)
+        Else
+            ' Proceed as normal
+            Y = GetPlayerY(Index) * PIC_Y + Player(Index).YOffset
+        End If
+
+        ' render the actual sprite
+        DrawCharacter(Spritenum, X, Y, srcrec)
+
+        'check for paperdolling
+        For i = 1 To EquipmentType.Count - 1
+            If GetPlayerEquipment(Index, i) > 0 Then
+                If Item(GetPlayerEquipment(Index, i)).Paperdoll > 0 Then
+                    DrawPaperdoll(X, Y, Item(GetPlayerEquipment(Index, i)).Paperdoll, Anim, spriteleft)
+                End If
+            End If
+        Next
+
+        ' Check to see if we want to stop showing emote
+        With Player(Index)
+            If .EmoteTimer < GetTimeMs() Then
+                .Emote = 0
+                .EmoteTimer = 0
+            End If
+        End With
+
+        'check for emotes
+        'Player(Index).Emote = 4
+        If Player(Index).Emote > 0 Then
+            DrawEmotes(X, Y, Player(Index).Emote)
+        End If
+    End Sub
+
+    Public Sub DrawPaperdoll(ByVal x2 As Integer, ByVal y2 As Integer, ByVal Sprite As Integer, ByVal Anim As Integer, ByVal spritetop As Integer)
+        Dim rec As Rectangle
+        Dim X As Integer, Y As Integer
+        Dim width As Integer, height As Integer
+
+        If Sprite < 1 Or Sprite > NumPaperdolls Then Exit Sub
+
+        If PaperDollGFXInfo(Sprite).IsLoaded = False Then
+            LoadTexture(Sprite, 3)
+        End If
+
+        ' we use it, lets update timer
+        With PaperDollGFXInfo(Sprite)
+            .TextureTimer = GetTimeMs() + 100000
+        End With
+
+        With rec
+            .Y = spritetop * (PaperDollGFXInfo(Sprite).Height / 4)
+            .Height = (PaperDollGFXInfo(Sprite).Height / 4)
+            .X = Anim * (PaperDollGFXInfo(Sprite).Width / 4)
+            .Width = (PaperDollGFXInfo(Sprite).Width / 4)
+        End With
+
+        X = ConvertMapX(x2)
+        Y = ConvertMapY(y2)
+        width = (rec.Right - rec.Left)
+        height = (rec.Bottom - rec.Top)
+
+        RenderSprite(PaperDollSprite(Sprite), GameWindow, X, Y, rec.X, rec.Y, rec.Width, rec.Height)
+
     End Sub
 #End Region
 

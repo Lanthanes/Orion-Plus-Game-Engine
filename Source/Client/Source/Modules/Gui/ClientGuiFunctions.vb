@@ -1,8 +1,13 @@
 ﻿Imports System.Drawing
 Imports System.Windows.Forms
+Imports Orion
+Imports SFML.Graphics
+Imports SFML.Window
 
 Public Module ClientGuiFunctions
-    Public Sub CheckGuiMove(ByVal X As Integer, ByVal Y As Integer)
+
+#Region "Interaction"
+    Public Sub CheckGuiMove(X As Integer, Y As Integer)
         Dim eqNum As Integer, InvNum As Integer, skillslot As Integer
         Dim bankitem As Integer, shopslot As Integer, TradeNum As Integer
 
@@ -168,7 +173,7 @@ Public Module ClientGuiFunctions
 
     End Sub
 
-    Public Function CheckGuiClick(ByVal X As Integer, ByVal Y As Integer, ByVal e As MouseEventArgs) As Boolean
+    Public Function CheckGuiClick(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
         Dim EqNum As Integer, InvNum As Integer
         Dim slotnum As Integer, hotbarslot As Integer
         Dim Buffer As ByteBuffer
@@ -703,7 +708,7 @@ Public Module ClientGuiFunctions
 
     End Function
 
-    Public Function CheckGuiDoubleClick(ByVal X As Integer, ByVal Y As Integer, ByVal e As MouseEventArgs) As Boolean
+    Public Function CheckGuiDoubleClick(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
         Dim InvNum As Integer, skillnum As Integer, BankItem As Integer
         Dim Value As Integer, TradeNum As Integer
         Dim multiplier As Double
@@ -833,7 +838,7 @@ Public Module ClientGuiFunctions
 
     End Function
 
-    Public Function CheckGuiMouseUp(ByVal X As Integer, ByVal Y As Integer, ByVal e As MouseEventArgs) As Boolean
+    Public Function CheckGuiMouseUp(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
         Dim i As Integer, rec_pos As Rectangle, buffer As ByteBuffer
         Dim hotbarslot As Integer
 
@@ -868,7 +873,7 @@ Public Module ClientGuiFunctions
                 End If
 
                 DragInvSlotNum = 0
-            ElseIf Abovehotbar(X, Y) Then
+            ElseIf AboveHotbar(X, Y) Then
                 If DragInvSlotNum > 0 Then
                     hotbarslot = IsHotBarSlot(e.Location.X, e.Location.Y)
                     If hotbarslot > 0 Then
@@ -929,7 +934,7 @@ Public Module ClientGuiFunctions
                 End If
 
                 DragSkillSlotNum = 0
-            ElseIf Abovehotbar(X, Y) Then
+            ElseIf AboveHotbar(X, Y) Then
                 If DragSkillSlotNum > 0 Then
                     hotbarslot = IsHotBarSlot(e.Location.X, e.Location.Y)
                     If hotbarslot > 0 Then
@@ -971,7 +976,7 @@ Public Module ClientGuiFunctions
 
     End Function
 
-    Public Function CheckGuiMouseDown(ByVal X As Integer, ByVal Y As Integer, ByVal e As MouseEventArgs) As Boolean
+    Public Function CheckGuiMouseDown(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
         Dim InvNum As Integer, skillnum As Integer, bankNum As Integer, shopItem As Integer
 
         'Inventory
@@ -1111,6 +1116,452 @@ Public Module ClientGuiFunctions
         End If
 
     End Function
+#End Region
+
+#Region "Drawing"
+    Sub DrawChat()
+        Dim i As Integer, x As Integer, y As Integer
+        Dim text As String
+
+        'first draw back image
+        RenderSprite(ChatWindowSprite, GameWindow, ChatWindowX, ChatWindowY - 2, 0, 0, ChatWindowGFXInfo.Width, ChatWindowGFXInfo.Height)
+
+        y = 5
+        x = 5
+
+        FirstLineIndex = (Chat.Count - MaxChatDisplayLines) - ScrollMod 'First element is the 5th from the last in the list
+        If FirstLineIndex < 0 Then FirstLineIndex = 0 'if the list has less than 5 elements, the first is the 0th index or first element
+
+        LastLineIndex = (FirstLineIndex + MaxChatDisplayLines) ' - ScrollMod
+        If (LastLineIndex >= Chat.Count) Then LastLineIndex = Chat.Count - 1  'Based off of index 0, so the last element should be Chat.Count -1
+
+        'only loop tru last entries
+        For i = FirstLineIndex To LastLineIndex
+            text = Chat(i).Text
+
+            If text <> "" Then ' or not
+                DrawText(ChatWindowX + x, ChatWindowY + y, text, GetSFMLColor(Chat(i).Color), SFML.Graphics.Color.Black, GameWindow)
+                y = y + ChatLineSpacing + 1
+            End If
+
+        Next
+
+        'My Text
+        'first draw back image
+        RenderSprite(MyChatWindowSprite, GameWindow, MyChatX, MyChatY - 5, 0, 0, MyChatWindowGFXInfo.Width, MyChatWindowGFXInfo.Height)
+
+        If Len(ChatInput.CurrentMessage) > 0 Then
+            Dim subText As String = ChatInput.CurrentMessage
+            While GetTextWidth(subText) > MyChatWindowGFXInfo.Width - ChatEntryPadding
+                subText = subText.Substring(1)
+            End While
+            DrawText(MyChatX + 5, MyChatY - 3, subText, SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+        End If
+    End Sub
+
+    Public Sub DrawButton(ByVal Text As String, ByVal DestX As Integer, ByVal DestY As Integer, ByVal Hover As Byte)
+        If Hover = 0 Then
+            RenderSprite(ButtonSprite, GameWindow, DestX, DestY, 0, 0, ButtonGFXInfo.Width, ButtonGFXInfo.Height)
+
+            DrawText(DestX + (ButtonGFXInfo.Width \ 2) - (GetTextWidth(Text) \ 2), DestY + (ButtonGFXInfo.Height \ 2) - (FONT_SIZE \ 2), Text, SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+        Else
+            RenderSprite(ButtonHoverSprite, GameWindow, DestX, DestY, 0, 0, ButtonHoverGFXInfo.Width, ButtonHoverGFXInfo.Height)
+
+            DrawText(DestX + (ButtonHoverGFXInfo.Width \ 2) - (GetTextWidth(Text) \ 2), DestY + (ButtonHoverGFXInfo.Height \ 2) - (FONT_SIZE \ 2), Text, SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+        End If
+
+    End Sub
+
+    Public Sub DrawBars()
+        Dim tmpY As Integer
+        Dim tmpX As Integer
+        Dim barWidth As Integer
+        Dim rec(1) As Rectangle
+
+        If GettingMap Then Exit Sub
+
+        ' check for casting time bar
+        If SkillBuffer > 0 Then
+            ' lock to player
+            tmpX = GetPlayerX(MyIndex) * PIC_X + Player(MyIndex).XOffset
+            tmpY = GetPlayerY(MyIndex) * PIC_Y + Player(MyIndex).YOffset + 35
+            If Skill(PlayerSkills(SkillBuffer)).CastTime = 0 Then Skill(PlayerSkills(SkillBuffer)).CastTime = 1
+            ' calculate the width to fill
+            barWidth = ((GetTimeMs() - SkillBufferTimer) / ((GetTimeMs() - SkillBufferTimer) + (Skill(PlayerSkills(SkillBuffer)).CastTime * 1000)) * 64)
+            ' draw bars
+            rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
+            Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
+            rectShape.Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY))
+            rectShape.FillColor = SFML.Graphics.Color.Cyan
+            GameWindow.Draw(rectShape)
+        End If
+
+        If Options.ShowNpcBar = 1 Then
+            ' check for hp bar
+            For i = 1 To MAX_MAP_NPCS
+                If Map.Npc Is Nothing Then Exit Sub
+                If Map.Npc(i) > 0 Then
+                    If Npc(MapNpc(i).Num).Behaviour = NpcBehavior.AttackOnSight Or Npc(MapNpc(i).Num).Behaviour = NpcBehavior.AttackWhenAttacked Or Npc(MapNpc(i).Num).Behaviour = NpcBehavior.Guard Then
+                        ' lock to npc
+                        tmpX = MapNpc(i).X * PIC_X + MapNpc(i).XOffset
+                        tmpY = MapNpc(i).Y * PIC_Y + MapNpc(i).YOffset + 35
+                        If MapNpc(i).Vital(Vitals.HP) > 0 Then
+                            ' calculate the width to fill
+                            barWidth = ((MapNpc(i).Vital(Vitals.HP) / (Npc(MapNpc(i).Num).Hp) * 32))
+                            ' draw bars
+                            rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
+                            Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
+                            rectShape.Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY - 75))
+                            rectShape.FillColor = SFML.Graphics.Color.Red
+                            GameWindow.Draw(rectShape)
+
+                            If MapNpc(i).Vital(Vitals.MP) > 0 Then
+                                ' calculate the width to fill
+                                barWidth = ((MapNpc(i).Vital(Vitals.MP) / (Npc(MapNpc(i).Num).Stat(Stats.Intelligence) * 2) * 32))
+                                ' draw bars
+                                rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
+                                Dim rectShape2 As New RectangleShape(New Vector2f(barWidth, 4))
+                                rectShape2.Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY - 80))
+                                rectShape2.FillColor = SFML.Graphics.Color.Blue
+                                GameWindow.Draw(rectShape2)
+                            End If
+                        End If
+                    End If
+                End If
+            Next
+        End If
+
+        If PetAlive(MyIndex) Then
+            ' draw own health bar
+            If Player(MyIndex).Pet.Health > 0 And Player(MyIndex).Pet.Health <= Player(MyIndex).Pet.MaxHp Then
+                ' lock to Player
+                tmpX = Player(MyIndex).Pet.X * PIC_X + Player(MyIndex).Pet.XOffset
+                tmpY = Player(MyIndex).Pet.Y * PIC_X + Player(MyIndex).Pet.YOffset + 35
+                ' calculate the width to fill
+                barWidth = ((Player(MyIndex).Pet.Health) / (Player(MyIndex).Pet.MaxHp)) * 32
+                ' draw bars
+                rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
+                Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
+                rectShape.Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY - 75))
+                rectShape.FillColor = SFML.Graphics.Color.Red
+                GameWindow.Draw(rectShape)
+            End If
+        End If
+        ' check for pet casting time bar
+        If PetSkillBuffer > 0 Then
+            If Skill(Pet(Player(MyIndex).Pet.Num).Skill(PetSkillBuffer)).CastTime > 0 Then
+                ' lock to pet
+                tmpX = Player(MyIndex).Pet.X * PIC_X + Player(MyIndex).Pet.XOffset
+                tmpY = Player(MyIndex).Pet.Y * PIC_Y + Player(MyIndex).Pet.YOffset + 35
+
+                ' calculate the width to fill
+                barWidth = (GetTimeMs() - PetSkillBufferTimer) / ((Skill(Pet(Player(MyIndex).Pet.Num).Skill(PetSkillBuffer)).CastTime * 1000)) * 64
+                ' draw bar background
+                rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
+                Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
+                rectShape.Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY))
+                rectShape.FillColor = SFML.Graphics.Color.Cyan
+                GameWindow.Draw(rectShape)
+            End If
+        End If
+    End Sub
+
+    Sub DrawMapName()
+        DrawText(DrawMapNameX, DrawMapNameY, Strings.Get("gamegui", "mapname") & Map.Name, DrawMapNameColor, SFML.Graphics.Color.Black, GameWindow)
+    End Sub
+
+    Sub DrawCursor()
+        RenderSprite(CursorSprite, GameWindow, CurMouseX, CurMouseY, 0, 0, CursorInfo.Width, CursorInfo.Height)
+    End Sub
+
+    Public Sub DrawTarget(X2 As Integer, Y2 As Integer)
+        Dim rec As Rectangle
+        Dim X As Integer, y As Integer
+        Dim width As Integer, height As Integer
+
+        With rec
+            .Y = 0
+            .Height = TargetGFXInfo.Height
+            .X = 0
+            .Width = TargetGFXInfo.Width / 2
+        End With
+
+        X = ConvertMapX(X2)
+        y = ConvertMapY(Y2)
+        width = (rec.Right - rec.Left)
+        height = (rec.Bottom - rec.Top)
+
+        RenderSprite(TargetSprite, GameWindow, X, y, rec.X, rec.Y, rec.Width, rec.Height)
+    End Sub
+
+    Public Sub DrawHover(X2 As Integer, Y2 As Integer)
+        Dim rec As Rectangle
+        Dim X As Integer, Y As Integer
+        Dim width As Integer, height As Integer
+
+        With rec
+            .Y = 0
+            .Height = TargetGFXInfo.Height
+            .X = TargetGFXInfo.Width / 2
+            .Width = TargetGFXInfo.Width / 2 + TargetGFXInfo.Width / 2
+        End With
+
+        X = ConvertMapX(X2)
+        Y = ConvertMapY(Y2)
+        width = (rec.Right - rec.Left)
+        height = (rec.Bottom - rec.Top)
+
+        RenderSprite(TargetSprite, GameWindow, X, Y, rec.X, rec.Y, rec.Width, rec.Height)
+    End Sub
+
+    Sub DrawHUD()
+        Dim rec As Rectangle
+
+        'first render backpanel
+        With rec
+            .Y = 0
+            .Height = HUDPanelGFXInfo.Height
+            .X = 0
+            .Width = HUDPanelGFXInfo.Width
+        End With
+
+        RenderSprite(HUDPanelSprite, GameWindow, HUDWindowX, HUDWindowY, rec.X, rec.Y, rec.Width, rec.Height)
+
+        If Player(MyIndex).Sprite <= NumFaces Then
+            Dim tmpSprite As Sprite = New Sprite(FacesGFX(Player(MyIndex).Sprite))
+
+            If FacesGFXInfo(Player(MyIndex).Sprite).IsLoaded = False Then
+                LoadTexture(Player(MyIndex).Sprite, 7)
+            End If
+
+            'seeying we still use it, lets update timer
+            With FacesGFXInfo(Player(MyIndex).Sprite)
+                .TextureTimer = GetTimeMs() + 100000
+            End With
+
+            'then render face
+            With rec
+                .Y = 0
+                .Height = FacesGFXInfo(Player(MyIndex).Sprite).Height
+                .X = 0
+                .Width = FacesGFXInfo(Player(MyIndex).Sprite).Width
+            End With
+
+            RenderSprite(FacesSprite(Player(MyIndex).Sprite), GameWindow, HUDFaceX, HUDFaceY, rec.X, rec.Y, rec.Width, rec.Height)
+        End If
+
+        'Hp Bar etc
+        DrawStatBars()
+
+        'Fps etc
+        If FPS > 64 Then FPS = 64
+
+        DrawText(HUDWindowX + HUDHPBarX + HPBarGFXInfo.Width + 10, HUDWindowY + HUDHPBarY + 4, Strings.Get("gamegui", "fps") & FPS, SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+        DrawText(HUDWindowX + HUDMPBarX + MPBarGFXInfo.Width + 10, HUDWindowY + HUDMPBarY + 4, Strings.Get("gamegui", "ping") & PingToDraw, SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+        DrawText(HUDWindowX + HUDEXPBarX + EXPBarGFXInfo.Width + 10, HUDWindowY + HUDEXPBarY + 4, Strings.Get("gamegui", "clock") & Time.Instance.ToString("h:mm"), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+
+        If BLPS Then
+            DrawText(HUDWindowX + HUDEXPBarX + EXPBarGFXInfo.Width + 10, HUDWindowY + HUDEXPBarY + 20, Strings.Get("gamegui", "lps") & LPS, SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+        End If
+
+        ' Draw map name
+        DrawMapName()
+    End Sub
+
+    Sub DrawStatBars()
+        Dim rec As Rectangle
+        Dim CurHP As Integer, CurMP As Integer, CurEXP As Integer
+
+        'HP Bar
+        CurHP = (GetPlayerVital(MyIndex, 1) / GetPlayerMaxVital(MyIndex, 1)) * 100
+
+        With rec
+            .Y = 0
+            .Height = HPBarGFXInfo.Height
+            .X = 0
+            .Width = CurHP * HPBarGFXInfo.Width / 100
+        End With
+
+        'then render full ontop of it
+        RenderSprite(HPBarSprite, GameWindow, HUDWindowX + HUDHPBarX, HUDWindowY + HUDHPBarY + 4, rec.X, rec.Y, rec.Width, rec.Height)
+
+        'then draw the text onto that
+        DrawText(HUDWindowX + HUDHPBarX + 65, HUDWindowY + HUDHPBarY + 4, GetPlayerVital(MyIndex, 1) & "/" & GetPlayerMaxVital(MyIndex, 1), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+
+        '==============================
+
+        'MP Bar
+        CurMP = (GetPlayerVital(MyIndex, 2) / GetPlayerMaxVital(MyIndex, 2)) * 100
+
+        'then render full ontop of it
+        With rec
+            .Y = 0
+            .Height = MPBarGFXInfo.Height
+            .X = 0
+            .Width = CurMP * MPBarGFXInfo.Width / 100
+        End With
+
+        RenderSprite(MPBarSprite, GameWindow, HUDWindowX + HUDMPBarX, HUDWindowY + HUDMPBarY + 4, rec.X, rec.Y, rec.Width, rec.Height)
+
+        'draw text onto that
+        DrawText(HUDWindowX + HUDMPBarX + 65, HUDWindowY + HUDMPBarY + 4, GetPlayerVital(MyIndex, 2) & "/" & GetPlayerMaxVital(MyIndex, 2), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+
+        '====================================================
+        'EXP Bar
+        CurEXP = (GetPlayerExp(MyIndex) / NextlevelExp) * 100
+
+        'then render full ontop of it
+        With rec
+            .Y = 0
+            .Height = EXPBarGFXInfo.Height
+            .X = 0
+            .Width = CurEXP * EXPBarGFXInfo.Width / 100
+        End With
+
+        RenderSprite(EXPBarSprite, GameWindow, HUDWindowX + HUDEXPBarX, HUDWindowY + HUDEXPBarY + 4, rec.X, rec.Y, rec.Width, rec.Height)
+
+        'draw text onto that
+        DrawText(HUDWindowX + HUDEXPBarX + 65, HUDWindowY + HUDEXPBarY + 4, GetPlayerExp(MyIndex) & "/" & NextlevelExp, SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+    End Sub
+
+    Sub DrawActionPanel()
+        Dim rec As Rectangle
+
+        'first render backpanel
+        With rec
+            .Y = 0
+            .Height = ActionPanelGFXInfo.Height
+            .X = 0
+            .Width = ActionPanelGFXInfo.Width
+        End With
+
+        RenderSprite(ActionPanelSprite, GameWindow, ActionPanelX, ActionPanelY, rec.X, rec.Y, rec.Width, rec.Height)
+
+    End Sub
+
+    Public Sub DrawDialogPanel()
+        'first render panel
+        RenderSprite(EventChatSprite, GameWindow, DialogPanelX, DialogPanelY, 0, 0, EventChatGFXInfo.Width, EventChatGFXInfo.Height)
+
+        DrawText(DialogPanelX + 175, DialogPanelY + 10, Trim(DialogMsg1), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+
+        If Len(DialogMsg2) > 0 Then
+            DrawText(DialogPanelX + 60, DialogPanelY + 30, Trim(DialogMsg2), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+        End If
+
+        If Len(DialogMsg3) > 0 Then
+            DrawText(DialogPanelX + 60, DialogPanelY + 50, Trim(DialogMsg3), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+        End If
+
+        If DialogType = DIALOGUE_TYPE_QUEST Then
+            If QuestAcceptTag > 0 Then
+                'render accept button
+                DrawButton(DialogButton1Text, DialogPanelX + OkButtonX, DialogPanelY + OkButtonY, 0)
+                DrawButton(DialogButton2Text, DialogPanelX + CancelButtonX, DialogPanelY + CancelButtonY, 0)
+            Else
+                'render cancel button
+                DrawButton(DialogButton2Text, DialogPanelX + CancelButtonX - 140, DialogPanelY + CancelButtonY, 0)
+            End If
+        Else
+            'render ok button
+            DrawButton(DialogButton1Text, DialogPanelX + OkButtonX, DialogPanelY + OkButtonY, 0)
+
+            'render cancel button
+            DrawButton(DialogButton2Text, DialogPanelX + CancelButtonX, DialogPanelY + CancelButtonY, 0)
+        End If
+
+    End Sub
+
+    Public Sub DrawRClick()
+        'first render panel
+        RenderSprite(RClickSprite, GameWindow, RClickX, RClickY, 0, 0, RClickGFXInfo.Width, RClickGFXInfo.Height)
+
+        DrawText(RClickX + (RClickGFXInfo.Width \ 2) - (GetTextWidth(RClickname) \ 2), RClickY + 10, RClickname, SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+
+        DrawText(RClickX + (RClickGFXInfo.Width \ 2) - (GetTextWidth("Invite to Trade") \ 2), RClickY + 35, "Invite to Trade", SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+
+        DrawText(RClickX + (RClickGFXInfo.Width \ 2) - (GetTextWidth("Invite to Party") \ 2), RClickY + 60, "Invite to Party", SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+
+        DrawText(RClickX + (RClickGFXInfo.Width \ 2) - (GetTextWidth("Invite to House") \ 2), RClickY + 85, "Invite to House", SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+
+    End Sub
+
+    Public Sub DrawGUI()
+        'hide GUI when mapping...
+        If HideGui = True Then Exit Sub
+
+        If HUDVisible = True Then
+            DrawHUD()
+            DrawActionPanel()
+            DrawChat()
+            DrawHotbar()
+            DrawPetBar()
+            DrawPetStats()
+        End If
+
+        If pnlCharacterVisible = True Then
+            DrawEquipment()
+            If ShowItemDesc = True Then DrawItemDesc()
+        End If
+
+        If pnlInventoryVisible = True Then
+            DrawInventory()
+            If ShowItemDesc = True Then DrawItemDesc()
+        End If
+
+        If pnlSkillsVisible = True Then
+            DrawPlayerSkills()
+            If ShowSkillDesc = True Then DrawSkillDesc()
+        End If
+
+        If DialogPanelVisible = True Then
+            DrawDialogPanel()
+        End If
+
+        If pnlBankVisible = True Then
+            DrawBank()
+        End If
+
+        If pnlShopVisible = True Then
+            DrawShop()
+        End If
+
+        If pnlTradeVisible = True Then
+            DrawTrade()
+        End If
+
+        If pnlEventChatVisible = True Then
+            DrawEventChat()
+        End If
+
+        If pnlRClickVisible = True Then
+            DrawRClick()
+        End If
+
+        If pnlQuestLogVisible = True Then
+            DrawQuestLog()
+        End If
+
+        If pnlCraftVisible = True Then
+            DrawCraftPanel()
+        End If
+
+        If DragInvSlotNum > 0 Then
+            DrawInventoryItem(CurMouseX, CurMouseY)
+        End If
+
+        If DragBankSlotNum > 0 Then
+            DrawBankItem(CurMouseX, CurMouseY)
+        End If
+
+        If DragSkillSlotNum > 0 Then
+            DrawSkillItem(CurMouseX, CurMouseY)
+        End If
+
+        'draw cursor
+        'DrawCursor()
+    End Sub
+#End Region
 
 #Region "Support Functions"
     Function IsEqItem(ByVal X As Single, ByVal Y As Single) As Integer
@@ -1123,14 +1574,14 @@ Public Module ClientGuiFunctions
             If GetPlayerEquipment(MyIndex, i) > 0 And GetPlayerEquipment(MyIndex, i) <= MAX_ITEMS Then
 
                 With tempRec
-                    .top = CharWindowY + EqTop + ((EqOffsetY + 32) * ((i - 1) \ EqColumns))
-                    .bottom = .top + PIC_Y
-                    .left = CharWindowX + EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
-                    .right = .left + PIC_X
+                    .Top = CharWindowY + EqTop + ((EqOffsetY + 32) * ((i - 1) \ EqColumns))
+                    .Bottom = .Top + PIC_Y
+                    .Left = CharWindowX + EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
+                    .Right = .Left + PIC_X
                 End With
 
-                If X >= tempRec.left And X <= tempRec.right Then
-                    If Y >= tempRec.top And Y <= tempRec.bottom Then
+                If X >= tempRec.Left And X <= tempRec.Right Then
+                    If Y >= tempRec.Top And Y <= tempRec.Bottom Then
                         IsEqItem = i
                         Exit Function
                     End If
@@ -1151,14 +1602,14 @@ Public Module ClientGuiFunctions
             If GetPlayerInvItemNum(MyIndex, i) > 0 And GetPlayerInvItemNum(MyIndex, i) <= MAX_ITEMS Then
 
                 With tempRec
-                    .top = InvWindowY + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                    .bottom = .top + PIC_Y
-                    .left = InvWindowX + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
-                    .right = .left + PIC_X
+                    .Top = InvWindowY + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                    .Bottom = .Top + PIC_Y
+                    .Left = InvWindowX + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
+                    .Right = .Left + PIC_X
                 End With
 
-                If X >= tempRec.left And X <= tempRec.right Then
-                    If Y >= tempRec.top And Y <= tempRec.bottom Then
+                If X >= tempRec.Left And X <= tempRec.Right Then
+                    If Y >= tempRec.Top And Y <= tempRec.Bottom Then
                         IsInvItem = i
                         Exit Function
                     End If
@@ -1180,14 +1631,14 @@ Public Module ClientGuiFunctions
             If PlayerSkills(i) > 0 And PlayerSkills(i) <= MAX_PLAYER_SKILLS Then
 
                 With tempRec
-                    .top = SkillWindowY + SkillTop + ((SkillOffsetY + 32) * ((i - 1) \ SkillColumns))
-                    .bottom = .top + PIC_Y
-                    .left = SkillWindowX + SkillLeft + ((SkillOffsetX + 32) * (((i - 1) Mod SkillColumns)))
-                    .right = .left + PIC_X
+                    .Top = SkillWindowY + SkillTop + ((SkillOffsetY + 32) * ((i - 1) \ SkillColumns))
+                    .Bottom = .Top + PIC_Y
+                    .Left = SkillWindowX + SkillLeft + ((SkillOffsetX + 32) * (((i - 1) Mod SkillColumns)))
+                    .Right = .Left + PIC_X
                 End With
 
-                If X >= tempRec.left And X <= tempRec.right Then
-                    If Y >= tempRec.top And Y <= tempRec.bottom Then
+                If X >= tempRec.Left And X <= tempRec.Right Then
+                    If Y >= tempRec.Top And Y <= tempRec.Bottom Then
                         IsPlayerSkill = i
                         Exit Function
                     End If
@@ -1208,14 +1659,14 @@ Public Module ClientGuiFunctions
             If GetBankItemNum(i) > 0 And GetBankItemNum(i) <= MAX_ITEMS Then
 
                 With tempRec
-                    .top = BankWindowY + BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
-                    .bottom = .top + PIC_Y
-                    .left = BankWindowX + BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
-                    .right = .left + PIC_X
+                    .Top = BankWindowY + BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
+                    .Bottom = .Top + PIC_Y
+                    .Left = BankWindowX + BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
+                    .Right = .Left + PIC_X
                 End With
 
-                If X >= tempRec.left And X <= tempRec.right Then
-                    If Y >= tempRec.top And Y <= tempRec.bottom Then
+                If X >= tempRec.Left And X <= tempRec.Right Then
+                    If Y >= tempRec.Top And Y <= tempRec.Bottom Then
 
                         IsBankItem = i
                         Exit Function
@@ -1263,26 +1714,26 @@ Public Module ClientGuiFunctions
                 itemnum = GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).Num)
 
                 With tempRec
-                    .top = TradeWindowY + OurTradeY + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                    .bottom = .top + PIC_Y
-                    .left = TradeWindowX + OurTradeX + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
-                    .right = .left + PIC_X
+                    .Top = TradeWindowY + OurTradeY + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                    .Bottom = .Top + PIC_Y
+                    .Left = TradeWindowX + OurTradeX + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
+                    .Right = .Left + PIC_X
                 End With
             Else
                 itemnum = TradeTheirOffer(i).Num
 
                 With tempRec
-                    .top = TradeWindowY + TheirTradeY + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                    .bottom = .top + PIC_Y
-                    .left = TradeWindowX + TheirTradeX + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
-                    .right = .left + PIC_X
+                    .Top = TradeWindowY + TheirTradeY + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                    .Bottom = .Top + PIC_Y
+                    .Left = TradeWindowX + TheirTradeX + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
+                    .Right = .Left + PIC_X
                 End With
             End If
 
             If itemnum > 0 And itemnum <= MAX_ITEMS Then
 
-                If X >= tempRec.left And X <= tempRec.right Then
-                    If Y >= tempRec.top And Y <= tempRec.bottom Then
+                If X >= tempRec.Left And X <= tempRec.Right Then
+                    If Y >= tempRec.Top And Y <= tempRec.Bottom Then
                         IsTradeItem = i
                         Exit Function
                     End If

@@ -336,55 +336,6 @@ Module ClientGameLogic
 
     End Sub
 
-    Sub ProcessNpcMovement(ByVal MapNpcNum As Integer)
-
-        ' Check if NPC is walking, and if so process moving them over
-        If MapNpc(MapNpcNum).Moving = MovementType.Walking Then
-
-            Select Case MapNpc(MapNpcNum).Dir
-                Case Direction.Up
-                    MapNpc(MapNpcNum).YOffset = MapNpc(MapNpcNum).YOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
-                    If MapNpc(MapNpcNum).YOffset < 0 Then MapNpc(MapNpcNum).YOffset = 0
-
-                Case Direction.Down
-                    MapNpc(MapNpcNum).YOffset = MapNpc(MapNpcNum).YOffset + ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
-                    If MapNpc(MapNpcNum).YOffset > 0 Then MapNpc(MapNpcNum).YOffset = 0
-
-                Case Direction.Left
-                    MapNpc(MapNpcNum).XOffset = MapNpc(MapNpcNum).XOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
-                    If MapNpc(MapNpcNum).XOffset < 0 Then MapNpc(MapNpcNum).XOffset = 0
-
-                Case Direction.Right
-                    MapNpc(MapNpcNum).XOffset = MapNpc(MapNpcNum).XOffset + ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
-                    If MapNpc(MapNpcNum).XOffset > 0 Then MapNpc(MapNpcNum).XOffset = 0
-
-            End Select
-
-            ' Check if completed walking over to the next tile
-            If MapNpc(MapNpcNum).Moving > 0 Then
-                If MapNpc(MapNpcNum).Dir = Direction.Right Or MapNpc(MapNpcNum).Dir = Direction.Down Then
-                    If (MapNpc(MapNpcNum).XOffset >= 0) And (MapNpc(MapNpcNum).YOffset >= 0) Then
-                        MapNpc(MapNpcNum).Moving = 0
-                        If MapNpc(MapNpcNum).Steps = 1 Then
-                            MapNpc(MapNpcNum).Steps = 3
-                        Else
-                            MapNpc(MapNpcNum).Steps = 1
-                        End If
-                    End If
-                Else
-                    If (MapNpc(MapNpcNum).XOffset <= 0) And (MapNpc(MapNpcNum).YOffset <= 0) Then
-                        MapNpc(MapNpcNum).Moving = 0
-                        If MapNpc(MapNpcNum).Steps = 1 Then
-                            MapNpc(MapNpcNum).Steps = 3
-                        Else
-                            MapNpc(MapNpcNum).Steps = 1
-                        End If
-                    End If
-                End If
-            End If
-        End If
-    End Sub
-
     Sub DrawPing()
 
         PingToDraw = Ping
