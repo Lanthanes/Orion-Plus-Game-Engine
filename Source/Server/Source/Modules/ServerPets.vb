@@ -62,6 +62,7 @@
 
         For i = 1 To MAX_PETS
             SavePet(i)
+            DoEvents()
         Next
 
     End Sub
@@ -109,6 +110,7 @@
 
         For i = 1 To MAX_PETS
             LoadPet(i)
+            DoEvents()
         Next
         'SavePets()
     End Sub
@@ -155,6 +157,7 @@
 
             If Not FileExist(Application.StartupPath & "\Data\pets\pet" & i & ".dat") Then
                 SavePet(i)
+                DoEvents()
             End If
 
         Next
@@ -655,7 +658,7 @@
 
         For MapNum = 1 To MAX_CACHED_MAPS
             For PlayerIndex = 1 To GetPlayersOnline()
-                TickCount = GetTimeMs()
+                TickCount = GetTickCount()
 
                 If GetPlayerMap(PlayerIndex) = MapNum AndAlso PetAlive(PlayerIndex) Then
                     ' // This is used for ATTACKING ON SIGHT //
@@ -745,7 +748,7 @@
                         ' Make sure theres a npc with the map
                         If TempPlayer(PlayerIndex).PetStunDuration > 0 Then
                             ' check if we can unstun them
-                            If GetTimeMs() > TempPlayer(PlayerIndex).PetStunTimer + (TempPlayer(PlayerIndex).PetStunDuration * 1000) Then
+                            If GetTickCount() > TempPlayer(PlayerIndex).PetStunTimer + (TempPlayer(PlayerIndex).PetStunDuration * 1000) Then
                                 TempPlayer(PlayerIndex).PetStunDuration = 0
                                 TempPlayer(PlayerIndex).PetStunTimer = 0
                             End If
@@ -935,12 +938,14 @@
                         End If
                     End If
                 End If
+                DoEvents()
             Next
+            DoEvents()
         Next
 
         ' Make sure we reset the timer for npc hp regeneration
-        If GetTimeMs() > GivePetHPTimer + 10000 Then
-            GivePetHPTimer = GetTimeMs()
+        If GetTickCount() > GivePetHPTimer + 10000 Then
+            GivePetHPTimer = GetTickCount()
         End If
     End Sub
 
@@ -966,8 +971,8 @@
         Player(Index).Character(TempPlayer(Index).CurChar).Pet.Health = 0
         Player(Index).Character(TempPlayer(Index).CurChar).Pet.Level = 0
         Player(Index).Character(TempPlayer(Index).CurChar).Pet.Mana = 0
-        Player(Index).Character(TempPlayer(Index).CurChar).Pet.X = 0
-        Player(Index).Character(TempPlayer(Index).CurChar).Pet.Y = 0
+        Player(Index).Character(TempPlayer(Index).CurChar).Pet.x = 0
+        Player(Index).Character(TempPlayer(Index).CurChar).Pet.y = 0
 
         TempPlayer(Index).PetTarget = 0
         TempPlayer(Index).PetTargetType = 0
@@ -979,7 +984,7 @@
         Next
 
         For i = 1 To Stats.Count - 1
-            Player(Index).Character(TempPlayer(Index).CurChar).Pet.Stat(i) = 0
+            Player(Index).Character(TempPlayer(Index).CurChar).Pet.stat(i) = 0
         Next
 
         SendUpdatePlayerPet(Index, False)
@@ -1022,13 +1027,13 @@
             Player(Index).Character(TempPlayer(Index).CurChar).Pet.Level = GetPlayerLevel(Index)
 
             For i = 1 To Stats.Count - 1
-                Player(Index).Character(TempPlayer(Index).CurChar).Pet.Stat(i) = Player(Index).Character(TempPlayer(Index).CurChar).Stat(i)
+                Player(Index).Character(TempPlayer(Index).CurChar).Pet.stat(i) = Player(Index).Character(TempPlayer(Index).CurChar).Stat(i)
             Next
 
             Player(Index).Character(TempPlayer(Index).CurChar).Pet.AdoptiveStats = 1
         Else
             For i = 1 To Stats.Count - 1
-                Player(Index).Character(TempPlayer(Index).CurChar).Pet.Stat(i) = Pet(PetNum).Stat(i)
+                Player(Index).Character(TempPlayer(Index).CurChar).Pet.stat(i) = Pet(PetNum).stat(i)
             Next
 
             Player(Index).Character(TempPlayer(Index).CurChar).Pet.Level = Pet(PetNum).Level
@@ -1037,8 +1042,8 @@
             Player(Index).Character(TempPlayer(Index).CurChar).Pet.Mana = GetPetMaxVital(Index, Vitals.MP)
         End If
 
-        Player(Index).Character(TempPlayer(Index).CurChar).Pet.X = GetPlayerX(Index)
-        Player(Index).Character(TempPlayer(Index).CurChar).Pet.Y = GetPlayerY(Index)
+        Player(Index).Character(TempPlayer(Index).CurChar).Pet.x = GetPlayerX(Index)
+        Player(Index).Character(TempPlayer(Index).CurChar).Pet.y = GetPlayerY(Index)
 
         Player(Index).Character(TempPlayer(Index).CurChar).Pet.Alive = 1
         Player(Index).Character(TempPlayer(Index).CurChar).Pet.Points = 0
@@ -1315,7 +1320,7 @@
                 Select Case i
                     Case 0
                         ' Up
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.Y > TargetY And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.y > TargetY And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Up) Then
                                 PetMove(x, MapNum, Direction.Up, MovementType.Walking)
                                 didwalk = True
@@ -1323,7 +1328,7 @@
                         End If
 
                         ' Down
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.Y < TargetY And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.y < TargetY And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Down) Then
                                 PetMove(x, MapNum, Direction.Down, MovementType.Walking)
                                 didwalk = True
@@ -1331,7 +1336,7 @@
                         End If
 
                         ' Left
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.X > TargetX And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.x > TargetX And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Left) Then
                                 PetMove(x, MapNum, Direction.Left, MovementType.Walking)
                                 didwalk = True
@@ -1339,7 +1344,7 @@
                         End If
 
                         ' Right
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.X < TargetX And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.x < TargetX And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Right) Then
                                 PetMove(x, MapNum, Direction.Right, MovementType.Walking)
                                 didwalk = True
@@ -1348,7 +1353,7 @@
                     Case 1
 
                         ' Right
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.X < TargetX And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.x < TargetX And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Right) Then
                                 PetMove(x, MapNum, Direction.Right, MovementType.Walking)
                                 didwalk = True
@@ -1356,7 +1361,7 @@
                         End If
 
                         ' Left
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.X > TargetX And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.x > TargetX And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Left) Then
                                 PetMove(x, MapNum, Direction.Left, MovementType.Walking)
                                 didwalk = True
@@ -1364,7 +1369,7 @@
                         End If
 
                         ' Down
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.Y < TargetY And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.y < TargetY And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Down) Then
                                 PetMove(x, MapNum, Direction.Down, MovementType.Walking)
                                 didwalk = True
@@ -1372,7 +1377,7 @@
                         End If
 
                         ' Up
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.Y > TargetY And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.y > TargetY And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Up) Then
                                 PetMove(x, MapNum, Direction.Up, MovementType.Walking)
                                 didwalk = True
@@ -1382,7 +1387,7 @@
                     Case 2
 
                         ' Down
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.Y < TargetY And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.y < TargetY And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Down) Then
                                 PetMove(x, MapNum, Direction.Down, MovementType.Walking)
                                 didwalk = True
@@ -1390,7 +1395,7 @@
                         End If
 
                         ' Up
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.Y > TargetY And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.y > TargetY And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Up) Then
                                 PetMove(x, MapNum, Direction.Up, MovementType.Walking)
                                 didwalk = True
@@ -1398,7 +1403,7 @@
                         End If
 
                         ' Right
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.X < TargetX And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.x < TargetX And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Right) Then
                                 PetMove(x, MapNum, Direction.Right, MovementType.Walking)
                                 didwalk = True
@@ -1406,7 +1411,7 @@
                         End If
 
                         ' Left
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.X > TargetX And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.x > TargetX And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Left) Then
                                 PetMove(x, MapNum, Direction.Left, MovementType.Walking)
                                 didwalk = True
@@ -1416,7 +1421,7 @@
                     Case 3
 
                         ' Left
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.X > TargetX And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.x > TargetX And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Left) Then
                                 Call PetMove(x, MapNum, Direction.Left, MovementType.Walking)
                                 didwalk = True
@@ -1424,7 +1429,7 @@
                         End If
 
                         ' Right
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.X < TargetX And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.x < TargetX And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Right) Then
                                 PetMove(x, MapNum, Direction.Right, MovementType.Walking)
                                 didwalk = True
@@ -1432,7 +1437,7 @@
                         End If
 
                         ' Up
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.Y > TargetY And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.y > TargetY And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Up) Then
                                 PetMove(x, MapNum, Direction.Up, MovementType.Walking)
                                 didwalk = True
@@ -1440,7 +1445,7 @@
                         End If
 
                         ' Down
-                        If Player(x).Character(TempPlayer(x).CurChar).Pet.Y < TargetY And Not didwalk Then
+                        If Player(x).Character(TempPlayer(x).CurChar).Pet.y < TargetY And Not didwalk Then
                             If CanPetMove(x, MapNum, Direction.Down) Then
                                 PetMove(x, MapNum, Direction.Down, MovementType.Walking)
                                 didwalk = True
@@ -1643,6 +1648,8 @@
                             End If
                         End If
                     End If
+
+                    DoEvents()
                 Next
             Next
 
@@ -1737,6 +1744,7 @@
             path(tim).Y = LastY
 
             'Now we loop back and decrease tim, and look for the next square with lower value
+            DoEvents()
         Loop
 
         'Ok we got a path. Now, lets look at the first step and see what direction we should take.
@@ -1869,7 +1877,7 @@
 
             attackspeed = 1000 'Pet cannot wield a weapon
 
-            If npcnum > 0 And GetTimeMs() > TempPlayer(Attacker).PetAttackTimer + attackspeed Then
+            If npcnum > 0 And GetTickCount() > TempPlayer(Attacker).PetAttackTimer + attackspeed Then
 
                 ' Check if at same coordinates
                 Select Case GetPetDir(Attacker)
@@ -1928,7 +1936,7 @@
 
         ' set the regen timer
         TempPlayer(Attacker).PetstopRegen = True
-        TempPlayer(Attacker).PetstopRegenTimer = GetTimeMs()
+        TempPlayer(Attacker).PetstopRegenTimer = GetTickCount()
 
         If Damage >= MapNpc(MapNum).Npc(mapnpcnum).Vital(Vitals.HP) Then
 
@@ -1962,7 +1970,7 @@
 
             ' Now set HP to 0 so we know to actually kill them in the server loop (this prevents subscript out of range)
             MapNpc(MapNum).Npc(mapnpcnum).Num = 0
-            MapNpc(MapNum).Npc(mapnpcnum).SpawnWait = GetTimeMs()
+            MapNpc(MapNum).Npc(mapnpcnum).SpawnWait = GetTickCount()
             MapNpc(MapNum).Npc(mapnpcnum).Vital(Vitals.HP) = 0
             MapNpc(MapNum).Npc(mapnpcnum).TargetType = 0
             MapNpc(MapNum).Npc(mapnpcnum).Target = 0
@@ -2039,7 +2047,7 @@
 
             ' set the regen timer
             MapNpc(MapNum).Npc(mapnpcnum).StopRegen = True
-            MapNpc(MapNum).Npc(mapnpcnum).StopRegenTimer = GetTimeMs()
+            MapNpc(MapNum).Npc(mapnpcnum).StopRegenTimer = GetTickCount()
 
             ' if stunning spell, stun the npc
             If Skillnum > 0 Then
@@ -2055,7 +2063,7 @@
 
         If Skillnum = 0 Then
             ' Reset attack timer
-            TempPlayer(Attacker).PetAttackTimer = GetTimeMs()
+            TempPlayer(Attacker).PetAttackTimer = GetTickCount()
         End If
 
     End Sub
@@ -2118,12 +2126,12 @@
         If MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.HP) <= 0 Then Exit Function
 
         ' Make sure npcs dont attack more then once a second
-        If GetTimeMs() < MapNpc(MapNum).Npc(MapNpcNum).AttackTimer + 1000 Then Exit Function
+        If GetTickCount() < MapNpc(MapNum).Npc(MapNpcNum).AttackTimer + 1000 Then Exit Function
 
         ' Make sure we dont attack the player if they are switching maps
         If TempPlayer(Index).GettingMap = 1 Then Exit Function
 
-        MapNpc(MapNum).Npc(MapNpcNum).AttackTimer = GetTimeMs()
+        MapNpc(MapNum).Npc(MapNpcNum).AttackTimer = GetTickCount()
 
         ' Make sure they are on the same map
         If IsPlaying(Index) And PetAlive(Index) Then
@@ -2174,7 +2182,7 @@
 
         ' set the regen timer
         MapNpc(MapNum).Npc(mapnpcnum).StopRegen = True
-        MapNpc(MapNum).Npc(mapnpcnum).StopRegenTimer = GetTimeMs()
+        MapNpc(MapNum).Npc(mapnpcnum).StopRegenTimer = GetTickCount()
 
         If Damage >= GetPetVital(Victim, Vitals.HP) Then
             ' Say damage
@@ -2182,7 +2190,7 @@
 
             ' kill pet
             PlayerMsg(Victim, "Your " & Trim$(GetPetName(Victim)) & " was killed by a " & Trim$(Npc(MapNpc(MapNum).Npc(mapnpcnum).Num).Name) & ".", ColorType.BrightRed)
-            ReCallPet(Victim)
+            RecallPet(Victim)
 
             ' Now that pet is dead, go for owner
             MapNpc(MapNum).Npc(mapnpcnum).Target = Victim
@@ -2199,7 +2207,7 @@
 
             ' set the regen timer
             TempPlayer(Victim).PetstopRegen = True
-            TempPlayer(Victim).PetstopRegenTimer = GetTimeMs()
+            TempPlayer(Victim).PetstopRegenTimer = GetTickCount()
 
             'pet gets attacked, lets set this target
             TempPlayer(Victim).PetTarget = mapnpcnum
@@ -2213,7 +2221,7 @@
     Function CanPetAttackPlayer(ByVal Attacker As Integer, ByVal Victim As Integer, Optional ByVal IsSkill As Boolean = False) As Boolean
 
         If Not IsSkill Then
-            If GetTimeMs() < TempPlayer(Attacker).PetAttackTimer + 1000 Then Exit Function
+            If GetTickCount() < TempPlayer(Attacker).PetAttackTimer + 1000 Then Exit Function
         End If
 
         ' Check for subscript out of range
@@ -2328,7 +2336,7 @@
         If Skillnum <= 0 Or Skillnum > MAX_SKILLS Then Exit Sub
 
         ' see if cooldown has finished
-        If TempPlayer(Index).PetSkillCD(SkillSlot) > GetTimeMs() Then
+        If TempPlayer(Index).PetSkillCD(SkillSlot) > GetTickCount() Then
             PlayerMsg(Index, Trim$(GetPetName(Index)) & "'s Skill hasn't cooled down yet!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -2358,7 +2366,7 @@
         End If
 
         ' find out what kind of spell it is! self cast, target or AOE
-        If Skill(Skillnum).Range > 0 Then
+        If Skill(Skillnum).range > 0 Then
 
             ' ranged attack, single target or aoe?
             If Not Skill(Skillnum).IsAoE Then
@@ -2376,7 +2384,7 @@
 
         TargetTypes = TempPlayer(Index).PetTargetType
         Target = TempPlayer(Index).PetTarget
-        Range = Skill(Skillnum).Range
+        Range = Skill(Skillnum).range
         HasBuffered = False
 
         Select Case SkillCastType
@@ -2400,7 +2408,7 @@
                 If TargetTypes = TargetType.Player Then
 
                     ' if have target, check in range
-                    If Not IsInRange(Range, GetPetX(Index), GetPetY(Index), GetPlayerX(Target), GetPlayerY(Target)) Then
+                    If Not isInRange(Range, GetPetX(Index), GetPetY(Index), GetPlayerX(Target), GetPlayerY(Target)) Then
                         PlayerMsg(Index, "Target not in range of " & Trim$(GetPetName(Index)) & ".", ColorType.Yellow)
                     Else
                         ' go through spell types
@@ -2416,7 +2424,7 @@
                 ElseIf TargetTypes = TargetType.Npc Then
 
                     ' if have target, check in range
-                    If Not IsInRange(Range, GetPetX(Index), GetPetY(Index), MapNpc(MapNum).Npc(Target).X, MapNpc(MapNum).Npc(Target).Y) Then
+                    If Not isInRange(Range, GetPetX(Index), GetPetY(Index), MapNpc(MapNum).Npc(Target).X, MapNpc(MapNum).Npc(Target).Y) Then
                         PlayerMsg(Index, "Target not in range of " & Trim$(GetPetName(Index)) & ".", ColorType.Yellow)
                         HasBuffered = False
                     Else
@@ -2434,7 +2442,7 @@
                 ElseIf TargetTypes = TargetType.Pet Then
 
                     ' if have target, check in range
-                    If Not IsInRange(Range, GetPetX(Index), GetPetY(Index), GetPetX(Target), GetPetY(Target)) Then
+                    If Not isInRange(Range, GetPetX(Index), GetPetY(Index), GetPetX(Target), GetPetY(Target)) Then
                         PlayerMsg(Index, "Target not in range of " & Trim$(GetPetName(Index)) & ".", ColorType.Yellow)
                         HasBuffered = False
                     Else
@@ -2454,7 +2462,7 @@
             SendAnimation(MapNum, Skill(Skillnum).CastAnim, 0, 0, TargetType.Pet, Index)
             SendActionMsg(MapNum, "Casting " & Trim$(Skill(Skillnum).Name) & "!", ColorType.BrightRed, ActionMsgType.Scroll, GetPetX(Index) * 32, GetPetY(Index) * 32)
             TempPlayer(Index).PetskillBuffer.Skill = SkillSlot
-            TempPlayer(Index).PetskillBuffer.Timer = GetTimeMs()
+            TempPlayer(Index).PetskillBuffer.Timer = GetTickCount()
             TempPlayer(Index).PetskillBuffer.Target = Target
             TempPlayer(Index).PetskillBuffer.TargetTypes = TargetTypes
             Exit Sub
@@ -2520,7 +2528,7 @@
         ' find out what kind of spell it is! self cast, target or AOE
         If Skill(Skillnum).IsProjectile = True Then
             SkillCastType = 4 ' Projectile
-        ElseIf Skill(Skillnum).Range > 0 Then
+        ElseIf Skill(Skillnum).range > 0 Then
             ' ranged attack, single target or aoe?
             If Not Skill(Skillnum).IsAoE Then
                 SkillCastType = 2 ' targetted
@@ -2538,7 +2546,7 @@
         ' set the vital
         Vital = Skill(Skillnum).Vital
         AoE = Skill(Skillnum).AoE
-        Range = Skill(Skillnum).Range
+        Range = Skill(Skillnum).range
 
         Select Case SkillCastType
             Case 0 ' self-cast target
@@ -2572,7 +2580,7 @@
                         y = GetPetY(Target)
                     End If
 
-                    If Not IsInRange(Range, GetPetX(Index), GetPetY(Index), x, y) Then
+                    If Not isInRange(Range, GetPetX(Index), GetPetY(Index), x, y) Then
                         PlayerMsg(Index, Trim$(GetPetName(Index)) & "'s target not in range.", ColorType.Yellow)
                         SendClearPetSpellBuffer(Index)
                     End If
@@ -2586,7 +2594,7 @@
                         For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) AndAlso i <> Index Then
                                 If GetPlayerMap(i) = GetPlayerMap(Index) Then
-                                    If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
+                                    If isInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
                                         If CanPetAttackPlayer(Index, i, True) And Index <> Target Then
                                             SendAnimation(MapNum, Skill(Skillnum).SkillAnim, 0, 0, TargetType.Player, i)
                                             PetAttackPlayer(Index, i, Vital, Skillnum)
@@ -2594,7 +2602,7 @@
                                     End If
 
                                     If PetAlive(i) Then
-                                        If IsInRange(AoE, x, y, GetPetX(i), GetPetY(i)) Then
+                                        If isInRange(AoE, x, y, GetPetX(i), GetPetY(i)) Then
 
                                             If CanPetAttackPet(Index, i, Skillnum) Then
                                                 SendAnimation(MapNum, Skill(Skillnum).SkillAnim, 0, 0, TargetType.Pet, i)
@@ -2608,7 +2616,7 @@
 
                         For i = 1 To MAX_MAP_NPCS
                             If MapNpc(MapNum).Npc(i).Num > 0 AndAlso MapNpc(MapNum).Npc(i).Vital(Vitals.HP) > 0 Then
-                                If IsInRange(AoE, x, y, MapNpc(MapNum).Npc(i).X, MapNpc(MapNum).Npc(i).Y) Then
+                                If isInRange(AoE, x, y, MapNpc(MapNum).Npc(i).X, MapNpc(MapNum).Npc(i).Y) Then
                                     If CanPetAttackNpc(Index, i, True) Then
                                         SendAnimation(MapNum, Skill(Skillnum).SkillAnim, 0, 0, TargetType.Npc, i)
                                         PetAttackNpc(Index, i, Vital, Skillnum)
@@ -2634,12 +2642,12 @@
 
                         For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(Index) Then
-                                If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
+                                If isInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
                                     SpellPlayer_Effect(VitalType, increment, i, Vital, Skillnum)
                                 End If
 
                                 If PetAlive(i) Then
-                                    If IsInRange(AoE, x, y, GetPetX(i), GetPetY(i)) Then
+                                    If isInRange(AoE, x, y, GetPetX(i), GetPetY(i)) Then
                                         SkillPet_Effect(VitalType, increment, i, Vital, Skillnum)
                                     End If
                                 End If
@@ -2663,7 +2671,7 @@
                     y = GetPetY(Target)
                 End If
 
-                If Not IsInRange(Range, GetPetX(Index), GetPetY(Index), x, y) Then
+                If Not isInRange(Range, GetPetX(Index), GetPetY(Index), x, y) Then
                     PlayerMsg(Index, "Target is not in range of your " & Trim$(GetPetName(Index)) & "!", ColorType.Yellow)
                     SendClearPetSpellBuffer(Index)
                     Exit Sub
@@ -2758,7 +2766,7 @@
             SendPetVital(Index, Vitals.MP)
             SendPetVital(Index, Vitals.HP)
 
-            TempPlayer(Index).PetSkillCD(Skillslot) = GetTimeMs() + (Skill(Skillnum).CdTime * 1000)
+            TempPlayer(Index).PetSkillCD(Skillslot) = GetTickCount() + (Skill(Skillnum).CdTime * 1000)
 
             SendActionMsg(MapNum, Trim$(Skill(Skillnum).Name) & "!", ColorType.BrightRed, ActionMsgType.Scroll, GetPetX(Index) * 32, GetPetY(Index) * 32)
         End If
@@ -2814,16 +2822,16 @@
             With TempPlayer(Index).PetHoT(i)
 
                 If .Skill = Skillnum Then
-                    .Timer = GetTimeMs()
-                    .StartTime = GetTimeMs()
+                    .Timer = GetTickCount()
+                    .StartTime = GetTickCount()
                     Exit Sub
                 End If
 
                 If .Used = False Then
                     .Skill = Skillnum
-                    .Timer = GetTimeMs()
+                    .Timer = GetTickCount()
                     .Used = True
-                    .StartTime = GetTimeMs()
+                    .StartTime = GetTickCount()
                     Exit Sub
                 End If
             End With
@@ -2839,19 +2847,19 @@
         For i = 1 To MAX_DOTS
             With TempPlayer(Index).PetDoT(i)
                 If .Skill = Skillnum Then
-                    .Timer = GetTimeMs()
+                    .Timer = GetTickCount()
                     .Caster = Caster
-                    .StartTime = GetTimeMs()
+                    .StartTime = GetTickCount()
                     .AttackerType = AttackerType
                     Exit Sub
                 End If
 
                 If .Used = False Then
                     .Skill = Skillnum
-                    .Timer = GetTimeMs()
+                    .Timer = GetTickCount()
                     .Caster = Caster
                     .Used = True
-                    .StartTime = GetTimeMs()
+                    .StartTime = GetTickCount()
                     .AttackerType = AttackerType
                     Exit Sub
                 End If
@@ -2879,7 +2887,7 @@
 
         ' set the regen timer
         TempPlayer(Attacker).PetstopRegen = True
-        TempPlayer(Attacker).PetstopRegenTimer = GetTimeMs()
+        TempPlayer(Attacker).PetstopRegenTimer = GetTickCount()
 
         If Damage >= GetPlayerVital(Victim, Vitals.HP) Then
             SendActionMsg(GetPlayerMap(Victim), "-" & GetPlayerVital(Victim, Vitals.HP), ColorType.BrightRed, 1, (GetPlayerX(Victim) * 32), (GetPlayerY(Victim) * 32))
@@ -2968,7 +2976,7 @@
 
             ' set the regen timer
             TempPlayer(Victim).StopRegen = True
-            TempPlayer(Victim).StopRegenTimer = GetTimeMs()
+            TempPlayer(Victim).StopRegenTimer = GetTickCount()
 
             'if a stunning spell, stun the player
             If SkillNum > 0 Then
@@ -2982,14 +2990,14 @@
         End If
 
         ' Reset attack timer
-        TempPlayer(Attacker).PetAttackTimer = GetTimeMs()
+        TempPlayer(Attacker).PetAttackTimer = GetTickCount()
 
     End Sub
 
     Function CanPetAttackPet(ByVal Attacker As Integer, ByVal Victim As Integer, Optional ByVal IsSkill As Integer = 0) As Boolean
 
         If Not IsSkill Then
-            If GetTimeMs() < TempPlayer(Attacker).PetAttackTimer + 1000 Then Exit Function
+            If GetTickCount() < TempPlayer(Attacker).PetAttackTimer + 1000 Then Exit Function
         End If
 
         ' Check for subscript out of range
@@ -3090,7 +3098,7 @@
 
         ' set the regen timer
         TempPlayer(Attacker).PetstopRegen = True
-        TempPlayer(Attacker).PetstopRegenTimer = GetTimeMs()
+        TempPlayer(Attacker).PetstopRegenTimer = GetTickCount()
 
         If Damage >= GetPetVital(Victim, Vitals.HP) Then
             SendActionMsg(GetPlayerMap(Victim), "-" & GetPetVital(Victim, Vitals.HP), ColorType.BrightRed, ActionMsgType.Scroll, (GetPetX(Victim) * 32), (GetPetY(Victim) * 32))
@@ -3182,7 +3190,7 @@
 
             ' set the regen timer
             TempPlayer(Victim).PetstopRegen = True
-            TempPlayer(Victim).PetstopRegenTimer = GetTimeMs()
+            TempPlayer(Victim).PetstopRegenTimer = GetTickCount()
 
             'if a stunning spell, stun the player
             If Skillnum > 0 Then
@@ -3195,7 +3203,7 @@
         End If
 
         ' Reset attack timer
-        TempPlayer(Attacker).PetAttackTimer = GetTimeMs()
+        TempPlayer(Attacker).PetAttackTimer = GetTickCount()
 
     End Sub
 
@@ -3206,7 +3214,7 @@
             If Skill(Skillnum).StunDuration > 0 Then
                 ' set the values on index
                 TempPlayer(Index).PetStunDuration = Skill(Skillnum).StunDuration
-                TempPlayer(Index).PetStunTimer = GetTimeMs()
+                TempPlayer(Index).PetStunTimer = GetTickCount()
                 ' tell him he's stunned
                 PlayerMsg(Index, "Your " & Trim$(GetPetName(Index)) & " has been stunned.", ColorType.Yellow)
             End If
@@ -3220,7 +3228,7 @@
 
             If .Used And .Skill > 0 Then
                 ' time to tick?
-                If GetTimeMs() > .Timer + (Skill(.Skill).Interval * 1000) Then
+                If GetTickCount() > .Timer + (Skill(.Skill).Interval * 1000) Then
                     If .AttackerType = TargetType.Pet Then
                         If CanPetAttackPet(.Caster, Index, .Skill) Then
                             PetAttackPet(.Caster, Index, Skill(.Skill).Vital)
@@ -3235,12 +3243,12 @@
                         End If
                     End If
 
-                    .Timer = GetTimeMs()
+                    .Timer = GetTickCount()
 
                     ' check if DoT is still active - if player died it'll have been purged
                     If .Used And .Skill > 0 Then
                         ' destroy DoT if finished
-                        If GetTimeMs() - .StartTime >= (Skill(.Skill).Duration * 1000) Then
+                        If GetTickCount() - .StartTime >= (Skill(.Skill).Duration * 1000) Then
                             .Used = False
                             .Skill = 0
                             .Timer = 0
@@ -3260,8 +3268,8 @@
 
             If .Used And .Skill > 0 Then
                 ' time to tick?
-                If GetTimeMs() > .Timer + (Skill(.Skill).Interval * 1000) Then
-                    SendActionMsg(GetPlayerMap(Index), "+" & Skill(.Skill).Vital, ColorType.BrightGreen, ActionMsgType.Scroll, Player(Index).Character(TempPlayer(Index).CurChar).Pet.X * 32, Player(Index).Character(TempPlayer(Index).CurChar).Pet.Y * 32,)
+                If GetTickCount() > .Timer + (Skill(.Skill).Interval * 1000) Then
+                    SendActionMsg(GetPlayerMap(Index), "+" & Skill(.Skill).Vital, ColorType.BrightGreen, ActionMsgType.Scroll, Player(Index).Character(TempPlayer(Index).CurChar).Pet.x * 32, Player(Index).Character(TempPlayer(Index).CurChar).Pet.y * 32,)
                     SetPetVital(Index, Vitals.HP, GetPetVital(Index, Vitals.HP) + Skill(.Skill).Vital)
 
                     If GetPetVital(Index, Vitals.HP) > GetPetMaxVital(Index, Vitals.HP) Then SetPetVital(Index, Vitals.HP, GetPetMaxVital(Index, Vitals.HP))
@@ -3270,12 +3278,12 @@
 
                     SendPetVital(Index, Vitals.HP)
                     SendPetVital(Index, Vitals.MP)
-                    .Timer = GetTimeMs()
+                    .Timer = GetTickCount()
 
                     ' check if DoT is still active - if player died it'll have been purged
                     If .Used And .Skill > 0 Then
                         ' destroy hoT if finished
-                        If GetTimeMs() - .StartTime >= (Skill(.Skill).Duration * 1000) Then
+                        If GetTickCount() - .StartTime >= (Skill(.Skill).Duration * 1000) Then
                             .Used = False
                             .Skill = 0
                             .Timer = 0
@@ -3399,7 +3407,7 @@
             Damage = Damage - blockAmount
 
             ' take away armour
-            Damage = Damage - Random(1, (Player(Index).Character(TempPlayer(Index).CurChar).Pet.Stat(Stats.Luck) * 2))
+            Damage = Damage - Random(1, (Player(Index).Character(TempPlayer(Index).CurChar).Pet.stat(Stats.Luck) * 2))
 
             ' randomise for up to 10% lower than max hit
             Damage = Random(1, Damage)
@@ -3423,9 +3431,9 @@
         If IsSkill = False Then
             ' Check attack timer
             If GetPlayerEquipment(Attacker, EquipmentType.Weapon) > 0 Then
-                If GetTimeMs() < TempPlayer(Attacker).AttackTimer + Item(GetPlayerEquipment(Attacker, EquipmentType.Weapon)).Speed Then Exit Function
+                If GetTickCount() < TempPlayer(Attacker).AttackTimer + Item(GetPlayerEquipment(Attacker, EquipmentType.Weapon)).Speed Then Exit Function
             Else
-                If GetTimeMs() < TempPlayer(Attacker).AttackTimer + 1000 Then Exit Function
+                If GetTickCount() < TempPlayer(Attacker).AttackTimer + 1000 Then Exit Function
             End If
         End If
 
@@ -3524,7 +3532,7 @@
 
         ' set the regen timer
         TempPlayer(Attacker).StopRegen = True
-        TempPlayer(Attacker).StopRegenTimer = GetTimeMs()
+        TempPlayer(Attacker).StopRegenTimer = GetTickCount()
 
         If Damage >= GetPetVital(Victim, Vitals.HP) Then
             SendActionMsg(GetPlayerMap(Victim), "-" & GetPetVital(Victim, Vitals.HP), ColorType.BrightRed, 1, (GetPetX(Victim) * 32), (GetPetY(Victim) * 32))
@@ -3568,7 +3576,7 @@
             Next
 
             PlayerMsg(Victim, ("Your " & Trim$(GetPetName(Victim)) & " was killed by  " & Trim$(GetPlayerName(Attacker)) & "."), ColorType.BrightRed)
-            ReCallPet(Victim)
+            RecallPet(Victim)
         Else
             ' Pet not dead, just do the damage
             SetPetVital(Victim, Vitals.HP, GetPetVital(Victim, Vitals.HP) - Damage)
@@ -3588,7 +3596,7 @@
 
             ' set the regen timer
             TempPlayer(Victim).PetstopRegen = True
-            TempPlayer(Victim).PetstopRegenTimer = GetTimeMs()
+            TempPlayer(Victim).PetstopRegenTimer = GetTickCount()
 
             'if a stunning spell, stun the player
             If Skillnum > 0 Then
@@ -3602,7 +3610,7 @@
         End If
 
         ' Reset attack timer
-        TempPlayer(Attacker).AttackTimer = GetTimeMs()
+        TempPlayer(Attacker).AttackTimer = GetTickCount()
 
     End Sub
 
@@ -3766,9 +3774,9 @@
             .Owner = Index
             .OwnerType = TargetType.Pet
             .Dir = Player(i).Character(TempPlayer(i).CurChar).Pet.Dir
-            .X = Player(i).Character(TempPlayer(i).CurChar).Pet.X
-            .Y = Player(i).Character(TempPlayer(i).CurChar).Pet.Y
-            .Timer = GetTimeMs() + 60000
+            .X = Player(i).Character(TempPlayer(i).CurChar).Pet.x
+            .Y = Player(i).Character(TempPlayer(i).CurChar).Pet.y
+            .Timer = GetTickCount() + 60000
         End With
 
         SendProjectileToMap(MapNum, ProjectileSlot)

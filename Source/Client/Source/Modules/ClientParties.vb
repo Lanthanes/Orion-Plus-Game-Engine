@@ -4,10 +4,10 @@ Imports SFML.Window
 
 Module ClientParties
 
-#Region "Globals and Structures"
-    Public Party As PartyStruct
+#Region "Types and Globals"
+    Public Party As PartyRec
 
-    Public Structure PartyStruct
+    Public Structure PartyRec
         Dim Leader As Integer
         Dim Member() As Integer
         Dim MemberCount As Integer
@@ -145,7 +145,7 @@ Module ClientParties
 #End Region
 
     Sub ClearParty()
-        Party = New PartyStruct With {
+        Party = New PartyRec With {
             .Leader = 0,
             .MemberCount = 0
         }

@@ -481,7 +481,7 @@ Module ServerPlayers
                                                 ReDim TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
 
                                                 TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 1
-                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTimeMs()
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTickCount()
                                             End If
                                         End If
                                     End If
@@ -535,7 +535,7 @@ Module ServerPlayers
                                                 ReDim TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
 
                                                 TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 1
-                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTimeMs()
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTickCount()
                                             End If
                                         End If
                                     End If
@@ -587,7 +587,7 @@ Module ServerPlayers
                                                 ReDim TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
 
                                                 TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 1
-                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTimeMs()
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTickCount()
                                             End If
                                         End If
                                     End If
@@ -640,7 +640,7 @@ Module ServerPlayers
                                                 ReDim TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
 
                                                 TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 1
-                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTimeMs()
+                                                TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTickCount()
                                             End If
                                         End If
                                     End If
@@ -710,7 +710,7 @@ Module ServerPlayers
 
                 If Map(GetPlayerMap(Index)).Tile(x, y).Type = TileType.Key And TempTile(GetPlayerMap(Index)).DoorOpen(x, y) = False Then
                     TempTile(GetPlayerMap(Index)).DoorOpen(x, y) = True
-                    TempTile(GetPlayerMap(Index)).DoorTimer = GetTimeMs()
+                    TempTile(GetPlayerMap(Index)).DoorTimer = GetTickCount()
                     SendMapKey(Index, x, y, 1)
                     MapMsg(GetPlayerMap(Index), "A door has been unlocked.", ColorType.White)
                 End If
@@ -836,7 +836,7 @@ Module ServerPlayers
                         'Process this event, it is on-touch and everything checks out.
                         If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount > 0 Then
                             TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 1
-                            TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTimeMs()
+                            TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).ActionTimer = GetTickCount()
                             TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).CurList = 1
                             TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).CurSlot = 1
                             TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).EventID = TempPlayer(Index).EventMap.EventPages(i).EventID
@@ -1587,7 +1587,7 @@ Module ServerPlayers
         If Not HasSkill(Index, skillnum) Then Exit Sub
 
         ' see if cooldown has finished
-        If TempPlayer(Index).SkillCD(Skillslot) > GetTimeMs() Then
+        If TempPlayer(Index).SkillCD(Skillslot) > GetTickCount() Then
             PlayerMsg(Index, "Skill hasn't cooled down yet!", ColorType.Yellow)
             Exit Sub
         End If
@@ -1627,7 +1627,7 @@ Module ServerPlayers
         End If
 
         ' find out what kind of skill it is! self cast, target or AOE
-        If Skill(skillnum).Range > 0 Then
+        If Skill(skillnum).range > 0 Then
             ' ranged attack, single target or aoe?
             If Not Skill(skillnum).IsAoE Then
                 SkillCastType = 2 ' targetted
@@ -1644,7 +1644,7 @@ Module ServerPlayers
 
         TargetType = TempPlayer(Index).TargetType
         Target = TempPlayer(Index).Target
-        range = Skill(skillnum).Range
+        range = Skill(skillnum).range
         HasBuffered = False
 
         Select Case SkillCastType
@@ -1663,7 +1663,7 @@ Module ServerPlayers
                         End If
                     End If
                     ' if have target, check in range
-                    If Not IsInRange(range, GetPlayerX(Index), GetPlayerY(Index), GetPlayerX(Target), GetPlayerY(Target)) Then
+                    If Not isInRange(range, GetPlayerX(Index), GetPlayerY(Index), GetPlayerX(Target), GetPlayerY(Target)) Then
                         PlayerMsg(Index, "Target not in range.", ColorType.BrightRed)
                     Else
                         ' go through skill types
@@ -1677,7 +1677,7 @@ Module ServerPlayers
                     End If
                 ElseIf TargetType = TargetType.Npc Then
                     ' if have target, check in range
-                    If Not IsInRange(range, GetPlayerX(Index), GetPlayerY(Index), MapNpc(MapNum).Npc(Target).X, MapNpc(MapNum).Npc(Target).Y) Then
+                    If Not isInRange(range, GetPlayerX(Index), GetPlayerY(Index), MapNpc(MapNum).Npc(Target).X, MapNpc(MapNum).Npc(Target).Y) Then
                         PlayerMsg(Index, "Target not in range.", ColorType.BrightRed)
                         HasBuffered = False
                     Else
@@ -1696,7 +1696,7 @@ Module ServerPlayers
         If HasBuffered Then
             SendAnimation(MapNum, Skill(skillnum).CastAnim, 0, 0, TargetType.Player, Index)
             TempPlayer(Index).SkillBuffer = Skillslot
-            TempPlayer(Index).SkillBufferTimer = GetTimeMs()
+            TempPlayer(Index).SkillBufferTimer = GetTickCount()
             Exit Sub
         Else
             SendClearSkillBuffer(Index)
@@ -2278,7 +2278,7 @@ Module ServerPlayers
                         ' Check if the key they are using matches the map key
                         If InvItemNum = Map(GetPlayerMap(Index)).Tile(x, y).Data1 Then
                             TempTile(GetPlayerMap(Index)).DoorOpen(x, y) = True
-                            TempTile(GetPlayerMap(Index)).DoorTimer = GetTimeMs()
+                            TempTile(GetPlayerMap(Index)).DoorTimer = GetTickCount()
                             SendMapKey(Index, x, y, 1)
                             MapMsg(GetPlayerMap(Index), "A door has been unlocked.", ColorType.Yellow)
 

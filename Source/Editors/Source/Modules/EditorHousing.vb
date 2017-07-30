@@ -1,10 +1,9 @@
-﻿Imports System.Windows.Forms
-Imports SFML.Graphics
+﻿Imports SFML.Graphics
 Imports SFML.Window
 
-Public Module ClientHousing
+Public Module EditorHousing
 
-#Region "Globals"
+#Region "Globals & Types"
     Public MAX_HOUSES As Integer = 100
 
     Public FurnitureCount As Integer
@@ -12,16 +11,14 @@ Public Module ClientHousing
     Public FurnitureSelected As Integer
     Public HouseTileIndex As Integer
 
-    Public House() As HouseStruct
-    Public HouseConfig() As HouseStruct
-    Public Furniture() As FurnitureStruct
+    Public House() As HouseRec
+    Public HouseConfig() As HouseRec
+    Public Furniture() As FurnitureRec
     Public NumFurniture As Integer
     Public House_Changed(0 To MAX_HOUSES) As Boolean
     Public HouseEdit As Boolean
-#End Region
 
-#Region "Structures"
-    Structure HouseStruct
+    Structure HouseRec
         Dim ConfigName As String
         Dim BaseMap As Integer
         Dim Price As Integer
@@ -30,21 +27,21 @@ Public Module ClientHousing
         Dim Y As Integer
     End Structure
 
-    Structure FurnitureStruct
+    Structure FurnitureRec
         Dim ItemNum As Integer
         Dim X As Integer
         Dim Y As Integer
     End Structure
 
-    Structure PlayerHouseStruct
+    Structure PlayerHouseRec
         Dim HouseIndex As Integer
         Dim FurnitureCount As Integer
-        Dim Furniture() As FurnitureStruct
+        Dim Furniture() As FurnitureRec
     End Structure
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_HouseConfigurations(Data() As Byte)
+    Sub Packet_HouseConfigurations(ByVal Data() As Byte)
         Dim buffer As New ByteBuffer, i As Integer
 
         buffer.WriteBytes(Data)
@@ -58,64 +55,11 @@ Public Module ClientHousing
             HouseConfig(i).MaxFurniture = buffer.ReadInteger
             HouseConfig(i).Price = buffer.ReadInteger
         Next
-
         buffer = Nothing
 
     End Sub
 
-    Sub Packet_HouseOffer(Data() As Byte)
-        Dim buffer As New ByteBuffer, i As Integer
-
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SBuyHouse Then Exit Sub
-
-        i = buffer.ReadInteger
-
-        buffer = Nothing
-
-        DialogType = DIALOGUE_TYPE_BUYHOME
-        If HouseConfig(i).MaxFurniture > 0 Then
-            ' ask to buy house
-            DialogMsg1 = "Would you like to buy the house: " & Trim$(HouseConfig(i).ConfigName)
-            DialogMsg2 = "Cost: " & HouseConfig(i).Price
-            DialogMsg3 = "Furniture Limit: " & HouseConfig(i).MaxFurniture
-        Else
-            DialogMsg1 = "Would you like to buy the house: " & Trim$(HouseConfig(i).ConfigName)
-            DialogMsg2 = "Cost: " & HouseConfig(i).Price
-            DialogMsg3 = "Furniture Limit: None."
-        End If
-
-        UpdateDialog = True
-
-        buffer = Nothing
-
-    End Sub
-
-    Sub Packet_Visit(Data() As Byte)
-        Dim buffer As New ByteBuffer, i As Integer
-
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SVisit Then Exit Sub
-
-        i = buffer.ReadInteger
-
-        DialogType = DIALOGUE_TYPE_VISIT
-
-        DialogMsg1 = "You have been invited to visit " & Trim$(GetPlayerName(i)) & "'s house."
-        DialogMsg2 = ""
-        DialogMsg3 = ""
-
-        buffer = Nothing
-
-        UpdateDialog = True
-
-    End Sub
-
-    Sub Packet_Furniture(Data() As Byte)
+    Sub Packet_Furniture(ByVal Data() As Byte)
         Dim buffer As New ByteBuffer, i As Integer
 
         buffer.WriteBytes(Data)
@@ -139,7 +83,7 @@ Public Module ClientHousing
 
     End Sub
 
-    Sub Packet_EditHouses(data() As Byte)
+    Sub Packet_EditHouses(ByVal data() As Byte)
         Dim buffer As New ByteBuffer
         Dim i As Integer
 
@@ -168,44 +112,127 @@ Public Module ClientHousing
 
 #Region "Outgoing Packets"
     Public Sub SendRequestEditHouse()
-        Dim buffer As New ByteBuffer
+        Dim buffer As ByteBuffer
+
+        buffer = New ByteBuffer
 
         buffer.WriteInteger(EditorPackets.RequestEditHouse)
-
         SendData(buffer.ToArray)
+
         buffer = Nothing
 
     End Sub
 
-    Public Sub SendBuyHouse(Accepted As Byte)
-        Dim buffer As New ByteBuffer
+    Public Sub SendBuyHouse(ByVal Accepted As Byte)
+        Dim buffer As ByteBuffer
+        buffer = New ByteBuffer
 
         buffer.WriteInteger(ClientPackets.CBuyHouse)
         buffer.WriteInteger(Accepted)
-
         SendData(buffer.ToArray)
+
         buffer = Nothing
     End Sub
 
-    Public Sub SendInvite(Name As String)
-        Dim buffer As New ByteBuffer
+    Public Sub SendInvite(ByVal Name As String)
+        Dim buffer As ByteBuffer
+        buffer = New ByteBuffer
 
         buffer.WriteInteger(ClientPackets.CVisit)
         buffer.WriteString(Name)
-
         SendData(buffer.ToArray)
+
         buffer = Nothing
     End Sub
 
-    Public Sub SendVisit(Accepted As Byte)
-        Dim buffer As New ByteBuffer
+    Public Sub SendVisit(ByVal Accepted As Byte)
+        Dim buffer As ByteBuffer
+        buffer = New ByteBuffer
 
         buffer.WriteInteger(ClientPackets.CAcceptVisit)
         buffer.WriteInteger(Accepted)
+        SendData(buffer.ToArray)
+
+        buffer = Nothing
+    End Sub
+#End Region
+
+#Region "Editor"
+    Public Sub HouseEditorInit()
+
+        If FrmEditor_House.Visible = False Then Exit Sub
+
+        EditorIndex = FrmEditor_House.lstIndex.SelectedIndex + 1
+
+        With House(EditorIndex)
+            FrmEditor_House.txtName.Text = Trim$(.ConfigName)
+            If .BaseMap = 0 Then .BaseMap = 1
+            FrmEditor_House.nudBaseMap.Value = .BaseMap
+            If .X = 0 Then .X = 1
+            FrmEditor_House.nudX.Value = .X
+            If .Y = 0 Then .Y = 1
+            FrmEditor_House.nudY.Value = .Y
+            FrmEditor_House.nudPrice.Value = .Price
+            FrmEditor_House.nudFurniture.Value = .MaxFurniture
+        End With
+
+        House_Changed(EditorIndex) = True
+
+    End Sub
+
+    Public Sub HouseEditorCancel()
+
+        Editor = 0
+        FrmEditor_House.Dispose()
+
+        ClearChanged_House()
+
+    End Sub
+
+    Public Sub HouseEditorOk()
+        Dim i As Integer, buffer As ByteBuffer, count As Integer
+        buffer = New ByteBuffer
+
+        buffer.WriteInteger(EditorPackets.SaveHouses)
+
+        For i = 1 To MAX_HOUSES
+            If House_Changed(i) Then count = count + 1
+        Next
+
+        buffer.WriteInteger(count)
+
+        If count > 0 Then
+            For i = 1 To MAX_HOUSES
+                If House_Changed(i) Then
+                    buffer.WriteInteger(i)
+                    buffer.WriteString(Trim$(House(i).ConfigName))
+                    buffer.WriteInteger(House(i).BaseMap)
+                    buffer.WriteInteger(House(i).X)
+                    buffer.WriteInteger(House(i).Y)
+                    buffer.WriteInteger(House(i).Price)
+                    buffer.WriteInteger(House(i).MaxFurniture)
+                End If
+            Next
+        End If
 
         SendData(buffer.ToArray)
         buffer = Nothing
+        FrmEditor_House.Dispose()
+        Editor = 0
+
+        ClearChanged_House()
+
     End Sub
+
+    Public Sub ClearChanged_House()
+
+        For i = 1 To MAX_HOUSES
+            House_Changed(i) = Nothing
+        Next i
+
+        ReDim House_Changed(0 To MAX_HOUSES)
+    End Sub
+
 #End Region
 
 #Region "Drawing"
@@ -221,7 +248,7 @@ Public Module ClientHousing
         If NumFurniture = 0 Then Exit Sub
     End Sub
 
-    Public Sub DrawFurniture(Index As Integer, Layer As Integer)
+    Public Sub DrawFurniture(ByVal Index As Integer, Layer As Integer)
         Dim i As Integer, ItemNum As Integer
         Dim X As Integer, Y As Integer, Width As Integer, Height As Integer, X1 As Integer, Y1 As Integer
 
@@ -237,7 +264,7 @@ Public Module ClientHousing
 
         'seeying we still use it, lets update timer
         With SkillIconsGFXInfo(i)
-            .TextureTimer = GetTimeMs() + 100000
+            .TextureTimer = GetTickCount() + 100000
         End With
 
         Width = Item(ItemNum).FurnitureWidth

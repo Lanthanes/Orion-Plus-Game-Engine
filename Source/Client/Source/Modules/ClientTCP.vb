@@ -147,7 +147,7 @@ Module ClientTCP
 
     Sub GetPing()
         Dim Buffer As New ByteBuffer
-        PingStart = GetTimeMs()
+        PingStart = GetTickCount()
 
         Buffer.WriteInteger(ClientPackets.CCheckPing)
         SendData(Buffer.ToArray())

@@ -4,19 +4,13 @@ Imports System.Windows.Forms
 Module ClientGeneral
 
     Public started As Boolean
-    Public myStopWatch As New Stopwatch()
 
-    'Public Function GetTimeMs() As Integer
-    '    Return Environment.TickCount
-    'End Function
-
-    Public Function GetTimeMs() As Long
-        Return myStopwatch.ElapsedMilliseconds
+    Public Function GetTickCount() As Integer
+        Return Environment.TickCount
     End Function
 
     Sub Startup()
         SFML.CSFML.Activate()
-        myStopWatch.Start()
 
         SetStatus(Strings.Get("loadscreen", "loading"))
 
@@ -247,14 +241,14 @@ Module ClientGeneral
         End If
 
         If i = 4 Then Exit Function
-        until = GetTimeMs() + 3500
+        until = GetTickCount() + 3500
 
         Connect()
 
         SetStatus(Strings.Get("mainmenu", "connectserver", i))
 
         ' Wait until connected or a few seconds have passed and report the server being down
-        Do While (Not IsConnected()) And (GetTimeMs() <= until)
+        Do While (Not IsConnected()) And (GetTickCount() <= until)
             DoEvents()
             Thread.Sleep(10)
         Loop

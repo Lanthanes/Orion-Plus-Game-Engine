@@ -2,7 +2,7 @@
 Imports Orion
 
 Public Module ClientTime
-    Sub Packet_Clock(data() As Byte)
+    Sub Packet_Clock(ByVal data() As Byte)
         Dim Buffer As New ByteBuffer
         Buffer.WriteBytes(data)
 
@@ -14,7 +14,7 @@ Public Module ClientTime
         Buffer = Nothing
     End Sub
 
-    Sub Packet_Time(data() As Byte)
+    Sub Packet_Time(ByVal data() As Byte)
         Dim Buffer As New ByteBuffer
         Buffer.WriteBytes(data)
 

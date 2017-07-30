@@ -1,7 +1,6 @@
 ﻿Imports System.Drawing
 
 Public Module ClientHotBar
-#Region "Globals"
     Public SelHotbarSlot As Integer
     Public SelSkillSlot As Boolean
 
@@ -11,16 +10,12 @@ Public Module ClientHotBar
     Public Const HotbarTop As Byte = 2
     Public Const HotbarLeft As Byte = 2
     Public Const HotbarOffsetX As Byte = 2
-#End Region
 
-#Region "Structures"
     Public Structure HotbarRec
         Dim Slot As Integer
         Dim sType As Byte
     End Structure
-#End Region
 
-#Region "Data"
     Public Function IsHotBarSlot(ByVal X As Single, ByVal Y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
@@ -29,14 +24,14 @@ Public Module ClientHotBar
 
         For i = 1 To MAX_HOTBAR
             With tempRec
-                .Top = HotbarY + HotbarTop
-                .Bottom = .Top + PIC_Y
-                .Left = HotbarX + HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1) Mod MAX_HOTBAR)))
-                .Right = .Left + PIC_X
+                .top = HotbarY + HotbarTop
+                .bottom = .top + PIC_Y
+                .left = HotbarX + HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1) Mod MAX_HOTBAR)))
+                .right = .left + PIC_X
             End With
 
-            If X >= tempRec.Left And X <= tempRec.Right Then
-                If Y >= tempRec.Top And Y <= tempRec.Bottom Then
+            If X >= tempRec.left And X <= tempRec.right Then
+                If Y >= tempRec.top And Y <= tempRec.bottom Then
                     IsHotBarSlot = i
                     Exit Function
                 End If
@@ -44,26 +39,7 @@ Public Module ClientHotBar
         Next
 
     End Function
-#End Region
 
-#Region "Incoming Packets"
-    Sub Packet_Hotbar(Data() As Byte)
-        Dim Buffer As New ByteBuffer, i As Integer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SHotbar Then Exit Sub
-
-        For i = 1 To MAX_HOTBAR
-            Player(MyIndex).Hotbar(i).Slot = Buffer.ReadInteger
-            Player(MyIndex).Hotbar(i).sType = Buffer.ReadInteger
-        Next
-
-        Buffer = Nothing
-    End Sub
-#End Region
-
-#Region "Outgoing Packets"
     Public Sub SendSetHotbarSlot(ByVal Slot As Integer, ByVal Num As Integer, ByVal Type As Integer)
         Dim Buffer As New ByteBuffer
 
@@ -97,9 +73,7 @@ Public Module ClientHotBar
         SendData(Buffer.ToArray())
         Buffer = Nothing
     End Sub
-#End Region
 
-#Region "Drawing"
     Sub DrawHotbar()
         Dim i As Integer, num As Integer, pic As Integer
         Dim rec As Rectangle, rec_pos As Rectangle
@@ -119,7 +93,7 @@ Public Module ClientHotBar
 
                     'seeying we still use it, lets update timer
                     With SkillIconsGFXInfo(pic)
-                        .TextureTimer = GetTimeMs() + 100000
+                        .TextureTimer = GetTickCount() + 100000
                     End With
 
                     With rec
@@ -156,7 +130,7 @@ Public Module ClientHotBar
 
                     'seeying we still use it, lets update timer
                     With ItemsGFXInfo(pic)
-                        .TextureTimer = GetTimeMs() + 100000
+                        .TextureTimer = GetTickCount() + 100000
                     End With
 
                     With rec
@@ -179,6 +153,4 @@ Public Module ClientHotBar
         Next
 
     End Sub
-#End Region
-
 End Module

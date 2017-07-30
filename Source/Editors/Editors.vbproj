@@ -200,23 +200,23 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Source\Modules\EditorLoop.vb" />
-    <Compile Include="Source\Modules\Objects\EditorPets.vb" />
-    <Compile Include="Source\Modules\Objects\EditorProjectiles.vb" />
-    <Compile Include="Source\Modules\Objects\EditorWeather.vb" />
+    <Compile Include="Source\Modules\EditorPets.vb" />
+    <Compile Include="Source\Modules\EditorProjectiles.vb" />
+    <Compile Include="Source\Modules\EditorWeather.vb" />
     <Compile Include="Source\Modules\EditorSound.vb" />
     <Compile Include="Source\Modules\EditorText.vb" />
-    <Compile Include="Source\Modules\Objects\EditorHousing.vb" />
+    <Compile Include="Source\Modules\EditorHousing.vb" />
     <Compile Include="Source\Modules\EditorEventSystem.vb" />
-    <Compile Include="Source\Modules\Objects\EditorAutoTiles.vb" />
+    <Compile Include="Source\Modules\EditorAutoTiles.vb" />
     <Compile Include="Source\Modules\EditorGraphics.vb" />
     <Compile Include="Source\Modules\EditorDataBase.vb" />
     <Compile Include="Source\Modules\EditorCrafting.vb" />
     <Compile Include="Source\Modules\GameEditors.vb" />
-    <Compile Include="Source\Modules\Objects\EditorQuest.vb" />
+    <Compile Include="Source\Modules\EditorQuest.vb" />
     <Compile Include="Source\Modules\EditorGlobals.vb" />
-    <Compile Include="Source\Modules\Networking\EditorHandleData.vb" />
+    <Compile Include="Source\Modules\EditorHandleData.vb" />
     <Compile Include="Source\Modules\EditorTypes.vb" />
-    <Compile Include="Source\Modules\Networking\EditorTCP.vb" />
+    <Compile Include="Source\Modules\EditorTCP.vb" />
     <Compile Include="Source\Modules\EditorAutoMap.vb" />
   </ItemGroup>
   <ItemGroup>

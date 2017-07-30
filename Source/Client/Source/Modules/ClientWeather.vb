@@ -118,7 +118,7 @@ Public Module ClientWeather
 
         'seeying we still use it, lets update timer
         With FogGFXInfo(fogNum)
-            .TextureTimer = GetTimeMs() + 100000
+            .TextureTimer = GetTickCount() + 100000
         End With
 
         FogGFX(fogNum).Repeated = True

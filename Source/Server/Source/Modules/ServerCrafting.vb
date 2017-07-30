@@ -30,6 +30,7 @@ Public Module ServerCrafting
         For i = 1 To MAX_RECIPE
             If Not FileExist(Path.Combine(Application.StartupPath, "data", "recipes", String.Format("recipe{0}.dat", i))) Then
                 SaveRecipe(i)
+                DoEvents()
             End If
         Next
 
@@ -40,6 +41,7 @@ Public Module ServerCrafting
 
         For i = 1 To MAX_RECIPE
             SaveRecipe(i)
+            DoEvents()
         Next
 
     End Sub
@@ -72,6 +74,7 @@ Public Module ServerCrafting
 
         For i = 1 To MAX_RECIPE
             LoadRecipe(i)
+            DoEvents()
         Next
 
     End Sub
@@ -105,6 +108,7 @@ Public Module ServerCrafting
 
         For i = 1 To MAX_RECIPE
             ClearRecipe(i)
+            DoEvents()
         Next
 
     End Sub
@@ -352,7 +356,7 @@ Public Module ServerCrafting
             TempPlayer(Index).CraftRecipe = RecipeNum
             TempPlayer(Index).CraftAmount = Amount
 
-            TempPlayer(Index).CraftTimer = GetTimeMs()
+            TempPlayer(Index).CraftTimer = GetTickCount()
             TempPlayer(Index).CraftTimeNeeded = Recipe(RecipeNum).CreateTime
 
             TempPlayer(Index).CraftIt = 1
@@ -375,7 +379,7 @@ Public Module ServerCrafting
             TempPlayer(Index).CraftAmount = TempPlayer(Index).CraftAmount - 1
 
             If TempPlayer(Index).CraftAmount > 0 Then
-                TempPlayer(Index).CraftTimer = GetTimeMs()
+                TempPlayer(Index).CraftTimer = GetTickCount()
                 TempPlayer(Index).CraftTimeNeeded = Recipe(TempPlayer(Index).CraftRecipe).CreateTime
 
                 TempPlayer(Index).CraftIt = 1

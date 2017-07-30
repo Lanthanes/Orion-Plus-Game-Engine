@@ -6,22 +6,14 @@ Module ServerGeneral
     Public ServerDestroyed As Boolean
     Public MyIPAddress As String
 
-    Public myStopWatch As New Stopwatch()
-
-    'Public Function GetTimeMs() As Integer
-    '    Return Environment.TickCount
-    'End Function
-
-    Public Function GetTimeMs() As Long
-        Return myStopWatch.ElapsedMilliseconds
+    Public Function GetTickCount()
+        Return Environment.TickCount
     End Function
 
     Sub InitServer()
         Dim i As Integer, F As Integer, x As Integer
         Dim time1 As Integer, time2 As Integer
         x = 0
-
-        myStopWatch.Start()
 
         If Debugger.IsAttached Then
             ' Since there is a debugger attached,
@@ -39,7 +31,7 @@ Module ServerGeneral
         handler = New ConsoleEventDelegate(AddressOf ConsoleEventCallback)
         SetConsoleCtrlHandler(handler, True)
 
-        time1 = GetTimeMs()
+        time1 = GetTickCount()
 
         ' Initialize the random-number generator
         Randomize()
@@ -219,7 +211,7 @@ Module ServerGeneral
         ServerTime.InitTime()
 
         UpdateCaption()
-        time2 = GetTimeMs()
+        time2 = GetTickCount()
 
         Console.Clear()
         Console.WriteLine("  ____       _                        _____                          ")
@@ -400,6 +392,10 @@ Module ServerGeneral
     Function FileExist(ByVal file_path) As Boolean
         FileExist = IO.File.Exists(file_path)
     End Function
+
+    Public Sub DoEvents()
+        Application.DoEvents()
+    End Sub
 
     Public Sub HandleShutdown()
 

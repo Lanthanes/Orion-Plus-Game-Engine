@@ -80,6 +80,7 @@ Public Module ServerQuest
         Dim I As Integer
         For I = 1 To MAX_QUESTS
             SaveQuest(I)
+            DoEvents()
         Next
     End Sub
 
@@ -143,6 +144,7 @@ Public Module ServerQuest
 
         For I = 1 To MAX_QUESTS
             LoadQuest(I)
+            DoEvents()
         Next
     End Sub
 
@@ -206,6 +208,7 @@ Public Module ServerQuest
         For I = 1 To MAX_QUESTS
             If Not FileExist(Path.Combine(Application.StartupPath, "data", "quests", String.Format("quest{0}.dat", I))) Then
                 SaveQuest(I)
+                DoEvents()
             End If
         Next
     End Sub
@@ -268,14 +271,15 @@ Public Module ServerQuest
 
         For I = 1 To MAX_QUESTS
             ClearQuest(I)
+            DoEvents()
         Next
     End Sub
 #End Region
 
 #Region "Incoming Packets"
     Sub Packet_RequestEditQuest(ByVal Index As Integer, ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
-
+        Dim Buffer As ByteBuffer
+        Buffer = New ByteBuffer
         Buffer.WriteBytes(Data)
 
         If Buffer.ReadInteger <> EditorPackets.RequestEditQuest Then Exit Sub

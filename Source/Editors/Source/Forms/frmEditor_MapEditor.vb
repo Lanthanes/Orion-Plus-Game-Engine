@@ -165,7 +165,7 @@ Public Class FrmEditor_MapEditor
 #Region "Toolbar"
     Private Sub TsbSave_Click(sender As Object, e As EventArgs) Handles tsbSave.Click
         HideCursor = True
-        ScreenShotTimer = GetTimeMs() + 500
+        ScreenShotTimer = GetTickCount() + 500
         MakeCache = True
     End Sub
 
@@ -191,7 +191,7 @@ Public Class FrmEditor_MapEditor
 
     Private Sub TsbScreenShot_Click(sender As Object, e As EventArgs) Handles tsbScreenShot.Click
         HideCursor = True
-        ScreenShotTimer = GetTimeMs() + 1000
+        ScreenShotTimer = GetTickCount() + 1000
         TakeScreenShot = True
     End Sub
 #End Region

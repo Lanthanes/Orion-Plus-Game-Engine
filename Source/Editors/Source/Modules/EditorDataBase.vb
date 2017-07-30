@@ -30,6 +30,14 @@ Module ClientDataBase
 
     End Function
 
+    Public Sub DoEvents()
+        Application.DoEvents()
+    End Sub
+
+    Public Function GetTickCount()
+        Return Environment.TickCount
+    End Function
+
     Public Function FileExist(ByVal file_path) As Boolean
         FileExist = IO.File.Exists(file_path)
     End Function

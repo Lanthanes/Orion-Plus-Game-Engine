@@ -44,6 +44,7 @@ Public Module ServerHousing
             HouseConfig(i).Price = Val(myXml.ReadString("House" & i, "Price"))
             HouseConfig(i).X = Val(myXml.ReadString("House" & i, "X"))
             HouseConfig(i).Y = Val(myXml.ReadString("House" & i, "Y"))
+            DoEvents()
         Next
         For i = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
@@ -141,7 +142,7 @@ Public Module ServerHousing
         End If
 
         If TempPlayer(invitee).InvitationIndex > 0 Then
-            If TempPlayer(invitee).InvitationTimer > GetTimeMs() Then
+            If TempPlayer(invitee).InvitationTimer > GetTickCount() Then
                 PlayerMsg(index, Trim$(GetPlayerName(invitee)) & " is currently busy!", ColorType.Yellow)
                 Exit Sub
             End If
@@ -163,7 +164,7 @@ Public Module ServerHousing
                         Buffer.WriteInteger(index)
                         SendDataTo(invitee, Buffer.ToArray)
                         TempPlayer(invitee).InvitationIndex = index
-                        TempPlayer(invitee).InvitationTimer = GetTimeMs() + 15000
+                        TempPlayer(invitee).InvitationTimer = GetTickCount() + 15000
                         Buffer = Nothing
                     End If
                 Else
@@ -191,7 +192,7 @@ Public Module ServerHousing
 
         If response = 1 Then
             If TempPlayer(index).InvitationIndex > 0 Then
-                If TempPlayer(index).InvitationTimer > GetTimeMs() Then
+                If TempPlayer(index).InvitationTimer > GetTickCount() Then
                     'Accept this invite
                     If IsPlaying(TempPlayer(index).InvitationIndex) Then
                         Player(index).Character(TempPlayer(index).CurChar).InHouse = TempPlayer(index).InvitationIndex

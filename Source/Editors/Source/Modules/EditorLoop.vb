@@ -1,15 +1,6 @@
 ﻿Imports System.Threading
 
 Module EditorLoop
-    Public myStopWatch As New Stopwatch()
-
-    'Public Function GetTimeMs() As Integer
-    '    Return Environment.TickCount
-    'End Function
-
-    Public Function GetTimeMs() As Long
-        Return myStopWatch.ElapsedMilliseconds
-    End Function
 #Region "Startup"
     Public Sub Main()
 
@@ -18,8 +9,6 @@ Module EditorLoop
             MsgBox("Run Editor from inside the Client folder!")
             End
         End If
-
-        myStopWatch.Start()
 
         If GameStarted = True Then Exit Sub
 
@@ -132,7 +121,7 @@ Module EditorLoop
                 ReDim Animation(i).LoopCount(x)
             Next
             For x = 0 To 1
-                ReDim Animation(i).LoopTime(x)
+                ReDim Animation(i).looptime(x)
             Next
         Next
 
@@ -200,7 +189,7 @@ Module EditorLoop
         Dim FrameTime As Integer, tmr500 As Integer
         Dim tmpfps As Integer, rendercount As Integer
 
-        starttime = GetTimeMs()
+        starttime = GetTickCount()
 
         Do
             If GameDestroyed = True Then End
@@ -208,7 +197,7 @@ Module EditorLoop
             UpdateUI()
 
             If GameStarted = True Then
-                Tick = GetTimeMs()
+                Tick = GetTickCount()
 
                 ' update animation editor
                 If Editor = EDITOR_ANIMATION Then
@@ -224,7 +213,7 @@ Module EditorLoop
 
                         FrmEditor_MapEditor.tsCurFps.Text = "Current FPS: " & FPS
                         tmpfps = 0
-                        starttime = GetTimeMs() + 1000
+                        starttime = GetTickCount() + 1000
                     End If
                     tmpfps = tmpfps + 1
 
@@ -513,7 +502,7 @@ Module EditorLoop
         End If
 
         If HouseEdit = True Then
-            With FrmEditor_House
+            With frmEditor_House
                 Editor = EDITOR_HOUSE
                 .lstIndex.Items.Clear()
 
@@ -532,10 +521,10 @@ Module EditorLoop
         End If
 
         If InitEventEditorForm = True Then
-            FrmEditor_Events.InitEventEditorForm()
+            frmEditor_Events.InitEventEditorForm()
 
             ' populate form
-            With FrmEditor_Events
+            With frmEditor_Events
                 ' set the tabs
                 .tabPages.TabPages.Clear()
 
@@ -577,7 +566,7 @@ Module EditorLoop
                 .nudShowChoicesFace.Maximum = NumFaces
             End With
             ' show the editor
-            FrmEditor_Events.Show()
+            frmEditor_Events.Show()
 
             InitEventEditorForm = False
         End If

@@ -135,7 +135,7 @@ Public Module EditorProjectiles
             .X = buffer.ReadInteger
             .Y = buffer.ReadInteger
             .Range = 0
-            .Timer = GetTimeMs() + 60000
+            .Timer = GetTickCount() + 60000
         End With
 
         buffer = Nothing

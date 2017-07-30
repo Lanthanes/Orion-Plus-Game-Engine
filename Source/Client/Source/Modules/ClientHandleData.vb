@@ -507,6 +507,264 @@
         GameInit()
     End Sub
 
+    Private Sub Packet_PlayerInv(ByVal data() As Byte)
+        Dim i As Integer, InvNum As Integer, Amount As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(data)
+
+        If Buffer.ReadInteger <> ServerPackets.SPlayerInv Then Exit Sub
+
+        For i = 1 To MAX_INV
+            InvNum = Buffer.ReadInteger
+            Amount = Buffer.ReadInteger
+            SetPlayerInvItemNum(MyIndex, i, InvNum)
+            SetPlayerInvItemValue(MyIndex, i, Amount)
+
+            Player(MyIndex).RandInv(i).Prefix = Buffer.ReadString
+            Player(MyIndex).RandInv(i).Suffix = Buffer.ReadString
+            Player(MyIndex).RandInv(i).Rarity = Buffer.ReadInteger
+            For n = 1 To Stats.Count - 1
+                Player(MyIndex).RandInv(i).Stat(n) = Buffer.ReadInteger
+            Next
+            Player(MyIndex).RandInv(i).Damage = Buffer.ReadInteger
+            Player(MyIndex).RandInv(i).Speed = Buffer.ReadInteger
+        Next
+
+        ' changes to inventory, need to clear any drop menu
+        FrmMainGame.pnlCurrency.Visible = False
+        FrmMainGame.txtCurrency.Text = ""
+        tmpCurrencyItem = 0
+        CurrencyMenu = 0 ' clear
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_PlayerInvUpdate(ByVal data() As Byte)
+        Dim n As Integer, i As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(data)
+
+        If Buffer.ReadInteger <> ServerPackets.SPlayerInvUpdate Then Exit Sub
+
+        n = Buffer.ReadInteger
+        SetPlayerInvItemNum(MyIndex, n, Buffer.ReadInteger)
+        SetPlayerInvItemValue(MyIndex, n, Buffer.ReadInteger)
+
+        Player(MyIndex).RandInv(n).Prefix = Buffer.ReadString
+        Player(MyIndex).RandInv(n).Suffix = Buffer.ReadString
+        Player(MyIndex).RandInv(n).Rarity = Buffer.ReadInteger
+        For i = 1 To Stats.Count - 1
+            Player(MyIndex).RandInv(n).Stat(i) = Buffer.ReadInteger
+        Next
+        Player(MyIndex).RandInv(n).Damage = Buffer.ReadInteger
+        Player(MyIndex).RandInv(n).Speed = Buffer.ReadInteger
+
+        ' changes, clear drop menu
+        FrmMainGame.pnlCurrency.Visible = False
+        FrmMainGame.txtCurrency.Text = ""
+        tmpCurrencyItem = 0
+        CurrencyMenu = 0 ' clear
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_PlayerWornEquipment(ByVal data() As Byte)
+        Dim Buffer As New ByteBuffer, i As Integer, n As Integer
+
+        Buffer.WriteBytes(data)
+
+        If Buffer.ReadInteger <> ServerPackets.SPlayerWornEq Then Exit Sub
+
+        For i = 1 To EquipmentType.Count - 1
+            SetPlayerEquipment(MyIndex, Buffer.ReadInteger, i)
+        Next
+
+        For i = 1 To EquipmentType.Count - 1
+            Player(MyIndex).RandEquip(i).Prefix = Buffer.ReadString
+            Player(MyIndex).RandEquip(i).Suffix = Buffer.ReadString
+            Player(MyIndex).RandEquip(i).Damage = Buffer.ReadInteger
+            Player(MyIndex).RandEquip(i).Speed = Buffer.ReadInteger
+            Player(MyIndex).RandEquip(i).Rarity = Buffer.ReadInteger
+
+            For n = 1 To Stats.Count - 1
+                Player(MyIndex).RandEquip(i).Stat(n) = Buffer.ReadInteger
+            Next
+        Next
+
+        ' changes to inventory, need to clear any drop menu
+
+        FrmMainGame.pnlCurrency.Visible = False
+        FrmMainGame.txtCurrency.Text = ""
+        tmpCurrencyItem = 0
+        CurrencyMenu = 0 ' clear
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_PlayerHP(ByVal data() As Byte)
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(data)
+
+        If Buffer.ReadInteger <> ServerPackets.SPlayerHp Then Exit Sub
+
+        Player(MyIndex).MaxHP = Buffer.ReadInteger
+
+        SetPlayerVital(MyIndex, Vitals.HP, Buffer.ReadInteger)
+
+        If GetPlayerMaxVital(MyIndex, Vitals.HP) > 0 Then
+            lblHPText = GetPlayerVital(MyIndex, Vitals.HP) & "/" & GetPlayerMaxVital(MyIndex, Vitals.HP)
+            ' hp bar
+            picHpWidth = Int(((GetPlayerVital(MyIndex, Vitals.HP) / 169) / (GetPlayerMaxVital(MyIndex, Vitals.HP) / 169)) * 169)
+        End If
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_PlayerMP(ByVal data() As Byte)
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(data)
+
+        If Buffer.ReadInteger <> ServerPackets.SPlayerMp Then Exit Sub
+
+        Player(MyIndex).MaxMP = Buffer.ReadInteger
+        SetPlayerVital(MyIndex, Vitals.MP, Buffer.ReadInteger)
+
+        If GetPlayerMaxVital(MyIndex, Vitals.MP) > 0 Then
+            lblManaText = GetPlayerVital(MyIndex, Vitals.MP) & "/" & GetPlayerMaxVital(MyIndex, Vitals.MP)
+            ' mp bar
+            picManaWidth = Int(((GetPlayerVital(MyIndex, Vitals.MP) / 169) / (GetPlayerMaxVital(MyIndex, Vitals.MP) / 169)) * 169)
+        End If
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_PlayerSP(ByVal data() As Byte)
+        Dim Buffer As New ByteBuffer
+        Buffer.WriteBytes(data)
+
+        If Buffer.ReadInteger <> ServerPackets.SPlayerSp Then Exit Sub
+
+        Player(MyIndex).MaxSP = Buffer.ReadInteger
+        SetPlayerVital(MyIndex, Vitals.SP, Buffer.ReadInteger)
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_PlayerStats(ByVal data() As Byte)
+        Dim i As Integer, index As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(data)
+
+        If Buffer.ReadInteger <> ServerPackets.SPlayerStats Then Exit Sub
+
+        index = Buffer.ReadInteger
+        For i = 1 To Stats.Count - 1
+            SetPlayerStat(index, i, Buffer.ReadInteger)
+        Next
+        UpdateCharacterPanel = True
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_PlayerData(ByVal Data() As Byte)
+        Dim i As Integer, X As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SPlayerData Then Exit Sub
+
+        i = Buffer.ReadInteger
+        SetPlayerName(i, Buffer.ReadString)
+        SetPlayerClass(i, Buffer.ReadInteger)
+        SetPlayerLevel(i, Buffer.ReadInteger)
+        SetPlayerPOINTS(i, Buffer.ReadInteger)
+        SetPlayerSprite(i, Buffer.ReadInteger)
+        SetPlayerMap(i, Buffer.ReadInteger)
+        SetPlayerX(i, Buffer.ReadInteger)
+        SetPlayerY(i, Buffer.ReadInteger)
+        SetPlayerDir(i, Buffer.ReadInteger)
+        SetPlayerAccess(i, Buffer.ReadInteger)
+        SetPlayerPK(i, Buffer.ReadInteger)
+
+        For X = 1 To Stats.Count - 1
+            SetPlayerStat(i, X, Buffer.ReadInteger)
+        Next
+
+        Player(i).InHouse = Buffer.ReadInteger
+
+        For X = 0 To ResourceSkills.Count - 1
+            Player(i).GatherSkills(X).SkillLevel = Buffer.ReadInteger
+            Player(i).GatherSkills(X).SkillCurExp = Buffer.ReadInteger
+            Player(i).GatherSkills(X).SkillNextLvlExp = Buffer.ReadInteger
+        Next
+
+        For X = 1 To MAX_RECIPE
+            Player(i).RecipeLearned(X) = Buffer.ReadInteger
+        Next
+
+        ' Check if the player is the client player
+        If i = MyIndex Then
+            ' Reset directions
+            DirUp = False
+            DirDown = False
+            DirLeft = False
+            DirRight = False
+
+            UpdateCharacterPanel = True
+        End If
+
+        ' Make sure they aren't walking
+        Player(i).Moving = 0
+        Player(i).XOffset = 0
+        Player(i).YOffset = 0
+
+        If i = MyIndex Then PlayerData = True
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_PlayerMove(ByVal Data() As Byte)
+        Dim i As Integer, X As Integer, Y As Integer
+        Dim Dir As Integer, n As Byte
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SPlayerMove Then Exit Sub
+
+        i = Buffer.ReadInteger
+        X = Buffer.ReadInteger
+        Y = Buffer.ReadInteger
+        Dir = Buffer.ReadInteger
+        n = Buffer.ReadInteger
+
+        SetPlayerX(i, X)
+        SetPlayerY(i, Y)
+        SetPlayerDir(i, Dir)
+        Player(i).XOffset = 0
+        Player(i).YOffset = 0
+        Player(i).Moving = n
+
+        Select Case GetPlayerDir(i)
+            Case Direction.Up
+                Player(i).YOffset = PIC_Y
+            Case Direction.Down
+                Player(i).YOffset = PIC_Y * -1
+            Case Direction.Left
+                Player(i).XOffset = PIC_X
+            Case Direction.Right
+                Player(i).XOffset = PIC_X * -1
+        End Select
+
+        Buffer = Nothing
+    End Sub
+
     Private Sub Packet_NpcMove(ByVal Data() As Byte)
         Dim MapNpcNum As Integer, Movement As Integer
         Dim X As Integer, Y As Integer, Dir As Integer
@@ -545,6 +803,28 @@
         Buffer = Nothing
     End Sub
 
+    Private Sub Packet_PlayerDir(ByVal Data() As Byte)
+        Dim Dir As Integer, i As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SPlayerDir Then Exit Sub
+
+        i = Buffer.ReadInteger
+        Dir = Buffer.ReadInteger
+
+        SetPlayerDir(i, Dir)
+
+        With Player(i)
+            .XOffset = 0
+            .YOffset = 0
+            .Moving = 0
+        End With
+
+        Buffer = Nothing
+    End Sub
+
     Private Sub Packet_NpcDir(ByVal Data() As Byte)
         Dim Dir As Integer, i As Integer
         Dim Buffer As New ByteBuffer
@@ -566,6 +846,47 @@
         Buffer = Nothing
     End Sub
 
+    Private Sub Packet_PlayerXY(ByVal Data() As Byte)
+        Dim X As Integer, Y As Integer, Dir As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SPlayerXY Then Exit Sub
+
+        X = Buffer.ReadInteger
+        Y = Buffer.ReadInteger
+        Dir = Buffer.ReadInteger
+
+        SetPlayerX(MyIndex, X)
+        SetPlayerY(MyIndex, Y)
+        SetPlayerDir(MyIndex, Dir)
+
+        ' Make sure they aren't walking
+        Player(MyIndex).Moving = 0
+        Player(MyIndex).XOffset = 0
+        Player(MyIndex).YOffset = 0
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_Attack(ByVal Data() As Byte)
+        Dim i As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SAttack Then Exit Sub
+
+        i = Buffer.ReadInteger
+
+        ' Set player to attacking
+        Player(i).Attacking = 1
+        Player(i).AttackTimer = GetTickCount()
+
+        Buffer = Nothing
+    End Sub
+
     Private Sub Packet_NpcAttack(ByVal Data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteBuffer
@@ -578,7 +899,7 @@
 
         ' Set npc to attacking
         MapNpc(i).Attacking = 1
-        MapNpc(i).AttackTimer = GetTimeMs()
+        MapNpc(i).AttackTimer = GetTickCount()
 
         Buffer = Nothing
     End Sub
@@ -1366,7 +1687,7 @@
     End Sub
 
     Private Sub Packet_Ping(ByVal data() As Byte)
-        PingEnd = GetTimeMs()
+        PingEnd = GetTickCount()
         Ping = PingEnd - PingStart
     End Sub
 
@@ -1383,7 +1704,7 @@
         With TempTile(X, Y)
             .DoorFrame = 1
             .DoorAnimate = 1 ' 0 = nothing| 1 = opening | 2 = closing
-            .DoorTimer = GetTimeMs()
+            .DoorTimer = GetTickCount()
         End With
 
         buffer = Nothing
@@ -1440,6 +1761,24 @@
         Buffer = Nothing
     End Sub
 
+    Private Sub Packet_PlayerExp(ByVal Data() As Byte)
+        Dim index As Integer, TNL As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SPlayerEXP Then Exit Sub
+
+        index = Buffer.ReadInteger
+        SetPlayerExp(index, Buffer.ReadInteger)
+        TNL = Buffer.ReadInteger
+
+        If TNL = 0 Then TNL = 1
+        NextlevelExp = TNL
+
+        Buffer = Nothing
+    End Sub
+
     Private Sub Packet_Blood(ByVal Data() As Byte)
         Dim X As Integer, Y As Integer, Sprite As Integer
         Dim Buffer As New ByteBuffer
@@ -1461,7 +1800,7 @@
             .X = X
             .Y = Y
             .Sprite = Sprite
-            .Timer = GetTimeMs()
+            .Timer = GetTickCount()
         End With
 
         Buffer = Nothing
@@ -1549,7 +1888,7 @@
         If Buffer.ReadInteger <> ServerPackets.SCooldown Then Exit Sub
 
         slot = Buffer.ReadInteger
-        SkillCD(slot) = GetTimeMs()
+        SkillCD(slot) = GetTickCount()
 
         Buffer = Nothing
     End Sub
@@ -1612,6 +1951,37 @@
         If Buffer.ReadInteger <> ServerPackets.SResetShopAction Then Exit Sub
 
         ShopAction = 0
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_Stunned(ByVal Data() As Byte)
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SStunned Then Exit Sub
+
+        StunDuration = Buffer.ReadInteger
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_MapWornEquipment(ByVal Data() As Byte)
+        Dim playernum As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SMapWornEq Then Exit Sub
+
+        playernum = Buffer.ReadInteger
+        SetPlayerEquipment(playernum, Buffer.ReadInteger, EquipmentType.Armor)
+        SetPlayerEquipment(playernum, Buffer.ReadInteger, EquipmentType.Weapon)
+        SetPlayerEquipment(playernum, Buffer.ReadInteger, EquipmentType.Helmet)
+        SetPlayerEquipment(playernum, Buffer.ReadInteger, EquipmentType.Shield)
+        SetPlayerEquipment(playernum, Buffer.ReadInteger, EquipmentType.Shoes)
+        SetPlayerEquipment(playernum, Buffer.ReadInteger, EquipmentType.Gloves)
 
         Buffer = Nothing
     End Sub
@@ -2100,7 +2470,18 @@
         buffer = Nothing
     End Sub
 
+    Private Sub Packet_Target(ByVal Data() As Byte)
+        Dim Buffer As New ByteBuffer
 
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.STarget Then Exit Sub
+
+        myTarget = Buffer.ReadInteger
+        myTargetType = Buffer.ReadInteger
+
+        Buffer = Nothing
+    End Sub
 
     Private Sub Packet_Mapreport(ByVal Data() As Byte)
         Dim Buffer As New ByteBuffer, I As Integer
@@ -2144,6 +2525,21 @@
         Buffer = Nothing
     End Sub
 
+    Private Sub Packet_Hotbar(ByVal Data() As Byte)
+        Dim Buffer As New ByteBuffer, i As Integer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SHotbar Then Exit Sub
+
+        For i = 1 To MAX_HOTBAR
+            Player(MyIndex).Hotbar(i).Slot = Buffer.ReadInteger
+            Player(MyIndex).Hotbar(i).sType = Buffer.ReadInteger
+        Next
+
+        Buffer = Nothing
+    End Sub
+
     Private Sub Packet_Critical(ByVal Data() As Byte)
         Dim Buffer As New ByteBuffer
 
@@ -2152,7 +2548,7 @@
         If Buffer.ReadInteger <> ServerPackets.SCritical Then Exit Sub
 
         ShakeTimerEnabled = True
-        ShakeTimer = GetTimeMs()
+        ShakeTimer = GetTickCount()
 
         Buffer = Nothing
     End Sub
@@ -2209,7 +2605,7 @@
 
         With Player(index)
             .Emote = emote
-            .EmoteTimer = GetTimeMs() + 5000
+            .EmoteTimer = GetTickCount() + 5000
         End With
 
         buffer = Nothing

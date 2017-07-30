@@ -693,7 +693,7 @@ Module ClientGraphics
                 .Width = TileSetTexture(Index).Size.X
                 .Height = TileSetTexture(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
         ElseIf TexType = 2 Then 'characters
@@ -708,7 +708,7 @@ Module ClientGraphics
                 .Width = CharacterGFX(Index).Size.X
                 .Height = CharacterGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
         ElseIf TexType = 3 Then 'paperdoll
@@ -723,7 +723,7 @@ Module ClientGraphics
                 .Width = PaperDollGFX(Index).Size.X
                 .Height = PaperDollGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
         ElseIf TexType = 4 Then 'items
@@ -738,7 +738,7 @@ Module ClientGraphics
                 .Width = ItemsGFX(Index).Size.X
                 .Height = ItemsGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
         ElseIf TexType = 5 Then 'resources
@@ -753,7 +753,7 @@ Module ClientGraphics
                 .Width = ResourcesGFX(Index).Size.X
                 .Height = ResourcesGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
         ElseIf TexType = 6 Then 'animations
@@ -768,7 +768,7 @@ Module ClientGraphics
                 .Width = AnimationsGFX(Index).Size.X
                 .Height = AnimationsGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
         ElseIf TexType = 7 Then 'faces
@@ -783,7 +783,7 @@ Module ClientGraphics
                 .Width = FacesGFX(Index).Size.X
                 .Height = FacesGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
         ElseIf TexType = 8 Then 'fogs
@@ -798,7 +798,7 @@ Module ClientGraphics
                 .Width = FogGFX(Index).Size.X
                 .Height = FogGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
         ElseIf TexType = 9 Then 'skill icons
@@ -813,7 +813,7 @@ Module ClientGraphics
                 .Width = SkillIconsGFX(Index).Size.X
                 .Height = SkillIconsGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
         ElseIf TexType = 10 Then 'furniture
@@ -828,7 +828,7 @@ Module ClientGraphics
                 .Width = FurnitureGFX(Index).Size.X
                 .Height = FurnitureGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
         ElseIf TexType = 11 Then 'projectiles
@@ -843,7 +843,7 @@ Module ClientGraphics
                 .Width = ProjectileGFX(Index).Size.X
                 .Height = ProjectileGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
         ElseIf TexType = 12 Then 'emotes
@@ -858,7 +858,7 @@ Module ClientGraphics
                 .Width = EmotesGFX(Index).Size.X
                 .Height = EmotesGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
         ElseIf TexType = 13 Then 'Panoramas
@@ -873,7 +873,7 @@ Module ClientGraphics
                 .Width = PanoramasGFX(Index).Size.X
                 .Height = PanoramasGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
         ElseIf TexType = 14 Then 'Parallax
             If Index < 0 Or Index > NumParallax Then Exit Sub
@@ -887,7 +887,7 @@ Module ClientGraphics
                 .Width = ParallaxGFX(Index).Size.X
                 .Height = ParallaxGFX(Index).Size.Y
                 .IsLoaded = True
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
         End If
 
@@ -907,7 +907,7 @@ Module ClientGraphics
 
         'seeying we still use it, lets update timer
         With EmotesGFXInfo(Sprite)
-            .TextureTimer = GetTimeMs() + 100000
+            .TextureTimer = GetTickCount() + 100000
         End With
 
         If ShowAnimLayers = True Then
@@ -1029,11 +1029,11 @@ Module ClientGraphics
     End Sub
 
     Public Function ConvertMapX(ByVal X As Integer) As Integer
-        ConvertMapX = X - (TileView.Left * PIC_X) - Camera.Left
+        ConvertMapX = X - (TileView.left * PIC_X) - Camera.Left
     End Function
 
     Public Function ConvertMapY(ByVal Y As Integer) As Integer
-        ConvertMapY = Y - (TileView.Top * PIC_Y) - Camera.Top
+        ConvertMapY = Y - (TileView.top * PIC_Y) - Camera.Top
     End Function
 
     Public Sub DrawPlayer(ByVal Index As Integer)
@@ -1059,7 +1059,7 @@ Module ClientGraphics
         Anim = 0
 
         ' Check for attacking animation
-        If Player(Index).AttackTimer + (attackspeed / 2) > GetTimeMs() Then
+        If Player(Index).AttackTimer + (attackspeed / 2) > GetTickCount() Then
             If Player(Index).Attacking = 1 Then
                 If AttackSprite = 1 Then
                     Anim = 4
@@ -1088,7 +1088,7 @@ Module ClientGraphics
 
         ' Check to see if we want to stop making him attack
         With Player(Index)
-            If .AttackTimer + attackspeed < GetTimeMs() Then
+            If .AttackTimer + attackspeed < GetTickCount() Then
                 .Attacking = 0
                 .AttackTimer = 0
             End If
@@ -1143,7 +1143,7 @@ Module ClientGraphics
 
         ' Check to see if we want to stop showing emote
         With Player(Index)
-            If .EmoteTimer < GetTimeMs() Then
+            If .EmoteTimer < GetTickCount() Then
                 .Emote = 0
                 .EmoteTimer = 0
             End If
@@ -1169,7 +1169,7 @@ Module ClientGraphics
 
         ' we use it, lets update timer
         With PaperDollGFXInfo(Sprite)
-            .TextureTimer = GetTimeMs() + 100000
+            .TextureTimer = GetTickCount() + 100000
         End With
 
         With rec
@@ -1199,8 +1199,8 @@ Module ClientGraphics
 
         If MapNpc(MapNpcNum).Num = 0 Then Exit Sub ' no npc set
 
-        If MapNpc(MapNpcNum).X < TileView.Left Or MapNpc(MapNpcNum).X > TileView.Right Then Exit Sub
-        If MapNpc(MapNpcNum).Y < TileView.Top Or MapNpc(MapNpcNum).Y > TileView.Bottom Then Exit Sub
+        If MapNpc(MapNpcNum).X < TileView.left Or MapNpc(MapNpcNum).X > TileView.right Then Exit Sub
+        If MapNpc(MapNpcNum).Y < TileView.top Or MapNpc(MapNpcNum).Y > TileView.bottom Then Exit Sub
 
         Sprite = Npc(MapNpc(MapNpcNum).Num).Sprite
 
@@ -1212,7 +1212,7 @@ Module ClientGraphics
         anim = 0
 
         ' Check for attacking animation
-        If MapNpc(MapNpcNum).AttackTimer + (attackspeed / 2) > GetTimeMs() Then
+        If MapNpc(MapNpcNum).AttackTimer + (attackspeed / 2) > GetTickCount() Then
             If MapNpc(MapNpcNum).Attacking = 1 Then
                 anim = 3
             End If
@@ -1232,7 +1232,7 @@ Module ClientGraphics
 
         ' Check to see if we want to stop making him attack
         With MapNpc(MapNpcNum)
-            If .AttackTimer + attackspeed < GetTimeMs() Then
+            If .AttackTimer + attackspeed < GetTickCount() Then
                 .Attacking = 0
                 .AttackTimer = 0
             End If
@@ -1300,7 +1300,7 @@ Module ClientGraphics
 
         'seeying we still use it, lets update timer
         With ResourcesGFXInfo(Resource)
-            .TextureTimer = GetTimeMs() + 100000
+            .TextureTimer = GetTickCount() + 100000
         End With
 
         RenderSprite(ResourcesSprite(Resource), GameWindow, X, Y, rec.X, rec.Y, rec.Width, rec.Height)
@@ -1367,12 +1367,12 @@ Module ClientGraphics
 
         'seeying we still use it, lets update timer
         With ItemsGFXInfo(PicNum)
-            .TextureTimer = GetTimeMs() + 100000
+            .TextureTimer = GetTickCount() + 100000
         End With
 
         With MapItem(itemnum)
-            If .X < TileView.Left Or .X > TileView.Right Then Exit Sub
-            If .Y < TileView.Top Or .Y > TileView.Bottom Then Exit Sub
+            If .X < TileView.left Or .X > TileView.right Then Exit Sub
+            If .Y < TileView.top Or .Y > TileView.bottom Then Exit Sub
         End With
 
         If ItemsGFXInfo(PicNum).Width > 32 Then ' has more than 1 frame
@@ -1405,7 +1405,7 @@ Module ClientGraphics
 
         'seeying we still use it, lets update timer
         With CharacterGFXInfo(Sprite)
-            .TextureTimer = GetTimeMs() + 100000
+            .TextureTimer = GetTickCount() + 100000
         End With
 
         X = ConvertMapX(x2)
@@ -1428,11 +1428,11 @@ Module ClientGraphics
         Dim y As Integer
 
         With Blood(Index)
-            If .X < TileView.Left Or .X > TileView.Right Then Exit Sub
-            If .Y < TileView.Top Or .Y > TileView.Bottom Then Exit Sub
+            If .X < TileView.left Or .X > TileView.right Then Exit Sub
+            If .Y < TileView.top Or .Y > TileView.bottom Then Exit Sub
 
             ' check if we should be seeing it
-            If .Timer + 20000 < GetTimeMs() Then Exit Sub
+            If .Timer + 20000 < GetTickCount() Then Exit Sub
 
             x = ConvertMapX(Blood(Index).X * PIC_X)
             y = ConvertMapY(Blood(Index).Y * PIC_Y)
@@ -1464,7 +1464,7 @@ Module ClientGraphics
                 End If
                 ' we use it, lets update timer
                 With TileSetTextureInfo(Map.Tile(X, Y).Layer(i).Tileset)
-                    .TextureTimer = GetTimeMs() + 100000
+                    .TextureTimer = GetTickCount() + 100000
                 End With
                 If Autotile(X, Y).Layer(i).renderState = RENDER_STATE_NORMAL Then
                     With srcrect
@@ -1507,7 +1507,7 @@ Module ClientGraphics
 
                 ' we use it, lets update timer
                 With TileSetTextureInfo(Map.Tile(X, Y).Layer(i).Tileset)
-                    .TextureTimer = GetTimeMs() + 100000
+                    .TextureTimer = GetTickCount() + 100000
                 End With
 
                 ' render
@@ -1607,10 +1607,10 @@ Module ClientGraphics
         End If
 
         With TileView
-            .Top = StartY
-            .Bottom = EndY
-            .Left = StartX
-            .Right = EndX
+            .top = StartY
+            .bottom = EndY
+            .left = StartX
+            .right = EndX
         End With
 
         With Camera
@@ -1629,7 +1629,7 @@ Module ClientGraphics
         'clear tilesets
         For I = 1 To NumTileSets
             If TileSetTextureInfo(I).IsLoaded Then
-                If TileSetTextureInfo(I).TextureTimer < GetTimeMs() Then
+                If TileSetTextureInfo(I).TextureTimer < GetTickCount() Then
                     TileSetTexture(I).Dispose()
                     TileSetSprite(I).Dispose()
                     TileSetTextureInfo(I).IsLoaded = False
@@ -1641,7 +1641,7 @@ Module ClientGraphics
         'clear characters
         For I = 1 To NumCharacters
             If CharacterGFXInfo(I).IsLoaded Then
-                If CharacterGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If CharacterGFXInfo(I).TextureTimer < GetTickCount() Then
                     CharacterGFX(I).Dispose()
                     CharacterSprite(I).Dispose()
                     CharacterGFXInfo(I).IsLoaded = False
@@ -1653,7 +1653,7 @@ Module ClientGraphics
         'clear paperdoll
         For I = 1 To NumPaperdolls
             If PaperDollGFXInfo(I).IsLoaded Then
-                If PaperDollGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If PaperDollGFXInfo(I).TextureTimer < GetTickCount() Then
                     PaperDollGFX(I).Dispose()
                     PaperDollSprite(I).Dispose()
                     PaperDollGFXInfo(I).IsLoaded = False
@@ -1665,7 +1665,7 @@ Module ClientGraphics
         'clear items
         For I = 1 To NumItems
             If ItemsGFXInfo(I).IsLoaded Then
-                If ItemsGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If ItemsGFXInfo(I).TextureTimer < GetTickCount() Then
                     ItemsGFX(I).Dispose()
                     ItemsSprite(I).Dispose()
                     ItemsGFXInfo(I).IsLoaded = False
@@ -1677,7 +1677,7 @@ Module ClientGraphics
         'clear resources
         For I = 1 To NumResources
             If ResourcesGFXInfo(I).IsLoaded Then
-                If ResourcesGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If ResourcesGFXInfo(I).TextureTimer < GetTickCount() Then
                     ResourcesGFX(I).Dispose()
                     ResourcesSprite(I).Dispose()
                     ResourcesGFXInfo(I).IsLoaded = False
@@ -1689,7 +1689,7 @@ Module ClientGraphics
         'animations
         For I = 1 To NumAnimations
             If AnimationsGFXInfo(I).IsLoaded Then
-                If AnimationsGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If AnimationsGFXInfo(I).TextureTimer < GetTickCount() Then
                     AnimationsGFX(I).Dispose()
                     AnimationsGFXInfo(I).IsLoaded = False
                     AnimationsGFXInfo(I).TextureTimer = 0
@@ -1700,7 +1700,7 @@ Module ClientGraphics
         'clear faces
         For I = 1 To NumFaces
             If FacesGFXInfo(I).IsLoaded Then
-                If FacesGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If FacesGFXInfo(I).TextureTimer < GetTickCount() Then
                     FacesGFX(I).Dispose()
                     FacesSprite(I).Dispose()
                     FacesGFXInfo(I).IsLoaded = False
@@ -1712,7 +1712,7 @@ Module ClientGraphics
         'clear fogs
         For I = 1 To NumFogs
             If FogGFXInfo(I).IsLoaded Then
-                If FogGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If FogGFXInfo(I).TextureTimer < GetTickCount() Then
                     FogGFX(I).Dispose()
                     FogGFXInfo(I).IsLoaded = False
                     FogGFXInfo(I).TextureTimer = 0
@@ -1723,7 +1723,7 @@ Module ClientGraphics
         'clear SkillIcons
         For I = 1 To NumSkillIcons
             If SkillIconsGFXInfo(I).IsLoaded Then
-                If SkillIconsGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If SkillIconsGFXInfo(I).TextureTimer < GetTickCount() Then
                     SkillIconsGFX(I).Dispose()
                     SkillIconsSprite(I).Dispose()
                     SkillIconsGFXInfo(I).IsLoaded = False
@@ -1735,7 +1735,7 @@ Module ClientGraphics
         'clear Furniture
         For I = 1 To NumFurniture
             If FurnitureGFXInfo(I).IsLoaded Then
-                If FurnitureGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If FurnitureGFXInfo(I).TextureTimer < GetTickCount() Then
                     FurnitureGFX(I).Dispose()
                     FurnitureSprite(I).Dispose()
                     FurnitureGFXInfo(I).IsLoaded = False
@@ -1747,7 +1747,7 @@ Module ClientGraphics
         'clear Projectiles
         For I = 1 To NumProjectiles
             If ProjectileGFXInfo(I).IsLoaded Then
-                If ProjectileGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If ProjectileGFXInfo(I).TextureTimer < GetTickCount() Then
                     ProjectileGFX(I).Dispose()
                     ProjectileSprite(I).Dispose()
                     ProjectileGFXInfo(I).IsLoaded = False
@@ -1759,7 +1759,7 @@ Module ClientGraphics
         'clear Emotes
         For I = 1 To NumEmotes
             If EmotesGFXInfo(I).IsLoaded Then
-                If EmotesGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If EmotesGFXInfo(I).TextureTimer < GetTickCount() Then
                     EmotesGFX(I).Dispose()
                     EmotesSprite(I).Dispose()
                     EmotesGFXInfo(I).IsLoaded = False
@@ -1771,7 +1771,7 @@ Module ClientGraphics
         'clear Panoramas
         For I = 1 To NumPanorama
             If PanoramasGFXInfo(I).IsLoaded Then
-                If PanoramasGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If PanoramasGFXInfo(I).TextureTimer < GetTickCount() Then
                     PanoramasGFX(I).Dispose()
                     PanoramasSprite(I).Dispose()
                     PanoramasGFXInfo(I).IsLoaded = False
@@ -1783,7 +1783,7 @@ Module ClientGraphics
         'clear Parallax
         For I = 1 To NumParallax
             If ParallaxGFXInfo(I).IsLoaded Then
-                If ParallaxGFXInfo(I).TextureTimer < GetTimeMs() Then
+                If ParallaxGFXInfo(I).TextureTimer < GetTickCount() Then
                     ParallaxGFX(I).Dispose()
                     ParallaxSprite(I).Dispose()
                     ParallaxGFXInfo(I).IsLoaded = False
@@ -1829,8 +1829,8 @@ Module ClientGraphics
         ' blit lower tiles
         If NumTileSets > 0 Then
 
-            For X = TileView.Left To TileView.Right + 1
-                For Y = TileView.Top To TileView.Bottom + 1
+            For X = TileView.left To TileView.right + 1
+                For Y = TileView.top To TileView.bottom + 1
                     If IsValidMapPoint(X, Y) Then
                         DrawMapTile(X, Y)
                     End If
@@ -1878,8 +1878,8 @@ Module ClientGraphics
         'Draw sum d00rs.
         If GettingMap Then Exit Sub
 
-        For X = TileView.Left To TileView.Right
-            For Y = TileView.Top To TileView.Bottom
+        For X = TileView.left To TileView.right
+            For Y = TileView.top To TileView.bottom
                 If IsValidMapPoint(X, Y) Then
                     If Map.Tile Is Nothing Then Exit Sub
                     If Map.Tile(X, Y).Type = TileType.Door Then
@@ -2004,8 +2004,8 @@ Module ClientGraphics
 
         ' blit out upper tiles
         If NumTileSets > 0 Then
-            For X = TileView.Left To TileView.Right + 1
-                For Y = TileView.Top To TileView.Bottom + 1
+            For X = TileView.left To TileView.right + 1
+                For Y = TileView.top To TileView.bottom + 1
                     If IsValidMapPoint(X, Y) Then
                         DrawMapFringeTile(X, Y)
                     End If
@@ -2038,8 +2038,8 @@ Module ClientGraphics
         End If
 
         If frmEditor_MapEditor.tabpages.SelectedTab Is frmEditor_MapEditor.tpDirBlock Then
-            For X = TileView.Left To TileView.Right
-                For Y = TileView.Top To TileView.Bottom
+            For X = TileView.left To TileView.right
+                For Y = TileView.top To TileView.bottom
                     If IsValidMapPoint(X, Y) Then
                         DrawDirections(X, Y)
                     End If
@@ -2143,7 +2143,7 @@ Module ClientGraphics
 
         ' we use it, lets update timer
         With PanoramasGFXInfo(Index)
-            .TextureTimer = GetTimeMs() + 100000
+            .TextureTimer = GetTickCount() + 100000
         End With
 
         PanoramasSprite(Index).TextureRect = New IntRect(0, 0, GameWindow.Size.X, GameWindow.Size.Y)
@@ -2168,7 +2168,7 @@ Module ClientGraphics
 
         ' we use it, lets update timer
         With ParallaxGFXInfo(Index)
-            .TextureTimer = GetTimeMs() + 100000
+            .TextureTimer = GetTickCount() + 100000
         End With
 
         horz = ConvertMapX(GetPlayerX(MyIndex))
@@ -2203,7 +2203,7 @@ Module ClientGraphics
             End If
             ' we use it, lets update timer
             With TileSetTextureInfo(frmEditor_MapEditor.cmbTileSets.SelectedIndex + 1)
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
             If EditorTileWidth = 1 And EditorTileHeight = 1 Then
@@ -2244,7 +2244,7 @@ Module ClientGraphics
             tmpY = GetPlayerY(MyIndex) * PIC_Y + Player(MyIndex).YOffset + 35
             If Skill(PlayerSkills(SkillBuffer)).CastTime = 0 Then Skill(PlayerSkills(SkillBuffer)).CastTime = 1
             ' calculate the width to fill
-            barWidth = ((GetTimeMs() - SkillBufferTimer) / ((GetTimeMs() - SkillBufferTimer) + (Skill(PlayerSkills(SkillBuffer)).CastTime * 1000)) * 64)
+            barWidth = ((GetTickCount() - SkillBufferTimer) / ((GetTickCount() - SkillBufferTimer) + (Skill(PlayerSkills(SkillBuffer)).CastTime * 1000)) * 64)
             ' draw bars
             rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
             Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
@@ -2264,7 +2264,7 @@ Module ClientGraphics
                         tmpY = MapNpc(i).Y * PIC_Y + MapNpc(i).YOffset + 35
                         If MapNpc(i).Vital(Vitals.HP) > 0 Then
                             ' calculate the width to fill
-                            barWidth = ((MapNpc(i).Vital(Vitals.HP) / (Npc(MapNpc(i).Num).Hp) * 32))
+                            barWidth = ((MapNpc(i).Vital(Vitals.HP) / (Npc(MapNpc(i).Num).HP) * 32))
                             ' draw bars
                             rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
                             Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
@@ -2312,7 +2312,7 @@ Module ClientGraphics
                 tmpY = Player(MyIndex).Pet.Y * PIC_Y + Player(MyIndex).Pet.YOffset + 35
 
                 ' calculate the width to fill
-                barWidth = (GetTimeMs() - PetSkillBufferTimer) / ((Skill(Pet(Player(MyIndex).Pet.Num).Skill(PetSkillBuffer)).CastTime * 1000)) * 64
+                barWidth = (GetTickCount() - PetSkillBufferTimer) / ((Skill(Pet(Player(MyIndex).Pet.Num).Skill(PetSkillBuffer)).CastTime * 1000)) * 64
                 ' draw bar background
                 rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
                 Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
@@ -2335,22 +2335,22 @@ Module ClientGraphics
         ' sort out animation
         With TempTile(X, Y)
             If .DoorAnimate = 1 Then ' opening
-                If .DoorTimer + 100 < GetTimeMs() Then
+                If .DoorTimer + 100 < GetTickCount() Then
                     If .DoorFrame < 4 Then
                         .DoorFrame = .DoorFrame + 1
                     Else
                         .DoorAnimate = 2 ' set to closing
                     End If
-                    .DoorTimer = GetTimeMs()
+                    .DoorTimer = GetTickCount()
                 End If
             ElseIf .DoorAnimate = 2 Then ' closing
-                If .DoorTimer + 100 < GetTimeMs() Then
+                If .DoorTimer + 100 < GetTickCount() Then
                     If .DoorFrame > 1 Then
                         .DoorFrame = .DoorFrame - 1
                     Else
                         .DoorAnimate = 0 ' end animation
                     End If
-                    .DoorTimer = GetTimeMs()
+                    .DoorTimer = GetTickCount()
                 End If
             End If
 
@@ -2513,8 +2513,8 @@ Module ClientGraphics
 
         Dim rec As New RectangleShape
 
-        For x = TileView.Left To TileView.Right ' - 1
-            For y = TileView.Top To TileView.Bottom ' - 1
+        For x = TileView.left To TileView.right ' - 1
+            For y = TileView.top To TileView.bottom ' - 1
                 If IsValidMapPoint(x, y) Then
                     rec.OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.White)
                     rec.OutlineThickness = 0.6
@@ -2672,7 +2672,7 @@ Module ClientGraphics
 
             'seeying we still use it, lets update timer
             With FacesGFXInfo(Player(MyIndex).Sprite)
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
             'then render face
@@ -2811,7 +2811,7 @@ Module ClientGraphics
 
                 'seeying we still use it, lets update timer
                 With ItemsGFXInfo(itempic)
-                    .TextureTimer = GetTimeMs() + 100000
+                    .TextureTimer = GetTickCount() + 100000
                 End With
 
                 With rec
@@ -2936,7 +2936,7 @@ Module ClientGraphics
 
             'seeying we still use it, lets update timer
             With ItemsGFXInfo(itempic)
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
             With rec
@@ -2974,7 +2974,7 @@ Module ClientGraphics
 
                 'seeying we still use it, lets update timer
                 With ItemsGFXInfo(itempic)
-                    .TextureTimer = GetTimeMs() + 100000
+                    .TextureTimer = GetTickCount() + 100000
                 End With
 
                 ' exit out if we're offering item in a trade.
@@ -3044,11 +3044,11 @@ NextLoop:
         Dim rec As Rectangle, rec_pos As Rectangle
         Dim clearregion(1) As Rectangle
         Static tmr100 As Integer
-        If tmr100 = 0 Then tmr100 = GetTimeMs() + 100
+        If tmr100 = 0 Then tmr100 = GetTickCount() + 100
 
         If Not InGame Then Exit Sub
 
-        If GetTimeMs() > tmr100 Then
+        If GetTickCount() > tmr100 Then
             ' check for map animation changes#
             For i = 1 To MAX_MAP_ITEMS
 
@@ -3077,13 +3077,13 @@ NextLoop:
 
                         MaxFrames = (ItemsGFXInfo(itempic).Width / 2) / 32 ' Work out how many frames there are. /2 because of inventory icons as well as ingame
 
-                        If GetTimeMs() > tmr100 Then
+                        If GetTickCount() > tmr100 Then
                             If InvItemFrame(i) < MaxFrames - 1 Then
                                 InvItemFrame(i) = InvItemFrame(i) + 1
                             Else
                                 InvItemFrame(i) = 1
                             End If
-                            tmr100 = GetTimeMs() + 100
+                            tmr100 = GetTickCount() + 100
                         End If
 
                         With rec
@@ -3143,7 +3143,7 @@ NextLoop:
 
             'seeying we still use it, lets update timer
             With SkillIconsGFXInfo(skillnum)
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
             With rec
@@ -3176,7 +3176,7 @@ NextLoop:
 
             'seeying we still use it, lets update timer
             With FacesGFXInfo(Shop(InShop).Face)
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
             RenderSprite(FacesSprite(Shop(InShop).Face), GameWindow, ShopWindowX + ShopFaceX, ShopWindowY + ShopFaceY, 0, 0, FacesGFXInfo(Shop(InShop).Face).Width, FacesGFXInfo(Shop(InShop).Face).Height)
         End If
@@ -3223,7 +3223,7 @@ NextLoop:
 
                     'seeying we still use it, lets update timer
                     With ItemsGFXInfo(itempic)
-                        .TextureTimer = GetTimeMs() + 100000
+                        .TextureTimer = GetTickCount() + 100000
                     End With
 
                     With rec
@@ -3292,7 +3292,7 @@ NextLoop:
 
                 'seeying we still use it, lets update timer
                 With ItemsGFXInfo(Sprite)
-                    .TextureTimer = GetTimeMs() + 100000
+                    .TextureTimer = GetTickCount() + 100000
                 End With
 
                 With sRECT
@@ -3351,7 +3351,7 @@ NextLoop:
 
             'seeying we still use it, lets update timer
             With ItemsGFXInfo(Sprite)
-                .TextureTimer = GetTimeMs() + 100000
+                .TextureTimer = GetTickCount() + 100000
             End With
 
             With rec
@@ -3400,7 +3400,7 @@ NextLoop:
 
                     'seeying we still use it, lets update timer
                     With ItemsGFXInfo(itempic)
-                        .TextureTimer = GetTimeMs() + 100000
+                        .TextureTimer = GetTickCount() + 100000
                     End With
 
                     With rec
@@ -3456,7 +3456,7 @@ NextLoop:
 
                     'seeying we still use it, lets update timer
                     With ItemsGFXInfo(itempic)
-                        .TextureTimer = GetTimeMs() + 100000
+                        .TextureTimer = GetTickCount() + 100000
                     End With
 
                     With rec
@@ -3528,7 +3528,7 @@ NextLoop:
 
                     'seeying we still use it, lets update timer
                     With SkillIconsGFXInfo(skillicon)
-                        .TextureTimer = GetTimeMs() + 100000
+                        .TextureTimer = GetTickCount() + 100000
                     End With
 
                     With rec
@@ -3884,7 +3884,7 @@ NextLoop:
         End If
         ' we use it, lets update timer
         With TileSetTextureInfo(tileset)
-            .TextureTimer = GetTimeMs() + 100000
+            .TextureTimer = GetTickCount() + 100000
         End With
 
         height = TileSetTextureInfo(tileset).Height

@@ -14,7 +14,7 @@ Module ServerLoop
         ServerOnline = True
         Do
             ' Update our current tick value.
-            Tick = GetTimeMs()
+            Tick = GetTickCount()
 
             ' Don't process anything else if we're going down.
             If ServerDestroyed Then End
@@ -26,7 +26,7 @@ Module ServerLoop
                 ' Check if any of our players has completed casting and get their skill going if they have.
                 Dim _playerskills = (
                     From p In OnlinePlayers
-                    Where p.Player.SkillBuffer > 0 AndAlso GetTimeMs() > (p.Player.SkillBufferTimer + Skill(p.Player.SkillBuffer).CastTime * 1000)
+                    Where p.Player.SkillBuffer > 0 AndAlso GetTickCount() > (p.Player.SkillBufferTimer + Skill(p.Player.SkillBuffer).CastTime * 1000)
                     Select New With {.Index = p.Index, Key .Success = HandleCastSkill(p.Index)}
                 ).ToArray()
 
@@ -40,7 +40,7 @@ Module ServerLoop
                 ' Check if any of our pets has completed casting and get their skill going if they have.
                 Dim _petskills = (
                 From p In OnlinePlayers
-                Where Player(p.Index).Character(p.Player.CurChar).Pet.Alive = 1 AndAlso TempPlayer(p.Index).PetskillBuffer.Skill > 0 AndAlso GetTimeMs() > p.Player.PetskillBuffer.Timer + (Skill(Player(p.Index).Character(p.Player.CurChar).Pet.Skill(p.Player.PetskillBuffer.Skill)).CastTime * 1000)
+                Where Player(p.Index).Character(p.Player.CurChar).Pet.Alive = 1 AndAlso TempPlayer(p.Index).PetskillBuffer.Skill > 0 AndAlso GetTickCount() > p.Player.PetskillBuffer.Timer + (Skill(Player(p.Index).Character(p.Player.CurChar).Pet.Skill(p.Player.PetskillBuffer.Skill)).CastTime * 1000)
                 Select New With {Key .Index = p.Index, Key .Success = HandlePetSkill(p.Index)}
                 ).ToArray()
 
@@ -54,7 +54,7 @@ Module ServerLoop
                 ' check pet regen timer
                 Dim _petregen = (
                     From p In OnlinePlayers
-                    Where p.Player.PetstopRegen = True AndAlso p.Player.PetstopRegenTimer + 5000 < GetTimeMs()
+                    Where p.Player.PetstopRegen = True AndAlso p.Player.PetstopRegenTimer + 5000 < GetTickCount()
                     Select New With {Key .Index = p.Index, Key .Success = HandleStopPetRegen(p.Index)}
                 ).ToArray()
 
@@ -68,7 +68,7 @@ Module ServerLoop
                 UpdateEventLogic()
 
                 ' Move the timer up 25ms.
-                tmr25 = GetTimeMs() + 25
+                tmr25 = GetTickCount() + 25
             End If
 
             If Tick > tmr1000 Then
@@ -80,14 +80,14 @@ Module ServerLoop
                 ' Handle our player crafting
                 Dim _playercrafts = (
                     From p In OnlinePlayers
-                    Where GetTimeMs() > p.Player.CraftTimer + (p.Player.CraftTimeNeeded * 1000) AndAlso p.Player.CraftIt = 1
+                    Where GetTickCount() > p.Player.CraftTimer + (p.Player.CraftTimeNeeded * 1000) AndAlso p.Player.CraftIt = 1
                     Select New With {Key .Index = p.Index, .Success = HandlePlayerCraft(p.Index)}
                 ).ToArray()
 
                 Time.Instance.Tick()
 
                 ' Move the timer up 1000ms.
-                tmr1000 = GetTimeMs() + 1000
+                tmr1000 = GetTickCount() + 1000
             End If
 
             If Tick > tmr500 Then
@@ -109,34 +109,36 @@ Module ServerLoop
                 ).ToArray()
 
                 ' Move the timer up 500ms.
-                tmr500 = GetTimeMs() + 500
+                tmr500 = GetTickCount() + 500
 
             End If
 
-            If GetTimeMs() > tmr300 Then
+            If GetTickCount() > tmr300 Then
                 UpdateNpcAI()
                 UpdatePetAI()
-                tmr300 = GetTimeMs() + 300
+                tmr300 = GetTickCount() + 300
             End If
 
             ' Checks to update player vitals every 5 seconds - Can be tweaked
             If Tick > LastUpdatePlayerVitals Then
                 UpdatePlayerVitals()
-                LastUpdatePlayerVitals = GetTimeMs() + 5000
+                LastUpdatePlayerVitals = GetTickCount() + 5000
             End If
 
             ' Checks to spawn map items every 5 minutes - Can be tweaked
             If Tick > LastUpdateMapSpawnItems Then
                 UpdateMapSpawnItems()
-                LastUpdateMapSpawnItems = GetTimeMs() + 300000
+                LastUpdateMapSpawnItems = GetTickCount() + 300000
             End If
 
             ' Checks to save players every 10 minutes - Can be tweaked
             If Tick > LastUpdateSavePlayers Then
                 UpdateSavePlayers()
-                LastUpdateSavePlayers = GetTimeMs() + 600000
+                LastUpdateSavePlayers = GetTickCount() + 600000
             End If
 
+            DoEvents()
+            'Thread.Yield()
             Thread.Sleep(1)
         Loop
     End Sub
@@ -157,6 +159,7 @@ Module ServerLoop
                     SavePlayer(i)
                     SaveBank(i)
                 End If
+                DoEvents()
             Next
 
         End If
@@ -185,6 +188,7 @@ Module ServerLoop
                 SendMapItemsToAll(y)
             End If
 
+            DoEvents()
         Next
 
     End Sub
@@ -253,8 +257,8 @@ Module ServerLoop
 
                     If Resource_index > 0 Then
                         If ResourceCache(MapNum).ResourceData(i).ResourceState = 1 Or ResourceCache(MapNum).ResourceData(i).Cur_Health < 1 Then  ' dead or fucked up
-                            If ResourceCache(MapNum).ResourceData(i).ResourceTimer + (Resource(Resource_index).RespawnTime * 1000) < GetTimeMs() Then
-                                ResourceCache(MapNum).ResourceData(i).ResourceTimer = GetTimeMs()
+                            If ResourceCache(MapNum).ResourceData(i).ResourceTimer + (Resource(Resource_index).RespawnTime * 1000) < GetTickCount() Then
+                                ResourceCache(MapNum).ResourceData(i).ResourceTimer = GetTickCount()
                                 ResourceCache(MapNum).ResourceData(i).ResourceState = 0 ' normal
                                 ' re-set health to resource root
                                 ResourceCache(MapNum).ResourceData(i).Cur_Health = Resource(Resource_index).Health
@@ -268,14 +272,14 @@ Module ServerLoop
             If ServerDestroyed Then Exit Sub
 
             If PlayersOnMap(MapNum) = True Then
-                TickCount = GetTimeMs()
+                TickCount = GetTickCount()
 
                 For x = 1 To MAX_MAP_NPCS
                     NpcNum = MapNpc(MapNum).Npc(x).Num
 
                     ' check if they've completed casting, and if so set the actual skill going
                     If MapNpc(MapNum).Npc(x).SkillBuffer > 0 AndAlso Map(MapNum).Npc(x) > 0 And MapNpc(MapNum).Npc(x).Num > 0 Then
-                        If GetTimeMs() > MapNpc(MapNum).Npc(x).SkillBufferTimer + (Skill(Npc(NpcNum).Skill(MapNpc(MapNum).Npc(x).SkillBuffer)).CastTime * 1000) Then
+                        If GetTickCount() > MapNpc(MapNum).Npc(x).SkillBufferTimer + (Skill(Npc(NpcNum).Skill(MapNpc(MapNum).Npc(x).SkillBuffer)).CastTime * 1000) Then
                             CastNpcSkill(x, MapNum, MapNpc(MapNum).Npc(x).SkillBuffer)
                             MapNpc(MapNum).Npc(x).SkillBuffer = 0
                             MapNpc(MapNum).Npc(x).SkillBufferTimer = 0
@@ -378,7 +382,7 @@ Module ServerLoop
                         If Map(MapNum).Npc(x) > 0 And MapNpc(MapNum).Npc(x).Num > 0 Then
                             If MapNpc(MapNum).Npc(x).StunDuration > 0 Then
                                 ' check if we can unstun them
-                                If GetTimeMs() > MapNpc(MapNum).Npc(x).StunTimer + (MapNpc(MapNum).Npc(x).StunDuration * 1000) Then
+                                If GetTickCount() > MapNpc(MapNum).Npc(x).StunTimer + (MapNpc(MapNum).Npc(x).StunDuration * 1000) Then
                                     MapNpc(MapNum).Npc(x).StunDuration = 0
                                     MapNpc(MapNum).Npc(x).StunTimer = 0
                                 End If
@@ -560,7 +564,7 @@ Module ServerLoop
                     ' Check if the npc is dead or not
                     If MapNpc(MapNum).Npc(x).Num > 0 AndAlso MapNpc(MapNum).Npc(x).Vital(Vitals.HP) <= 0 Then
                         MapNpc(MapNum).Npc(x).Num = 0
-                        MapNpc(MapNum).Npc(x).SpawnWait = GetTimeMs()
+                        MapNpc(MapNum).Npc(x).SpawnWait = GetTickCount()
                         MapNpc(MapNum).Npc(x).Vital(Vitals.HP) = 0
                     End If
 
@@ -579,12 +583,12 @@ Module ServerLoop
         Next
 
         ' Make sure we reset the timer for npc hp regeneration
-        If GetTimeMs() > GiveNPCHPTimer + 10000 Then GiveNPCHPTimer = GetTimeMs()
+        If GetTickCount() > GiveNPCHPTimer + 10000 Then GiveNPCHPTimer = GetTickCount()
 
-        If GetTimeMs() > GiveNPCMPTimer + 10000 Then GiveNPCMPTimer = GetTimeMs()
+        If GetTickCount() > GiveNPCMPTimer + 10000 Then GiveNPCMPTimer = GetTickCount()
 
         ' Make sure we reset the timer for door closing
-        If GetTimeMs() > KeyTimer + 15000 Then KeyTimer = GetTimeMs()
+        If GetTickCount() > KeyTimer + 15000 Then KeyTimer = GetTickCount()
 
     End Sub
 
@@ -689,9 +693,9 @@ Module ServerLoop
         ElseIf Not Skill(SkillId).ClassReq = 0 AndAlso GetPlayerClass(Index) <> Skill(SkillId).ClassReq Then
             PlayerMsg(Index, String.Format("Only {0} can use this skill.", CheckGrammar((Classes(Skill(SkillId).ClassReq).Name.Trim()))), ColorType.BrightRed)
             Exit Sub
-        ElseIf Skill(SkillId).Range > 0 AndAlso Not IsTargetOnMap(Index) Then
+        ElseIf Skill(SkillId).range > 0 AndAlso Not IsTargetOnMap(Index) Then
             Exit Sub
-        ElseIf Skill(SkillId).Range > 0 AndAlso Not IsInSkillRange(Index, SkillId) AndAlso Skill(SkillId).IsProjectile = 0 Then
+        ElseIf Skill(SkillId).range > 0 AndAlso Not IsInSkillRange(Index, SkillId) AndAlso Skill(SkillId).IsProjectile = 0 Then
             PlayerMsg(Index, "Target not in range.", ColorType.BrightRed)
             SendClearSkillBuffer(Index)
             Exit Sub
@@ -701,10 +705,10 @@ Module ServerLoop
         If Skill(SkillId).IsProjectile = 1 Then
             PlayerFireProjectile(Index, SkillId)
         Else
-            If Skill(SkillId).Range = 0 AndAlso Not Skill(SkillId).IsAoE Then HandleSelfCastSkill(Index, SkillId)
-            If Skill(SkillId).Range = 0 AndAlso Skill(SkillId).IsAoE Then HandleSelfCastAoESkill(Index, SkillId)
-            If Skill(SkillId).Range > 0 AndAlso Skill(SkillId).IsAoE Then HandleTargetedAoESkill(Index, SkillId)
-            If Skill(SkillId).Range > 0 AndAlso Not Skill(SkillId).IsAoE Then HandleTargetedSkill(Index, SkillId)
+            If Skill(SkillId).range = 0 AndAlso Not Skill(SkillId).IsAoE Then HandleSelfCastSkill(Index, SkillId)
+            If Skill(SkillId).range = 0 AndAlso Skill(SkillId).IsAoE Then HandleSelfCastAoESkill(Index, SkillId)
+            If Skill(SkillId).range > 0 AndAlso Skill(SkillId).IsAoE Then HandleTargetedAoESkill(Index, SkillId)
+            If Skill(SkillId).range > 0 AndAlso Not Skill(SkillId).IsAoE Then HandleTargetedSkill(Index, SkillId)
         End If
 
         ' Do everything we need to do at the end of the cast.
@@ -889,7 +893,7 @@ Module ServerLoop
 
         ' Loop through all online players on the current map.
         For Each id In TempPlayer.Where(Function(p) p.InGame).Select(Function(p, i) i + 1).Where(Function(i) GetPlayerMap(i) = Map AndAlso i <> Index).ToArray()
-            If IsInRange(Range, X, Y, GetPlayerX(id), GetPlayerY(id)) Then
+            If isInRange(Range, X, Y, GetPlayerX(id), GetPlayerY(id)) Then
 
                 ' Deal with damaging abilities.
                 If DealsDamage And CanPlayerAttackPlayer(Index, id, True) Then SkillPlayer_Effect(Vital, False, id, Amount, SkillId)
@@ -915,7 +919,7 @@ Module ServerLoop
 
         ' Loop through all the NPCs on this map
         For Each id In MapNpc(Map).Npc.Where(Function(n) n.Num > 0 AndAlso n.Vital(Vitals.HP) > 0).Select(Function(n, i) i + 1).ToArray()
-            If IsInRange(Range, X, Y, MapNpc(Map).Npc(id).X, MapNpc(Map).Npc(id).Y) Then
+            If isInRange(Range, X, Y, MapNpc(Map).Npc(id).X, MapNpc(Map).Npc(id).Y) Then
 
                 ' Deal with damaging abilities.
                 If DealsDamage And CanPlayerAttackNpc(Index, id, True) Then SkillNpc_Effect(Vital, False, id, Amount, SkillId, Map)
@@ -937,7 +941,7 @@ Module ServerLoop
     Private Sub FinalizeCast(ByVal Index As Integer, ByVal SkillSlot As Integer, ByVal SkillCost As Integer)
         SetPlayerVital(Index, Vitals.MP, GetPlayerVital(Index, Vitals.MP) - SkillCost)
         SendVital(Index, Vitals.MP)
-        TempPlayer(Index).SkillCD(SkillSlot) = GetTimeMs() + (Skill(SkillSlot).CdTime * 1000)
+        TempPlayer(Index).SkillCD(SkillSlot) = GetTickCount() + (Skill(SkillSlot).CdTime * 1000)
         SendCooldown(Index, SkillSlot)
     End Sub
 
@@ -961,7 +965,7 @@ Module ServerLoop
             TargetY = MapNpc(GetPlayerMap(Index)).Npc(TempPlayer(Index).Target).Y
         End If
 
-        IsInSkillRange = IsInRange(Skill(SkillId).Range, GetPlayerX(Index), GetPlayerY(Index), TargetX, TargetY)
+        IsInSkillRange = isInRange(Skill(SkillId).range, GetPlayerX(Index), GetPlayerY(Index), TargetX, TargetY)
     End Function
 
     Public Sub CastNpcSkill(ByVal NpcNum As Integer, ByVal MapNum As Integer, ByVal skillslot As Integer)
@@ -990,7 +994,7 @@ Module ServerLoop
         ' find out what kind of skill it is! self cast, target or AOE
         If Skill(skillnum).IsProjectile = 1 Then
             SkillCastType = 4 ' Projectile
-        ElseIf Skill(skillnum).Range > 0 Then
+        ElseIf Skill(skillnum).range > 0 Then
             ' ranged attack, single target or aoe?
             If Not Skill(skillnum).IsAoE Then
                 SkillCastType = 2 ' targetted
@@ -1008,7 +1012,7 @@ Module ServerLoop
         ' set the vital
         Vital = Skill(skillnum).Vital
         AoE = Skill(skillnum).AoE
-        range = Skill(skillnum).Range
+        range = Skill(skillnum).range
 
         Select Case SkillCastType
             Case 0 ' self-cast target
@@ -1045,7 +1049,7 @@ Module ServerLoop
                         y = MapNpc(MapNum).Npc(Target).Y
                     End If
 
-                    If Not IsInRange(range, x, y, GetPlayerX(NpcNum), GetPlayerY(NpcNum)) Then
+                    If Not isInRange(range, x, y, GetPlayerX(NpcNum), GetPlayerY(NpcNum)) Then
                         Exit Sub
                     End If
                 End If
@@ -1055,7 +1059,7 @@ Module ServerLoop
                         For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) Then
                                 If GetPlayerMap(i) = MapNum Then
-                                    If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
+                                    If isInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
                                         If CanNpcAttackPlayer(NpcNum, i) Then
                                             SendAnimation(MapNum, Skill(skillnum).SkillAnim, 0, 0, Enums.TargetType.Player, i)
                                             PlayerMsg(i, Trim(Npc(MapNpc(MapNum).Npc(NpcNum).Num).Name) & " uses " & Trim(Skill(skillnum).Name) & "!", ColorType.Yellow)
@@ -1068,7 +1072,7 @@ Module ServerLoop
                         For i = 1 To MAX_MAP_NPCS
                             If MapNpc(MapNum).Npc(i).Num > 0 Then
                                 If MapNpc(MapNum).Npc(i).Vital(Vitals.HP) > 0 Then
-                                    If IsInRange(AoE, x, y, MapNpc(MapNum).Npc(i).X, MapNpc(MapNum).Npc(i).Y) Then
+                                    If isInRange(AoE, x, y, MapNpc(MapNum).Npc(i).X, MapNpc(MapNum).Npc(i).Y) Then
                                         If CanPlayerAttackNpc(NpcNum, i, True) Then
                                             SendAnimation(MapNum, Skill(skillnum).SkillAnim, 0, 0, Enums.TargetType.Npc, i)
                                             SkillNpc_Effect(Vitals.HP, False, i, Vital, skillnum, MapNum)
@@ -1095,14 +1099,14 @@ Module ServerLoop
                         DidCast = True
                         For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(NpcNum) Then
-                                If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
+                                If isInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
                                     SkillPlayer_Effect(VitalType, increment, i, Vital, skillnum)
                                 End If
                             End If
                         Next
                         For i = 1 To MAX_MAP_NPCS
                             If MapNpc(MapNum).Npc(i).Num > 0 AndAlso MapNpc(MapNum).Npc(i).Vital(Vitals.HP) > 0 Then
-                                If IsInRange(AoE, x, y, MapNpc(MapNum).Npc(i).X, MapNpc(MapNum).Npc(i).Y) Then
+                                If isInRange(AoE, x, y, MapNpc(MapNum).Npc(i).X, MapNpc(MapNum).Npc(i).Y) Then
                                     SkillNpc_Effect(VitalType, increment, i, Vital, skillnum, MapNum)
                                 End If
                             End If
@@ -1124,7 +1128,7 @@ Module ServerLoop
                     y = MapNpc(MapNum).Npc(Target).Y
                 End If
 
-                If Not IsInRange(range, MapNpc(MapNum).Npc(NpcNum).X, MapNpc(MapNum).Npc(NpcNum).Y, x, y) Then Exit Sub
+                If Not isInRange(range, MapNpc(MapNum).Npc(NpcNum).X, MapNpc(MapNum).Npc(NpcNum).Y, x, y) Then Exit Sub
 
                 Select Case Skill(skillnum).Type
                     Case SkillType.DamageHp
@@ -1186,7 +1190,7 @@ Module ServerLoop
         If DidCast Then
             MapNpc(MapNum).Npc(NpcNum).Vital(Vitals.MP) = MapNpc(MapNum).Npc(NpcNum).Vital(Vitals.MP) - MPCost
             SendMapNpcVitals(MapNum, NpcNum)
-            MapNpc(MapNum).Npc(NpcNum).SkillCD(skillslot) = GetTimeMs() + (Skill(skillnum).CdTime * 1000)
+            MapNpc(MapNum).Npc(NpcNum).SkillCD(skillslot) = GetTickCount() + (Skill(skillnum).CdTime * 1000)
         End If
     End Sub
 

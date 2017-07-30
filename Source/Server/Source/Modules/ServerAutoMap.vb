@@ -269,8 +269,8 @@ Module ServerAutoMap
         Dim tick As Integer
 
         TextAdd("Working...")
-
-        tick = GetTimeMs()
+        DoEvents()
+        tick = GetTickCount()
         TotalMaps = Size * Size
 
         For i = MapStart To MapStart + TotalMaps - 1
@@ -278,9 +278,9 @@ Module ServerAutoMap
             CacheResources(i)
         Next i
 
-        tick = GetTimeMs() - tick
+        tick = GetTickCount() - tick
         TextAdd("Done and cached resources in " & CDbl(tick / 1000) & "s")
-
+        DoEvents()
     End Sub
 
     Sub MakeOvergrasses(ByVal MapStart As Integer, ByVal Size As Integer)
@@ -289,15 +289,17 @@ Module ServerAutoMap
         Dim tick As Integer
 
         TextAdd("Working...")
-        tick = GetTimeMs()
+        DoEvents()
+        tick = GetTickCount()
         TotalMaps = Size * Size
 
         For i = MapStart To MapStart + TotalMaps - 1
             MakeOvergrass(i)
         Next i
 
-        tick = GetTimeMs() - tick
+        tick = GetTickCount() - tick
         TextAdd("Done overgrasses in " & CDbl(tick / 1000) & "s")
+        DoEvents()
     End Sub
 
     Sub MakeOvergrass(ByVal MapNum As Integer)
@@ -460,8 +462,8 @@ Module ServerAutoMap
         Dim tick As Integer
 
         TextAdd("Working...")
-
-        tick = GetTimeMs()
+        DoEvents()
+        tick = GetTickCount()
         RiverBorder = 4
         MadeRivers = 0
         TotalMaps = Size * Size
@@ -572,21 +574,21 @@ SelectMap:
             MadeRivers = MadeRivers + 1
         Loop
 
-        tick = GetTimeMs() - tick
+        tick = GetTickCount() - tick
         TextAdd("Done " & TotalRivers & " rivers in " & CDbl(tick / 1000) & "s")
-
+        DoEvents()
     End Sub
 
     Sub PlaceMountain(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal MountainPrefab As MountainTile)
         Dim OldX As Integer, OldY As Integer
 
-        OldX = Tile(TilePrefab.Mountain).Layer(2).X
-        OldY = Tile(TilePrefab.Mountain).Layer(2).Y
-        Tile(TilePrefab.Mountain).Layer(2).X = OldX + (MountainPrefab Mod 3)
-        Tile(TilePrefab.Mountain).Layer(2).Y = OldY + (Int(MountainPrefab / 3))
+        OldX = Tile(TilePrefab.Mountain).Layer(2).x
+        OldY = Tile(TilePrefab.Mountain).Layer(2).y
+        Tile(TilePrefab.Mountain).Layer(2).x = OldX + (MountainPrefab Mod 3)
+        Tile(TilePrefab.Mountain).Layer(2).y = OldY + (Int(MountainPrefab / 3))
         AddTile(TilePrefab.Mountain, MapNum, X, Y)
-        Tile(TilePrefab.Mountain).Layer(2).X = OldX
-        Tile(TilePrefab.Mountain).Layer(2).Y = OldY
+        Tile(TilePrefab.Mountain).Layer(2).x = OldX
+        Tile(TilePrefab.Mountain).Layer(2).y = OldY
     End Sub
 
 
@@ -786,10 +788,9 @@ Important:
         Dim TotalMaps As Integer
         Dim tick As Integer
         Dim MapCount As Integer
-
         TextAdd("Working...")
-
-        tick = GetTimeMs()
+        DoEvents()
+        tick = GetTickCount()
         TotalMaps = Size * Size
         MapCount = 0
         For i = MapStart To MapStart + TotalMaps - 1
@@ -798,8 +799,9 @@ Important:
                 MapCount = MapCount + 1
             End If
         Next i
-        tick = GetTimeMs() - tick
+        tick = GetTickCount() - tick
         TextAdd("Done mountains in " & (MapCount) & " maps in " & CDbl(tick / 1000) & "s")
+        DoEvents()
     End Sub
 
     Sub MakeMap(ByVal MapNum As Integer, ByVal Prefab As MapPrefab)
@@ -1199,7 +1201,8 @@ ChangeDir:
         Dim tick As Integer
 
         TextAdd("Working...")
-        tick = GetTimeMs()
+        DoEvents()
+        tick = GetTickCount()
 
         MaxTries = 30
         TotalPaths = Random(Map(MapNum).MaxX / 20, Map(MapNum).MaxX / 10)
@@ -1257,8 +1260,9 @@ ChangeDir:
             Next i
         End If
 
-        tick = GetTimeMs() - tick
+        tick = GetTickCount() - tick
         TextAdd("Done " & TotalPaths & " paths in " & CDbl(tick / 1000) & "s")
+        DoEvents()
     End Sub
 
     Sub MakePaths(ByVal MapStart As Integer, ByVal Size As Integer)
@@ -1279,7 +1283,7 @@ ChangeDir:
     Sub StartAutomapper(ByVal MapStart As Integer, ByVal Size As Integer, ByVal MapX As Integer, ByVal MapY As Integer)
         Dim StartTick As Integer
         Dim tick As Integer
-        StartTick = GetTimeMs()
+        StartTick = GetTickCount()
         LoadTilePrefab()
         LoadDetails()
 
@@ -1289,7 +1293,7 @@ ChangeDir:
 
         ReDim MapOrientation(0 To MapStart + TotalMaps)
 
-        tick = GetTimeMs()
+        tick = GetTickCount()
 
         For mapnum = MapStart To MapStart + TotalMaps - 1
             ClearMap(mapnum)
@@ -1361,8 +1365,9 @@ ChangeDir:
             MakeMap(mapnum, Prefab)
         Next mapnum
 
-        tick = GetTimeMs() - tick
+        tick = GetTickCount() - tick
         TextAdd("Done " & TotalMaps & " maps models in " & CDbl(tick / 1000) & "s")
+        DoEvents()
 
         If PathsChecked = True Then MakePaths(MapStart, Size)
         If RiversChecked = True Then MakeRivers(MapStart, Size)
@@ -1370,16 +1375,17 @@ ChangeDir:
         If OverGrassChecked = True Then MakeOvergrasses(MapStart, Size)
         If ResourcesChecked = True Then MakeResources(MapStart, Size)
 
-        tick = GetTimeMs()
+        tick = GetTickCount()
         TextAdd("Working...")
+        DoEvents()
 
         For mapnum = MapStart To MapStart + TotalMaps - 1
             SaveMap(mapnum)
             'MapCache_Create mapnum
         Next mapnum
 
-        tick = GetTimeMs() - tick
-        StartTick = GetTimeMs() - StartTick
+        tick = GetTickCount() - tick
+        StartTick = GetTickCount() - StartTick
 
         TextAdd("Cached all maps in " & CDbl(tick / 1000) & "s (" & ((tick / StartTick) * 100) & "%)")
         TextAdd("Done " & TotalMaps & " maps in " & CDbl(StartTick / 1000) & "s")

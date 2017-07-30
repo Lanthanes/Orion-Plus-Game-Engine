@@ -2861,8 +2861,8 @@ Module ServerHandleData
 
         ' Check if elapsed time has passed
         'Player(Index).DataBytes = Player(Index).DataBytes + DataLength
-        If GetTimeMs() >= TempPlayer(index).DataTimer Then
-            TempPlayer(index).DataTimer = GetTimeMs() + 1000
+        If GetTickCount() >= TempPlayer(index).DataTimer Then
+            TempPlayer(index).DataTimer = GetTickCount() + 1000
             TempPlayer(index).DataBytes = 0
             TempPlayer(index).DataPackets = 0
         End If

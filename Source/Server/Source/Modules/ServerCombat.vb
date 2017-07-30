@@ -8,9 +8,9 @@ Public Module ServerCombat
         If Not IsSkill Then
             ' Check attack timer
             If GetPlayerEquipment(Attacker, EquipmentType.Weapon) > 0 Then
-                If GetTimeMs() < TempPlayer(Attacker).AttackTimer + Item(GetPlayerEquipment(Attacker, EquipmentType.Weapon)).Speed Then Exit Function
+                If GetTickCount() < TempPlayer(Attacker).AttackTimer + Item(GetPlayerEquipment(Attacker, EquipmentType.Weapon)).Speed Then Exit Function
             Else
-                If GetTimeMs() < TempPlayer(Attacker).AttackTimer + 1000 Then Exit Function
+                If GetTickCount() < TempPlayer(Attacker).AttackTimer + 1000 Then Exit Function
             End If
         End If
 
@@ -263,7 +263,7 @@ Public Module ServerCombat
             End If
 
             ' Reset attack timer
-            TempPlayer(Attacker).AttackTimer = GetTimeMs()
+            TempPlayer(Attacker).AttackTimer = GetTickCount()
         Else ' npc to player
             ' Check for subscript out of range
             If IsPlaying(Victim) = False Or Damage < 0 Then Exit Sub
@@ -306,7 +306,7 @@ Public Module ServerCombat
             End If
 
             ' Reset attack timer
-            MapNpc(mapnum).Npc(Attacker).AttackTimer = GetTimeMs()
+            MapNpc(mapnum).Npc(Attacker).AttackTimer = GetTickCount()
         End If
 
     End Sub
@@ -316,7 +316,7 @@ Public Module ServerCombat
         If Skill(skillnum).StunDuration > 0 Then
             ' set the values on index
             TempPlayer(Index).StunDuration = Skill(skillnum).StunDuration
-            TempPlayer(Index).StunTimer = GetTimeMs()
+            TempPlayer(Index).StunTimer = GetTickCount()
             ' send it to the index
             SendStunned(Index)
             ' tell him he's stunned
@@ -359,7 +359,7 @@ Public Module ServerCombat
                 attackspeed = 1000
             End If
 
-            If NpcNum > 0 And GetTimeMs() > TempPlayer(Attacker).AttackTimer + attackspeed Then
+            If NpcNum > 0 And GetTickCount() > TempPlayer(Attacker).AttackTimer + attackspeed Then
 
                 ' exit out early
                 If IsSkill Then
@@ -385,8 +385,8 @@ Public Module ServerCombat
                         atkY = GetPlayerY(Attacker)
                 End Select
 
-                If atkX = MapNpc(MapNum).Npc(MapNpcNum).X Then
-                    If atkY = MapNpc(MapNum).Npc(MapNpcNum).Y Then
+                If atkX = MapNpc(MapNum).Npc(MapNpcNum).x Then
+                    If atkY = MapNpc(MapNum).Npc(MapNpcNum).y Then
                         If Npc(NpcNum).Behaviour <> NpcBehavior.Friendly And Npc(NpcNum).Behaviour <> NpcBehavior.ShopKeeper And Npc(NpcNum).Behaviour <> NpcBehavior.Quest Then
                             CanPlayerAttackNpc = True
                         Else
@@ -430,7 +430,7 @@ Public Module ServerCombat
         If Skill(skillnum).StunDuration > 0 Then
             ' set the values on index
             MapNpc(MapNum).Npc(Index).StunDuration = Skill(skillnum).StunDuration
-            MapNpc(MapNum).Npc(Index).StunTimer = GetTimeMs()
+            MapNpc(MapNum).Npc(Index).StunTimer = GetTickCount()
         End If
     End Sub
 
@@ -464,15 +464,15 @@ Public Module ServerCombat
         End If
 
         ' Send our general visual stuff.
-        SendActionMsg(MapNum, "-" & Damage, ColorType.BrightRed, 1, (MapNpc(MapNum).Npc(MapNpcNum).X * 32), (MapNpc(MapNum).Npc(MapNpcNum).Y * 32))
-        SendBlood(GetPlayerMap(Attacker), MapNpc(MapNum).Npc(MapNpcNum).X, MapNpc(MapNum).Npc(MapNpcNum).Y)
+        SendActionMsg(MapNum, "-" & Damage, ColorType.BrightRed, 1, (MapNpc(MapNum).Npc(MapNpcNum).x * 32), (MapNpc(MapNum).Npc(MapNpcNum).y * 32))
+        SendBlood(GetPlayerMap(Attacker), MapNpc(MapNum).Npc(MapNpcNum).x, MapNpc(MapNum).Npc(MapNpcNum).y)
         SendPlayerAttack(Attacker)
         If Weapon > 0 Then
             SendAnimation(MapNum, Item(GetPlayerEquipment(Attacker, EquipmentType.Weapon)).Animation, 0, 0, TargetType.Npc, MapNpcNum)
         End If
 
         ' Reset our attack timer.
-        TempPlayer(Attacker).AttackTimer = GetTimeMs()
+        TempPlayer(Attacker).AttackTimer = GetTickCount()
 
         If Not IsNpcDead(MapNum, MapNpcNum) Then
             ' Check if our NPC has something to share with our player.
@@ -502,12 +502,12 @@ Public Module ServerCombat
 
             ' check if PLAYER can avoid the attack
             If CanPlayerDodge(Index) Then
-                SendActionMsg(MapNum, "Dodge!", ColorType.Pink, 1, (Player(Index).Character(TempPlayer(Index).CurChar).X * 32), (Player(Index).Character(TempPlayer(Index).CurChar).Y * 32))
+                SendActionMsg(MapNum, "Dodge!", ColorType.Pink, 1, (Player(Index).Character(TempPlayer(Index).CurChar).x * 32), (Player(Index).Character(TempPlayer(Index).CurChar).y * 32))
                 Exit Sub
             End If
 
             If CanPlayerParry(Index) Then
-                SendActionMsg(MapNum, "Parry!", ColorType.Pink, 1, (Player(Index).Character(TempPlayer(Index).CurChar).X * 32), (Player(Index).Character(TempPlayer(Index).CurChar).Y * 32))
+                SendActionMsg(MapNum, "Parry!", ColorType.Pink, 1, (Player(Index).Character(TempPlayer(Index).CurChar).x * 32), (Player(Index).Character(TempPlayer(Index).CurChar).y * 32))
                 Exit Sub
             End If
 
@@ -515,7 +515,7 @@ Public Module ServerCombat
             Damage = GetNpcDamage(npcnum)
 
             If CanPlayerBlockHit(Index) Then
-                SendActionMsg(MapNum, "Block!", ColorType.Pink, 1, (Player(Index).Character(TempPlayer(Index).CurChar).X * 32), (Player(Index).Character(TempPlayer(Index).CurChar).Y * 32))
+                SendActionMsg(MapNum, "Block!", ColorType.Pink, 1, (Player(Index).Character(TempPlayer(Index).CurChar).x * 32), (Player(Index).Character(TempPlayer(Index).CurChar).y * 32))
                 Exit Sub
             Else
 
@@ -530,7 +530,7 @@ Public Module ServerCombat
                 ' * 1.5 if crit hit
                 If CanNpcCrit(npcnum) Then
                     Damage = Damage * 1.5
-                    SendActionMsg(MapNum, "Critical!", ColorType.BrightCyan, 1, (MapNpc(MapNum).Npc(mapnpcnum).X * 32), (MapNpc(MapNum).Npc(mapnpcnum).Y * 32))
+                    SendActionMsg(MapNum, "Critical!", ColorType.BrightCyan, 1, (MapNpc(MapNum).Npc(mapnpcnum).x * 32), (MapNpc(MapNum).Npc(mapnpcnum).y * 32))
                 End If
 
             End If
@@ -566,7 +566,7 @@ Public Module ServerCombat
         End If
 
         ' Make sure npcs dont attack more then once a second
-        If GetTimeMs() < MapNpc(MapNum).Npc(MapNpcNum).AttackTimer + 1000 Then
+        If GetTickCount() < MapNpc(MapNum).Npc(MapNpcNum).AttackTimer + 1000 Then
             Exit Function
         End If
 
@@ -575,26 +575,26 @@ Public Module ServerCombat
             Exit Function
         End If
 
-        MapNpc(MapNum).Npc(MapNpcNum).AttackTimer = GetTimeMs()
+        MapNpc(MapNum).Npc(MapNpcNum).AttackTimer = GetTickCount()
 
         ' Make sure they are on the same map
         If IsPlaying(Index) Then
             If NpcNum > 0 Then
 
                 ' Check if at same coordinates
-                If (GetPlayerY(Index) + 1 = MapNpc(MapNum).Npc(MapNpcNum).Y) And (GetPlayerX(Index) = MapNpc(MapNum).Npc(MapNpcNum).X) Then
+                If (GetPlayerY(Index) + 1 = MapNpc(MapNum).Npc(MapNpcNum).y) And (GetPlayerX(Index) = MapNpc(MapNum).Npc(MapNpcNum).x) Then
                     CanNpcAttackPlayer = True
                 Else
 
-                    If (GetPlayerY(Index) - 1 = MapNpc(MapNum).Npc(MapNpcNum).Y) And (GetPlayerX(Index) = MapNpc(MapNum).Npc(MapNpcNum).X) Then
+                    If (GetPlayerY(Index) - 1 = MapNpc(MapNum).Npc(MapNpcNum).y) And (GetPlayerX(Index) = MapNpc(MapNum).Npc(MapNpcNum).x) Then
                         CanNpcAttackPlayer = True
                     Else
 
-                        If (GetPlayerY(Index) = MapNpc(MapNum).Npc(MapNpcNum).Y) And (GetPlayerX(Index) + 1 = MapNpc(MapNum).Npc(MapNpcNum).X) Then
+                        If (GetPlayerY(Index) = MapNpc(MapNum).Npc(MapNpcNum).y) And (GetPlayerX(Index) + 1 = MapNpc(MapNum).Npc(MapNpcNum).x) Then
                             CanNpcAttackPlayer = True
                         Else
 
-                            If (GetPlayerY(Index) = MapNpc(MapNum).Npc(MapNpcNum).Y) And (GetPlayerX(Index) - 1 = MapNpc(MapNum).Npc(MapNpcNum).X) Then
+                            If (GetPlayerY(Index) = MapNpc(MapNum).Npc(MapNpcNum).y) And (GetPlayerX(Index) - 1 = MapNpc(MapNum).Npc(MapNpcNum).x) Then
                                 CanNpcAttackPlayer = True
                             End If
                         End If
@@ -647,16 +647,16 @@ Public Module ServerCombat
         End If
 
         ' Make sure npcs dont attack more then once a second
-        If GetTimeMs() < MapNpc(MapNum).Npc(Attacker).AttackTimer + 1000 Then
+        If GetTickCount() < MapNpc(MapNum).Npc(Attacker).AttackTimer + 1000 Then
             Exit Function
         End If
 
-        MapNpc(MapNum).Npc(Attacker).AttackTimer = GetTimeMs()
+        MapNpc(MapNum).Npc(Attacker).AttackTimer = GetTickCount()
 
-        AttackerX = MapNpc(MapNum).Npc(Attacker).X
-        AttackerY = MapNpc(MapNum).Npc(Attacker).Y
-        VictimX = MapNpc(MapNum).Npc(Victim).X
-        VictimY = MapNpc(MapNum).Npc(Victim).Y
+        AttackerX = MapNpc(MapNum).Npc(Attacker).x
+        AttackerY = MapNpc(MapNum).Npc(Attacker).y
+        VictimX = MapNpc(MapNum).Npc(Victim).x
+        VictimY = MapNpc(MapNum).Npc(Victim).y
 
         ' Check if at same coordinates
         If (VictimY + 1 = AttackerY) And (VictimX = AttackerX) Then
@@ -705,8 +705,8 @@ Public Module ServerCombat
         If Damage <= 0 Then Exit Sub
 
         ' set the regen timer
-        MapNpc(MapNum).Npc(MapNpcNum).StopRegen = True
-        MapNpc(MapNum).Npc(MapNpcNum).StopRegenTimer = GetTimeMs()
+        MapNpc(MapNum).Npc(MapNpcNum).stopRegen = True
+        MapNpc(MapNum).Npc(MapNpcNum).stopRegenTimer = GetTickCount()
 
         If Damage >= GetPlayerVital(Victim, Vitals.HP) Then
             ' Say damage
@@ -791,8 +791,8 @@ Public Module ServerCombat
             SendBlood(GetPlayerMap(Victim), GetPlayerX(Victim), GetPlayerY(Victim))
 
             ' set the regen timer
-            TempPlayer(Victim).StopRegen = True
-            TempPlayer(Victim).StopRegenTimer = GetTimeMs()
+            TempPlayer(Victim).stopRegen = True
+            TempPlayer(Victim).stopRegenTimer = GetTickCount()
 
         End If
 
@@ -823,8 +823,8 @@ Public Module ServerCombat
         Buffer = Nothing
 
         If Damage >= MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) Then
-            SendActionMsg(MapNum, "-" & Damage, ColorType.BrightRed, 1, (MapNpc(MapNum).Npc(Victim).X * 32), (MapNpc(MapNum).Npc(Victim).Y * 32))
-            SendBlood(MapNum, MapNpc(MapNum).Npc(Victim).X, MapNpc(MapNum).Npc(Victim).Y)
+            SendActionMsg(MapNum, "-" & Damage, ColorType.BrightRed, 1, (MapNpc(MapNum).Npc(Victim).x * 32), (MapNpc(MapNum).Npc(Victim).y * 32))
+            SendBlood(MapNum, MapNpc(MapNum).Npc(Victim).x, MapNpc(MapNum).Npc(Victim).y)
 
             ' npc is dead.
 
@@ -836,12 +836,12 @@ Public Module ServerCombat
             Dim tmpitem = Random(1, 5)
             n = Int(Rnd() * Npc(vNpcNum).DropChance(tmpitem)) + 1
             If n = 1 Then
-                SpawnItem(Npc(vNpcNum).DropItem(tmpitem), Npc(vNpcNum).DropItemValue(tmpitem), MapNum, MapNpc(MapNum).Npc(Victim).X, MapNpc(MapNum).Npc(Victim).Y)
+                SpawnItem(Npc(vNpcNum).DropItem(tmpitem), Npc(vNpcNum).DropItemValue(tmpitem), MapNum, MapNpc(MapNum).Npc(Victim).x, MapNpc(MapNum).Npc(Victim).y)
             End If
 
             ' Reset victim's stuff so it dies in loop
             MapNpc(MapNum).Npc(Victim).Num = 0
-            MapNpc(MapNum).Npc(Victim).SpawnWait = GetTimeMs()
+            MapNpc(MapNum).Npc(Victim).SpawnWait = GetTickCount()
             MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) = 0
 
             ' send npc death packet to map
@@ -854,8 +854,8 @@ Public Module ServerCombat
             ' npc not dead, just do the damage
             MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) = MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) - Damage
             ' Say damage
-            SendActionMsg(MapNum, "-" & Damage, ColorType.BrightRed, 1, (MapNpc(MapNum).Npc(Victim).X * 32), (MapNpc(MapNum).Npc(Victim).Y * 32))
-            SendBlood(MapNum, MapNpc(MapNum).Npc(Victim).X, MapNpc(MapNum).Npc(Victim).Y)
+            SendActionMsg(MapNum, "-" & Damage, ColorType.BrightRed, 1, (MapNpc(MapNum).Npc(Victim).x * 32), (MapNpc(MapNum).Npc(Victim).y * 32))
+            SendBlood(MapNum, MapNpc(MapNum).Npc(Victim).x, MapNpc(MapNum).Npc(Victim).y)
         End If
 
     End Sub
@@ -868,7 +868,7 @@ Public Module ServerCombat
                 End If
             Next
             MapNpc(GetPlayerMap(Index)).Npc(NpcNum).StunDuration = 1
-            MapNpc(GetPlayerMap(Index)).Npc(NpcNum).StunTimer = GetTimeMs()
+            MapNpc(GetPlayerMap(Index)).Npc(NpcNum).StunTimer = GetTickCount()
         Else
             If Item(GetPlayerEquipment(Index, EquipmentType.Weapon)).KnockBack = 1 Then
                 For i = 1 To Item(GetPlayerEquipment(Index, EquipmentType.Weapon)).KnockBackTiles
@@ -877,7 +877,7 @@ Public Module ServerCombat
                     End If
                 Next
                 MapNpc(GetPlayerMap(Index)).Npc(NpcNum).StunDuration = 1
-                MapNpc(GetPlayerMap(Index)).Npc(NpcNum).StunTimer = GetTimeMs()
+                MapNpc(GetPlayerMap(Index)).Npc(NpcNum).StunTimer = GetTickCount()
             End If
         End If
     End Sub
@@ -925,18 +925,18 @@ Public Module ServerCombat
         If skillnum <= 0 Or skillnum > MAX_SKILLS Then Exit Sub
 
         ' see if cooldown has finished
-        If MapNpc(MapNum).Npc(MapNpcNum).SkillCD(skillslot) > GetTimeMs() Then
+        If MapNpc(MapNum).Npc(MapNpcNum).SkillCD(skillslot) > GetTickCount() Then
             TryNpcAttackPlayer(MapNpcNum, MapNpc(MapNum).Npc(MapNpcNum).Target)
             Exit Sub
         End If
 
-        MPCost = Skill(skillnum).MpCost
+        MPCost = Skill(skillnum).MPCost
 
         ' Check if they have enough MP
         If MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.MP) < MPCost Then Exit Sub
 
         ' find out what kind of skill it is! self cast, target or AOE
-        If Skill(skillnum).Range > 0 Then
+        If Skill(skillnum).range > 0 Then
             ' ranged attack, single target or aoe?
             If Not Skill(skillnum).IsAoE Then
                 SkillCastType = 2 ' targetted
@@ -953,7 +953,7 @@ Public Module ServerCombat
 
         TargetType = MapNpc(MapNum).Npc(MapNpcNum).TargetType
         Target = MapNpc(MapNum).Npc(MapNpcNum).Target
-        range = Skill(skillnum).Range
+        range = Skill(skillnum).range
         HasBuffered = False
 
         Select Case SkillCastType
@@ -966,7 +966,7 @@ Public Module ServerCombat
                 End If
                 If TargetType = Enums.TargetType.Player Then
                     ' if have target, check in range
-                    If Not IsInRange(range, MapNpc(MapNum).Npc(MapNpcNum).X, MapNpc(MapNum).Npc(MapNpcNum).Y, GetPlayerX(Target), GetPlayerY(Target)) Then
+                    If Not isInRange(range, MapNpc(MapNum).Npc(MapNpcNum).x, MapNpc(MapNum).Npc(MapNpcNum).y, GetPlayerX(Target), GetPlayerY(Target)) Then
                         Exit Sub
                     Else
                         HasBuffered = True
@@ -992,7 +992,7 @@ Public Module ServerCombat
         If HasBuffered Then
             SendAnimation(MapNum, Skill(skillnum).CastAnim, 0, 0, Enums.TargetType.Player, Target)
             MapNpc(MapNum).Npc(MapNpcNum).SkillBuffer = skillslot
-            MapNpc(MapNum).Npc(MapNpcNum).SkillBufferTimer = GetTimeMs()
+            MapNpc(MapNum).Npc(MapNpcNum).SkillBufferTimer = GetTickCount()
             Exit Sub
         End If
     End Sub
@@ -1117,7 +1117,7 @@ Public Module ServerCombat
             End If
 
             SendAnimation(MapNum, Skill(Skillnum).SkillAnim, 0, 0, TargetType.Npc, Index)
-            SendActionMsg(MapNum, sSymbol & Damage, Colour, ActionMsgType.Scroll, MapNpc(MapNum).Npc(Index).X * 32, MapNpc(MapNum).Npc(Index).Y * 32)
+            SendActionMsg(MapNum, sSymbol & Damage, Colour, ActionMsgType.Scroll, MapNpc(MapNum).Npc(Index).x * 32, MapNpc(MapNum).Npc(Index).y * 32)
 
             ' send the sound
             'SendMapSound(Index, MapNpc(MapNum).Npc(Index).x, MapNpc(MapNum).Npc(Index).y, SoundEntity.seSpell, Skillnum)
@@ -1235,8 +1235,8 @@ Public Module ServerCombat
         End If
 
         ' Stop our player's regeneration abilities.
-        TempPlayer(Attacker).StopRegen = True
-        TempPlayer(Attacker).StopRegenTimer = GetTimeMs()
+        TempPlayer(Attacker).stopRegen = True
+        TempPlayer(Attacker).stopRegenTimer = GetTickCount()
 
         ' Deal damage to our player.
         SetPlayerVital(Victim, Vitals.HP, GetPlayerVital(Victim, Vitals.HP) - Damage)
@@ -1249,11 +1249,11 @@ Public Module ServerCombat
         SendBlood(GetPlayerMap(Victim), GetPlayerX(Victim), GetPlayerY(Victim))
 
         ' set the regen timer
-        TempPlayer(Victim).StopRegen = True
-        TempPlayer(Victim).StopRegenTimer = GetTimeMs()
+        TempPlayer(Victim).stopRegen = True
+        TempPlayer(Victim).stopRegenTimer = GetTickCount()
 
         ' Reset attack timer
-        TempPlayer(Attacker).AttackTimer = GetTimeMs()
+        TempPlayer(Attacker).AttackTimer = GetTickCount()
 
         If Not IsPlayerDead(Victim) Then
             ' Send our player's new vitals to everyone that needs them.
@@ -1283,12 +1283,12 @@ Public Module ServerCombat
 
             ' check if NPC can avoid the attack
             If CanNpcDodge(npcnum) Then
-                SendActionMsg(MapNum, "Dodge!", ColorType.Pink, 1, (MapNpc(MapNum).Npc(mapnpcnum).X * 32), (MapNpc(MapNum).Npc(mapnpcnum).Y * 32))
+                SendActionMsg(MapNum, "Dodge!", ColorType.Pink, 1, (MapNpc(MapNum).Npc(mapnpcnum).x * 32), (MapNpc(MapNum).Npc(mapnpcnum).y * 32))
                 Exit Sub
             End If
 
             If CanNpcParry(npcnum) Then
-                SendActionMsg(MapNum, "Parry!", ColorType.Pink, 1, (MapNpc(MapNum).Npc(mapnpcnum).X * 32), (MapNpc(MapNum).Npc(mapnpcnum).Y * 32))
+                SendActionMsg(MapNum, "Parry!", ColorType.Pink, 1, (MapNpc(MapNum).Npc(mapnpcnum).x * 32), (MapNpc(MapNum).Npc(mapnpcnum).y * 32))
                 Exit Sub
             End If
 
@@ -1296,7 +1296,7 @@ Public Module ServerCombat
             Damage = GetPlayerDamage(Index)
 
             If CanNpcBlock(npcnum) Then
-                SendActionMsg(MapNum, "Block!", ColorType.BrightCyan, 1, (MapNpc(MapNum).Npc(mapnpcnum).X * 32), (MapNpc(MapNum).Npc(mapnpcnum).Y * 32))
+                SendActionMsg(MapNum, "Block!", ColorType.BrightCyan, 1, (MapNpc(MapNum).Npc(mapnpcnum).x * 32), (MapNpc(MapNum).Npc(mapnpcnum).y * 32))
                 Damage = 0
                 Exit Sub
             Else
@@ -1343,7 +1343,7 @@ Public Module ServerCombat
         Dim n = Int(Rnd() * Npc(NpcNum).DropChance(tmpitem)) + 1
 
         If n = 1 Then
-            SpawnItem(Npc(NpcNum).DropItem(tmpitem), Npc(NpcNum).DropItemValue(tmpitem), MapNum, MapNpc(MapNum).Npc(MapNpcNum).X, MapNpc(MapNum).Npc(MapNpcNum).Y)
+            SpawnItem(Npc(NpcNum).DropItem(tmpitem), Npc(NpcNum).DropItemValue(tmpitem), MapNum, MapNpc(MapNum).Npc(MapNpcNum).x, MapNpc(MapNum).Npc(MapNpcNum).y)
         End If
     End Sub
 
@@ -1386,7 +1386,7 @@ Public Module ServerCombat
 
         ' Set our NPC's data to default so we know it's dead.
         MapNpc(MapNum).Npc(MapNpcNum).Num = 0
-        MapNpc(MapNum).Npc(MapNpcNum).SpawnWait = GetTimeMs()
+        MapNpc(MapNum).Npc(MapNpcNum).SpawnWait = GetTickCount()
         MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.HP) = 0
 
         ' Notify all our clients that the NPC has died.
