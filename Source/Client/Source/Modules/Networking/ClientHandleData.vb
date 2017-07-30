@@ -507,6 +507,82 @@
         GameInit()
     End Sub
 
+    Private Sub Packet_NpcMove(ByVal Data() As Byte)
+        Dim MapNpcNum As Integer, Movement As Integer
+        Dim X As Integer, Y As Integer, Dir As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SNpcMove Then Exit Sub
+
+        MapNpcNum = Buffer.ReadInteger
+        X = Buffer.ReadInteger
+        Y = Buffer.ReadInteger
+        Dir = Buffer.ReadInteger
+        Movement = Buffer.ReadInteger
+
+        With MapNpc(MapNpcNum)
+            .X = X
+            .Y = Y
+            .Dir = Dir
+            .XOffset = 0
+            .YOffset = 0
+            .Moving = Movement
+
+            Select Case .Dir
+                Case Direction.Up
+                    .YOffset = PIC_Y
+                Case Direction.Down
+                    .YOffset = PIC_Y * -1
+                Case Direction.Left
+                    .XOffset = PIC_X
+                Case Direction.Right
+                    .XOffset = PIC_X * -1
+            End Select
+        End With
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_NpcDir(ByVal Data() As Byte)
+        Dim Dir As Integer, i As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SNpcDir Then Exit Sub
+
+        i = Buffer.ReadInteger
+        Dir = Buffer.ReadInteger
+
+        With MapNpc(i)
+            .Dir = Dir
+            .XOffset = 0
+            .YOffset = 0
+            .Moving = 0
+        End With
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_NpcAttack(ByVal Data() As Byte)
+        Dim i As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SNpcAttack Then Exit Sub
+
+        i = Buffer.ReadInteger
+
+        ' Set npc to attacking
+        MapNpc(i).Attacking = 1
+        MapNpc(i).AttackTimer = GetTimeMs()
+
+        Buffer = Nothing
+    End Sub
+
     Private Sub Packet_CheckMap(ByVal Data() As Byte)
         Dim X As Integer, Y As Integer, i As Integer
         Dim NeedMap As Byte
@@ -1040,6 +1116,99 @@
 
     End Sub
 
+    Sub Packet_SpawnNPC(ByVal data() As Byte)
+        Dim i As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(data)
+
+        If Buffer.ReadInteger <> ServerPackets.SSpawnNpc Then Exit Sub
+
+        i = Buffer.ReadInteger
+
+        With MapNpc(i)
+            .Num = Buffer.ReadInteger
+            .X = Buffer.ReadInteger
+            .Y = Buffer.ReadInteger
+            .Dir = Buffer.ReadInteger
+
+            For i = 1 To Vitals.Count - 1
+                .Vital(i) = Buffer.ReadInteger
+            Next
+            ' Client use only
+            .XOffset = 0
+            .YOffset = 0
+            .Moving = 0
+        End With
+
+        Buffer = Nothing
+    End Sub
+
+    Sub Packet_NpcDead(ByVal data() As Byte)
+        Dim i As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(data)
+
+        If Buffer.ReadInteger <> ServerPackets.SNpcDead Then Exit Sub
+
+        i = Buffer.ReadInteger
+        ClearMapNpc(i)
+
+        Buffer = Nothing
+    End Sub
+
+    Sub Packet_UpdateNPC(ByVal data() As Byte)
+        Dim i As Integer, x As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(data)
+
+        If Buffer.ReadInteger <> ServerPackets.SUpdateNpc Then Exit Sub
+
+        i = Buffer.ReadInteger
+
+        ' Update the Npc
+        Npc(i).Animation = Buffer.ReadInteger()
+        Npc(i).AttackSay = Trim(Buffer.ReadString())
+        Npc(i).Behaviour = Buffer.ReadInteger()
+        ReDim Npc(i).DropChance(5)
+        ReDim Npc(i).DropItem(5)
+        ReDim Npc(i).DropItemValue(5)
+        For x = 1 To 5
+            Npc(i).DropChance(x) = Buffer.ReadInteger()
+            Npc(i).DropItem(x) = Buffer.ReadInteger()
+            Npc(i).DropItemValue(x) = Buffer.ReadInteger()
+        Next
+
+        Npc(i).EXP = Buffer.ReadInteger()
+        Npc(i).Faction = Buffer.ReadInteger()
+        Npc(i).HP = Buffer.ReadInteger()
+        Npc(i).Name = Trim(Buffer.ReadString())
+        Npc(i).Range = Buffer.ReadInteger()
+        Npc(i).SpawnTime = Buffer.ReadInteger()
+        Npc(i).SpawnSecs = Buffer.ReadInteger()
+        Npc(i).Sprite = Buffer.ReadInteger()
+
+        For i = 0 To Stats.Count - 1
+            Npc(i).Stat(i) = Buffer.ReadInteger()
+        Next
+
+        Npc(i).QuestNum = Buffer.ReadInteger()
+
+        For x = 1 To MAX_NPC_SKILLS
+            Npc(i).Skill(x) = Buffer.ReadInteger()
+        Next
+
+        Npc(i).Level = Buffer.ReadInteger()
+        Npc(i).Damage = Buffer.ReadInteger()
+
+        If Npc(i).AttackSay Is Nothing Then Npc(i).AttackSay = ""
+        If Npc(i).Name Is Nothing Then Npc(i).Name = ""
+
+        Buffer = Nothing
+    End Sub
+
     Sub Packet_MapKey(ByVal data() As Byte)
         Dim n As Integer, X As Integer, Y As Integer
         Dim Buffer As New ByteBuffer
@@ -1355,6 +1524,22 @@
         Buffer = Nothing
     End Sub
 
+    Private Sub Packet_NPCVitals(ByVal Data() As Byte)
+        Dim MapNpcNum As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SMapNpcVitals Then Exit Sub
+
+        MapNpcNum = Buffer.ReadInteger
+        For i = 1 To Vitals.Count - 1
+            MapNpc(MapNpcNum).Vital(i) = Buffer.ReadInteger
+        Next
+
+        Buffer = Nothing
+    End Sub
+
     Private Sub Packet_Cooldown(ByVal Data() As Byte)
         Dim slot As Integer
         Dim Buffer As New ByteBuffer
@@ -1427,6 +1612,34 @@
         If Buffer.ReadInteger <> ServerPackets.SResetShopAction Then Exit Sub
 
         ShopAction = 0
+
+        Buffer = Nothing
+    End Sub
+
+    Private Sub Packet_OpenBank(ByVal Data() As Byte)
+        Dim i As Integer, x As Integer
+        Dim Buffer As New ByteBuffer
+
+        Buffer.WriteBytes(Data)
+
+        If Buffer.ReadInteger <> ServerPackets.SBank Then Exit Sub
+
+        For i = 1 To MAX_BANK
+            Bank.Item(i).Num = Buffer.ReadInteger
+            Bank.Item(i).Value = Buffer.ReadInteger
+
+            Bank.ItemRand(i).Prefix = Buffer.ReadString
+            Bank.ItemRand(i).Suffix = Buffer.ReadString
+            Bank.ItemRand(i).Rarity = Buffer.ReadInteger
+            Bank.ItemRand(i).Damage = Buffer.ReadInteger
+            Bank.ItemRand(i).Speed = Buffer.ReadInteger
+
+            For x = 1 To Stats.Count - 1
+                Bank.ItemRand(i).Stat(x) = Buffer.ReadInteger
+            Next
+        Next
+
+        NeedToOpenBank = True
 
         Buffer = Nothing
     End Sub
@@ -1886,6 +2099,8 @@
 
         buffer = Nothing
     End Sub
+
+
 
     Private Sub Packet_Mapreport(ByVal Data() As Byte)
         Dim Buffer As New ByteBuffer, I As Integer

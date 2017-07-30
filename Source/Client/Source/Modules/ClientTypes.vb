@@ -5,7 +5,7 @@
     ' Public data structures
     Public Map As MapRec
     Public MapLock As New Object()
-
+    Public Bank As BankRec
     Public MapItem(MAX_MAP_ITEMS) As MapItemRec
     Public MapNpc(MAX_MAP_NPCS) As MapNpcRec
     Public TempTile(,) As TempTileRec

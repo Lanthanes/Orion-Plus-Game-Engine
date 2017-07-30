@@ -40,18 +40,15 @@ Public Class ByteBuffer
         Buff.AddRange(BitConverter.GetBytes(Input))
         buffUpdated = True
     End Sub
-
     Public Sub WriteInteger(ByVal Input As Integer)
         Buff.AddRange(BitConverter.GetBytes(Input))
         buffUpdated = True
     End Sub
-
     Public Sub WriteString(ByVal Input As String)
         Buff.AddRange(BitConverter.GetBytes(Input.Length))
         Buff.AddRange(Encoding.ASCII.GetBytes(Input))
         buffUpdated = True
     End Sub
-
     Public Function ReadString(Optional ByVal Peek As Boolean = True) As String
         Dim Len As Integer = ReadInteger(True)
         If buffUpdated Then
@@ -66,7 +63,6 @@ Public Class ByteBuffer
         End If
         Return ret
     End Function
-
     Public Function ReadByte(Optional ByRef Peek As Boolean = True) As Byte
         If Buff.Count > readpos Then 'check to see if this passes the byte count
             If buffUpdated Then
@@ -82,7 +78,6 @@ Public Class ByteBuffer
             Throw New Exception("Byte Buffer Past Limit!") 'past byte count throw a new exception
         End If
     End Function
-
     Public Function ReadBytes(ByVal Length As Integer, Optional ByRef Peek As Boolean = True) As Byte()
         If buffUpdated Then
             readBuff = Buff.ToArray
@@ -92,7 +87,6 @@ Public Class ByteBuffer
         If Peek Then readpos += Length
         Return ret
     End Function
-
     Public Function ReadShort(Optional ByVal peek As Boolean = True) As Short
         If Buff.Count > readpos Then 'check to see if this passes the byte count
             If buffUpdated Then

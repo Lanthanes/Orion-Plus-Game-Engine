@@ -142,7 +142,6 @@
     </Compile>
     <Compile Include="Source\Modules\Gui\ClientText.vb" />
     <Compile Include="Source\Modules\Objects\ClientAutoTiles.vb" />
-    <Compile Include="Source\Modules\Objects\ClientBank.vb" />
     <Compile Include="Source\Modules\Objects\ClientCrafting.vb" />
     <Compile Include="Source\Modules\Objects\ClientEvents.vb" />
     <Compile Include="Source\Modules\Gui\ClientGuiFunctions.vb" />
