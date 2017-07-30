@@ -224,7 +224,7 @@ Module ServerDatabase
 
     End Sub
 
-    Sub ClearMap(ByVal MapNum As Integer)
+    Sub ClearMap(MapNum As Integer)
         Dim x As Integer
         Dim y As Integer
         Map(MapNum) = Nothing
@@ -266,7 +266,7 @@ Module ServerDatabase
 
     End Sub
 
-    Sub SaveMap(ByVal MapNum As Integer)
+    Sub SaveMap(MapNum As Integer)
         Dim filename As String
         Dim x As Integer, y As Integer, l As Integer
 
@@ -325,19 +325,20 @@ Module ServerDatabase
 
     End Sub
 
-    Sub SaveMapEvent(ByVal MapNum As Integer)
+    Sub SaveMapEvent(MapNum As Integer)
         Dim myXml As New XmlClass With {
             .Filename = Application.StartupPath & "\data\maps\map" & MapNum & "_eventdata.xml",
             .Root = "Data"
         }
 
+        If Not FileExist(Application.StartupPath & "\data\maps\map" & MapNum & "_eventdata.xml") Then
+            myXml.NewXmlDocument()
+        End If
+
         myXml.LoadXml()
 
         'This is for event saving, it is in .xml files because there are non-limited values (strings) that cannot easily be loaded/saved in the normal manner.
         myXml.WriteString("Events", "EventCount", Val(Map(MapNum).EventCount))
-
-        'Dim filename = Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}_eventdata.dat", MapNum))
-        'PutVar(filename, "Events", "EventCount", Val(Map(MapNum).EventCount))
 
         If Map(MapNum).EventCount > 0 Then
             For i = 1 To Map(MapNum).EventCount
@@ -348,11 +349,6 @@ Module ServerDatabase
                     myXml.WriteString("Event" & i, "y", Val(.Y))
                     myXml.WriteString("Event" & i, "PageCount", Val(.PageCount))
 
-                    'PutVar(filename, "Event" & i, "Name", .Name)
-                    'PutVar(filename, "Event" & i, "Global", Val(.Globals))
-                    'PutVar(filename, "Event" & i, "x", Val(.X))
-                    'PutVar(filename, "Event" & i, "y", Val(.Y))
-                    'PutVar(filename, "Event" & i, "PageCount", Val(.PageCount))
                 End With
                 If Map(MapNum).Events(i).PageCount > 0 Then
                     For x = 1 To Map(MapNum).Events(i).PageCount
@@ -362,34 +358,17 @@ Module ServerDatabase
                             myXml.WriteString("Event" & i & "Page" & x, "VariableCondition", Val(.VariableCondition))
                             myXml.WriteString("Event" & i & "Page" & x, "VariableCompare", Val(.VariableCompare))
 
-                            'PutVar(filename, "Event" & i & "Page" & x, "chkVariable", Val(.chkVariable))
-                            'PutVar(filename, "Event" & i & "Page" & x, "VariableIndex", Val(.VariableIndex))
-                            'PutVar(filename, "Event" & i & "Page" & x, "VariableCondition", Val(.VariableCondition))
-                            'PutVar(filename, "Event" & i & "Page" & x, "VariableCompare", Val(.VariableCompare))
-
                             myXml.WriteString("Event" & i & "Page" & x, "chkSwitch", Val(.chkSwitch))
                             myXml.WriteString("Event" & i & "Page" & x, "SwitchIndex", Val(.SwitchIndex))
                             myXml.WriteString("Event" & i & "Page" & x, "SwitchCompare", Val(.SwitchCompare))
-
-                            'PutVar(filename, "Event" & i & "Page" & x, "chkSwitch", Val(.chkSwitch))
-                            'PutVar(filename, "Event" & i & "Page" & x, "SwitchIndex", Val(.SwitchIndex))
-                            'PutVar(filename, "Event" & i & "Page" & x, "SwitchCompare", Val(.SwitchCompare))
 
                             myXml.WriteString("Event" & i & "Page" & x, "chkHasItem", Val(.chkHasItem))
                             myXml.WriteString("Event" & i & "Page" & x, "HasItemIndex", Val(.HasItemIndex))
                             myXml.WriteString("Event" & i & "Page" & x, "HasItemAmount", Val(.HasItemAmount))
 
-                            'PutVar(filename, "Event" & i & "Page" & x, "chkHasItem", Val(.chkHasItem))
-                            'PutVar(filename, "Event" & i & "Page" & x, "HasItemIndex", Val(.HasItemIndex))
-                            'PutVar(filename, "Event" & i & "Page" & x, "HasItemAmount", Val(.HasItemAmount))
-
                             myXml.WriteString("Event" & i & "Page" & x, "chkSelfSwitch", Val(.chkSelfSwitch))
                             myXml.WriteString("Event" & i & "Page" & x, "SelfSwitchIndex", Val(.SelfSwitchIndex))
                             myXml.WriteString("Event" & i & "Page" & x, "SelfSwitchCompare", Val(.SelfSwitchCompare))
-
-                            'PutVar(filename, "Event" & i & "Page" & x, "chkSelfSwitch", Val(.chkSelfSwitch))
-                            'PutVar(filename, "Event" & i & "Page" & x, "SelfSwitchIndex", Val(.SelfSwitchIndex))
-                            'PutVar(filename, "Event" & i & "Page" & x, "SelfSwitchCompare", Val(.SelfSwitchCompare))
 
                             myXml.WriteString("Event" & i & "Page" & x, "GraphicType", Val(.GraphicType))
                             myXml.WriteString("Event" & i & "Page" & x, "Graphic", Val(.Graphic))
@@ -398,30 +377,14 @@ Module ServerDatabase
                             myXml.WriteString("Event" & i & "Page" & x, "GraphicX2", Val(.GraphicX2))
                             myXml.WriteString("Event" & i & "Page" & x, "GraphicY2", Val(.GraphicY2))
 
-                            'PutVar(filename, "Event" & i & "Page" & x, "GraphicType", Val(.GraphicType))
-                            'PutVar(filename, "Event" & i & "Page" & x, "Graphic", Val(.Graphic))
-                            'PutVar(filename, "Event" & i & "Page" & x, "GraphicX", Val(.GraphicX))
-                            'PutVar(filename, "Event" & i & "Page" & x, "GraphicY", Val(.GraphicY))
-                            'PutVar(filename, "Event" & i & "Page" & x, "GraphicX2", Val(.GraphicX2))
-                            'PutVar(filename, "Event" & i & "Page" & x, "GraphicY2", Val(.GraphicY2))
-
                             myXml.WriteString("Event" & i & "Page" & x, "MoveType", Val(.MoveType))
                             myXml.WriteString("Event" & i & "Page" & x, "MoveSpeed", Val(.MoveSpeed))
                             myXml.WriteString("Event" & i & "Page" & x, "MoveFreq", Val(.MoveFreq))
 
-                            'PutVar(filename, "Event" & i & "Page" & x, "MoveType", Val(.MoveType))
-                            'PutVar(filename, "Event" & i & "Page" & x, "MoveSpeed", Val(.MoveSpeed))
-                            'PutVar(filename, "Event" & i & "Page" & x, "MoveFreq", Val(.MoveFreq))
-
                             myXml.WriteString("Event" & i & "Page" & x, "IgnoreMoveRoute", Val(.IgnoreMoveRoute))
                             myXml.WriteString("Event" & i & "Page" & x, "RepeatMoveRoute", Val(.RepeatMoveRoute))
 
-                            'PutVar(filename, "Event" & i & "Page" & x, "IgnoreMoveRoute", Val(.IgnoreMoveRoute))
-                            'PutVar(filename, "Event" & i & "Page" & x, "RepeatMoveRoute", Val(.RepeatMoveRoute))
-
                             myXml.WriteString("Event" & i & "Page" & x, "MoveRouteCount", Val(.MoveRouteCount))
-
-                            'PutVar(filename, "Event" & i & "Page" & x, "MoveRouteCount", Val(.MoveRouteCount))
 
                             If .MoveRouteCount > 0 Then
                                 For y = 1 To .MoveRouteCount
@@ -432,14 +395,6 @@ Module ServerDatabase
                                     myXml.WriteString("Event" & i & "Page" & x, "MoveRoute" & y & "Data4", Val(.MoveRoute(y).Data4))
                                     myXml.WriteString("Event" & i & "Page" & x, "MoveRoute" & y & "Data5", Val(.MoveRoute(y).Data5))
                                     myXml.WriteString("Event" & i & "Page" & x, "MoveRoute" & y & "Data6", Val(.MoveRoute(y).Data6))
-
-                                    'PutVar(filename, "Event" & i & "Page" & x, "MoveRoute" & y & "Index", Val(.MoveRoute(y).Index))
-                                    'PutVar(filename, "Event" & i & "Page" & x, "MoveRoute" & y & "Data1", Val(.MoveRoute(y).Data1))
-                                    'PutVar(filename, "Event" & i & "Page" & x, "MoveRoute" & y & "Data2", Val(.MoveRoute(y).Data2))
-                                    'PutVar(filename, "Event" & i & "Page" & x, "MoveRoute" & y & "Data3", Val(.MoveRoute(y).Data3))
-                                    'PutVar(filename, "Event" & i & "Page" & x, "MoveRoute" & y & "Data4", Val(.MoveRoute(y).Data4))
-                                    'PutVar(filename, "Event" & i & "Page" & x, "MoveRoute" & y & "Data5", Val(.MoveRoute(y).Data5))
-                                    'PutVar(filename, "Event" & i & "Page" & x, "MoveRoute" & y & "Data6", Val(.MoveRoute(y).Data6))
                                 Next
                             End If
 
@@ -450,22 +405,11 @@ Module ServerDatabase
                             myXml.WriteString("Event" & i & "Page" & x, "Trigger", Val(.Trigger))
                             myXml.WriteString("Event" & i & "Page" & x, "CommandListCount", Val(.CommandListCount))
 
-                            'PutVar(filename, "Event" & i & "Page" & x, "WalkAnim", Val(.WalkAnim))
-                            'PutVar(filename, "Event" & i & "Page" & x, "DirFix", Val(.DirFix))
-                            'PutVar(filename, "Event" & i & "Page" & x, "WalkThrough", Val(.WalkThrough))
-                            'PutVar(filename, "Event" & i & "Page" & x, "ShowName", Val(.ShowName))
-                            'PutVar(filename, "Event" & i & "Page" & x, "Trigger", Val(.Trigger))
-                            'PutVar(filename, "Event" & i & "Page" & x, "CommandListCount", Val(.CommandListCount))
-
                             myXml.WriteString("Event" & i & "Page" & x, "Position", Val(.Position))
                             myXml.WriteString("Event" & i & "Page" & x, "QuestNum", Val(.QuestNum))
 
-                            'PutVar(filename, "Event" & i & "Page" & x, "Position", Val(.Position))
-                            'PutVar(filename, "Event" & i & "Page" & x, "QuestNum", Val(.QuestNum))
-
                             myXml.WriteString("Event" & i & "Page" & x, "PlayerGender", Val(.chkPlayerGender))
 
-                            'PutVar(filename, "Event" & i & "Page" & x, "PlayerGender", Val(.chkPlayerGender))
                         End With
 
                         If Map(MapNum).Events(i).Pages(x).CommandListCount > 0 Then
@@ -473,8 +417,6 @@ Module ServerDatabase
                                 myXml.WriteString("Event" & i & "Page" & x, "CommandList" & y & "CommandCount", Val(Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount))
                                 myXml.WriteString("Event" & i & "Page" & x, "CommandList" & y & "ParentList", Val(Map(MapNum).Events(i).Pages(x).CommandList(y).ParentList))
 
-                                'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "CommandCount", Val(Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount))
-                                'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "ParentList", Val(Map(MapNum).Events(i).Pages(x).CommandList(y).ParentList))
                                 If Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount > 0 Then
                                     For z = 1 To Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount
                                         With Map(MapNum).Events(i).Pages(x).CommandList(y).Commands(z)
@@ -498,25 +440,6 @@ Module ServerDatabase
                                             myXml.WriteString("Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "ConditionalBranchElseCommandList", Val(.ConditionalBranch.ElseCommandList))
                                             myXml.WriteString("Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRouteCount", Val(.MoveRouteCount))
 
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "Index", Val(.Index))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "Text1", .Text1)
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "Text2", .Text2)
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "Text3", .Text3)
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "Text4", .Text4)
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "Text5", .Text5)
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "Data1", Val(.Data1))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "Data2", Val(.Data2))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "Data3", Val(.Data3))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "Data4", Val(.Data4))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "Data5", Val(.Data5))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "Data6", Val(.Data6))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "ConditionalBranchCommandList", Val(.ConditionalBranch.CommandList))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "ConditionalBranchCondition", Val(.ConditionalBranch.Condition))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "ConditionalBranchData1", Val(.ConditionalBranch.Data1))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "ConditionalBranchData2", Val(.ConditionalBranch.Data2))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "ConditionalBranchData3", Val(.ConditionalBranch.Data3))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "ConditionalBranchElseCommandList", Val(.ConditionalBranch.ElseCommandList))
-                                            'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRouteCount", Val(.MoveRouteCount))
                                             If .MoveRouteCount > 0 Then
                                                 For w = 1 To .MoveRouteCount
                                                     myXml.WriteString("Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRoute" & w & "Index", Val(.MoveRoute(w).Index))
@@ -526,14 +449,6 @@ Module ServerDatabase
                                                     myXml.WriteString("Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRoute" & w & "Data4", Val(.MoveRoute(w).Data4))
                                                     myXml.WriteString("Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRoute" & w & "Data5", Val(.MoveRoute(w).Data5))
                                                     myXml.WriteString("Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRoute" & w & "Data6", Val(.MoveRoute(w).Data6))
-
-                                                    'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRoute" & w & "Index", Val(.MoveRoute(w).Index))
-                                                    'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRoute" & w & "Data1", Val(.MoveRoute(w).Data1))
-                                                    'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRoute" & w & "Data2", Val(.MoveRoute(w).Data2))
-                                                    'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRoute" & w & "Data3", Val(.MoveRoute(w).Data3))
-                                                    'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRoute" & w & "Data4", Val(.MoveRoute(w).Data4))
-                                                    'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRoute" & w & "Data5", Val(.MoveRoute(w).Data5))
-                                                    'PutVar(filename, "Event" & i & "Page" & x, "CommandList" & y & "Command" & z & "MoveRoute" & w & "Data6", Val(.MoveRoute(w).Data6))
                                                 Next
                                             End If
                                         End With
@@ -543,14 +458,13 @@ Module ServerDatabase
                         End If
                     Next
                 End If
-                DoEvents()
             Next
         End If
 
         myXml.CloseXml(True)
     End Sub
 
-    Sub LoadMapEvent(ByVal MapNum As Integer)
+    Sub LoadMapEvent(MapNum As Integer)
         Dim myXml As New XmlClass With {
             .Filename = Application.StartupPath & "\data\maps\map" & MapNum & "_eventdata.xml",
             .Root = "Data"

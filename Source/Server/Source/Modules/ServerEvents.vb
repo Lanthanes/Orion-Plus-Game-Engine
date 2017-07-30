@@ -354,7 +354,7 @@ Public Module ServerEvents
     End Enum
 #End Region
 
-#Region "database"
+#Region "Database"
     Sub SaveSwitches()
         Dim i As Integer
         Dim myXml As New XmlClass With {
@@ -2066,9 +2066,45 @@ Public Module ServerEvents
 
     End Sub
 
-    Public Sub CustomScript(ByVal Index As Integer, ByVal caseID As Integer)
+    Public Sub CustomScript(Index As Integer, caseID As Integer, MapNum As Integer, EventId As Integer)
+        Dim buffer As New ByteBuffer
 
         Select Case caseID
+            'Case 1
+            '    If GetPlayerEquipment(Index, EquipmentType.Weapon) > 0 Then
+            '        If Item(GetPlayerEquipment(Index, EquipmentType.Weapon)).Data3 = 4 Then
+            '            Map(MapNum).Events(EventId).Pages(1).GraphicType = 2
+            '            Map(MapNum).Events(EventId).Pages(1).Graphic = 1
+            '            Map(MapNum).Events(EventId).Pages(1).GraphicX = 4
+            '            Map(MapNum).Events(EventId).Pages(1).GraphicY = 6
+            '        End If
+
+            '        Buffer = New ByteBuffer
+            '        Buffer.WriteInteger(ServerPackets.SSpawnEvent)
+            '        buffer.WriteInteger(EventId)
+            '        With Map(MapNum).Events(EventId).Pages(1)
+            '            buffer.WriteString(Trim(Map(MapNum).Events(EventId).Name))
+            '            buffer.WriteInteger(.DirFix)
+            '            buffer.WriteInteger(.Graphic)
+            '            buffer.WriteInteger(.GraphicType)
+            '            buffer.WriteInteger(.GraphicX)
+            '            buffer.WriteInteger(.GraphicX2)
+            '            buffer.WriteInteger(.GraphicY)
+            '            buffer.WriteInteger(.GraphicY2)
+            '            buffer.WriteInteger(.MoveSpeed)
+            '            buffer.WriteInteger(.X)
+            '            buffer.WriteInteger(.Y)
+            '            buffer.WriteInteger(.Position)
+            '            buffer.WriteInteger(1)
+            '            buffer.WriteInteger(0)
+            '            buffer.WriteInteger(0)
+            '            buffer.WriteInteger(.WalkThrough)
+            '            buffer.WriteInteger(.ShowName)
+            '            buffer.WriteInteger(.QuestNum)
+            '        End With
+            '        SendDataTo(Index, buffer.ToArray)
+            '        buffer = Nothing
+            '    End If
             Case Else
                 PlayerMsg(Index, "You just activated custom script " & caseID & ". This script is not yet programmed.", ColorType.BrightRed)
         End Select

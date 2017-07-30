@@ -1784,7 +1784,7 @@ Public Module ServerEventLogic
                                                             End If
                                                         Case EventType.evCustomScript
                                                             'Runs Through Cases for a script
-                                                            CustomScript(i, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1)
+                                                            CustomScript(i, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1, GetPlayerMap(i), .EventID)
                                                         Case EventType.evPlayBGM
                                                             Buffer = New ByteBuffer
                                                             Buffer.WriteInteger(ServerPackets.SPlayBGM)

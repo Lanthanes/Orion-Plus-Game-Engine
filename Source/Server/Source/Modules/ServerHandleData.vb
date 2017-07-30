@@ -1185,6 +1185,7 @@ Module ServerHandleData
 
         ' Save the map
         SaveMap(MapNum)
+        SaveMapEvent(MapNum)
 
         Gettingmap = False
 

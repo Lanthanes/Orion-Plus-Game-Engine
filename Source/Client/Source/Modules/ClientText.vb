@@ -375,86 +375,89 @@ Module ClientText
         Dim line As String = ""
         Dim nextLine As String = ""
 
-        For Each word In Explode(str, SplitChars)
-            Dim trim = word.Trim()
-            Dim currentType = type
-            Do
-                Dim baseLine = If(line.Length < 1, "", line + " ")
-                Dim newLine = If(nextLine.Length < 1, baseLine + trim, nextLine)
-                nextLine = ""
+        If Not str = "" Then
+            For Each word In Explode(str, SplitChars)
+                Dim trim = word.Trim()
+                Dim currentType = type
+                Do
+                    Dim baseLine = If(line.Length < 1, "", line + " ")
+                    Dim newLine = If(nextLine.Length < 1, baseLine + trim, nextLine)
+                    nextLine = ""
 
-                Select Case If(mode = WrapMode.Font, GetTextWidth(newLine, size), newLine.Length)
-                    Case < width
-                        line = newLine
-                        Exit Select
+                    Select Case If(mode = WrapMode.Font, GetTextWidth(newLine, size), newLine.Length)
+                        Case < width
+                            line = newLine
+                            Exit Select
 
-                    Case = width
-                        lines.Add(newLine)
-                        line = ""
-                        Exit Select
+                        Case = width
+                            lines.Add(newLine)
+                            line = ""
+                            Exit Select
 
-                    Case Else
-                        Select Case currentType
-                            Case WrapType.None
-                                line = newLine
-                                Exit Select
+                        Case Else
+                            Select Case currentType
+                                Case WrapType.None
+                                    line = newLine
+                                    Exit Select
 
-                            Case WrapType.Whitespace
-                                lines.Add(If(line.Length < 1, newLine, line))
-                                line = If(line.Length < 1, "", trim)
-                                Exit Select
+                                Case WrapType.Whitespace
+                                    lines.Add(If(line.Length < 1, newLine, line))
+                                    line = If(line.Length < 1, "", trim)
+                                    Exit Select
 
-                            Case WrapType.BreakWord
-                                Dim remaining = trim
-                                Do
-                                    If If(mode = WrapMode.Font, GetTextWidth(baseLine, size), baseLine.Length) > width Then
+                                Case WrapType.BreakWord
+                                    Dim remaining = trim
+                                    Do
+                                        If If(mode = WrapMode.Font, GetTextWidth(baseLine, size), baseLine.Length) > width Then
+                                            lines.Add(line)
+                                            baseLine = ""
+                                            line = ""
+                                        End If
+
+                                        Dim i = remaining.Length - 1
+                                        While (-1 < i)
+                                            Select Case mode
+                                                Case WrapMode.Font
+                                                    If Not (width < GetTextWidth(baseLine + remaining.Substring(0, i) + "-", size)) Then
+                                                        Exit While
+                                                    End If
+                                                    Exit Select
+
+                                                Case WrapMode.Characters
+                                                    If Not (width < (baseLine + remaining.Substring(0, i) + "-").Length) Then
+                                                        Exit While
+                                                    End If
+                                                    Exit Select
+                                            End Select
+                                            i -= 1
+                                        End While
+
+                                        line = baseLine + remaining.Substring(0, i + 1) + If(remaining.Length <= i + 1, "", "-")
                                         lines.Add(line)
-                                        baseLine = ""
                                         line = ""
+                                        baseLine = ""
+                                        remaining = remaining.Substring(i + 1)
+                                    Loop While (remaining.Length > 0) And (width < If(mode = WrapMode.Font, GetTextWidth(remaining, size), remaining.Length))
+                                    line = remaining
+                                    Exit Select
+
+                                Case WrapType.Smart
+                                    If (line.Length < 1) Or (width < If(mode = WrapMode.Font, GetTextWidth(trim, size), trim.Length)) Then
+                                        currentType = WrapType.BreakWord
+                                    Else
+                                        currentType = WrapType.Whitespace
                                     End If
+                                    nextLine = newLine
 
-                                    Dim i = remaining.Length - 1
-                                    While (-1 < i)
-                                        Select Case mode
-                                            Case WrapMode.Font
-                                                If Not (width < GetTextWidth(baseLine + remaining.Substring(0, i) + "-", size)) Then
-                                                    Exit While
-                                                End If
-                                                Exit Select
+                                    Exit Select
 
-                                            Case WrapMode.Characters
-                                                If Not (width < (baseLine + remaining.Substring(0, i) + "-").Length) Then
-                                                    Exit While
-                                                End If
-                                                Exit Select
-                                        End Select
-                                        i -= 1
-                                    End While
+                            End Select
+                            Exit Select
+                    End Select
+                Loop While (nextLine.Length > 0)
+            Next
+        End If
 
-                                    line = baseLine + remaining.Substring(0, i + 1) + If(remaining.Length <= i + 1, "", "-")
-                                    lines.Add(line)
-                                    line = ""
-                                    baseLine = ""
-                                    remaining = remaining.Substring(i + 1)
-                                Loop While (remaining.Length > 0) And (width < If(mode = WrapMode.Font, GetTextWidth(remaining, size), remaining.Length))
-                                line = remaining
-                                Exit Select
-
-                            Case WrapType.Smart
-                                If (line.Length < 1) Or (width < If(mode = WrapMode.Font, GetTextWidth(trim, size), trim.Length)) Then
-                                    currentType = WrapType.BreakWord
-                                Else
-                                    currentType = WrapType.Whitespace
-                                End If
-                                nextLine = newLine
-
-                                Exit Select
-
-                        End Select
-                        Exit Select
-                End Select
-            Loop While (nextLine.Length > 0)
-        Next
 
         If (line.Length > 0) Then
             lines.Add(line)
