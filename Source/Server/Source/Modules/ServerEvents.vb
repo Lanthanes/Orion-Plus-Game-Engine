@@ -355,6 +355,38 @@ Public Module ServerEvents
 #End Region
 
 #Region "Database"
+    Sub CreateSwitches()
+        Dim i As Integer
+        Dim myXml As New XmlClass With {
+            .Filename = Path.Combine(Application.StartupPath, "Data", "Switches.xml"),
+            .Root = "Data"
+        }
+
+        myXml.NewXmlDocument()
+
+        For i = 1 To MAX_SWITCHES
+            Switches(i) = ""
+        Next
+
+        SaveSwitches()
+    End Sub
+
+    Sub CreateVariables()
+        Dim i As Integer
+        Dim myXml As New XmlClass With {
+            .Filename = Path.Combine(Application.StartupPath, "Data", "Variables.xml"),
+            .Root = "Data"
+        }
+
+        myXml.NewXmlDocument()
+
+        For i = 1 To MAX_VARIABLES
+            Variables(i) = ""
+        Next
+
+        SaveVariables()
+    End Sub
+
     Sub SaveSwitches()
         Dim i As Integer
         Dim myXml As New XmlClass With {
@@ -362,10 +394,13 @@ Public Module ServerEvents
             .Root = "Data"
         }
 
+        myXml.LoadXml()
+
         For i = 1 To MAX_SWITCHES
             myXml.WriteString("Switches", "Switch" & i & "Name", Switches(i))
         Next
 
+        myXml.CloseXml(True)
     End Sub
 
     Sub SaveVariables()
@@ -375,10 +410,13 @@ Public Module ServerEvents
             .Root = "Data"
         }
 
+        myXml.LoadXml()
+
         For i = 1 To MAX_VARIABLES
             myXml.WriteString("Variables", "Variable" & i & "Name", Variables(i))
         Next
 
+        myXml.CloseXml(True)
     End Sub
 
     Sub LoadSwitches()
@@ -388,24 +426,39 @@ Public Module ServerEvents
             .Root = "Data"
         }
 
+        If Not FileExist(myXml.Filename) Then
+            CreateSwitches()
+            Exit Sub
+        End If
+
+        myXml.LoadXml()
+
         For i = 1 To MAX_SWITCHES
-            DoEvents()
             Switches(i) = myXml.ReadString("Switches", "Switch" & i & "Name")
         Next
 
+        myXml.CloseXml(False)
     End Sub
 
     Sub LoadVariables()
         Dim i As Integer
         Dim myXml As New XmlClass With {
-            .Filename = Path.Combine(Application.StartupPath, "Data", "Switches.xml"),
+            .Filename = Path.Combine(Application.StartupPath, "Data", "Variables.xml"),
             .Root = "Data"
         }
 
+        If Not FileExist(myXml.Filename) Then
+            CreateVariables()
+            Exit Sub
+        End If
+
+        myXml.LoadXml()
+
         For i = 1 To MAX_VARIABLES
             Variables(i) = myXml.ReadString("Variables", "Variable" & i & "Name")
-            DoEvents()
         Next
+
+        myXml.CloseXml(False)
 
     End Sub
 #End Region
@@ -2070,41 +2123,41 @@ Public Module ServerEvents
         Dim buffer As New ByteBuffer
 
         Select Case caseID
-            'Case 1
-            '    If GetPlayerEquipment(Index, EquipmentType.Weapon) > 0 Then
-            '        If Item(GetPlayerEquipment(Index, EquipmentType.Weapon)).Data3 = 4 Then
-            '            Map(MapNum).Events(EventId).Pages(1).GraphicType = 2
-            '            Map(MapNum).Events(EventId).Pages(1).Graphic = 1
-            '            Map(MapNum).Events(EventId).Pages(1).GraphicX = 4
-            '            Map(MapNum).Events(EventId).Pages(1).GraphicY = 6
-            '        End If
+            Case 1
+                If GetPlayerEquipment(Index, EquipmentType.Weapon) > 0 Then
+                    If Item(GetPlayerEquipment(Index, EquipmentType.Weapon)).Data3 = 4 Then
+                        Map(MapNum).Events(EventId).Pages(1).GraphicType = 2
+                        Map(MapNum).Events(EventId).Pages(1).Graphic = 1
+                        Map(MapNum).Events(EventId).Pages(1).GraphicX = 4
+                        Map(MapNum).Events(EventId).Pages(1).GraphicY = 6
+                    End If
 
-            '        Buffer = New ByteBuffer
-            '        Buffer.WriteInteger(ServerPackets.SSpawnEvent)
-            '        buffer.WriteInteger(EventId)
-            '        With Map(MapNum).Events(EventId).Pages(1)
-            '            buffer.WriteString(Trim(Map(MapNum).Events(EventId).Name))
-            '            buffer.WriteInteger(.DirFix)
-            '            buffer.WriteInteger(.Graphic)
-            '            buffer.WriteInteger(.GraphicType)
-            '            buffer.WriteInteger(.GraphicX)
-            '            buffer.WriteInteger(.GraphicX2)
-            '            buffer.WriteInteger(.GraphicY)
-            '            buffer.WriteInteger(.GraphicY2)
-            '            buffer.WriteInteger(.MoveSpeed)
-            '            buffer.WriteInteger(.X)
-            '            buffer.WriteInteger(.Y)
-            '            buffer.WriteInteger(.Position)
-            '            buffer.WriteInteger(1)
-            '            buffer.WriteInteger(0)
-            '            buffer.WriteInteger(0)
-            '            buffer.WriteInteger(.WalkThrough)
-            '            buffer.WriteInteger(.ShowName)
-            '            buffer.WriteInteger(.QuestNum)
-            '        End With
-            '        SendDataTo(Index, buffer.ToArray)
-            '        buffer = Nothing
-            '    End If
+                    Buffer = New ByteBuffer
+                    Buffer.WriteInteger(ServerPackets.SSpawnEvent)
+                    buffer.WriteInteger(EventId)
+                    With Map(MapNum).Events(EventId).Pages(1)
+                        buffer.WriteString(Trim(Map(MapNum).Events(EventId).Name))
+                        buffer.WriteInteger(.DirFix)
+                        buffer.WriteInteger(.Graphic)
+                        buffer.WriteInteger(.GraphicType)
+                        buffer.WriteInteger(.GraphicX)
+                        buffer.WriteInteger(.GraphicX2)
+                        buffer.WriteInteger(.GraphicY)
+                        buffer.WriteInteger(.GraphicY2)
+                        buffer.WriteInteger(.MoveSpeed)
+                        buffer.WriteInteger(.X)
+                        buffer.WriteInteger(.Y)
+                        buffer.WriteInteger(.Position)
+                        buffer.WriteInteger(1)
+                        buffer.WriteInteger(0)
+                        buffer.WriteInteger(0)
+                        buffer.WriteInteger(.WalkThrough)
+                        buffer.WriteInteger(.ShowName)
+                        buffer.WriteInteger(.QuestNum)
+                    End With
+                    SendDataTo(Index, buffer.ToArray)
+                    buffer = Nothing
+                End If
             Case Else
                 PlayerMsg(Index, "You just activated custom script " & caseID & ". This script is not yet programmed.", ColorType.BrightRed)
         End Select
