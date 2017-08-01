@@ -1201,7 +1201,7 @@ Module ServerHandleData
             End If
         Next
 
-        ' Clear out it all
+        ' Clear it all out 
         For i = 1 To MAX_MAP_ITEMS
             SpawnItemSlot(i, 0, 0, GetPlayerMap(Index), MapItem(GetPlayerMap(Index), i).X, MapItem(GetPlayerMap(Index), i).Y)
             ClearMapItem(i, GetPlayerMap(Index))
