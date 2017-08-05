@@ -270,7 +270,7 @@ Module ServerAutoMap
 
         TextAdd("Working...")
         DoEvents()
-        tick = GetTickCount()
+        tick = GetTimeMs()
         TotalMaps = Size * Size
 
         For i = MapStart To MapStart + TotalMaps - 1
@@ -278,7 +278,7 @@ Module ServerAutoMap
             CacheResources(i)
         Next i
 
-        tick = GetTickCount() - tick
+        tick = GetTimeMs() - tick
         TextAdd("Done and cached resources in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
@@ -290,14 +290,14 @@ Module ServerAutoMap
 
         TextAdd("Working...")
         DoEvents()
-        tick = GetTickCount()
+        tick = GetTimeMs()
         TotalMaps = Size * Size
 
         For i = MapStart To MapStart + TotalMaps - 1
             MakeOvergrass(i)
         Next i
 
-        tick = GetTickCount() - tick
+        tick = GetTimeMs() - tick
         TextAdd("Done overgrasses in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
@@ -463,7 +463,7 @@ Module ServerAutoMap
 
         TextAdd("Working...")
         DoEvents()
-        tick = GetTickCount()
+        tick = GetTimeMs()
         RiverBorder = 4
         MadeRivers = 0
         TotalMaps = Size * Size
@@ -574,7 +574,7 @@ SelectMap:
             MadeRivers = MadeRivers + 1
         Loop
 
-        tick = GetTickCount() - tick
+        tick = GetTimeMs() - tick
         TextAdd("Done " & TotalRivers & " rivers in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
@@ -790,7 +790,7 @@ Important:
         Dim MapCount As Integer
         TextAdd("Working...")
         DoEvents()
-        tick = GetTickCount()
+        tick = GetTimeMs()
         TotalMaps = Size * Size
         MapCount = 0
         For i = MapStart To MapStart + TotalMaps - 1
@@ -799,7 +799,7 @@ Important:
                 MapCount = MapCount + 1
             End If
         Next i
-        tick = GetTickCount() - tick
+        tick = GetTimeMs() - tick
         TextAdd("Done mountains in " & (MapCount) & " maps in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
@@ -1202,7 +1202,7 @@ ChangeDir:
 
         TextAdd("Working...")
         DoEvents()
-        tick = GetTickCount()
+        tick = GetTimeMs()
 
         MaxTries = 30
         TotalPaths = Random(Map(MapNum).MaxX / 20, Map(MapNum).MaxX / 10)
@@ -1260,7 +1260,7 @@ ChangeDir:
             Next i
         End If
 
-        tick = GetTickCount() - tick
+        tick = GetTimeMs() - tick
         TextAdd("Done " & TotalPaths & " paths in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
@@ -1283,7 +1283,7 @@ ChangeDir:
     Sub StartAutomapper(ByVal MapStart As Integer, ByVal Size As Integer, ByVal MapX As Integer, ByVal MapY As Integer)
         Dim StartTick As Integer
         Dim tick As Integer
-        StartTick = GetTickCount()
+        StartTick = GetTimeMs()
         LoadTilePrefab()
         LoadDetails()
 
@@ -1293,7 +1293,7 @@ ChangeDir:
 
         ReDim MapOrientation(0 To MapStart + TotalMaps)
 
-        tick = GetTickCount()
+        tick = GetTimeMs()
 
         For mapnum = MapStart To MapStart + TotalMaps - 1
             ClearMap(mapnum)
@@ -1365,7 +1365,7 @@ ChangeDir:
             MakeMap(mapnum, Prefab)
         Next mapnum
 
-        tick = GetTickCount() - tick
+        tick = GetTimeMs() - tick
         TextAdd("Done " & TotalMaps & " maps models in " & CDbl(tick / 1000) & "s")
         DoEvents()
 
@@ -1375,7 +1375,7 @@ ChangeDir:
         If OverGrassChecked = True Then MakeOvergrasses(MapStart, Size)
         If ResourcesChecked = True Then MakeResources(MapStart, Size)
 
-        tick = GetTickCount()
+        tick = GetTimeMs()
         TextAdd("Working...")
         DoEvents()
 
@@ -1384,8 +1384,8 @@ ChangeDir:
             'MapCache_Create mapnum
         Next mapnum
 
-        tick = GetTickCount() - tick
-        StartTick = GetTickCount() - StartTick
+        tick = GetTimeMs() - tick
+        StartTick = GetTimeMs() - StartTick
 
         TextAdd("Cached all maps in " & CDbl(tick / 1000) & "s (" & ((tick / StartTick) * 100) & "%)")
         TextAdd("Done " & TotalMaps & " maps in " & CDbl(StartTick / 1000) & "s")

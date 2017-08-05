@@ -5,14 +5,18 @@ Module ServerGeneral
     Public Declare Function GetQueueStatus Lib "user32" (ByVal fuFlags As Integer) As Integer
     Public ServerDestroyed As Boolean
     Public MyIPAddress As String
+    Public myStopWatch As New Stopwatch()
 
-    Public Function GetTickCount()
-        Return Environment.TickCount
+    Public Function GetTimeMs() As Long
+        Return myStopWatch.ElapsedMilliseconds
     End Function
 
     Sub InitServer()
         Dim i As Integer, F As Integer, x As Integer
         Dim time1 As Integer, time2 As Integer
+
+        myStopWatch.Start()
+
         x = 0
 
         If Debugger.IsAttached Then
@@ -31,7 +35,7 @@ Module ServerGeneral
         handler = New ConsoleEventDelegate(AddressOf ConsoleEventCallback)
         SetConsoleCtrlHandler(handler, True)
 
-        time1 = GetTickCount()
+        time1 = GetTimeMs()
 
         ' Initialize the random-number generator
         Randomize()
@@ -211,7 +215,7 @@ Module ServerGeneral
         ServerTime.InitTime()
 
         UpdateCaption()
-        time2 = GetTickCount()
+        time2 = GetTimeMs()
 
         Console.Clear()
         Console.WriteLine("  ____       _                        _____                          ")

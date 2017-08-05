@@ -74,7 +74,7 @@ Public Module ServerResources
                                 ' cut it down!
                                 If ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).cur_health - Damage <= 0 Then
                                     ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).ResourceState = 1 ' Cut
-                                    ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).ResourceTimer = GetTickCount()
+                                    ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).ResourceTimer = GetTimeMs()
                                     SendResourceCacheToMap(GetPlayerMap(Index), Resource_num)
                                     SendActionMsg(GetPlayerMap(Index), Trim$(Resource(Resource_index).SuccessMessage), ColorType.BrightGreen, 1, (GetPlayerX(Index) * 32), (GetPlayerY(Index) * 32))
                                     GiveInvItem(Index, Resource(Resource_index).ItemReward, 1)

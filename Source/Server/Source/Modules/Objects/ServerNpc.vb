@@ -1,0 +1,3 @@
+﻿Module ServerNpc
+
+End Module

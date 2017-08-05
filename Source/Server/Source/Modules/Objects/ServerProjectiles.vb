@@ -372,7 +372,7 @@ Public Module ServerProjectiles
             .Dir = GetPlayerDir(Index)
             .X = GetPlayerX(Index)
             .Y = GetPlayerY(Index)
-            .Timer = GetTickCount() + 60000
+            .Timer = GetTimeMs() + 60000
         End With
 
         SendProjectileToMap(MapNum, ProjectileSlot)

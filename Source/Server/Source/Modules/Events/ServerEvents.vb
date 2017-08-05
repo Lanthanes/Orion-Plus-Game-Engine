@@ -514,7 +514,7 @@ Public Module ServerEvents
                                         'Process this event, it is on-touch and everything checks out.
                                         If Map(MapNum).Events(eventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount > 0 Then
                                             TempPlayer(Index).EventProcessing(eventID).Active = 1
-                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTickCount()
+                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTimeMs()
                                             TempPlayer(Index).EventProcessing(eventID).CurList = 1
                                             TempPlayer(Index).EventProcessing(eventID).CurSlot = 1
                                             TempPlayer(Index).EventProcessing(eventID).EventID = eventID
@@ -599,7 +599,7 @@ Public Module ServerEvents
                                         'Process this event, it is on-touch and everything checks out.
                                         If Map(MapNum).Events(eventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount > 0 Then
                                             TempPlayer(Index).EventProcessing(eventID).Active = 1
-                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTickCount()
+                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTimeMs()
                                             TempPlayer(Index).EventProcessing(eventID).CurList = 1
                                             TempPlayer(Index).EventProcessing(eventID).CurSlot = 1
                                             TempPlayer(Index).EventProcessing(eventID).EventID = eventID
@@ -685,7 +685,7 @@ Public Module ServerEvents
                                         'Process this event, it is on-touch and everything checks out.
                                         If Map(MapNum).Events(eventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount > 0 Then
                                             TempPlayer(Index).EventProcessing(eventID).Active = 1
-                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTickCount()
+                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTimeMs()
                                             TempPlayer(Index).EventProcessing(eventID).CurList = 1
                                             TempPlayer(Index).EventProcessing(eventID).CurSlot = 1
                                             TempPlayer(Index).EventProcessing(eventID).EventID = eventID
@@ -771,7 +771,7 @@ Public Module ServerEvents
                                         'Process this event, it is on-touch and everything checks out.
                                         If Map(MapNum).Events(eventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount > 0 Then
                                             TempPlayer(Index).EventProcessing(eventID).Active = 1
-                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTickCount()
+                                            TempPlayer(Index).EventProcessing(eventID).ActionTimer = GetTimeMs()
                                             TempPlayer(Index).EventProcessing(eventID).CurList = 1
                                             TempPlayer(Index).EventProcessing(eventID).CurSlot = 1
                                             TempPlayer(Index).EventProcessing(eventID).EventID = eventID
@@ -1825,7 +1825,7 @@ Public Module ServerEvents
                 If (TempPlayer(index).EventProcessing(TempPlayer(index).EventMap.EventPages(i).EventID).Active = 0) Then
                     TempPlayer(index).EventProcessing(TempPlayer(index).EventMap.EventPages(i).EventID).Active = 1
                     With TempPlayer(index).EventProcessing(TempPlayer(index).EventMap.EventPages(i).EventID)
-                        .ActionTimer = GetTickCount()
+                        .ActionTimer = GetTimeMs()
                         .CurList = 1
                         .CurSlot = 1
                         .EventID = TempPlayer(index).EventMap.EventPages(i).EventID

@@ -8,9 +8,9 @@ Public Module ServerCombat
         If Not IsSkill Then
             ' Check attack timer
             If GetPlayerEquipment(Attacker, EquipmentType.Weapon) > 0 Then
-                If GetTickCount() < TempPlayer(Attacker).AttackTimer + Item(GetPlayerEquipment(Attacker, EquipmentType.Weapon)).Speed Then Exit Function
+                If GetTimeMs() < TempPlayer(Attacker).AttackTimer + Item(GetPlayerEquipment(Attacker, EquipmentType.Weapon)).Speed Then Exit Function
             Else
-                If GetTickCount() < TempPlayer(Attacker).AttackTimer + 1000 Then Exit Function
+                If GetTimeMs() < TempPlayer(Attacker).AttackTimer + 1000 Then Exit Function
             End If
         End If
 
@@ -263,7 +263,7 @@ Public Module ServerCombat
             End If
 
             ' Reset attack timer
-            TempPlayer(Attacker).AttackTimer = GetTickCount()
+            TempPlayer(Attacker).AttackTimer = GetTimeMs()
         Else ' npc to player
             ' Check for subscript out of range
             If IsPlaying(Victim) = False Or Damage < 0 Then Exit Sub
@@ -306,7 +306,7 @@ Public Module ServerCombat
             End If
 
             ' Reset attack timer
-            MapNpc(mapnum).Npc(Attacker).AttackTimer = GetTickCount()
+            MapNpc(mapnum).Npc(Attacker).AttackTimer = GetTimeMs()
         End If
 
     End Sub
@@ -316,7 +316,7 @@ Public Module ServerCombat
         If Skill(skillnum).StunDuration > 0 Then
             ' set the values on index
             TempPlayer(Index).StunDuration = Skill(skillnum).StunDuration
-            TempPlayer(Index).StunTimer = GetTickCount()
+            TempPlayer(Index).StunTimer = GetTimeMs()
             ' send it to the index
             SendStunned(Index)
             ' tell him he's stunned
@@ -359,7 +359,7 @@ Public Module ServerCombat
                 attackspeed = 1000
             End If
 
-            If NpcNum > 0 And GetTickCount() > TempPlayer(Attacker).AttackTimer + attackspeed Then
+            If NpcNum > 0 And GetTimeMs() > TempPlayer(Attacker).AttackTimer + attackspeed Then
 
                 ' exit out early
                 If IsSkill Then
@@ -430,7 +430,7 @@ Public Module ServerCombat
         If Skill(skillnum).StunDuration > 0 Then
             ' set the values on index
             MapNpc(MapNum).Npc(Index).StunDuration = Skill(skillnum).StunDuration
-            MapNpc(MapNum).Npc(Index).StunTimer = GetTickCount()
+            MapNpc(MapNum).Npc(Index).StunTimer = GetTimeMs()
         End If
     End Sub
 
@@ -472,7 +472,7 @@ Public Module ServerCombat
         End If
 
         ' Reset our attack timer.
-        TempPlayer(Attacker).AttackTimer = GetTickCount()
+        TempPlayer(Attacker).AttackTimer = GetTimeMs()
 
         If Not IsNpcDead(MapNum, MapNpcNum) Then
             ' Check if our NPC has something to share with our player.
@@ -566,7 +566,7 @@ Public Module ServerCombat
         End If
 
         ' Make sure npcs dont attack more then once a second
-        If GetTickCount() < MapNpc(MapNum).Npc(MapNpcNum).AttackTimer + 1000 Then
+        If GetTimeMs() < MapNpc(MapNum).Npc(MapNpcNum).AttackTimer + 1000 Then
             Exit Function
         End If
 
@@ -575,7 +575,7 @@ Public Module ServerCombat
             Exit Function
         End If
 
-        MapNpc(MapNum).Npc(MapNpcNum).AttackTimer = GetTickCount()
+        MapNpc(MapNum).Npc(MapNpcNum).AttackTimer = GetTimeMs()
 
         ' Make sure they are on the same map
         If IsPlaying(Index) Then
@@ -647,11 +647,11 @@ Public Module ServerCombat
         End If
 
         ' Make sure npcs dont attack more then once a second
-        If GetTickCount() < MapNpc(MapNum).Npc(Attacker).AttackTimer + 1000 Then
+        If GetTimeMs() < MapNpc(MapNum).Npc(Attacker).AttackTimer + 1000 Then
             Exit Function
         End If
 
-        MapNpc(MapNum).Npc(Attacker).AttackTimer = GetTickCount()
+        MapNpc(MapNum).Npc(Attacker).AttackTimer = GetTimeMs()
 
         AttackerX = MapNpc(MapNum).Npc(Attacker).x
         AttackerY = MapNpc(MapNum).Npc(Attacker).y
@@ -706,7 +706,7 @@ Public Module ServerCombat
 
         ' set the regen timer
         MapNpc(MapNum).Npc(MapNpcNum).stopRegen = True
-        MapNpc(MapNum).Npc(MapNpcNum).stopRegenTimer = GetTickCount()
+        MapNpc(MapNum).Npc(MapNpcNum).stopRegenTimer = GetTimeMs()
 
         If Damage >= GetPlayerVital(Victim, Vitals.HP) Then
             ' Say damage
@@ -792,7 +792,7 @@ Public Module ServerCombat
 
             ' set the regen timer
             TempPlayer(Victim).stopRegen = True
-            TempPlayer(Victim).stopRegenTimer = GetTickCount()
+            TempPlayer(Victim).stopRegenTimer = GetTimeMs()
 
         End If
 
@@ -841,7 +841,7 @@ Public Module ServerCombat
 
             ' Reset victim's stuff so it dies in loop
             MapNpc(MapNum).Npc(Victim).Num = 0
-            MapNpc(MapNum).Npc(Victim).SpawnWait = GetTickCount()
+            MapNpc(MapNum).Npc(Victim).SpawnWait = GetTimeMs()
             MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) = 0
 
             ' send npc death packet to map
@@ -868,7 +868,7 @@ Public Module ServerCombat
                 End If
             Next
             MapNpc(GetPlayerMap(Index)).Npc(NpcNum).StunDuration = 1
-            MapNpc(GetPlayerMap(Index)).Npc(NpcNum).StunTimer = GetTickCount()
+            MapNpc(GetPlayerMap(Index)).Npc(NpcNum).StunTimer = GetTimeMs()
         Else
             If Item(GetPlayerEquipment(Index, EquipmentType.Weapon)).KnockBack = 1 Then
                 For i = 1 To Item(GetPlayerEquipment(Index, EquipmentType.Weapon)).KnockBackTiles
@@ -877,7 +877,7 @@ Public Module ServerCombat
                     End If
                 Next
                 MapNpc(GetPlayerMap(Index)).Npc(NpcNum).StunDuration = 1
-                MapNpc(GetPlayerMap(Index)).Npc(NpcNum).StunTimer = GetTickCount()
+                MapNpc(GetPlayerMap(Index)).Npc(NpcNum).StunTimer = GetTimeMs()
             End If
         End If
     End Sub
@@ -925,7 +925,7 @@ Public Module ServerCombat
         If skillnum <= 0 Or skillnum > MAX_SKILLS Then Exit Sub
 
         ' see if cooldown has finished
-        If MapNpc(MapNum).Npc(MapNpcNum).SkillCD(skillslot) > GetTickCount() Then
+        If MapNpc(MapNum).Npc(MapNpcNum).SkillCD(skillslot) > GetTimeMs() Then
             TryNpcAttackPlayer(MapNpcNum, MapNpc(MapNum).Npc(MapNpcNum).Target)
             Exit Sub
         End If
@@ -992,7 +992,7 @@ Public Module ServerCombat
         If HasBuffered Then
             SendAnimation(MapNum, Skill(skillnum).CastAnim, 0, 0, Enums.TargetType.Player, Target)
             MapNpc(MapNum).Npc(MapNpcNum).SkillBuffer = skillslot
-            MapNpc(MapNum).Npc(MapNpcNum).SkillBufferTimer = GetTickCount()
+            MapNpc(MapNum).Npc(MapNpcNum).SkillBufferTimer = GetTimeMs()
             Exit Sub
         End If
     End Sub
@@ -1236,7 +1236,7 @@ Public Module ServerCombat
 
         ' Stop our player's regeneration abilities.
         TempPlayer(Attacker).stopRegen = True
-        TempPlayer(Attacker).stopRegenTimer = GetTickCount()
+        TempPlayer(Attacker).stopRegenTimer = GetTimeMs()
 
         ' Deal damage to our player.
         SetPlayerVital(Victim, Vitals.HP, GetPlayerVital(Victim, Vitals.HP) - Damage)
@@ -1250,10 +1250,10 @@ Public Module ServerCombat
 
         ' set the regen timer
         TempPlayer(Victim).stopRegen = True
-        TempPlayer(Victim).stopRegenTimer = GetTickCount()
+        TempPlayer(Victim).stopRegenTimer = GetTimeMs()
 
         ' Reset attack timer
-        TempPlayer(Attacker).AttackTimer = GetTickCount()
+        TempPlayer(Attacker).AttackTimer = GetTimeMs()
 
         If Not IsPlayerDead(Victim) Then
             ' Send our player's new vitals to everyone that needs them.
@@ -1386,7 +1386,7 @@ Public Module ServerCombat
 
         ' Set our NPC's data to default so we know it's dead.
         MapNpc(MapNum).Npc(MapNpcNum).Num = 0
-        MapNpc(MapNum).Npc(MapNpcNum).SpawnWait = GetTickCount()
+        MapNpc(MapNum).Npc(MapNpcNum).SpawnWait = GetTimeMs()
         MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.HP) = 0
 
         ' Notify all our clients that the NPC has died.

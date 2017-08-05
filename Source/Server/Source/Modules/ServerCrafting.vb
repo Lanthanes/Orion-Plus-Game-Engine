@@ -356,7 +356,7 @@ Public Module ServerCrafting
             TempPlayer(Index).CraftRecipe = RecipeNum
             TempPlayer(Index).CraftAmount = Amount
 
-            TempPlayer(Index).CraftTimer = GetTickCount()
+            TempPlayer(Index).CraftTimer = GetTimeMs()
             TempPlayer(Index).CraftTimeNeeded = Recipe(RecipeNum).CreateTime
 
             TempPlayer(Index).CraftIt = 1
@@ -379,7 +379,7 @@ Public Module ServerCrafting
             TempPlayer(Index).CraftAmount = TempPlayer(Index).CraftAmount - 1
 
             If TempPlayer(Index).CraftAmount > 0 Then
-                TempPlayer(Index).CraftTimer = GetTickCount()
+                TempPlayer(Index).CraftTimer = GetTimeMs()
                 TempPlayer(Index).CraftTimeNeeded = Recipe(TempPlayer(Index).CraftRecipe).CreateTime
 
                 TempPlayer(Index).CraftIt = 1
