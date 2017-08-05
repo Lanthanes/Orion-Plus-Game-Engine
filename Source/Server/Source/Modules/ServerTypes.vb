@@ -115,9 +115,9 @@
         Dim InvitationIndex As Integer
         Dim InvitationTimer As Integer
 
-        Dim EventMap As EventMapRec
+        Dim EventMap As EventMapStruct
         Dim EventProcessingCount As Integer
-        Dim EventProcessing() As EventProcessingRec
+        Dim EventProcessing() As EventProcessingStruct
 
         'multi char
         Dim CurChar As Byte
@@ -189,7 +189,7 @@
         Dim Npc() As Integer
 
         Dim EventCount As Integer
-        Dim Events() As EventRec
+        Dim Events() As EventStruct
 
         Dim WeatherType As Byte
         Dim FogIndex As Integer

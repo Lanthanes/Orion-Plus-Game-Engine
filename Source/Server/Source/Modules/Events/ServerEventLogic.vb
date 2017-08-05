@@ -2,7 +2,7 @@
 
 Public Module ServerEventLogic
     Public Sub RemoveDeadEvents()
-        Dim i As Integer, MapNum As Integer, Buffer As ByteBuffer, x As Integer, id As Integer, page As Integer, compare As Integer
+        Dim i As Integer, MapNum As Integer, Buffer As New ByteBuffer, x As Integer, id As Integer, page As Integer, compare As Integer
 
         For i = 1 To GetPlayersOnline()
             If Gettingmap = True Then Exit Sub
@@ -1965,7 +1965,7 @@ Public Module ServerEventLogic
 
     End Sub
 
-    Function ParseEventText(ByVal Index As Integer, ByVal txt As String) As String
+    Function ParseEventText(Index As Integer, txt As String) As String
         Dim i As Integer, x As Integer, newtxt As String, parsestring As String, z As Integer
 
         txt = Replace(txt, "/name", Trim$(Player(Index).Character(TempPlayer(Index).CurChar).Name))
@@ -1991,7 +1991,7 @@ Public Module ServerEventLogic
 
     End Function
 
-    Sub FindEventLabel(ByVal Label As String, ByVal MapNum As Integer, ByVal eventID As Integer, ByVal pageID As Integer, ByRef CurSlot As Integer, ByRef CurList As Integer, ByRef ListLeftOff() As Integer)
+    Sub FindEventLabel(Label As String, MapNum As Integer, eventID As Integer, pageID As Integer, ByRef CurSlot As Integer, ByRef CurList As Integer, ByRef ListLeftOff() As Integer)
         Dim tmpCurSlot As Integer, tmpCurList As Integer, CurrentListOption() As Integer
         Dim removeEventProcess As Boolean, tmpListLeftOff() As Integer, restartlist As Boolean, w As Integer
 
@@ -2097,7 +2097,7 @@ Public Module ServerEventLogic
 
     End Sub
 
-    Function FindNpcPath(ByVal MapNum As Integer, ByVal mapnpcnum As Integer, ByVal targetx As Integer, ByVal targety As Integer) As Integer
+    Function FindNpcPath(MapNum As Integer, mapnpcnum As Integer, targetx As Integer, targety As Integer) As Integer
         Dim tim As Integer, sX As Integer, sY As Integer, pos(,) As Integer, reachable As Boolean, j As Integer, LastSum As Integer, Sum As Integer, FX As Integer, FY As Integer, i As Integer
         Dim path() As Point, LastX As Integer, LastY As Integer, did As Boolean
 
@@ -2295,7 +2295,7 @@ Public Module ServerEventLogic
 
     End Sub
 
-    Sub SpawnGlobalEvents(ByVal MapNum As Integer)
+    Sub SpawnGlobalEvents(MapNum As Integer)
         Dim i As Integer, z As Integer
 
         If Map(MapNum).EventCount > 0 Then
@@ -2355,7 +2355,7 @@ Public Module ServerEventLogic
 
     End Sub
 
-    Public Sub SpawnMapEventsFor(ByVal Index As Integer, ByVal MapNum As Integer)
+    Public Sub SpawnMapEventsFor(Index As Integer, MapNum As Integer)
         Dim i As Integer, z As Integer, spawncurrentevent As Boolean, p As Integer, compare As Integer
         Dim Buffer As New ByteBuffer
 

@@ -2,7 +2,7 @@
 
 Public Module ServerEvents
 #Region "Globals"
-    Public TempEventMap() As GlobalEventsRec
+    Public TempEventMap() As GlobalEventsStruct
     Public Switches() As String
     Public Variables() As String
 
@@ -20,8 +20,8 @@ Public Module ServerEvents
     Public Const EFFECT_TYPE_TINT As Integer = 6
 #End Region
 
-#Region "Types"
-    Structure MoveRouteRec
+#Region "Structures"
+    Structure MoveRouteStruct
         Dim Index As Integer
         Dim Data1 As Integer
         Dim Data2 As Integer
@@ -31,7 +31,7 @@ Public Module ServerEvents
         Dim Data6 As Integer
     End Structure
 
-    Structure GlobalEventRec
+    Structure GlobalEventStruct
         Dim X As Integer
         Dim Y As Integer
         Dim Dir As Integer
@@ -56,7 +56,7 @@ Public Module ServerEvents
         Dim MoveSpeed As Integer
         Dim MoveFreq As Integer
         Dim MoveRouteCount As Integer
-        Dim MoveRoute() As MoveRouteRec
+        Dim MoveRoute() As MoveRouteStruct
         Dim MoveRouteStep As Integer
 
         Dim RepeatMoveRoute As Integer
@@ -67,12 +67,12 @@ Public Module ServerEvents
         Dim MoveRouteComplete As Integer
     End Structure
 
-    Structure GlobalEventsRec
+    Structure GlobalEventsStruct
         Dim EventCount As Integer
-        Dim Events() As GlobalEventRec
+        Dim Events() As GlobalEventStruct
     End Structure
 
-    Public Structure ConditionalBranchRec
+    Public Structure ConditionalBranchStruct
         Dim Condition As Integer
         Dim Data1 As Integer
         Dim Data2 As Integer
@@ -81,7 +81,7 @@ Public Module ServerEvents
         Dim ElseCommandList As Integer
     End Structure
 
-    Structure EventCommandRec
+    Structure EventCommandStruct
         Dim Index As Byte
         Dim Text1 As String
         Dim Text2 As String
@@ -94,18 +94,18 @@ Public Module ServerEvents
         Dim Data4 As Integer
         Dim Data5 As Integer
         Dim Data6 As Integer
-        Dim ConditionalBranch As ConditionalBranchRec
+        Dim ConditionalBranch As ConditionalBranchStruct
         Dim MoveRouteCount As Integer
-        Dim MoveRoute() As MoveRouteRec
+        Dim MoveRoute() As MoveRouteStruct
     End Structure
 
-    Structure CommandListRec
+    Structure CommandListStruct
         Dim CommandCount As Integer
         Dim ParentList As Integer
-        Dim Commands() As EventCommandRec
+        Dim Commands() As EventCommandStruct
     End Structure
 
-    Structure EventPageRec
+    Structure EventPageStruct
         'These are condition variables that decide if the event even appears to the player.
         Dim chkVariable As Integer
         Dim VariableIndex As Integer
@@ -139,7 +139,7 @@ Public Module ServerEvents
         Dim MoveSpeed As Byte
         Dim MoveFreq As Byte
         Dim MoveRouteCount As Integer
-        Dim MoveRoute() As MoveRouteRec
+        Dim MoveRoute() As MoveRouteStruct
         Dim IgnoreMoveRoute As Integer
         Dim RepeatMoveRoute As Integer
 
@@ -154,7 +154,7 @@ Public Module ServerEvents
 
         'Commands for the event
         Dim CommandListCount As Integer
-        Dim CommandList() As CommandListRec
+        Dim CommandList() As CommandListStruct
 
         Dim Position As Byte
 
@@ -165,25 +165,25 @@ Public Module ServerEvents
         Dim Y As Integer
     End Structure
 
-    Structure EventRec
+    Structure EventStruct
         Dim Name As String
         Dim Globals As Byte
         Dim PageCount As Integer
-        Dim Pages() As EventPageRec
+        Dim Pages() As EventPageStruct
         Dim X As Integer
         Dim Y As Integer
         'Self Switches re-set on restart.
         Dim SelfSwitches() As Integer '0 to 4
     End Structure
 
-    Public Structure GlobalMapEvents
+    Public Structure GlobalMapEventsStruct
         Dim EventID As Integer
         Dim PageID As Integer
         Dim X As Integer
         Dim Y As Integer
     End Structure
 
-    Structure MapEventRec
+    Structure MapEventStruct
         Dim Dir As Integer
         Dim X As Integer
         Dim Y As Integer
@@ -211,7 +211,7 @@ Public Module ServerEvents
         Dim MoveSpeed As Integer
         Dim MoveFreq As Integer
         Dim MoveRouteCount As Integer
-        Dim MoveRoute() As MoveRouteRec
+        Dim MoveRoute() As MoveRouteStruct
         Dim MoveRouteStep As Integer
 
         Dim RepeatMoveRoute As Integer
@@ -223,12 +223,12 @@ Public Module ServerEvents
         Dim MoveRouteComplete As Integer
     End Structure
 
-    Structure EventMapRec
+    Structure EventMapStruct
         Dim CurrentEvents As Integer
-        Dim EventPages() As MapEventRec
+        Dim EventPages() As MapEventStruct
     End Structure
 
-    Structure EventProcessingRec
+    Structure EventProcessingStruct
         Dim Active As Integer
         Dim CurList As Integer
         Dim CurSlot As Integer
@@ -464,7 +464,7 @@ Public Module ServerEvents
 #End Region
 
 #Region "Movement"
-    Function CanEventMove(ByVal Index As Integer, ByVal MapNum As Integer, ByVal x As Integer, ByVal y As Integer, ByVal eventID As Integer, ByVal WalkThrough As Integer, ByVal Dir As Byte, Optional globalevent As Boolean = False) As Boolean
+    Function CanEventMove(Index As Integer, MapNum As Integer, x As Integer, y As Integer, eventID As Integer, WalkThrough As Integer, Dir As Byte, Optional globalevent As Boolean = False) As Boolean
         Dim i As Integer
         Dim n As Integer, z As Integer, begineventprocessing As Boolean
 
@@ -532,21 +532,19 @@ Public Module ServerEvents
                     If CanEventMove = False Then Exit Function
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNpc(MapNum).Npc(i).x = x) And (MapNpc(MapNum).Npc(i).y = y - 1) Then
+                        If (MapNpc(MapNum).Npc(i).X = x) And (MapNpc(MapNum).Npc(i).Y = y - 1) Then
                             CanEventMove = False
                             Exit Function
                         End If
                     Next
 
-                    If globalevent = True Then
-                        If TempEventMap(MapNum).EventCount > 0 Then
-                            For z = 1 To TempEventMap(MapNum).EventCount
-                                If (z <> eventID) And (z > 0) And (TempEventMap(MapNum).Events(z).X = x) And (TempEventMap(MapNum).Events(z).Y = y - 1) And (TempEventMap(MapNum).Events(z).WalkThrough = 0) Then
-                                    CanEventMove = False
-                                    Exit Function
-                                End If
-                            Next
-                        End If
+                    If globalevent = True And TempEventMap(MapNum).EventCount > 0 Then
+                        For z = 1 To TempEventMap(MapNum).EventCount
+                            If (z <> eventID) And (z > 0) And (TempEventMap(MapNum).Events(z).X = x) And (TempEventMap(MapNum).Events(z).Y = y - 1) And (TempEventMap(MapNum).Events(z).WalkThrough = 0) Then
+                                CanEventMove = False
+                                Exit Function
+                            End If
+                        Next
                     Else
                         If TempPlayer(Index).EventMap.CurrentEvents > 0 Then
                             For z = 1 To TempPlayer(Index).EventMap.CurrentEvents
@@ -620,21 +618,19 @@ Public Module ServerEvents
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNpc(MapNum).Npc(i).x = x) And (MapNpc(MapNum).Npc(i).y = y + 1) Then
+                        If (MapNpc(MapNum).Npc(i).X = x) And (MapNpc(MapNum).Npc(i).Y = y + 1) Then
                             CanEventMove = False
                             Exit Function
                         End If
                     Next
 
-                    If globalevent = True Then
-                        If TempEventMap(MapNum).EventCount > 0 Then
-                            For z = 1 To TempEventMap(MapNum).EventCount
-                                If (z <> eventID) And (z > 0) And (TempEventMap(MapNum).Events(z).X = x) And (TempEventMap(MapNum).Events(z).Y = y + 1) And (TempEventMap(MapNum).Events(z).WalkThrough = 0) Then
-                                    CanEventMove = False
-                                    Exit Function
-                                End If
-                            Next
-                        End If
+                    If globalevent = True And TempEventMap(MapNum).EventCount > 0 Then
+                        For z = 1 To TempEventMap(MapNum).EventCount
+                            If (z <> eventID) And (z > 0) And (TempEventMap(MapNum).Events(z).X = x) And (TempEventMap(MapNum).Events(z).Y = y + 1) And (TempEventMap(MapNum).Events(z).WalkThrough = 0) Then
+                                CanEventMove = False
+                                Exit Function
+                            End If
+                        Next
                     Else
                         If TempPlayer(Index).EventMap.CurrentEvents > 0 Then
                             For z = 1 To TempPlayer(Index).EventMap.CurrentEvents
@@ -708,21 +704,19 @@ Public Module ServerEvents
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNpc(MapNum).Npc(i).x = x - 1) And (MapNpc(MapNum).Npc(i).y = y) Then
+                        If (MapNpc(MapNum).Npc(i).X = x - 1) And (MapNpc(MapNum).Npc(i).Y = y) Then
                             CanEventMove = False
                             Exit Function
                         End If
                     Next
 
-                    If globalevent = True Then
-                        If TempEventMap(MapNum).EventCount > 0 Then
-                            For z = 1 To TempEventMap(MapNum).EventCount
-                                If (z <> eventID) And (z > 0) And (TempEventMap(MapNum).Events(z).X = x - 1) And (TempEventMap(MapNum).Events(z).Y = y) And (TempEventMap(MapNum).Events(z).WalkThrough = 0) Then
-                                    CanEventMove = False
-                                    Exit Function
-                                End If
-                            Next
-                        End If
+                    If globalevent = True And TempEventMap(MapNum).EventCount > 0 Then
+                        For z = 1 To TempEventMap(MapNum).EventCount
+                            If (z <> eventID) And (z > 0) And (TempEventMap(MapNum).Events(z).X = x - 1) And (TempEventMap(MapNum).Events(z).Y = y) And (TempEventMap(MapNum).Events(z).WalkThrough = 0) Then
+                                CanEventMove = False
+                                Exit Function
+                            End If
+                        Next
                     Else
                         If TempPlayer(Index).EventMap.CurrentEvents > 0 Then
                             For z = 1 To TempPlayer(Index).EventMap.CurrentEvents
@@ -796,21 +790,19 @@ Public Module ServerEvents
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNpc(MapNum).Npc(i).x = x + 1) And (MapNpc(MapNum).Npc(i).y = y) Then
+                        If (MapNpc(MapNum).Npc(i).X = x + 1) And (MapNpc(MapNum).Npc(i).Y = y) Then
                             CanEventMove = False
                             Exit Function
                         End If
                     Next
 
-                    If globalevent = True Then
-                        If TempEventMap(MapNum).EventCount > 0 Then
-                            For z = 1 To TempEventMap(MapNum).EventCount
-                                If (z <> eventID) And (z > 0) And (TempEventMap(MapNum).Events(z).X = x + 1) And (TempEventMap(MapNum).Events(z).Y = y) And (TempEventMap(MapNum).Events(z).WalkThrough = 0) Then
-                                    CanEventMove = False
-                                    Exit Function
-                                End If
-                            Next
-                        End If
+                    If globalevent = True And TempEventMap(MapNum).EventCount > 0 Then
+                        For z = 1 To TempEventMap(MapNum).EventCount
+                            If (z <> eventID) And (z > 0) And (TempEventMap(MapNum).Events(z).X = x + 1) And (TempEventMap(MapNum).Events(z).Y = y) And (TempEventMap(MapNum).Events(z).WalkThrough = 0) Then
+                                CanEventMove = False
+                                Exit Function
+                            End If
+                        Next
                     Else
                         If TempPlayer(Index).EventMap.CurrentEvents > 0 Then
                             For z = 1 To TempPlayer(Index).EventMap.CurrentEvents
@@ -835,8 +827,8 @@ Public Module ServerEvents
 
     End Function
 
-    Sub EventDir(ByVal PlayerIndex As Integer, ByVal MapNum As Integer, ByVal eventID As Integer, ByVal Dir As Integer, Optional globalevent As Boolean = False)
-        Dim Buffer As ByteBuffer
+    Sub EventDir(PlayerIndex As Integer, MapNum As Integer, eventID As Integer, Dir As Integer, Optional globalevent As Boolean = False)
+        Dim Buffer As New ByteBuffer
         Dim eventIndex As Integer, i As Integer
 
         ' Check for subscript out of range
@@ -867,7 +859,6 @@ Public Module ServerEvents
             If Map(MapNum).Events(eventID).Pages(TempPlayer(PlayerIndex).EventMap.EventPages(eventIndex).PageID).DirFix = 0 Then TempPlayer(PlayerIndex).EventMap.EventPages(eventIndex).Dir = Dir
         End If
 
-        Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SEventDir)
         Buffer.WriteInteger(eventID)
 
@@ -883,16 +874,14 @@ Public Module ServerEvents
 
     End Sub
 
-    Sub EventMove(ByVal Index As Integer, ByVal MapNum As Integer, ByVal eventID As Integer, ByVal Dir As Integer, ByVal movementspeed As Integer, Optional globalevent As Boolean = False)
-        Dim Buffer As ByteBuffer
+    Sub EventMove(Index As Integer, MapNum As Integer, eventID As Integer, Dir As Integer, movementspeed As Integer, Optional globalevent As Boolean = False)
+        Dim Buffer As New ByteBuffer
         Dim eventIndex As Integer, i As Integer
 
         ' Check for subscript out of range
         If Gettingmap = True Then Exit Sub
 
-        If MapNum <= 0 Or MapNum > MAX_MAPS Or Dir < Direction.Up Or Dir > Direction.Right Then
-            Exit Sub
-        End If
+        If MapNum <= 0 Or MapNum > MAX_MAPS Or Dir < Direction.Up Or Dir > Direction.Right Then Exit Sub
 
         If globalevent = False Then
             If TempPlayer(Index).EventMap.CurrentEvents > 0 Then
@@ -921,7 +910,6 @@ Public Module ServerEvents
             Case Direction.Up
                 If globalevent Then
                     TempEventMap(MapNum).Events(eventIndex).Y = TempEventMap(MapNum).Events(eventIndex).Y - 1
-                    Buffer = New ByteBuffer
                     Buffer.WriteInteger(ServerPackets.SEventMove)
                     Buffer.WriteInteger(eventID)
                     Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).X)
@@ -937,7 +925,6 @@ Public Module ServerEvents
                     Buffer = Nothing
                 Else
                     TempPlayer(Index).EventMap.EventPages(eventIndex).Y = TempPlayer(Index).EventMap.EventPages(eventIndex).Y - 1
-                    Buffer = New ByteBuffer
                     Buffer.WriteInteger(ServerPackets.SEventMove)
                     Buffer.WriteInteger(eventID)
                     Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).X)
@@ -956,7 +943,6 @@ Public Module ServerEvents
             Case Direction.Down
                 If globalevent Then
                     TempEventMap(MapNum).Events(eventIndex).Y = TempEventMap(MapNum).Events(eventIndex).Y + 1
-                    Buffer = New ByteBuffer
                     Buffer.WriteInteger(ServerPackets.SEventMove)
                     Buffer.WriteInteger(eventID)
                     Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).X)
@@ -972,7 +958,6 @@ Public Module ServerEvents
                     Buffer = Nothing
                 Else
                     TempPlayer(Index).EventMap.EventPages(eventIndex).Y = TempPlayer(Index).EventMap.EventPages(eventIndex).Y + 1
-                    Buffer = New ByteBuffer
                     Buffer.WriteInteger(ServerPackets.SEventMove)
                     Buffer.WriteInteger(eventID)
                     Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).X)
@@ -990,7 +975,6 @@ Public Module ServerEvents
             Case Direction.Left
                 If globalevent Then
                     TempEventMap(MapNum).Events(eventIndex).X = TempEventMap(MapNum).Events(eventIndex).X - 1
-                    Buffer = New ByteBuffer
                     Buffer.WriteInteger(ServerPackets.SEventMove)
                     Buffer.WriteInteger(eventID)
                     Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).X)
@@ -1006,7 +990,6 @@ Public Module ServerEvents
                     Buffer = Nothing
                 Else
                     TempPlayer(Index).EventMap.EventPages(eventIndex).X = TempPlayer(Index).EventMap.EventPages(eventIndex).X - 1
-                    Buffer = New ByteBuffer
                     Buffer.WriteInteger(ServerPackets.SEventMove)
                     Buffer.WriteInteger(eventID)
                     Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).X)
@@ -1024,7 +1007,6 @@ Public Module ServerEvents
             Case Direction.Right
                 If globalevent Then
                     TempEventMap(MapNum).Events(eventIndex).X = TempEventMap(MapNum).Events(eventIndex).X + 1
-                    Buffer = New ByteBuffer
                     Buffer.WriteInteger(ServerPackets.SEventMove)
                     Buffer.WriteInteger(eventID)
                     Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).X)
@@ -1040,7 +1022,6 @@ Public Module ServerEvents
                     Buffer = Nothing
                 Else
                     TempPlayer(Index).EventMap.EventPages(eventIndex).X = TempPlayer(Index).EventMap.EventPages(eventIndex).X + 1
-                    Buffer = New ByteBuffer
                     Buffer.WriteInteger(ServerPackets.SEventMove)
                     Buffer.WriteInteger(eventID)
                     Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).X)
@@ -1059,7 +1040,7 @@ Public Module ServerEvents
 
     End Sub
 
-    Function IsOneBlockAway(ByVal x1 As Integer, ByVal y1 As Integer, ByVal x2 As Integer, ByVal y2 As Integer) As Boolean
+    Function IsOneBlockAway(x1 As Integer, y1 As Integer, x2 As Integer, y2 As Integer) As Boolean
 
         If x1 = x2 Then
             If y1 = y2 - 1 Or y1 = y2 + 1 Then
@@ -1079,7 +1060,7 @@ Public Module ServerEvents
 
     End Function
 
-    Function GetNpcDir(ByVal x As Integer, ByVal y As Integer, ByVal x1 As Integer, ByVal y1 As Integer) As Integer
+    Function GetNpcDir(x As Integer, y As Integer, x1 As Integer, y1 As Integer) As Integer
         Dim i As Integer, distance As Integer
 
         i = Direction.Right
@@ -1112,14 +1093,15 @@ Public Module ServerEvents
 
     End Function
 
-    Function CanEventMoveTowardsPlayer(ByVal playerID As Integer, ByVal MapNum As Integer, ByVal eventID As Integer) As Integer
+    Function CanEventMoveTowardsPlayer(playerID As Integer, MapNum As Integer, eventID As Integer) As Integer
         Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, didwalk As Boolean, WalkThrough As Integer
         Dim tim As Integer, sX As Integer, sY As Integer, pos(,) As Integer, reachable As Boolean, j As Integer, LastSum As Integer, Sum As Integer, FX As Integer, FY As Integer
         Dim path() As Point, LastX As Integer, LastY As Integer, did As Boolean
         'This does not work for global events so this MUST be a player one....
-        'This Event returns a direction, 4 is not a valid direction so we assume fail unless otherwise told.
 
+        'This Event returns a direction, 4 is not a valid direction so we assume fail unless otherwise told.
         CanEventMoveTowardsPlayer = 4
+
         If playerID <= 0 Or playerID > MAX_PLAYERS Then Exit Function
         If MapNum <= 0 Or MapNum > MAX_MAPS Then Exit Function
         If eventID <= 0 Or eventID > TempPlayer(playerID).EventMap.CurrentEvents Then Exit Function
@@ -1139,7 +1121,6 @@ Public Module ServerEvents
             ' Lets move the event
             Select Case i
                 Case 0
-
                     ' Up
                     If y1 > y And Not didwalk Then
                         If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Up, False) Then
@@ -1177,7 +1158,6 @@ Public Module ServerEvents
                     End If
 
                 Case 1
-
                     ' Right
                     If x1 < x And Not didwalk Then
                         If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Right, False) Then
@@ -1215,7 +1195,6 @@ Public Module ServerEvents
                     End If
 
                 Case 2
-
                     ' Down
                     If y1 < y And Not didwalk Then
                         If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Down, False) Then
@@ -1253,7 +1232,6 @@ Public Module ServerEvents
                     End If
 
                 Case 3
-
                     ' Left
                     If x1 > x And Not didwalk Then
                         If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Left, False) Then
@@ -1479,12 +1457,13 @@ Public Module ServerEvents
 
     End Function
 
-    Function CanEventMoveAwayFromPlayer(ByVal playerID As Integer, ByVal MapNum As Integer, ByVal eventID As Integer) As Integer
+    Function CanEventMoveAwayFromPlayer(playerID As Integer, MapNum As Integer, eventID As Integer) As Integer
         Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, didwalk As Boolean, WalkThrough As Integer
         'This does not work for global events so this MUST be a player one....
-        'This Event returns a direction, 5 is not a valid direction so we assume fail unless otherwise told.
 
+        'This Event returns a direction, 5 is not a valid direction so we assume fail unless otherwise told.
         CanEventMoveAwayFromPlayer = 5
+
         If playerID <= 0 Or playerID > MAX_PLAYERS Then Exit Function
         If MapNum <= 0 Or MapNum > MAX_MAPS Then Exit Function
         If eventID <= 0 Or eventID > TempPlayer(playerID).EventMap.CurrentEvents Then Exit Function
@@ -1502,7 +1481,6 @@ Public Module ServerEvents
         ' Lets move the event
         Select Case i
             Case 0
-
                 ' Up
                 If y1 > y And Not didwalk Then
                     If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Down, False) Then
@@ -1540,7 +1518,6 @@ Public Module ServerEvents
                 End If
 
             Case 1
-
                 ' Right
                 If x1 < x And Not didwalk Then
                     If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Left, False) Then
@@ -1578,7 +1555,6 @@ Public Module ServerEvents
                 End If
 
             Case 2
-
                 ' Down
                 If y1 < y And Not didwalk Then
                     If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Up, False) Then
@@ -1616,7 +1592,6 @@ Public Module ServerEvents
                 End If
 
             Case 3
-
                 ' Left
                 If x1 > x And Not didwalk Then
                     If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Right, False) Then
@@ -1659,10 +1634,9 @@ Public Module ServerEvents
 
     End Function
 
-    Function GetDirToPlayer(ByVal playerID As Integer, ByVal MapNum As Integer, ByVal eventID As Integer) As Integer
+    Function GetDirToPlayer(playerID As Integer, MapNum As Integer, eventID As Integer) As Integer
         Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, distance As Integer
         'This does not work for global events so this MUST be a player one....
-        'This Event returns a direction, 5 is not a valid direction so we assume fail unless otherwise told.
 
         If playerID <= 0 Or playerID > MAX_PLAYERS Then Exit Function
         If MapNum <= 0 Or MapNum > MAX_MAPS Then Exit Function
@@ -1703,10 +1677,9 @@ Public Module ServerEvents
 
     End Function
 
-    Function GetDirAwayFromPlayer(ByVal playerID As Integer, ByVal MapNum As Integer, ByVal eventID As Integer) As Integer
+    Function GetDirAwayFromPlayer(playerID As Integer, MapNum As Integer, eventID As Integer) As Integer
         Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, distance As Integer
         'This does not work for global events so this MUST be a player one....
-        'This Event returns a direction, 5 is not a valid direction so we assume fail unless otherwise told.
 
         If playerID <= 0 Or playerID > MAX_PLAYERS Then Exit Function
         If MapNum <= 0 Or MapNum > MAX_MAPS Then Exit Function
@@ -1750,7 +1723,7 @@ Public Module ServerEvents
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_EventChatReply(ByVal index As Integer, ByVal data() As Byte)
+    Sub Packet_EventChatReply(index As Integer, data() As Byte)
         Dim Buffer As New ByteBuffer
         Dim eventID As Integer, pageID As Integer, reply As Integer, i As Integer
 
@@ -1802,7 +1775,7 @@ Public Module ServerEvents
 
     End Sub
 
-    Sub Packet_Event(ByVal index As Integer, ByVal data() As Byte)
+    Sub Packet_Event(index As Integer, data() As Byte)
         Dim i As Integer, begineventprocessing As Boolean, z As Integer, Buffer As New ByteBuffer
         Dim x As Integer, y As Integer
 
@@ -1867,7 +1840,7 @@ Public Module ServerEvents
 
     End Sub
 
-    Sub Packet_RequestSwitchesAndVariables(ByVal index As Integer, ByVal data() As Byte)
+    Sub Packet_RequestSwitchesAndVariables(index As Integer, data() As Byte)
         Dim Buffer As New ByteBuffer
 
         Buffer.WriteBytes(data)
@@ -1880,7 +1853,7 @@ Public Module ServerEvents
 
     End Sub
 
-    Sub Packet_SwitchesAndVariables(ByVal index As Integer, ByVal data() As Byte)
+    Sub Packet_SwitchesAndVariables(index As Integer, data() As Byte)
         Dim Buffer As New ByteBuffer, i As Integer
 
         Buffer.WriteBytes(data)
@@ -1907,7 +1880,7 @@ Public Module ServerEvents
 #End Region
 
 #Region "Outgoing Packets"
-    Sub SendSpecialEffect(ByVal Index As Integer, EffectType As Integer, Optional Data1 As Integer = 0, Optional Data2 As Integer = 0, Optional Data3 As Integer = 0, Optional Data4 As Integer = 0)
+    Sub SendSpecialEffect(Index As Integer, EffectType As Integer, Optional Data1 As Integer = 0, Optional Data2 As Integer = 0, Optional Data3 As Integer = 0, Optional Data4 As Integer = 0)
         Dim Buffer As New ByteBuffer
 
         Buffer.WriteInteger(ServerPackets.SSpecialEffect)
@@ -1941,7 +1914,7 @@ Public Module ServerEvents
 
     End Sub
 
-    Sub SendSwitchesAndVariables(ByVal Index As Integer, Optional everyone As Boolean = False)
+    Sub SendSwitchesAndVariables(Index As Integer, Optional everyone As Boolean = False)
         Dim Buffer As New ByteBuffer, i As Integer
 
         Buffer.WriteInteger(ServerPackets.SSwitchesAndVariables)
@@ -2097,7 +2070,7 @@ Public Module ServerEvents
 #End Region
 
 #Region "Misc"
-    Public Sub GivePlayerEXP(ByVal Index As Integer, ByVal Exp As Integer)
+    Public Sub GivePlayerEXP(Index As Integer, Exp As Integer)
         ' give the exp
 
         SetPlayerExp(Index, GetPlayerExp(Index) + Exp)
@@ -2120,44 +2093,9 @@ Public Module ServerEvents
     End Sub
 
     Public Sub CustomScript(Index As Integer, caseID As Integer, MapNum As Integer, EventId As Integer)
-        Dim buffer As New ByteBuffer
 
         Select Case caseID
-            Case 1
-                If GetPlayerEquipment(Index, EquipmentType.Weapon) > 0 Then
-                    If Item(GetPlayerEquipment(Index, EquipmentType.Weapon)).Data3 = 4 Then
-                        Map(MapNum).Events(EventId).Pages(1).GraphicType = 2
-                        Map(MapNum).Events(EventId).Pages(1).Graphic = 1
-                        Map(MapNum).Events(EventId).Pages(1).GraphicX = 4
-                        Map(MapNum).Events(EventId).Pages(1).GraphicY = 6
-                    End If
 
-                    Buffer = New ByteBuffer
-                    Buffer.WriteInteger(ServerPackets.SSpawnEvent)
-                    buffer.WriteInteger(EventId)
-                    With Map(MapNum).Events(EventId).Pages(1)
-                        buffer.WriteString(Trim(Map(MapNum).Events(EventId).Name))
-                        buffer.WriteInteger(.DirFix)
-                        buffer.WriteInteger(.Graphic)
-                        buffer.WriteInteger(.GraphicType)
-                        buffer.WriteInteger(.GraphicX)
-                        buffer.WriteInteger(.GraphicX2)
-                        buffer.WriteInteger(.GraphicY)
-                        buffer.WriteInteger(.GraphicY2)
-                        buffer.WriteInteger(.MoveSpeed)
-                        buffer.WriteInteger(.X)
-                        buffer.WriteInteger(.Y)
-                        buffer.WriteInteger(.Position)
-                        buffer.WriteInteger(1)
-                        buffer.WriteInteger(0)
-                        buffer.WriteInteger(0)
-                        buffer.WriteInteger(.WalkThrough)
-                        buffer.WriteInteger(.ShowName)
-                        buffer.WriteInteger(.QuestNum)
-                    End With
-                    SendDataTo(Index, buffer.ToArray)
-                    buffer = Nothing
-                End If
             Case Else
                 PlayerMsg(Index, "You just activated custom script " & caseID & ". This script is not yet programmed.", ColorType.BrightRed)
         End Select

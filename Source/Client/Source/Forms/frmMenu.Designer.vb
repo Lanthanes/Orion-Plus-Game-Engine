@@ -128,7 +128,7 @@ Partial Class FrmMenu
         Me.btnLogin.BackgroundImage = CType(resources.GetObject("btnLogin.BackgroundImage"), System.Drawing.Image)
         Me.btnLogin.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnLogin.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnLogin.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnLogin.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnLogin.Location = New System.Drawing.Point(180, 153)
         Me.btnLogin.Name = "btnLogin"
@@ -141,56 +141,58 @@ Partial Class FrmMenu
         '
         Me.chkSavePass.AutoSize = True
         Me.chkSavePass.BackColor = System.Drawing.Color.Transparent
-        Me.chkSavePass.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkSavePass.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkSavePass.Location = New System.Drawing.Point(110, 128)
         Me.chkSavePass.Name = "chkSavePass"
-        Me.chkSavePass.Size = New System.Drawing.Size(108, 19)
+        Me.chkSavePass.Size = New System.Drawing.Size(123, 21)
         Me.chkSavePass.TabIndex = 25
         Me.chkSavePass.Text = "Save Password?"
         Me.chkSavePass.UseVisualStyleBackColor = False
         '
         'txtPassword
         '
+        Me.txtPassword.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtPassword.Location = New System.Drawing.Point(180, 98)
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-        Me.txtPassword.Size = New System.Drawing.Size(110, 20)
+        Me.txtPassword.Size = New System.Drawing.Size(110, 25)
         Me.txtPassword.TabIndex = 24
         '
         'lblLoginPass
         '
         Me.lblLoginPass.AutoSize = True
-        Me.lblLoginPass.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblLoginPass.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblLoginPass.Location = New System.Drawing.Point(107, 101)
         Me.lblLoginPass.Name = "lblLoginPass"
-        Me.lblLoginPass.Size = New System.Drawing.Size(59, 15)
+        Me.lblLoginPass.Size = New System.Drawing.Size(70, 17)
         Me.lblLoginPass.TabIndex = 23
         Me.lblLoginPass.Text = "Password:"
         '
         'txtLogin
         '
+        Me.txtLogin.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtLogin.Location = New System.Drawing.Point(180, 63)
         Me.txtLogin.Name = "txtLogin"
-        Me.txtLogin.Size = New System.Drawing.Size(110, 20)
+        Me.txtLogin.Size = New System.Drawing.Size(110, 25)
         Me.txtLogin.TabIndex = 17
         '
         'lblLoginName
         '
         Me.lblLoginName.AutoSize = True
-        Me.lblLoginName.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblLoginName.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblLoginName.Location = New System.Drawing.Point(107, 66)
         Me.lblLoginName.Name = "lblLoginName"
-        Me.lblLoginName.Size = New System.Drawing.Size(40, 15)
+        Me.lblLoginName.Size = New System.Drawing.Size(48, 17)
         Me.lblLoginName.TabIndex = 16
         Me.lblLoginName.Text = "Name:"
         '
         'lblLogin
         '
         Me.lblLogin.AutoSize = True
-        Me.lblLogin.Font = New System.Drawing.Font("Modern No. 20", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLogin.Location = New System.Drawing.Point(170, 12)
+        Me.lblLogin.Font = New System.Drawing.Font("Segoe UI Semibold", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblLogin.Location = New System.Drawing.Point(156, 9)
         Me.lblLogin.Name = "lblLogin"
-        Me.lblLogin.Size = New System.Drawing.Size(90, 31)
+        Me.lblLogin.Size = New System.Drawing.Size(85, 37)
         Me.lblLogin.TabIndex = 15
         Me.lblLogin.Text = "Login"
         '
@@ -219,7 +221,7 @@ Partial Class FrmMenu
         Me.btnCreateAccount.BackgroundImage = CType(resources.GetObject("btnCreateAccount.BackgroundImage"), System.Drawing.Image)
         Me.btnCreateAccount.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.btnCreateAccount.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnCreateAccount.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCreateAccount.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnCreateAccount.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnCreateAccount.Location = New System.Drawing.Point(180, 157)
         Me.btnCreateAccount.Name = "btnCreateAccount"
@@ -230,64 +232,67 @@ Partial Class FrmMenu
         '
         'txtRPass2
         '
+        Me.txtRPass2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtRPass2.Location = New System.Drawing.Point(180, 125)
         Me.txtRPass2.Name = "txtRPass2"
         Me.txtRPass2.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-        Me.txtRPass2.Size = New System.Drawing.Size(110, 20)
+        Me.txtRPass2.Size = New System.Drawing.Size(110, 25)
         Me.txtRPass2.TabIndex = 21
         '
         'lblNewAccPass2
         '
         Me.lblNewAccPass2.AutoSize = True
-        Me.lblNewAccPass2.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNewAccPass2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNewAccPass2.Location = New System.Drawing.Point(70, 128)
         Me.lblNewAccPass2.Name = "lblNewAccPass2"
-        Me.lblNewAccPass2.Size = New System.Drawing.Size(98, 15)
+        Me.lblNewAccPass2.Size = New System.Drawing.Size(116, 17)
         Me.lblNewAccPass2.TabIndex = 20
         Me.lblNewAccPass2.Text = "Retype Password:"
         '
         'txtRPass
         '
+        Me.txtRPass.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtRPass.Location = New System.Drawing.Point(180, 97)
         Me.txtRPass.Name = "txtRPass"
         Me.txtRPass.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-        Me.txtRPass.Size = New System.Drawing.Size(110, 20)
+        Me.txtRPass.Size = New System.Drawing.Size(110, 25)
         Me.txtRPass.TabIndex = 19
         '
         'lblNewAccPass
         '
         Me.lblNewAccPass.AutoSize = True
-        Me.lblNewAccPass.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNewAccPass.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNewAccPass.Location = New System.Drawing.Point(107, 100)
         Me.lblNewAccPass.Name = "lblNewAccPass"
-        Me.lblNewAccPass.Size = New System.Drawing.Size(59, 15)
+        Me.lblNewAccPass.Size = New System.Drawing.Size(70, 17)
         Me.lblNewAccPass.TabIndex = 18
         Me.lblNewAccPass.Text = "Password:"
         '
         'txtRuser
         '
+        Me.txtRuser.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtRuser.Location = New System.Drawing.Point(180, 63)
         Me.txtRuser.Name = "txtRuser"
-        Me.txtRuser.Size = New System.Drawing.Size(110, 20)
+        Me.txtRuser.Size = New System.Drawing.Size(110, 25)
         Me.txtRuser.TabIndex = 17
         '
         'lblNewAccName
         '
         Me.lblNewAccName.AutoSize = True
-        Me.lblNewAccName.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNewAccName.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNewAccName.Location = New System.Drawing.Point(107, 65)
         Me.lblNewAccName.Name = "lblNewAccName"
-        Me.lblNewAccName.Size = New System.Drawing.Size(62, 15)
+        Me.lblNewAccName.Size = New System.Drawing.Size(73, 17)
         Me.lblNewAccName.TabIndex = 16
         Me.lblNewAccName.Text = "Username:"
         '
         'lblNewAccount
         '
         Me.lblNewAccount.AutoSize = True
-        Me.lblNewAccount.Font = New System.Drawing.Font("Modern No. 20", 21.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNewAccount.Font = New System.Drawing.Font("Segoe UI Semibold", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNewAccount.Location = New System.Drawing.Point(122, 12)
         Me.lblNewAccount.Name = "lblNewAccount"
-        Me.lblNewAccount.Size = New System.Drawing.Size(168, 31)
+        Me.lblNewAccount.Size = New System.Drawing.Size(192, 40)
         Me.lblNewAccount.TabIndex = 15
         Me.lblNewAccount.Text = "New Account"
         '
@@ -308,7 +313,7 @@ Partial Class FrmMenu
         'lblCreditsTop
         '
         Me.lblCreditsTop.BackColor = System.Drawing.Color.Transparent
-        Me.lblCreditsTop.Font = New System.Drawing.Font("Modern No. 20", 21.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCreditsTop.Font = New System.Drawing.Font("Segoe UI Semibold", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblCreditsTop.Location = New System.Drawing.Point(78, 6)
         Me.lblCreditsTop.Name = "lblCreditsTop"
         Me.lblCreditsTop.Size = New System.Drawing.Size(247, 33)
@@ -359,6 +364,7 @@ Partial Class FrmMenu
         '
         'txtDescription
         '
+        Me.txtDescription.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtDescription.Location = New System.Drawing.Point(227, 76)
         Me.txtDescription.Multiline = True
         Me.txtDescription.Name = "txtDescription"
@@ -368,9 +374,10 @@ Partial Class FrmMenu
         'lblNewCharSprite
         '
         Me.lblNewCharSprite.AutoSize = True
-        Me.lblNewCharSprite.Location = New System.Drawing.Point(56, 75)
+        Me.lblNewCharSprite.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNewCharSprite.Location = New System.Drawing.Point(49, 71)
         Me.lblNewCharSprite.Name = "lblNewCharSprite"
-        Me.lblNewCharSprite.Size = New System.Drawing.Size(34, 13)
+        Me.lblNewCharSprite.Size = New System.Drawing.Size(42, 17)
         Me.lblNewCharSprite.TabIndex = 43
         Me.lblNewCharSprite.Text = "Sprite"
         '
@@ -379,7 +386,7 @@ Partial Class FrmMenu
         Me.btnCreateCharacter.BackgroundImage = CType(resources.GetObject("btnCreateCharacter.BackgroundImage"), System.Drawing.Image)
         Me.btnCreateCharacter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.btnCreateCharacter.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnCreateCharacter.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCreateCharacter.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnCreateCharacter.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnCreateCharacter.Location = New System.Drawing.Point(263, 150)
         Me.btnCreateCharacter.Name = "btnCreateCharacter"
@@ -402,7 +409,7 @@ Partial Class FrmMenu
         Me.lblNextChar.AutoSize = True
         Me.lblNextChar.Location = New System.Drawing.Point(100, 156)
         Me.lblNextChar.Name = "lblNextChar"
-        Me.lblNextChar.Size = New System.Drawing.Size(13, 13)
+        Me.lblNextChar.Size = New System.Drawing.Size(15, 13)
         Me.lblNextChar.TabIndex = 40
         Me.lblNextChar.Text = ">"
         '
@@ -411,17 +418,17 @@ Partial Class FrmMenu
         Me.lblPrevChar.AutoSize = True
         Me.lblPrevChar.Location = New System.Drawing.Point(37, 156)
         Me.lblPrevChar.Name = "lblPrevChar"
-        Me.lblPrevChar.Size = New System.Drawing.Size(13, 13)
+        Me.lblPrevChar.Size = New System.Drawing.Size(15, 13)
         Me.lblPrevChar.TabIndex = 39
         Me.lblPrevChar.Text = "<"
         '
         'rdoFemale
         '
         Me.rdoFemale.AutoSize = True
-        Me.rdoFemale.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.rdoFemale.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.rdoFemale.Location = New System.Drawing.Point(135, 118)
         Me.rdoFemale.Name = "rdoFemale"
-        Me.rdoFemale.Size = New System.Drawing.Size(63, 19)
+        Me.rdoFemale.Size = New System.Drawing.Size(67, 21)
         Me.rdoFemale.TabIndex = 38
         Me.rdoFemale.TabStop = True
         Me.rdoFemale.Text = "Female"
@@ -430,10 +437,10 @@ Partial Class FrmMenu
         'rdoMale
         '
         Me.rdoMale.AutoSize = True
-        Me.rdoMale.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.rdoMale.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.rdoMale.Location = New System.Drawing.Point(135, 93)
         Me.rdoMale.Name = "rdoMale"
-        Me.rdoMale.Size = New System.Drawing.Size(51, 19)
+        Me.rdoMale.Size = New System.Drawing.Size(55, 21)
         Me.rdoMale.TabIndex = 37
         Me.rdoMale.TabStop = True
         Me.rdoMale.Text = "Male"
@@ -442,58 +449,60 @@ Partial Class FrmMenu
         'cmbClass
         '
         Me.cmbClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbClass.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmbClass.FormattingEnabled = True
         Me.cmbClass.Location = New System.Drawing.Point(227, 43)
         Me.cmbClass.Name = "cmbClass"
-        Me.cmbClass.Size = New System.Drawing.Size(157, 21)
+        Me.cmbClass.Size = New System.Drawing.Size(157, 25)
         Me.cmbClass.TabIndex = 36
         '
         'lblNewCharGender
         '
         Me.lblNewCharGender.AutoSize = True
-        Me.lblNewCharGender.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNewCharGender.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNewCharGender.Location = New System.Drawing.Point(133, 75)
         Me.lblNewCharGender.Name = "lblNewCharGender"
-        Me.lblNewCharGender.Size = New System.Drawing.Size(47, 15)
+        Me.lblNewCharGender.Size = New System.Drawing.Size(54, 17)
         Me.lblNewCharGender.TabIndex = 34
         Me.lblNewCharGender.Text = "Gender:"
         '
         'lblNewCharClass
         '
         Me.lblNewCharClass.AutoSize = True
-        Me.lblNewCharClass.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNewCharClass.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNewCharClass.Location = New System.Drawing.Point(186, 45)
         Me.lblNewCharClass.Name = "lblNewCharClass"
-        Me.lblNewCharClass.Size = New System.Drawing.Size(37, 15)
+        Me.lblNewCharClass.Size = New System.Drawing.Size(41, 17)
         Me.lblNewCharClass.TabIndex = 33
         Me.lblNewCharClass.Text = "Class:"
         '
         'txtCharName
         '
+        Me.txtCharName.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtCharName.Location = New System.Drawing.Point(59, 42)
         Me.txtCharName.Name = "txtCharName"
-        Me.txtCharName.Size = New System.Drawing.Size(121, 20)
+        Me.txtCharName.Size = New System.Drawing.Size(121, 25)
         Me.txtCharName.TabIndex = 32
         '
         'lblNewCharName
         '
         Me.lblNewCharName.AutoSize = True
-        Me.lblNewCharName.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNewCharName.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNewCharName.ForeColor = System.Drawing.Color.White
         Me.lblNewCharName.Location = New System.Drawing.Point(13, 45)
         Me.lblNewCharName.Name = "lblNewCharName"
-        Me.lblNewCharName.Size = New System.Drawing.Size(40, 15)
+        Me.lblNewCharName.Size = New System.Drawing.Size(46, 17)
         Me.lblNewCharName.TabIndex = 31
         Me.lblNewCharName.Text = "Name:"
         '
         'lblNewChar
         '
         Me.lblNewChar.AutoSize = True
-        Me.lblNewChar.Font = New System.Drawing.Font("Modern No. 20", 21.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNewChar.Font = New System.Drawing.Font("Segoe UI Semibold", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNewChar.ForeColor = System.Drawing.Color.White
-        Me.lblNewChar.Location = New System.Drawing.Point(90, 8)
+        Me.lblNewChar.Location = New System.Drawing.Point(85, 1)
         Me.lblNewChar.Name = "lblNewChar"
-        Me.lblNewChar.Size = New System.Drawing.Size(207, 31)
+        Me.lblNewChar.Size = New System.Drawing.Size(235, 40)
         Me.lblNewChar.TabIndex = 30
         Me.lblNewChar.Text = "Create Character"
         '
@@ -501,11 +510,11 @@ Partial Class FrmMenu
         '
         Me.lblStatusHeader.AutoSize = True
         Me.lblStatusHeader.BackColor = System.Drawing.Color.Transparent
-        Me.lblStatusHeader.Font = New System.Drawing.Font("Modern No. 20", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusHeader.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblStatusHeader.ForeColor = System.Drawing.Color.White
         Me.lblStatusHeader.Location = New System.Drawing.Point(482, 9)
         Me.lblStatusHeader.Name = "lblStatusHeader"
-        Me.lblStatusHeader.Size = New System.Drawing.Size(109, 18)
+        Me.lblStatusHeader.Size = New System.Drawing.Size(114, 21)
         Me.lblStatusHeader.TabIndex = 44
         Me.lblStatusHeader.Text = "Server Status:"
         '
@@ -513,11 +522,11 @@ Partial Class FrmMenu
         '
         Me.lblServerStatus.AutoSize = True
         Me.lblServerStatus.BackColor = System.Drawing.Color.Transparent
-        Me.lblServerStatus.Font = New System.Drawing.Font("Modern No. 20", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblServerStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblServerStatus.ForeColor = System.Drawing.Color.Red
         Me.lblServerStatus.Location = New System.Drawing.Point(589, 9)
         Me.lblServerStatus.Name = "lblServerStatus"
-        Me.lblServerStatus.Size = New System.Drawing.Size(62, 18)
+        Me.lblServerStatus.Size = New System.Drawing.Size(63, 21)
         Me.lblServerStatus.TabIndex = 45
         Me.lblServerStatus.Text = "Offline"
         '
@@ -538,17 +547,17 @@ Partial Class FrmMenu
         '
         Me.lblNewsHeader.AutoSize = True
         Me.lblNewsHeader.BackColor = System.Drawing.Color.Transparent
-        Me.lblNewsHeader.Font = New System.Drawing.Font("Modern No. 20", 21.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNewsHeader.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNewsHeader.Location = New System.Drawing.Point(112, 16)
         Me.lblNewsHeader.Name = "lblNewsHeader"
-        Me.lblNewsHeader.Size = New System.Drawing.Size(156, 31)
+        Me.lblNewsHeader.Size = New System.Drawing.Size(171, 40)
         Me.lblNewsHeader.TabIndex = 36
         Me.lblNewsHeader.Text = "Latest News"
         '
         'lblNews
         '
         Me.lblNews.BackColor = System.Drawing.Color.Transparent
-        Me.lblNews.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNews.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNews.Location = New System.Drawing.Point(17, 55)
         Me.lblNews.Name = "lblNews"
         Me.lblNews.Size = New System.Drawing.Size(366, 121)
@@ -580,7 +589,7 @@ Partial Class FrmMenu
         Me.btnSaveIP.BackgroundImage = CType(resources.GetObject("btnSaveIP.BackgroundImage"), System.Drawing.Image)
         Me.btnSaveIP.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.btnSaveIP.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnSaveIP.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSaveIP.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnSaveIP.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnSaveIP.Location = New System.Drawing.Point(157, 101)
         Me.btnSaveIP.Name = "btnSaveIP"
@@ -591,43 +600,45 @@ Partial Class FrmMenu
         '
         'txtPort
         '
+        Me.txtPort.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtPort.Location = New System.Drawing.Point(157, 71)
         Me.txtPort.Name = "txtPort"
         Me.txtPort.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-        Me.txtPort.Size = New System.Drawing.Size(110, 20)
+        Me.txtPort.Size = New System.Drawing.Size(110, 25)
         Me.txtPort.TabIndex = 28
         '
         'lblPort
         '
         Me.lblPort.AutoSize = True
-        Me.lblPort.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblPort.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblPort.Location = New System.Drawing.Point(84, 74)
         Me.lblPort.Name = "lblPort"
-        Me.lblPort.Size = New System.Drawing.Size(33, 15)
+        Me.lblPort.Size = New System.Drawing.Size(35, 17)
         Me.lblPort.TabIndex = 27
         Me.lblPort.Text = "Port:"
         '
         'txtIP
         '
+        Me.txtIP.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtIP.Location = New System.Drawing.Point(157, 39)
         Me.txtIP.Name = "txtIP"
-        Me.txtIP.Size = New System.Drawing.Size(192, 20)
+        Me.txtIP.Size = New System.Drawing.Size(192, 25)
         Me.txtIP.TabIndex = 26
         '
         'lblIpAdress
         '
         Me.lblIpAdress.AutoSize = True
-        Me.lblIpAdress.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblIpAdress.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblIpAdress.Location = New System.Drawing.Point(84, 42)
         Me.lblIpAdress.Name = "lblIpAdress"
-        Me.lblIpAdress.Size = New System.Drawing.Size(57, 15)
+        Me.lblIpAdress.Size = New System.Drawing.Size(59, 17)
         Me.lblIpAdress.TabIndex = 25
         Me.lblIpAdress.Text = "IP Adres:"
         '
         'lblIpConfig
         '
         Me.lblIpConfig.BackColor = System.Drawing.Color.Transparent
-        Me.lblIpConfig.Font = New System.Drawing.Font("Modern No. 20", 21.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblIpConfig.Font = New System.Drawing.Font("Segoe UI Semibold", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblIpConfig.Location = New System.Drawing.Point(86, 4)
         Me.lblIpConfig.Name = "lblIpConfig"
         Me.lblIpConfig.Size = New System.Drawing.Size(247, 32)
@@ -661,7 +672,7 @@ Partial Class FrmMenu
         Me.btnPlay.BackgroundImage = CType(resources.GetObject("btnPlay.BackgroundImage"), System.Drawing.Image)
         Me.btnPlay.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btnPlay.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnPlay.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnPlay.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnPlay.ForeColor = System.Drawing.Color.White
         Me.btnPlay.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnPlay.Location = New System.Drawing.Point(142, 490)
@@ -676,7 +687,7 @@ Partial Class FrmMenu
         Me.btnRegister.BackgroundImage = CType(resources.GetObject("btnRegister.BackgroundImage"), System.Drawing.Image)
         Me.btnRegister.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btnRegister.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnRegister.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRegister.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnRegister.ForeColor = System.Drawing.Color.White
         Me.btnRegister.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnRegister.Location = New System.Drawing.Point(254, 490)
@@ -691,7 +702,7 @@ Partial Class FrmMenu
         Me.btnCredits.BackgroundImage = CType(resources.GetObject("btnCredits.BackgroundImage"), System.Drawing.Image)
         Me.btnCredits.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btnCredits.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnCredits.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCredits.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnCredits.ForeColor = System.Drawing.Color.White
         Me.btnCredits.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnCredits.Location = New System.Drawing.Point(366, 490)
@@ -706,7 +717,7 @@ Partial Class FrmMenu
         Me.btnExit.BackgroundImage = CType(resources.GetObject("btnExit.BackgroundImage"), System.Drawing.Image)
         Me.btnExit.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnExit.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnExit.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnExit.ForeColor = System.Drawing.Color.White
         Me.btnExit.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnExit.Location = New System.Drawing.Point(478, 490)
@@ -741,7 +752,7 @@ Partial Class FrmMenu
         Me.btnUseChar.BackgroundImage = CType(resources.GetObject("btnUseChar.BackgroundImage"), System.Drawing.Image)
         Me.btnUseChar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.btnUseChar.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnUseChar.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnUseChar.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnUseChar.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnUseChar.Location = New System.Drawing.Point(147, 154)
         Me.btnUseChar.Name = "btnUseChar"
@@ -755,7 +766,7 @@ Partial Class FrmMenu
         Me.btnDelChar.BackgroundImage = CType(resources.GetObject("btnDelChar.BackgroundImage"), System.Drawing.Image)
         Me.btnDelChar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.btnDelChar.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnDelChar.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDelChar.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnDelChar.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnDelChar.Location = New System.Drawing.Point(263, 154)
         Me.btnDelChar.Name = "btnDelChar"
@@ -769,7 +780,7 @@ Partial Class FrmMenu
         Me.btnNewChar.BackgroundImage = CType(resources.GetObject("btnNewChar.BackgroundImage"), System.Drawing.Image)
         Me.btnNewChar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.btnNewChar.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnNewChar.Font = New System.Drawing.Font("Modern No. 20", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnNewChar.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnNewChar.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnNewChar.Location = New System.Drawing.Point(20, 154)
         Me.btnNewChar.Name = "btnNewChar"
@@ -811,7 +822,7 @@ Partial Class FrmMenu
         'lblCharSelect
         '
         Me.lblCharSelect.BackColor = System.Drawing.Color.Transparent
-        Me.lblCharSelect.Font = New System.Drawing.Font("Modern No. 20", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCharSelect.Font = New System.Drawing.Font("Segoe UI Semibold", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblCharSelect.Location = New System.Drawing.Point(44, 12)
         Me.lblCharSelect.Name = "lblCharSelect"
         Me.lblCharSelect.Size = New System.Drawing.Size(312, 33)
@@ -859,10 +870,10 @@ Partial Class FrmMenu
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.ClientSize = New System.Drawing.Size(1226, 541)
+        Me.ClientSize = New System.Drawing.Size(1100, 541)
+        Me.Controls.Add(Me.pnlCharSelect)
         Me.Controls.Add(Me.pnlNewChar)
         Me.Controls.Add(Me.pnlLoad)
-        Me.Controls.Add(Me.pnlCharSelect)
         Me.Controls.Add(Me.btnExit)
         Me.Controls.Add(Me.btnCredits)
         Me.Controls.Add(Me.btnRegister)
@@ -876,6 +887,7 @@ Partial Class FrmMenu
         Me.Controls.Add(Me.pnlMainMenu)
         Me.Controls.Add(Me.picLogo)
         Me.DoubleBuffered = True
+        Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ForeColor = System.Drawing.Color.Black
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
