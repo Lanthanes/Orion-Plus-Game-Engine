@@ -176,13 +176,14 @@ Module ServerHandleData
 
     End Sub
 
-    Public Sub HandleDataPackets(ByVal index As Integer, ByVal data() As Byte)
+    Public Sub HandleDataPackets(index As Integer, data() As Byte)
         Dim packetnum As Integer, buffer As New ByteBuffer, Packet As Packet_
         Packet = Nothing
 
         buffer.WriteBytes(data)
         packetnum = buffer.ReadInteger
         buffer = Nothing
+
         If packetnum = 0 Then Exit Sub
         If packetnum <> ClientPackets.CCheckPing Then TempPlayer(index).DataPackets = TempPlayer(index).DataPackets + 1
 
@@ -191,12 +192,13 @@ Module ServerHandleData
         End If
     End Sub
 
-    Private Sub Packet_NewAccount(ByVal index As Integer, ByVal data() As Byte)
+    Private Sub Packet_NewAccount(index As Integer, data() As Byte)
         Dim buffer As New ByteBuffer
         Dim username As String, password As String
         Dim i As Integer, n As Integer
 
         buffer.WriteBytes(data)
+
         'Make Sure that it is correct
         If buffer.ReadInteger <> ClientPackets.CNewAccount Then Exit Sub
 
@@ -205,7 +207,7 @@ Module ServerHandleData
             username = buffer.ReadString
             password = buffer.ReadString
             ' Prevent hacking
-            If Len(Trim$(username)) < 3 Or Len(Trim$(password)) < 3 Then
+            If Len(username.Trim) < 3 Or Len(password.Trim) < 3 Then
                 AlertMsg(index, "Your username and password must be at least three characters in length")
                 Exit Sub
             End If
@@ -252,7 +254,7 @@ Module ServerHandleData
         End If
     End Sub
 
-    Private Sub Packet_DeleteAccount(ByVal index As Integer, ByVal data() As Byte)
+    Private Sub Packet_DeleteAccount(index As Integer, data() As Byte)
         Dim Buffer As New ByteBuffer
         Dim Name As String
         'Dim Password As String
@@ -279,11 +281,11 @@ Module ServerHandleData
         Next
     End Sub
 
-    Private Sub Packet_Login(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
+    Private Sub Packet_Login(index As Integer, data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim Name As String
         Dim Password As String
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CLogin Then Exit Sub
@@ -375,11 +377,10 @@ Module ServerHandleData
         End If
     End Sub
 
-    Private Sub Packet_UseChar(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
+    Private Sub Packet_UseChar(index As Integer, data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim slot As Byte
 
-        Buffer = New ByteBuffer
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CUseChar Then Exit Sub
@@ -408,15 +409,15 @@ Module ServerHandleData
 
     End Sub
 
-    Private Sub Packet_AddChar(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
+    Private Sub Packet_AddChar(index As Integer, data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim Name As String, slot As Byte
         Dim Sex As Integer
         Dim Classes As Integer
         Dim Sprite As Integer
         Dim i As Integer
         Dim n As Integer
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CAddChar Then Exit Sub
@@ -429,12 +430,11 @@ Module ServerHandleData
             Sprite = Buffer.ReadInteger
 
             ' Prevent hacking
-            If Len(Trim$(Name)) < 3 Then
+            If Len(Name.Trim) < 3 Then
                 AlertMsg(index, "Character name must be at least three characters in length.")
                 Exit Sub
             End If
 
-            ' Prevent hacking
             For i = 1 To Len(Name)
                 n = AscW(Mid$(Name, i, 1))
 
@@ -445,10 +445,8 @@ Module ServerHandleData
 
             Next
 
-            ' Prevent hacking
             If (Sex < Enums.Sex.Male) Or (Sex > Enums.Sex.Female) Then Exit Sub
 
-            ' Prevent hacking
             If Classes < 1 Or Classes > Max_Classes Then Exit Sub
 
             ' Check if char already exists in slot
@@ -476,11 +474,10 @@ Module ServerHandleData
 
     End Sub
 
-    Private Sub Packet_DeleteChar(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
+    Private Sub Packet_DeleteChar(index As Integer, data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim slot As Byte
 
-        Buffer = New ByteBuffer
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CDelChar Then Exit Sub
@@ -526,10 +523,10 @@ Module ServerHandleData
 
     End Sub
 
-    Private Sub Packet_SayMessage(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
+    Private Sub Packet_SayMessage(index As Integer, data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim msg As String
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CSayMsg Then Exit Sub
@@ -544,11 +541,11 @@ Module ServerHandleData
         Buffer = Nothing
     End Sub
 
-    Private Sub Packet_BroadCastMsg(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
+    Private Sub Packet_BroadCastMsg(index As Integer, data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim msg As String
         Dim s As String
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CBroadcastMsg Then Exit Sub
@@ -563,10 +560,9 @@ Module ServerHandleData
         Buffer = Nothing
     End Sub
 
-    Public Sub Packet_PlayerMsg(ByVal index As Integer, ByVal Data() As Byte)
-        Dim buffer As ByteBuffer, OtherPlayer As String, Msg As String, OtherPlayerIndex As Integer
+    Public Sub Packet_PlayerMsg(index As Integer, Data() As Byte)
+        Dim buffer As New ByteBuffer, OtherPlayer As String, Msg As String, OtherPlayerIndex As Integer
 
-        buffer = New ByteBuffer()
         buffer.WriteBytes(Data)
 
         If buffer.ReadInteger <> ClientPackets.CPlayerMsg Then Exit Sub
@@ -590,12 +586,12 @@ Module ServerHandleData
         End If
     End Sub
 
-    Private Sub Packet_PlayerMove(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
+    Private Sub Packet_PlayerMove(index As Integer, data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim Dir As Integer
         Dim movement As Integer
         Dim tmpX As Integer, tmpY As Integer
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CPlayerMove Then Exit Sub
@@ -611,7 +607,6 @@ Module ServerHandleData
         ' Prevent hacking
         If Dir < Direction.Up Or Dir > Direction.Right Then Exit Sub
 
-        ' Prevent hacking
         If movement < 1 Or movement > 2 Then Exit Sub
 
         ' Prevent player from moving if they have casted a skill
@@ -632,7 +627,7 @@ Module ServerHandleData
             Exit Sub
         End If
 
-        ' Prever player from moving if in shop
+        ' Prevent player from moving if in shop
         If TempPlayer(index).InShop > 0 Then
             SendPlayerXY(index)
             Exit Sub
@@ -654,10 +649,10 @@ Module ServerHandleData
         Buffer = Nothing
     End Sub
 
-    Sub Packet_PlayerDirection(ByVal Index As Integer, ByVal Data() As Byte)
+    Sub Packet_PlayerDirection(Index As Integer, Data() As Byte)
         Dim dir As Integer
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As New ByteBuffer
+
         Buffer.WriteBytes(Data)
 
         If Buffer.ReadInteger <> ClientPackets.CPlayerDir Then Exit Sub
@@ -681,10 +676,10 @@ Module ServerHandleData
 
     End Sub
 
-    Sub Packet_UseItem(ByVal Index As Integer, ByVal Data() As Byte)
-        Dim Buffer As ByteBuffer
+    Sub Packet_UseItem(Index As Integer, Data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim invnum As Integer
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(Data)
 
         If Buffer.ReadInteger <> ClientPackets.CUseItem Then Exit Sub
@@ -695,12 +690,12 @@ Module ServerHandleData
         UseItem(Index, invnum)
     End Sub
 
-    Sub Packet_Attack(ByVal Index As Integer, ByVal Data() As Byte)
-        Dim Buffer As ByteBuffer
-        Dim i As Integer ', Shoot As Boolean
+    Sub Packet_Attack(Index As Integer, Data() As Byte)
+        Dim Buffer As New ByteBuffer
+        Dim i As Integer
         Dim TempIndex As Integer
         Dim x As Integer, y As Integer
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(Data)
 
         If Buffer.ReadInteger <> ClientPackets.CAttack Then Exit Sub
@@ -783,11 +778,11 @@ Module ServerHandleData
         Buffer = Nothing
     End Sub
 
-    Sub Packet_PlayerInfo(ByVal Index As Integer, ByVal Data() As Byte)
-        Dim Buffer As ByteBuffer
+    Sub Packet_PlayerInfo(Index As Integer, Data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim i As Integer, n As Integer
         Dim name As String
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(Data)
 
         If Buffer.ReadInteger <> ClientPackets.CPlayerInfoRequest Then Exit Sub
@@ -817,21 +812,19 @@ Module ServerHandleData
         Buffer = Nothing
     End Sub
 
-    Sub Packet_WarpMeTo(ByVal Index As Integer, ByVal Data() As Byte)
+    Sub Packet_WarpMeTo(Index As Integer, Data() As Byte)
         Dim n As Integer
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As New ByteBuffer
+
         Buffer.WriteBytes(Data)
 
         If Buffer.ReadInteger <> ClientPackets.CWarpMeTo Then Exit Sub
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Mapper Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
 
         ' The player
-        n = FindPlayer(Buffer.ReadString) 'Parse(1))
+        n = FindPlayer(Buffer.ReadString)
         Buffer = Nothing
 
         If n <> Index Then
@@ -850,13 +843,10 @@ Module ServerHandleData
 
     End Sub
 
-    ' :::::::::::::::::::::::
-    ' :: Warp to me packet ::
-    ' :::::::::::::::::::::::
-    Sub Packet_WarpToMe(ByVal Index As Integer, ByVal Data() As Byte)
+    Sub Packet_WarpToMe(Index As Integer, Data() As Byte)
         Dim n As Integer
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As New ByteBuffer
+
         Buffer.WriteBytes(Data)
 
         If Buffer.ReadInteger <> ClientPackets.CWarpToMe Then Exit Sub
@@ -884,10 +874,10 @@ Module ServerHandleData
 
     End Sub
 
-    Sub Packet_WarpTo(ByVal Index As Integer, ByVal Data() As Byte)
+    Sub Packet_WarpTo(Index As Integer, Data() As Byte)
         Dim n As Integer
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As New ByteBuffer
+
         Buffer.WriteBytes(Data)
 
         If Buffer.ReadInteger <> ClientPackets.CWarpTo Then Exit Sub
@@ -908,32 +898,31 @@ Module ServerHandleData
 
     End Sub
 
-    Sub Packet_SetSprite(ByVal Index As Integer, ByVal Data() As Byte)
+    Sub Packet_SetSprite(Index As Integer, Data() As Byte)
         Dim n As Integer
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As New ByteBuffer
+
         Buffer.WriteBytes(Data)
 
         If Buffer.ReadInteger <> ClientPackets.CSetSprite Then Exit Sub
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Mapper Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
 
         ' The sprite
-        n = Buffer.ReadInteger 'CLng(Parse(1))
+        n = Buffer.ReadInteger
         Buffer = Nothing
-        Call SetPlayerSprite(Index, n)
-        Call SendPlayerData(Index)
-        Exit Sub
+
+        SetPlayerSprite(Index, n)
+        SendPlayerData(Index)
+
     End Sub
 
-    Sub Packet_GetStats(ByVal Index As Integer, ByVal Data() As Byte)
-        Dim Buffer As ByteBuffer
+    Sub Packet_GetStats(Index As Integer, Data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim i As Integer
         Dim n As Integer
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(Data)
 
         If Buffer.ReadInteger <> ClientPackets.CGetStats Then Exit Sub
@@ -951,10 +940,10 @@ Module ServerHandleData
         Buffer = Nothing
     End Sub
 
-    Sub Packet_RequestNewMap(ByVal Index As Integer, ByVal Data() As Byte)
-        Dim Buffer As ByteBuffer
+    Sub Packet_RequestNewMap(Index As Integer, Data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim dir As Integer
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(Data)
 
         If Buffer.ReadInteger <> ClientPackets.CRequestNewMap Then Exit Sub
@@ -964,16 +953,10 @@ Module ServerHandleData
         ' Prevent hacking
         If dir < Direction.Up Or dir > Direction.Right Then Exit Sub
 
-        'Debug.Print("Server-RequestNewMap")
-
         PlayerMove(Index, dir, 1, True)
-        Buffer = Nothing
     End Sub
 
-    ' :::::::::::::::::::::
-    ' :: Map data packet ::
-    ' :::::::::::::::::::::
-    Sub Packet_MapData(ByVal Index As Integer, ByVal Data() As Byte)
+    Sub Packet_MapData(Index As Integer, Data() As Byte)
         Dim i As Integer
         Dim MapNum As Integer
         Dim x As Integer
@@ -1225,10 +1208,10 @@ Module ServerHandleData
         Buffer = Nothing
     End Sub
 
-    Private Sub Packet_NeedMap(ByVal index As Integer, ByVal data() As Byte)
+    Private Sub Packet_NeedMap(index As Integer, data() As Byte)
         Dim s As String
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As New ByteBuffer
+
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CNeedMap Then Exit Sub
@@ -1249,9 +1232,9 @@ Module ServerHandleData
         TempPlayer(index).GettingMap = False
     End Sub
 
-    Private Sub Packet_GetItem(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+    Private Sub Packet_GetItem(index As Integer, data() As Byte)
+        Dim Buffer As New ByteBuffer
+
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CMapGetItem Then Exit Sub
@@ -1261,10 +1244,10 @@ Module ServerHandleData
         Buffer = Nothing
     End Sub
 
-    Private Sub Packet_DropItem(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
+    Private Sub Packet_DropItem(index As Integer, data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim InvNum As Integer, Amount As Integer
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(data)
         If Buffer.ReadInteger <> ClientPackets.CMapDropItem Then Exit Sub
         InvNum = Buffer.ReadInteger
@@ -1284,36 +1267,34 @@ Module ServerHandleData
         PlayerMapDropItem(index, InvNum, Amount)
     End Sub
 
-    Sub Packet_RespawnMap(ByVal Index As Integer, ByVal Data() As Byte)
-        Dim Buffer As ByteBuffer
+    Sub Packet_RespawnMap(Index As Integer, Data() As Byte)
+        Dim Buffer As New ByteBuffer
         Dim i As Integer
-        Buffer = New ByteBuffer
+
         Buffer.WriteBytes(Data)
 
         If Buffer.ReadInteger <> ClientPackets.CMapRespawn Then Exit Sub
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Mapper Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
 
         ' Clear out it all
         For i = 1 To MAX_MAP_ITEMS
-            Call SpawnItemSlot(i, 0, 0, GetPlayerMap(Index), MapItem(GetPlayerMap(Index), i).X, MapItem(GetPlayerMap(Index), i).Y)
-            Call ClearMapItem(i, GetPlayerMap(Index))
+            SpawnItemSlot(i, 0, 0, GetPlayerMap(Index), MapItem(GetPlayerMap(Index), i).X, MapItem(GetPlayerMap(Index), i).Y)
+            ClearMapItem(i, GetPlayerMap(Index))
         Next
 
         ' Respawn
-        Call SpawnMapItems(GetPlayerMap(Index))
+        SpawnMapItems(GetPlayerMap(Index))
 
         ' Respawn NPCS
         For i = 1 To MAX_MAP_NPCS
-            Call SpawnNpc(i, GetPlayerMap(Index))
+            SpawnNpc(i, GetPlayerMap(Index))
         Next
 
         CacheResources(GetPlayerMap(Index))
-        Call PlayerMsg(Index, "Map respawned.", ColorType.BrightGreen)
-        Call Addlog(GetPlayerName(Index) & " has respawned map #" & GetPlayerMap(Index), ADMIN_LOG)
+        PlayerMsg(Index, "Map respawned.", ColorType.BrightGreen)
+        Addlog(GetPlayerName(Index) & " has respawned map #" & GetPlayerMap(Index), ADMIN_LOG)
 
         Buffer = Nothing
     End Sub

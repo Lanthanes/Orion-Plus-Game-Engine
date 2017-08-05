@@ -86,9 +86,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.vb" />
+    <Compile Include="Source\Modules\Objects\ServerItems.vb" />
     <Compile Include="Source\Modules\Objects\ServerNpc.vb" />
     <Compile Include="Source\Modules\ServerAutoMap.vb" />
-    <Compile Include="Source\Modules\ServerCombat.vb" />
     <Compile Include="Source\Modules\ServerConsole.vb" />
     <Compile Include="Source\Modules\ServerConstants.vb" />
     <Compile Include="Source\Modules\ServerCrafting.vb" />
