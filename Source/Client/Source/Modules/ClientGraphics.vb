@@ -198,7 +198,9 @@ Module ClientGraphics
     Public PetBarSprite As Sprite
     Public PetbarGFXInfo As GraphicInfo
 
+    Public MapTintGfx As New RenderTexture(1152, 864)
     Public MapTintSprite As Sprite
+
     Public MapFadeSprite As Sprite
 
     ' Number of graphic files
@@ -2533,11 +2535,15 @@ Module ClientGraphics
 
         If Map.HasMapTint = 0 Then Exit Sub
 
-        MapTintSprite = New Sprite(New Texture(New SFML.Graphics.Image(GameWindow.Size.X, GameWindow.Size.Y, SFML.Graphics.Color.White)))
-        MapTintSprite.Color = New SFML.Graphics.Color(CurrentTintR, CurrentTintG, CurrentTintB, CurrentTintA)
+        MapTintGfx.Clear(New SFML.Graphics.Color(CurrentTintR, CurrentTintG, CurrentTintB, CurrentTintA))
+
+        MapTintSprite = New Sprite(MapTintGfx.Texture)
+        'MapTintSprite.Color = New SFML.Graphics.Color(CurrentTintR, CurrentTintG, CurrentTintB, CurrentTintA)
         MapTintSprite.TextureRect = New IntRect(0, 0, GameWindow.Size.X, GameWindow.Size.Y)
 
         MapTintSprite.Position = New Vector2f(0, 0)
+
+        MapTintGfx.Display()
 
         GameWindow.Draw(MapTintSprite)
 
