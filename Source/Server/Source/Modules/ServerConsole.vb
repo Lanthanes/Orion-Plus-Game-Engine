@@ -51,9 +51,22 @@ Module ServerConsole
             Return
         End If
 
+        'check for non existant commands
+        If Not CmdExists(command) Then
+            Return
+        End If
+
         FireEvent(globalCommandHandlers, line, command, parts)
         FireEvent(GetCommandHandlers(command), line, command, parts)
     End Sub
+
+    Private Function CmdExists(Cmd As String) As Boolean
+        If LCase(Cmd) <> ("/help") And Cmd <> ("/exit") And Cmd <> ("/setadmin") And Cmd <> ("/kick") And Cmd <> ("/ban") Then
+            Return False
+        End If
+
+        Return True
+    End Function
 
     Private Sub FireEvent(ByRef handlers As ConcurrentStack(Of HandleConsoleCommand), ByVal line As String, ByVal command As String, ByVal parts As String())
         For Each handler As HandleConsoleCommand In handlers
