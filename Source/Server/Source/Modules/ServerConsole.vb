@@ -152,39 +152,54 @@ Module ServerConsole
     Sub HandleCommandKick(ByVal Line As String, ByVal Command As String, ByVal Parts As String())
         Dim Name As String
 
-        If Parts.Length < 1 Then Exit Sub
+        Try
+            If Parts.Length < 1 Then Exit Sub
 
-        Name = Parts(1)
+            Name = Parts(1)
 
-        If Not FindPlayer(Name) > 0 Then Exit Sub
+            If Not FindPlayer(Name) > 0 Then Exit Sub
 
-        AlertMsg(FindPlayer(Name), "You have been kicked by the server owner!")
-        LeftGame(FindPlayer(Name))
+            AlertMsg(FindPlayer(Name), "You have been kicked by the server owner!")
+            LeftGame(FindPlayer(Name))
+        Catch ex As Exception
+            TextAdd("You need to supply a name!")
+        End Try
+
     End Sub
 
     Sub HandleCommandBan(ByVal Line As String, ByVal Command As String, ByVal Parts As String())
         Dim Name As String
 
-        If Parts.Length < 1 Then Exit Sub
+        Try
+            If Parts.Length < 1 Then Exit Sub
 
-        Name = Parts(1)
+            Name = Parts(1)
 
-        If Not FindPlayer(Name) > 0 Then Exit Sub
+            If Not FindPlayer(Name) > 0 Then Exit Sub
 
-        ServerBanIndex(FindPlayer(Name))
+            ServerBanIndex(FindPlayer(Name))
+        Catch ex As Exception
+            TextAdd("You need to supply a name!")
+        End Try
+
 
     End Sub
 
     Sub HandleCommandTimeSpeed(ByVal Line As String, ByVal Command As String, ByVal Parts As String())
         Dim speed As Double
 
-        If Parts.Length < 1 Then Exit Sub
+        Try
+            If Parts.Length < 1 Then Exit Sub
 
-        speed = Val(Parts(1))
+            speed = Val(Parts(1))
 
-        Time.Instance.GameSpeed = speed
+            Time.Instance.GameSpeed = speed
 
-        TextAdd("Set GameSpeed to " & Time.Instance.GameSpeed & " secs per seconds")
+            TextAdd("Set GameSpeed to " & Time.Instance.GameSpeed & " secs per seconds")
+        Catch ex As Exception
+            TextAdd("Not a valid value!")
+        End Try
+
     End Sub
 #End Region
 
