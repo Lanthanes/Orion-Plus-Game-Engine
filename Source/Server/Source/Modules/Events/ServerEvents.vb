@@ -862,6 +862,9 @@ Public Module ServerEvents
         Buffer.WriteInteger(ServerPackets.SEventDir)
         Buffer.WriteInteger(eventID)
 
+        Addlog("Sent SMSG: SEventDir", PACKET_LOG)
+        TextAdd("Sent SMSG: SEventDir")
+
         If globalevent Then
             Buffer.WriteInteger(TempEventMap(MapNum).Events(eventID).Dir)
         Else
@@ -917,6 +920,10 @@ Public Module ServerEvents
                     Buffer.WriteInteger(Dir)
                     Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).Dir)
                     Buffer.WriteInteger(movementspeed)
+
+                    Addlog("Sent SMSG: SEventMove Dir Up GlobalEvent", PACKET_LOG)
+                    TextAdd("Sent SMSG: SEventMove Dir Up GlobalEvent")
+
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.ToArray)
                     Else
@@ -932,6 +939,10 @@ Public Module ServerEvents
                     Buffer.WriteInteger(Dir)
                     Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).Dir)
                     Buffer.WriteInteger(movementspeed)
+
+                    Addlog("Sent SMSG: SEventMove Dir Up", PACKET_LOG)
+                    TextAdd("Sent SMSG: SEventMove Dir Up")
+
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.ToArray)
                     Else
@@ -950,6 +961,10 @@ Public Module ServerEvents
                     Buffer.WriteInteger(Dir)
                     Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).Dir)
                     Buffer.WriteInteger(movementspeed)
+
+                    Addlog("Sent SMSG: SEventMove Down GlobalEvent", PACKET_LOG)
+                    TextAdd("Sent SMSG: SEventMove Down GlobalEvent")
+
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.ToArray)
                     Else
@@ -965,6 +980,10 @@ Public Module ServerEvents
                     Buffer.WriteInteger(Dir)
                     Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).Dir)
                     Buffer.WriteInteger(movementspeed)
+
+                    Addlog("Sent SMSG: SEventMove", PACKET_LOG)
+                    TextAdd("Sent SMSG: SEventMove")
+
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.ToArray)
                     Else
@@ -982,6 +1001,10 @@ Public Module ServerEvents
                     Buffer.WriteInteger(Dir)
                     Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).Dir)
                     Buffer.WriteInteger(movementspeed)
+
+                    Addlog("Sent SMSG: SEventMove Left GlobalEvent", PACKET_LOG)
+                    TextAdd("Sent SMSG: SEventMove Left GlobalEvent")
+
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.ToArray)
                     Else
@@ -997,6 +1020,10 @@ Public Module ServerEvents
                     Buffer.WriteInteger(Dir)
                     Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).Dir)
                     Buffer.WriteInteger(movementspeed)
+
+                    Addlog("Sent SMSG: SEventMove", PACKET_LOG)
+                    TextAdd("Sent SMSG: SEventMove")
+
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.ToArray)
                     Else
@@ -1014,6 +1041,10 @@ Public Module ServerEvents
                     Buffer.WriteInteger(Dir)
                     Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).Dir)
                     Buffer.WriteInteger(movementspeed)
+
+                    Addlog("Sent SMSG: SEventMove GlobalEvent", PACKET_LOG)
+                    TextAdd("Sent SMSG: SEventMove GlobalEvent")
+
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.ToArray)
                     Else
@@ -1029,6 +1060,10 @@ Public Module ServerEvents
                     Buffer.WriteInteger(Dir)
                     Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).Dir)
                     Buffer.WriteInteger(movementspeed)
+
+                    Addlog("Sent SMSG: SEventMove", PACKET_LOG)
+                    TextAdd("Sent SMSG: SEventMove")
+
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.ToArray)
                     Else
@@ -1731,6 +1766,10 @@ Public Module ServerEvents
 
         If Buffer.ReadInteger <> ClientPackets.CEventChatReply Then Exit Sub
 
+        Addlog("Recieved CMSG: CEventChatReply", PACKET_LOG)
+        TextAdd("Recieved CMSG: CEventChatReply")
+
+
         eventID = Buffer.ReadInteger
         pageID = Buffer.ReadInteger
         reply = Buffer.ReadInteger
@@ -1782,6 +1821,9 @@ Public Module ServerEvents
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CEvent Then Exit Sub
+
+        Addlog("Recieved CMSG: CEvent", PACKET_LOG)
+        TextAdd("Recieved CMSG: CEvent")
 
         i = Buffer.ReadInteger
         Buffer = Nothing
@@ -1847,6 +1889,9 @@ Public Module ServerEvents
 
         If Buffer.ReadInteger <> ClientPackets.CRequestSwitchesAndVariables Then Exit Sub
 
+        Addlog("Recieved CMSG: CRequestSwitchesAndVariables", PACKET_LOG)
+        TextAdd("Recieved CMSG: CRequestSwitchesAndVariables")
+
         Buffer = Nothing
 
         SendSwitchesAndVariables(index)
@@ -1859,6 +1904,10 @@ Public Module ServerEvents
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CSwitchesAndVariables Then Exit Sub
+
+
+        Addlog("Recieved CMSG: CSwitchesAndVariables", PACKET_LOG)
+        TextAdd("Recieved CMSG: CSwitchesAndVariables")
 
         For i = 1 To MAX_SWITCHES
             Switches(i) = Buffer.ReadString
@@ -1884,6 +1933,9 @@ Public Module ServerEvents
         Dim Buffer As New ByteBuffer
 
         Buffer.WriteInteger(ServerPackets.SSpecialEffect)
+
+        Addlog("Sent SMSG: SSpecialEffect", PACKET_LOG)
+        TextAdd("Sent SMSG: SPecialEffect")
 
         Select Case EffectType
             Case EFFECT_TYPE_FADEIN
@@ -1919,6 +1971,9 @@ Public Module ServerEvents
 
         Buffer.WriteInteger(ServerPackets.SSwitchesAndVariables)
 
+        Addlog("Sent SMSG: SSwitchesAndVariables", PACKET_LOG)
+        TextAdd("Sent SMSG: SSwitchesAndVariables")
+
         For i = 1 To MAX_SWITCHES
             Buffer.WriteString(Trim(Switches(i)))
         Next
@@ -1943,6 +1998,9 @@ Public Module ServerEvents
 
         Buffer.WriteInteger(ServerPackets.SMapEventData)
         MapNum = GetPlayerMap(Index)
+
+        Addlog("Sent SMSG: SMapEventData", PACKET_LOG)
+        TextAdd("Sent SMSG: SMapEventData")
 
         'Event Data
         Buffer.WriteInteger(Map(MapNum).EventCount)

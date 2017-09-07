@@ -3,6 +3,7 @@
     ' Path constants
     Public Const ADMIN_LOG As String = "admin.log"
     Public Const PLAYER_LOG As String = "player.log"
+    Public Const PACKET_LOG As String = "packet.log"
 
     ' Maximum values
     Public Const MAX_HOTBAR As Byte = 7

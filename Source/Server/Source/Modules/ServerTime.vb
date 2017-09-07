@@ -34,6 +34,12 @@ Public Module ServerTime
         Buffer.WriteBytes(BitConverter.GetBytes(Time.Instance.Time.Ticks))
         SendDataTo(Index, Buffer.ToArray)
 
+        Addlog("Sent SMSG: SClock", PACKET_LOG)
+        TextAdd("Sent SMSG: SClock")
+
+        Addlog(" Player: " & GetPlayerName(Index) & " : " & " GameSpeed: " & Time.Instance.GameSpeed & " Instance Time Ticks: " & Time.Instance.Time.Ticks, PLAYER_LOG)
+        TextAdd(" Player: " & GetPlayerName(Index) & " : " & " GameSpeed: " & Time.Instance.GameSpeed & " Instance Time Ticks: " & Time.Instance.Time.Ticks)
+
         Buffer = Nothing
     End Sub
 
@@ -53,6 +59,12 @@ Public Module ServerTime
         Buffer.WriteInteger(ServerPackets.STime)
         Buffer.WriteByte(Time.Instance.TimeOfDay)
         SendDataTo(Index, Buffer.ToArray)
+
+        Addlog("Sent SMSG: STime", PACKET_LOG)
+        TextAdd("Sent SMSG: STime")
+
+        Addlog(" Player: " & GetPlayerName(Index) & " : " & " Time Of Day: " & Time.Instance.TimeOfDay, PLAYER_LOG)
+        TextAdd(" Player: " & GetPlayerName(Index) & " : " & " Time Of Day: " & Time.Instance.TimeOfDay)
 
         Buffer = Nothing
     End Sub

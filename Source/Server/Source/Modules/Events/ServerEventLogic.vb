@@ -116,6 +116,10 @@ Public Module ServerEventLogic
                                     Buffer.WriteInteger(.QuestNum)
                                 End With
                                 SendDataTo(i, Buffer.ToArray)
+
+                                Addlog("Sent SMSG: SSpawnEvent Remove Dead Events", PACKET_LOG)
+                                TextAdd("Sent SMSG: SSpawnEvent Remove Dead Events")
+
                                 Buffer = Nothing
                             End If
                         End If
@@ -331,6 +335,10 @@ Public Module ServerEventLogic
                                 Buffer.WriteInteger(.QuestNum)
                             End With
                             SendDataTo(i, Buffer.ToArray)
+
+                            Addlog("Sent SMSG: SSpawnEvent Spawn New Events", PACKET_LOG)
+                            TextAdd("Sent SMSG: SSpawnEvent Spawn New Events")
+
                             Buffer = Nothing
                             z = 1
                         End If
@@ -690,6 +698,10 @@ Public Module ServerEventLogic
                                                             Buffer.WriteInteger(.QuestNum)
                                                         End With
                                                         SendDataToMap(i, Buffer.ToArray)
+
+                                                        Addlog("Sent SMSG: SSpawnEvent Process Event Movement", PACKET_LOG)
+                                                        TextAdd("Sent SMSG: SSpawnEvent Process Event Movement")
+
                                                         Buffer = Nothing
                                                     End If
                                                 End If
@@ -1251,6 +1263,10 @@ Public Module ServerEventLogic
                                                             Buffer.WriteInteger(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1)
                                                             Buffer.WriteString(Trim(ParseEventText(i, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Text1)))
                                                             Buffer.WriteInteger(0)
+
+                                                            Addlog("Sent SMSG: SEventChat evShowText", PACKET_LOG)
+                                                            TextAdd("Sent SMSG: SEventChat evShowText")
+
                                                             If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).CommandCount > .CurSlot Then
                                                                 If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evShowText Or Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evShowChoices Then
                                                                     Buffer.WriteInteger(1)
@@ -1272,6 +1288,10 @@ Public Module ServerEventLogic
                                                             Buffer.WriteInteger(.PageID)
                                                             Buffer.WriteInteger(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data5)
                                                             Buffer.WriteString(Trim(ParseEventText(i, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Text1)))
+
+                                                            Addlog("Sent SMSG: SEventChat evShowChoices", PACKET_LOG)
+                                                            TextAdd("Sent SMSG: SEventChat")
+
                                                             If Len(Trim$(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Text2)) > 0 Then
                                                                 w = 1
                                                                 If Len(Trim$(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Text3)) > 0 Then
@@ -1790,22 +1810,38 @@ Public Module ServerEventLogic
                                                             Buffer.WriteInteger(ServerPackets.SPlayBGM)
                                                             Buffer.WriteString(Trim(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Text1))
                                                             SendDataTo(i, Buffer.ToArray)
+
+                                                            Addlog("Sent SMSG: SPlayBGM", PACKET_LOG)
+                                                            TextAdd("Sent SMSG: SPlayBGM")
+
                                                             Buffer = Nothing
                                                         Case EventType.evFadeoutBGM
                                                             Buffer = New ByteBuffer
                                                             Buffer.WriteInteger(ServerPackets.SFadeoutBGM)
                                                             SendDataTo(i, Buffer.ToArray)
+
+                                                            Addlog("Sent SMSG: SFadeoutBGM", PACKET_LOG)
+                                                            TextAdd("Sent SMSG: SFadeoutBGM")
+
                                                             Buffer = Nothing
                                                         Case EventType.evPlaySound
                                                             Buffer = New ByteBuffer
                                                             Buffer.WriteInteger(ServerPackets.SPlaySound)
                                                             Buffer.WriteString(Trim(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Text1))
                                                             SendDataTo(i, Buffer.ToArray)
+
+                                                            Addlog("Sent SMSG: SPlaySound", PACKET_LOG)
+                                                            TextAdd("Sent SMSG: SPlaySound")
+
                                                             Buffer = Nothing
                                                         Case EventType.evStopSound
                                                             Buffer = New ByteBuffer
                                                             Buffer.WriteInteger(ServerPackets.SStopSound)
                                                             SendDataTo(i, Buffer.ToArray)
+
+                                                            Addlog("Sent SMSG: SStopSound", PACKET_LOG)
+                                                            TextAdd("Sent SMSG: SStopSound")
+
                                                             Buffer = Nothing
                                                         Case EventType.evSetAccess
                                                             Player(i).Access = Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1
@@ -1884,6 +1920,10 @@ Public Module ServerEventLogic
                                                             Buffer.WriteInteger(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data4)
                                                             Buffer.WriteInteger(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data5)
                                                             SendDataTo(i, Buffer.ToArray)
+
+                                                            Addlog("Sent SMSG: SPic evShowPicture", PACKET_LOG)
+                                                            TextAdd("Sent SMSG: SPic evShowPicture")
+
                                                             Buffer = Nothing
                                                         Case EventType.evHidePicture
                                                             Buffer = New ByteBuffer
@@ -1891,6 +1931,10 @@ Public Module ServerEventLogic
                                                             Buffer.WriteInteger(1)
                                                             Buffer.WriteInteger(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1 + 1)
                                                             SendDataTo(i, Buffer.ToArray)
+
+                                                            Addlog("Sent SMSG: SPic evHidePicture", PACKET_LOG)
+                                                            TextAdd("Sent SMSG: SPic evHidePicture")
+
                                                             Buffer = Nothing
                                                         Case EventType.evWaitMovement
                                                             If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1 <= Map(GetPlayerMap(i)).EventCount Then
@@ -1909,12 +1953,20 @@ Public Module ServerEventLogic
                                                             Buffer.WriteInteger(ServerPackets.SHoldPlayer)
                                                             Buffer.WriteInteger(0)
                                                             SendDataTo(i, Buffer.ToArray)
+
+                                                            Addlog("Sent SMSG: SHoldPlayer", PACKET_LOG)
+                                                            TextAdd("Sent SMSG: SHoldPlayer")
+
                                                             Buffer = Nothing
                                                         Case EventType.evReleasePlayer
                                                             Buffer = New ByteBuffer
                                                             Buffer.WriteInteger(ServerPackets.SHoldPlayer)
                                                             Buffer.WriteInteger(1)
                                                             SendDataTo(i, Buffer.ToArray)
+
+                                                            Addlog("Sent SMSG: SHoldPlayer Release", PACKET_LOG)
+                                                            TextAdd("Sent SMSG: SHoldPlayer Release")
+
                                                             Buffer = Nothing
                                                     End Select
                                                 End If
@@ -2559,6 +2611,10 @@ nextevent:
                     Buffer.WriteInteger(Map(MapNum).Events(.EventID).Pages(.PageID).QuestNum)
                 End With
                 SendDataTo(Index, Buffer.ToArray)
+
+                Addlog("Sent SMSG: SSpawnEvent For Player", PACKET_LOG)
+                TextAdd("Sent SMSG: SSpawnEvent For Player")
+
                 Buffer = Nothing
             Next
         End If
