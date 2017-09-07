@@ -97,6 +97,9 @@ Module ServerGameLogic
                 Buffer.WriteInteger(x)
                 Buffer.WriteInteger(y)
 
+                Addlog("Sent SMSG: SSpawnItem MapItemSlot", PACKET_LOG)
+                TextAdd("Sent SMSG: SSpawnItem MapItemSlot")
+
                 SendDataToMap(MapNum, Buffer.ToArray())
             End If
 
@@ -240,6 +243,9 @@ Module ServerGameLogic
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).X)
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
+
+                Addlog("Recieved SMSG: SSpawnNpc", PACKET_LOG)
+                TextAdd("Recieved SMSG: SSpawnNpc")
 
                 For i = 1 To Vitals.Count - 1
                     Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Vital(i))
@@ -476,6 +482,10 @@ Module ServerGameLogic
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
                 Buffer.WriteInteger(Movement)
+
+                Addlog("Sent SMSG: SNpcMove Up", PACKET_LOG)
+                TextAdd("Sent SMSG: SNpcMove Up")
+
                 SendDataToMap(MapNum, Buffer.ToArray())
             Case Direction.Down
                 MapNpc(MapNum).Npc(MapNpcNum).Y = MapNpc(MapNum).Npc(MapNpcNum).Y + 1
@@ -486,6 +496,10 @@ Module ServerGameLogic
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
                 Buffer.WriteInteger(Movement)
+
+                Addlog("Sent SMSG: SNpcMove Down", PACKET_LOG)
+                TextAdd("Sent SMSG: SNpcMove Down")
+
                 SendDataToMap(MapNum, Buffer.ToArray())
             Case Direction.Left
                 MapNpc(MapNum).Npc(MapNpcNum).X = MapNpc(MapNum).Npc(MapNpcNum).X - 1
@@ -496,6 +510,10 @@ Module ServerGameLogic
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
                 Buffer.WriteInteger(Movement)
+
+                Addlog("Sent SMSG: SNpcMove Left", PACKET_LOG)
+                TextAdd("Sent SMSG: SNpcMove Left")
+
                 SendDataToMap(MapNum, Buffer.ToArray())
             Case Direction.Right
                 MapNpc(MapNum).Npc(MapNpcNum).X = MapNpc(MapNum).Npc(MapNpcNum).X + 1
@@ -506,6 +524,10 @@ Module ServerGameLogic
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
                 Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
                 Buffer.WriteInteger(Movement)
+
+                Addlog("Sent SMSG: SNpcMove Right", PACKET_LOG)
+                TextAdd("Sent SMSG: SNpcMove Right")
+
                 SendDataToMap(MapNum, Buffer.ToArray())
         End Select
 
@@ -525,6 +547,10 @@ Module ServerGameLogic
         Buffer.WriteInteger(ServerPackets.SNpcDir)
         Buffer.WriteInteger(MapNpcNum)
         Buffer.WriteInteger(Dir)
+
+        Addlog("Sent SMSG: SNpcDir", PACKET_LOG)
+        TextAdd("Sent SMSG: SNpcDir")
+
         SendDataToMap(MapNum, Buffer.ToArray())
 
         Buffer = Nothing
@@ -553,6 +579,9 @@ Module ServerGameLogic
         Dim Buffer As New ByteBuffer
 
         Buffer.WriteInteger(ServerPackets.SMapNpcData)
+
+        Addlog("Sent SMSG: SMapNpcData", PACKET_LOG)
+        TextAdd("Sent SMSG: SMapNpcData")
 
         For i = 1 To MAX_MAP_NPCS
             Buffer.WriteInteger(MapNpc(MapNum).Npc(i).Num)

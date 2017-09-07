@@ -132,6 +132,9 @@ Public Module ServerCrafting
 
         If Buffer.ReadInteger <> ClientPackets.CRequestRecipes Then Exit Sub
 
+        Addlog("Recieved CMSG: CRequestRecipes", PACKET_LOG)
+        TextAdd("Recieved CMSG: CRequestRecipes")
+
         SendRecipes(Index)
 
         Buffer = Nothing
@@ -147,6 +150,10 @@ Public Module ServerCrafting
         Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SRecipeEditor)
         SendDataTo(Index, Buffer.ToArray())
+
+        Addlog("Sent SMSG: SRecipeEditor", PACKET_LOG)
+        TextAdd("Sent SMSG: SRecipeEditor")
+
         Buffer = Nothing
 
     End Sub
@@ -161,6 +168,9 @@ Public Module ServerCrafting
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> EditorPackets.SaveRecipe Then Exit Sub
+
+        Addlog("Recieved EMSG: SaveRecipe", PACKET_LOG)
+        TextAdd("Recieved EMSG: SaveRecipe")
 
         'recipe index
         n = Buffer.ReadInteger
@@ -195,6 +205,9 @@ Public Module ServerCrafting
 
         If Buffer.ReadInteger <> ClientPackets.CCloseCraft Then Exit Sub
 
+        Addlog("Recieved CMSG: CCloseCraft", PACKET_LOG)
+        TextAdd("Recieved CMSG: CCloseCraft")
+
         TempPlayer(Index).IsCrafting = False
 
         Buffer = Nothing
@@ -209,6 +222,9 @@ Public Module ServerCrafting
         Buffer.WriteBytes(data)
 
         If Buffer.ReadInteger <> ClientPackets.CStartCraft Then Exit Sub
+
+        Addlog("Recieved CMSG: CStartCraft", PACKET_LOG)
+        TextAdd("Recieved CMSG: CStartCraft")
 
         recipeindex = Buffer.ReadInteger
         amount = Buffer.ReadInteger
@@ -247,6 +263,9 @@ Public Module ServerCrafting
         Buffer.WriteInteger(ServerPackets.SUpdateRecipe)
         Buffer.WriteInteger(RecipeNum)
 
+        Addlog("Sent SMSG: SUpdateRecipe", PACKET_LOG)
+        TextAdd("Sent SMSG: SUpdateRecipe")
+
         Buffer.WriteString(Trim$(Recipe(RecipeNum).Name))
         Buffer.WriteInteger(Recipe(RecipeNum).RecipeType)
         Buffer.WriteInteger(Recipe(RecipeNum).MakeItemNum)
@@ -269,6 +288,9 @@ Public Module ServerCrafting
         Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SUpdateRecipe)
         Buffer.WriteInteger(RecipeNum)
+
+        Addlog("Sent SMSG: SUpdateRecipe To All", PACKET_LOG)
+        TextAdd("Sent SMSG: SUpdateRecipe To All")
 
         Buffer.WriteString(Trim$(Recipe(RecipeNum).Name))
         Buffer.WriteInteger(Recipe(RecipeNum).RecipeType)
@@ -293,6 +315,9 @@ Public Module ServerCrafting
         Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SSendPlayerRecipe)
 
+        Addlog("Sent SMSG: SSendPlayerRecipe", PACKET_LOG)
+        TextAdd("Sent SMSG: SSendPlayerRecipe")
+
         For i = 1 To MAX_RECIPE
             Buffer.WriteInteger(Player(Index).Character(TempPlayer(Index).CurChar).RecipeLearned(i))
         Next
@@ -307,6 +332,9 @@ Public Module ServerCrafting
         Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SOpenCraft)
 
+        Addlog("Sent SMSG: SOpenCraft", PACKET_LOG)
+        TextAdd("Sent SMSG: SOpenCraft")
+
         SendDataTo(Index, Buffer.ToArray())
 
         Buffer = Nothing
@@ -316,6 +344,9 @@ Public Module ServerCrafting
         Dim Buffer As ByteBuffer
         Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SUpdateCraft)
+
+        Addlog("Sent SMSG: SUpdateCraft", PACKET_LOG)
+        TextAdd("Sent SMSG: SUpdateCraft")
 
         Buffer.WriteInteger(done)
 
