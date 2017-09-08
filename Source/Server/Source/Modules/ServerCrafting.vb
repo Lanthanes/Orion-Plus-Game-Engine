@@ -54,7 +54,7 @@ Public Module ServerCrafting
 
         filename = Path.Combine(Application.StartupPath, "data", "recipes", String.Format("recipe{0}.dat", RecipeNum))
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
 
         writer.WriteString(Recipe(RecipeNum).Name)
         writer.WriteByte(Recipe(RecipeNum).RecipeType)

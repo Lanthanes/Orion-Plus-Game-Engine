@@ -91,7 +91,7 @@ Public Module ServerQuest
         Dim I As Integer
         filename = Path.Combine(Application.StartupPath, "data", "quests", String.Format("quest{0}.dat", QuestNum))
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
 
         writer.WriteString(Quest(QuestNum).Name)
         writer.WriteString(Quest(QuestNum).QuestLog)

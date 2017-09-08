@@ -45,7 +45,7 @@ Public Module ServerProjectiles
 
         filename = Path.Combine(Application.StartupPath, "data", "projectiles", String.Format("projectile{0}.dat", ProjectileNum))
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
 
         writer.WriteString(Projectiles(ProjectileNum).Name)
         writer.WriteInt32(Projectiles(ProjectileNum).Sprite)

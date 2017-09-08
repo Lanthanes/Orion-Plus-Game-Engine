@@ -273,7 +273,7 @@ Module ServerDatabase
         Dim x As Integer, y As Integer, l As Integer
 
         filename = Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}.dat", MapNum))
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
         writer.WriteString(Map(MapNum).Name)
         writer.WriteString(Map(MapNum).Music)
         writer.WriteInt32(Map(MapNum).Revision)
@@ -753,7 +753,7 @@ Module ServerDatabase
         Dim filename As String
         filename = Path.Combine(Application.StartupPath, "data", "items", String.Format("item{0}.dat", itemNum))
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
         writer.WriteString(Item(itemNum).Name)
         writer.WriteInt32(Item(itemNum).Pic)
         writer.WriteString(Item(itemNum).Description)
@@ -946,7 +946,7 @@ Module ServerDatabase
         Dim i As Integer
         filename = Path.Combine(Application.StartupPath, "data", "npcs", String.Format("npc{0}.dat", NpcNum))
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
         writer.WriteString(Npc(NpcNum).Name)
         writer.WriteString(Npc(NpcNum).AttackSay)
         writer.WriteInt32(Npc(NpcNum).Sprite)
@@ -1120,7 +1120,7 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "resources", String.Format("resource{0}.dat", ResourceNum))
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
 
         writer.WriteString(Resource(ResourceNum).Name)
         writer.WriteString(Resource(ResourceNum).SuccessMessage)
@@ -1250,7 +1250,7 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "shops", String.Format("shop{0}.dat", shopNum))
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
 
         writer.WriteString(Shop(shopNum).Name)
         writer.WriteByte(Shop(shopNum).Face)
@@ -1354,7 +1354,7 @@ Module ServerDatabase
         Dim filename As String
         filename = Path.Combine(Application.StartupPath, "data", "skills", String.Format("skills{0}.dat", skillnum))
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
 
         writer.WriteString(Skill(skillnum).Name)
         writer.WriteByte(Skill(skillnum).Type)
@@ -1487,7 +1487,7 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "animations", String.Format("animation{0}.dat", AnimationNum))
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
 
         writer.WriteString(Animation(AnimationNum).Name)
         writer.WriteString(Animation(AnimationNum).Sound)
@@ -1678,7 +1678,7 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "accounts", playername, String.Format("{0}.bin", playername))
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
 
         writer.WriteString(Player(Index).Login)
         writer.WriteString(Player(Index).Password)
@@ -1765,7 +1765,7 @@ Module ServerDatabase
     Sub SaveBank(ByVal Index As Integer)
         Dim filename = Path.Combine(Application.StartupPath, "data", "banks", String.Format("{0}.bin", Player(Index).Login.Trim()))
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
 
         For i = 1 To MAX_BANK
             writer.WriteByte(Bank(Index).Item(i).Num)
@@ -2120,7 +2120,7 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Player(Index).Login), String.Format("{0}.bin", CharNum))
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
 
         writer.WriteByte(Player(Index).Character(CharNum).Classes)
         writer.WriteByte(Player(Index).Character(CharNum).Dir)

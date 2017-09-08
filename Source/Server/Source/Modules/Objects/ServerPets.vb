@@ -75,7 +75,7 @@ Module ServerPets
 
         filename = Application.StartupPath & "\data\pets\pet" & PetNum & ".dat"
 
-        Dim writer As New ByteStream()
+        Dim writer As New ByteStream(100)
 
         writer.WriteInt32(Pet(PetNum).Num)
         writer.WriteString(Trim$(Pet(PetNum).Name))
