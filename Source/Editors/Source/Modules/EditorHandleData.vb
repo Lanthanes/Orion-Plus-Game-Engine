@@ -1,4 +1,7 @@
-﻿Module EditorHandleData
+﻿Imports ASFW
+Imports ASFW.IO
+
+Module EditorHandleData
     Public PlayerBuffer As ByteBuffer
     Private Delegate Sub Packet_(ByVal Data() As Byte)
     Private Packets As Dictionary(Of Integer, Packet_)
@@ -266,7 +269,7 @@
 
         Data = Buffer.ReadBytes(Buffer.Count - 4)
         Buffer = New ByteBuffer
-        Buffer.WriteBytes(ArchaicIO.Compression.Decompress(Data))
+        Buffer.WriteBytes(Compression.DecompressBytes(Data))
 
         MapData = False
 
@@ -682,9 +685,9 @@
             Npc(i).DropItemValue(x) = Buffer.ReadInteger()
         Next
 
-        Npc(i).EXP = Buffer.ReadInteger()
+        Npc(i).Exp = Buffer.ReadInteger()
         Npc(i).Faction = Buffer.ReadInteger()
-        Npc(i).HP = Buffer.ReadInteger()
+        Npc(i).Hp = Buffer.ReadInteger()
         Npc(i).Name = Trim(Buffer.ReadString())
         Npc(i).Range = Buffer.ReadInteger()
         Npc(i).SpawnTime = Buffer.ReadInteger()
@@ -786,7 +789,7 @@
         Skill(skillnum).AoE = Buffer.ReadInteger()
         Skill(skillnum).CastAnim = Buffer.ReadInteger()
         Skill(skillnum).CastTime = Buffer.ReadInteger()
-        Skill(skillnum).CDTime = Buffer.ReadInteger()
+        Skill(skillnum).CdTime = Buffer.ReadInteger()
         Skill(skillnum).ClassReq = Buffer.ReadInteger()
         Skill(skillnum).Dir = Buffer.ReadInteger()
         Skill(skillnum).Duration = Buffer.ReadInteger()
@@ -795,7 +798,7 @@
         Skill(skillnum).IsAoE = Buffer.ReadInteger()
         Skill(skillnum).LevelReq = Buffer.ReadInteger()
         Skill(skillnum).Map = Buffer.ReadInteger()
-        Skill(skillnum).MPCost = Buffer.ReadInteger()
+        Skill(skillnum).MpCost = Buffer.ReadInteger()
         Skill(skillnum).Name = Trim(Buffer.ReadString())
         Skill(skillnum).Range = Buffer.ReadInteger()
         Skill(skillnum).SkillAnim = Buffer.ReadInteger()
@@ -890,8 +893,8 @@
             Animation(n).LoopCount(i) = Buffer.ReadInteger()
         Next
 
-        For i = 0 To UBound(Animation(n).looptime)
-            Animation(n).looptime(i) = Buffer.ReadInteger()
+        For i = 0 To UBound(Animation(n).LoopTime)
+            Animation(n).LoopTime(i) = Buffer.ReadInteger()
         Next
 
         Animation(n).Name = Trim$(Buffer.ReadString)
@@ -915,7 +918,7 @@
         If buffer.ReadInteger <> ServerPackets.SGameData Then Exit Sub
 
         Data = buffer.ReadBytes(buffer.Count - 4)
-        Data = ArchaicIO.Compression.Decompress(Data)
+        Data = Compression.DecompressBytes(Data)
         buffer = New ByteBuffer
         buffer.WriteBytes(Data)
 
@@ -1075,8 +1078,8 @@
                 Animation(n).LoopCount(z) = buffer.ReadInteger()
             Next
 
-            For z = 0 To UBound(Animation(n).looptime)
-                Animation(n).looptime(z) = buffer.ReadInteger()
+            For z = 0 To UBound(Animation(n).LoopTime)
+                Animation(n).LoopTime(z) = buffer.ReadInteger()
             Next
 
             Animation(n).Name = Trim(buffer.ReadString)
@@ -1111,9 +1114,9 @@
                 Npc(n).DropItemValue(z) = buffer.ReadInteger()
             Next
 
-            Npc(n).EXP = buffer.ReadInteger()
+            Npc(n).Exp = buffer.ReadInteger()
             Npc(n).Faction = buffer.ReadInteger()
-            Npc(n).HP = buffer.ReadInteger()
+            Npc(n).Hp = buffer.ReadInteger()
             Npc(n).Name = Trim(buffer.ReadString())
             Npc(n).Range = buffer.ReadInteger()
             Npc(n).SpawnTime = buffer.ReadInteger()
@@ -1182,7 +1185,7 @@
             Skill(n).AoE = buffer.ReadInteger()
             Skill(n).CastAnim = buffer.ReadInteger()
             Skill(n).CastTime = buffer.ReadInteger()
-            Skill(n).CDTime = buffer.ReadInteger()
+            Skill(n).CdTime = buffer.ReadInteger()
             Skill(n).ClassReq = buffer.ReadInteger()
             Skill(n).Dir = buffer.ReadInteger()
             Skill(n).Duration = buffer.ReadInteger()
@@ -1191,7 +1194,7 @@
             Skill(n).IsAoE = buffer.ReadInteger()
             Skill(n).LevelReq = buffer.ReadInteger()
             Skill(n).Map = buffer.ReadInteger()
-            Skill(n).MPCost = buffer.ReadInteger()
+            Skill(n).MpCost = buffer.ReadInteger()
             Skill(n).Name = Trim(buffer.ReadString())
             Skill(n).Range = buffer.ReadInteger()
             Skill(n).SkillAnim = buffer.ReadInteger()
@@ -1313,7 +1316,7 @@
         ResourceFreq = Buffer.ReadInteger
 
         Dim myXml As New XmlClass With {
-            .Filename = IO.Path.Combine(Application.StartupPath, "Data", "AutoMapper.xml"),
+            .Filename = System.IO.Path.Combine(Application.StartupPath, "Data", "AutoMapper.xml"),
             .Root = "Options"
         }
 

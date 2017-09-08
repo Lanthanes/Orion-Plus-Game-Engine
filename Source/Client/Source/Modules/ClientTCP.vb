@@ -1,6 +1,8 @@
 ﻿Imports System.Net.Sockets
 Imports System.IO
 Imports System.Windows.Forms
+Imports ASFW
+Imports ASFW.IO
 
 Module ClientTCP
     Private PlayerBuffer As ByteBuffer = New ByteBuffer
@@ -330,7 +332,7 @@ Module ClientTCP
 
         Buffer = New ByteBuffer
         Buffer.WriteInteger(ClientPackets.CSaveMap)
-        Buffer.WriteBytes(ArchaicIO.Compression.Compress(data))
+        Buffer.WriteBytes(Compression.CompressBytes(data))
 
         SendData(Buffer.ToArray())
         Buffer = Nothing

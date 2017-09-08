@@ -1,4 +1,6 @@
 ﻿Imports System.IO
+Imports ASFW
+Imports ASFW.IO
 
 Public Module ServerProjectiles
 
@@ -43,15 +45,15 @@ Public Module ServerProjectiles
 
         filename = Path.Combine(Application.StartupPath, "data", "projectiles", String.Format("projectile{0}.dat", ProjectileNum))
 
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer()
+        Dim writer As New ByteStream()
 
-        writer.Write(Projectiles(ProjectileNum).Name)
-        writer.Write(Projectiles(ProjectileNum).Sprite)
-        writer.Write(Projectiles(ProjectileNum).Range)
-        writer.Write(Projectiles(ProjectileNum).Speed)
-        writer.Write(Projectiles(ProjectileNum).Damage)
+        writer.WriteString(Projectiles(ProjectileNum).Name)
+        writer.WriteInt32(Projectiles(ProjectileNum).Sprite)
+        writer.WriteByte(Projectiles(ProjectileNum).Range)
+        writer.WriteInt32(Projectiles(ProjectileNum).Speed)
+        writer.WriteInt32(Projectiles(ProjectileNum).Damage)
 
-        writer.Save(filename)
+        FileHandler.BinaryFile.Save(filename, writer)
 
     End Sub
 
@@ -63,13 +65,14 @@ Public Module ServerProjectiles
 
         For i = 1 To MAX_PROJECTILES
             filename = Path.Combine(Application.StartupPath, "data", "projectiles", String.Format("projectile{0}.dat", i))
-            Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
+            Dim reader As New ByteStream()
+            FileHandler.BinaryFile.Load(filename, reader)
 
-            reader.Read(Projectiles(i).Name)
-            reader.Read(Projectiles(i).Sprite)
-            reader.Read(Projectiles(i).Range)
-            reader.Read(Projectiles(i).Speed)
-            reader.Read(Projectiles(i).Damage)
+            Projectiles(i).Name = reader.ReadString()
+            Projectiles(i).Sprite = reader.ReadInt32()
+            Projectiles(i).Range = reader.ReadByte()
+            Projectiles(i).Speed = reader.ReadInt32()
+            Projectiles(i).Damage = reader.ReadInt32()
 
             DoEvents()
         Next

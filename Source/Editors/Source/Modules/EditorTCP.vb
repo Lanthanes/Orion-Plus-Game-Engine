@@ -1,5 +1,7 @@
 ﻿Imports System.Net.Sockets
 Imports System.IO
+Imports ASFW
+Imports ASFW.IO
 
 Module EditorTCP
     Private PlayerBuffer As ByteBuffer = New ByteBuffer
@@ -283,7 +285,7 @@ Module EditorTCP
 
         Buffer = New ByteBuffer
         Buffer.WriteInteger(EditorPackets.EditorSaveMap)
-        Buffer.WriteBytes(ArchaicIO.Compression.Compress(data))
+        Buffer.WriteBytes(Compression.CompressBytes(data))
 
         SendData(Buffer.ToArray())
         Buffer = Nothing

@@ -71,9 +71,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ArchaicIO, Version=2.6.6175.25756, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ArchaicIO.2.6.1\lib\ArchaicIO.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="ASFW, Version=1.0.6459.32965, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-ASFW.0.9.9\lib\ASFW.dll</HintPath>
     </Reference>
     <Reference Include="DarkUI">
       <HintPath>..\Editors\DarkUI.dll</HintPath>

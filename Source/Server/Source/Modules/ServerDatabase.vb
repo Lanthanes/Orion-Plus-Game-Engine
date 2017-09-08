@@ -1,5 +1,7 @@
 ﻿Imports System.IO
 Imports System.Linq
+Imports ASFW
+Imports ASFW.IO
 
 Module ServerDatabase
 
@@ -271,57 +273,57 @@ Module ServerDatabase
         Dim x As Integer, y As Integer, l As Integer
 
         filename = Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}.dat", MapNum))
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer()
-        writer.Write(Map(MapNum).Name)
-        writer.Write(Map(MapNum).Music)
-        writer.Write(Map(MapNum).Revision)
-        writer.Write(Map(MapNum).Moral)
-        writer.Write(Map(MapNum).Tileset)
-        writer.Write(Map(MapNum).Up)
-        writer.Write(Map(MapNum).Down)
-        writer.Write(Map(MapNum).Left)
-        writer.Write(Map(MapNum).Right)
-        writer.Write(Map(MapNum).BootMap)
-        writer.Write(Map(MapNum).BootX)
-        writer.Write(Map(MapNum).BootY)
-        writer.Write(Map(MapNum).MaxX)
-        writer.Write(Map(MapNum).MaxY)
-        writer.Write(Map(MapNum).WeatherType)
-        writer.Write(Map(MapNum).FogIndex)
-        writer.Write(Map(MapNum).WeatherIntensity)
-        writer.Write(Map(MapNum).FogAlpha)
-        writer.Write(Map(MapNum).FogSpeed)
-        writer.Write(Map(MapNum).HasMapTint)
-        writer.Write(Map(MapNum).MapTintR)
-        writer.Write(Map(MapNum).MapTintG)
-        writer.Write(Map(MapNum).MapTintB)
-        writer.Write(Map(MapNum).MapTintA)
+        Dim writer As New ByteStream()
+        writer.WriteString(Map(MapNum).Name)
+        writer.WriteString(Map(MapNum).Music)
+        writer.WriteInt32(Map(MapNum).Revision)
+        writer.WriteByte(Map(MapNum).Moral)
+        writer.WriteInt32(Map(MapNum).Tileset)
+        writer.WriteInt32(Map(MapNum).Up)
+        writer.WriteInt32(Map(MapNum).Down)
+        writer.WriteInt32(Map(MapNum).Left)
+        writer.WriteInt32(Map(MapNum).Right)
+        writer.WriteInt32(Map(MapNum).BootMap)
+        writer.WriteByte(Map(MapNum).BootX)
+        writer.WriteByte(Map(MapNum).BootY)
+        writer.WriteByte(Map(MapNum).MaxX)
+        writer.WriteByte(Map(MapNum).MaxY)
+        writer.WriteByte(Map(MapNum).WeatherType)
+        writer.WriteInt32(Map(MapNum).FogIndex)
+        writer.WriteInt32(Map(MapNum).WeatherIntensity)
+        writer.WriteByte(Map(MapNum).FogAlpha)
+        writer.WriteByte(Map(MapNum).FogSpeed)
+        writer.WriteByte(Map(MapNum).HasMapTint)
+        writer.WriteByte(Map(MapNum).MapTintR)
+        writer.WriteByte(Map(MapNum).MapTintG)
+        writer.WriteByte(Map(MapNum).MapTintB)
+        writer.WriteByte(Map(MapNum).MapTintA)
 
-        writer.Write(Map(MapNum).Instanced)
-        writer.Write(Map(MapNum).Panorama)
-        writer.Write(Map(MapNum).Parallax)
+        writer.WriteByte(Map(MapNum).Instanced)
+        writer.WriteByte(Map(MapNum).Panorama)
+        writer.WriteByte(Map(MapNum).Parallax)
 
         For x = 0 To Map(MapNum).MaxX
             For y = 0 To Map(MapNum).MaxY
-                writer.Write(Map(MapNum).Tile(x, y).Data1)
-                writer.Write(Map(MapNum).Tile(x, y).Data2)
-                writer.Write(Map(MapNum).Tile(x, y).Data3)
-                writer.Write(Map(MapNum).Tile(x, y).DirBlock)
+                writer.WriteInt32(Map(MapNum).Tile(x, y).Data1)
+                writer.WriteInt32(Map(MapNum).Tile(x, y).Data2)
+                writer.WriteInt32(Map(MapNum).Tile(x, y).Data3)
+                writer.WriteByte(Map(MapNum).Tile(x, y).DirBlock)
                 For l = 0 To MapLayer.Count - 1
-                    writer.Write(Map(MapNum).Tile(x, y).Layer(l).Tileset)
-                    writer.Write(Map(MapNum).Tile(x, y).Layer(l).X)
-                    writer.Write(Map(MapNum).Tile(x, y).Layer(l).Y)
-                    writer.Write(Map(MapNum).Tile(x, y).Layer(l).AutoTile)
+                    writer.WriteByte(Map(MapNum).Tile(x, y).Layer(l).Tileset)
+                    writer.WriteByte(Map(MapNum).Tile(x, y).Layer(l).X)
+                    writer.WriteByte(Map(MapNum).Tile(x, y).Layer(l).Y)
+                    writer.WriteByte(Map(MapNum).Tile(x, y).Layer(l).AutoTile)
                 Next
-                writer.Write(Map(MapNum).Tile(x, y).Type)
+                writer.WriteByte(Map(MapNum).Tile(x, y).Type)
             Next
         Next
 
         For x = 1 To MAX_MAP_NPCS
-            writer.Write(Map(MapNum).Npc(x))
+            writer.WriteInt32(Map(MapNum).Npc(x))
         Next
 
-        writer.Save(filename)
+        FileHandler.BinaryFile.Save(filename, writer)
 
     End Sub
 
@@ -614,7 +616,6 @@ Module ServerDatabase
         For i = 1 To MAX_MAPS
             LoadMap(i)
         Next
-        'SaveMaps()
     End Sub
 
     Sub LoadMap(ByVal MapNum As Integer)
@@ -624,62 +625,61 @@ Module ServerDatabase
         Dim l As Integer
 
         filename = Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}.dat", MapNum))
-        Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
+        Dim reader As New ByteStream()
+        FileHandler.BinaryFile.Load(filename, reader)
 
-        reader.Read(Map(MapNum).Name)
-        reader.Read(Map(MapNum).Music)
-        reader.Read(Map(MapNum).Revision)
-        reader.Read(Map(MapNum).Moral)
-        reader.Read(Map(MapNum).Tileset)
-        reader.Read(Map(MapNum).Up)
-        reader.Read(Map(MapNum).Down)
-        reader.Read(Map(MapNum).Left)
-        reader.Read(Map(MapNum).Right)
-        reader.Read(Map(MapNum).BootMap)
-        reader.Read(Map(MapNum).BootX)
-        reader.Read(Map(MapNum).BootY)
-        reader.Read(Map(MapNum).MaxX)
-        reader.Read(Map(MapNum).MaxY)
-        reader.Read(Map(MapNum).WeatherType)
-        reader.Read(Map(MapNum).FogIndex)
-        reader.Read(Map(MapNum).WeatherIntensity)
-        reader.Read(Map(MapNum).FogAlpha)
-        reader.Read(Map(MapNum).FogSpeed)
-        reader.Read(Map(MapNum).HasMapTint)
-        reader.Read(Map(MapNum).MapTintR)
-        reader.Read(Map(MapNum).MapTintG)
-        reader.Read(Map(MapNum).MapTintB)
-        reader.Read(Map(MapNum).MapTintA)
-        reader.Read(Map(MapNum).Instanced)
-        reader.Read(Map(MapNum).Panorama)
-        reader.Read(Map(MapNum).Parallax)
+        Map(MapNum).Name = reader.ReadString()
+        Map(MapNum).Music = reader.ReadString()
+        Map(MapNum).Revision = reader.ReadInt32()
+        Map(MapNum).Moral = reader.ReadByte()
+        Map(MapNum).Tileset = reader.ReadInt32()
+        Map(MapNum).Up = reader.ReadInt32()
+        Map(MapNum).Down = reader.ReadInt32()
+        Map(MapNum).Left = reader.ReadInt32()
+        Map(MapNum).Right = reader.ReadInt32()
+        Map(MapNum).BootMap = reader.ReadInt32()
+        Map(MapNum).BootX = reader.ReadByte()
+        Map(MapNum).BootY = reader.ReadByte()
+        Map(MapNum).MaxX = reader.ReadByte()
+        Map(MapNum).MaxY = reader.ReadByte()
+        Map(MapNum).WeatherType = reader.ReadByte()
+        Map(MapNum).FogIndex = reader.ReadInt32()
+        Map(MapNum).WeatherIntensity = reader.ReadInt32()
+        Map(MapNum).FogAlpha = reader.ReadByte()
+        Map(MapNum).FogSpeed = reader.ReadByte()
+        Map(MapNum).HasMapTint = reader.ReadByte()
+        Map(MapNum).MapTintR = reader.ReadByte()
+        Map(MapNum).MapTintG = reader.ReadByte()
+        Map(MapNum).MapTintB = reader.ReadByte()
+        Map(MapNum).MapTintA = reader.ReadByte()
+        Map(MapNum).Instanced = reader.ReadByte()
+        Map(MapNum).Panorama = reader.ReadByte()
+        Map(MapNum).Parallax = reader.ReadByte()
 
         ' have to set the tile()
         ReDim Map(MapNum).Tile(0 To Map(MapNum).MaxX, 0 To Map(MapNum).MaxY)
 
         For x = 0 To Map(MapNum).MaxX
             For y = 0 To Map(MapNum).MaxY
-                reader.Read(Map(MapNum).Tile(x, y).Data1)
-                reader.Read(Map(MapNum).Tile(x, y).Data2)
-                reader.Read(Map(MapNum).Tile(x, y).Data3)
-                reader.Read(Map(MapNum).Tile(x, y).DirBlock)
+                Map(MapNum).Tile(x, y).Data1 = reader.ReadInt32()
+                Map(MapNum).Tile(x, y).Data2 = reader.ReadInt32()
+                Map(MapNum).Tile(x, y).Data3 = reader.ReadInt32()
+                Map(MapNum).Tile(x, y).DirBlock = reader.ReadByte()
                 ReDim Map(MapNum).Tile(x, y).Layer(0 To MapLayer.Count - 1)
                 For l = 0 To MapLayer.Count - 1
-                    reader.Read(Map(MapNum).Tile(x, y).Layer(l).Tileset)
-                    reader.Read(Map(MapNum).Tile(x, y).Layer(l).X)
-                    reader.Read(Map(MapNum).Tile(x, y).Layer(l).Y)
-                    reader.Read(Map(MapNum).Tile(x, y).Layer(l).AutoTile)
+                    Map(MapNum).Tile(x, y).Layer(l).Tileset = reader.ReadByte()
+                    Map(MapNum).Tile(x, y).Layer(l).X = reader.ReadByte()
+                    Map(MapNum).Tile(x, y).Layer(l).Y = reader.ReadByte()
+                    Map(MapNum).Tile(x, y).Layer(l).AutoTile = reader.ReadByte()
                 Next
-                reader.Read(Map(MapNum).Tile(x, y).Type)
+                Map(MapNum).Tile(x, y).Type = reader.ReadByte()
             Next
         Next
 
         For x = 1 To MAX_MAP_NPCS
-            reader.Read(Map(MapNum).Npc(x))
+            Map(MapNum).Npc(x) = reader.ReadInt32()
             MapNpc(MapNum).Npc(x).Num = Map(MapNum).Npc(x)
         Next
-
-        reader = Nothing
 
         ClearTempTile(MapNum)
         CacheResources(MapNum)
@@ -753,64 +753,64 @@ Module ServerDatabase
         Dim filename As String
         filename = Path.Combine(Application.StartupPath, "data", "items", String.Format("item{0}.dat", itemNum))
 
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer()
-        writer.Write(Item(itemNum).Name)
-        writer.Write(Item(itemNum).Pic)
-        writer.Write(Item(itemNum).Description)
+        Dim writer As New ByteStream()
+        writer.WriteString(Item(itemNum).Name)
+        writer.WriteInt32(Item(itemNum).Pic)
+        writer.WriteString(Item(itemNum).Description)
 
-        writer.Write(Item(itemNum).Type)
-        writer.Write(Item(itemNum).SubType)
-        writer.Write(Item(itemNum).Data1)
-        writer.Write(Item(itemNum).Data2)
-        writer.Write(Item(itemNum).Data3)
-        writer.Write(Item(itemNum).ClassReq)
-        writer.Write(Item(itemNum).AccessReq)
-        writer.Write(Item(itemNum).LevelReq)
-        writer.Write(Item(itemNum).Mastery)
-        writer.Write(Item(itemNum).Price)
-
-        For i = 0 To Stats.Count - 1
-            writer.Write(Item(itemNum).Add_Stat(i))
-        Next
-
-        writer.Write(Item(itemNum).Rarity)
-        writer.Write(Item(itemNum).Speed)
-        writer.Write(Item(itemNum).TwoHanded)
-        writer.Write(Item(itemNum).BindType)
+        writer.WriteByte(Item(itemNum).Type)
+        writer.WriteByte(Item(itemNum).SubType)
+        writer.WriteInt32(Item(itemNum).Data1)
+        writer.WriteInt32(Item(itemNum).Data2)
+        writer.WriteInt32(Item(itemNum).Data3)
+        writer.WriteInt32(Item(itemNum).ClassReq)
+        writer.WriteInt32(Item(itemNum).AccessReq)
+        writer.WriteInt32(Item(itemNum).LevelReq)
+        writer.WriteByte(Item(itemNum).Mastery)
+        writer.WriteInt32(Item(itemNum).Price)
 
         For i = 0 To Stats.Count - 1
-            writer.Write(Item(itemNum).Stat_Req(i))
+            writer.WriteByte(Item(itemNum).Add_Stat(i))
         Next
 
-        writer.Write(Item(itemNum).Animation)
-        writer.Write(Item(itemNum).Paperdoll)
+        writer.WriteByte(Item(itemNum).Rarity)
+        writer.WriteInt32(Item(itemNum).Speed)
+        writer.WriteInt32(Item(itemNum).TwoHanded)
+        writer.WriteByte(Item(itemNum).BindType)
+
+        For i = 0 To Stats.Count - 1
+            writer.WriteByte(Item(itemNum).Stat_Req(i))
+        Next
+
+        writer.WriteInt32(Item(itemNum).Animation)
+        writer.WriteInt32(Item(itemNum).Paperdoll)
 
         'Housing
-        writer.Write(Item(itemNum).FurnitureWidth)
-        writer.Write(Item(itemNum).FurnitureHeight)
+        writer.WriteInt32(Item(itemNum).FurnitureWidth)
+        writer.WriteInt32(Item(itemNum).FurnitureHeight)
 
         For a = 1 To 3
             For b = 1 To 3
-                writer.Write(Item(itemNum).FurnitureBlocks(a, b))
-                writer.Write(Item(itemNum).FurnitureFringe(a, b))
+                writer.WriteInt32(Item(itemNum).FurnitureBlocks(a, b))
+                writer.WriteInt32(Item(itemNum).FurnitureFringe(a, b))
             Next
         Next
 
-        writer.Write(Item(itemNum).KnockBack)
-        writer.Write(Item(itemNum).KnockBackTiles)
+        writer.WriteByte(Item(itemNum).KnockBack)
+        writer.WriteByte(Item(itemNum).KnockBackTiles)
 
-        writer.Write(Item(itemNum).Randomize)
-        writer.Write(Item(itemNum).RandomMin)
-        writer.Write(Item(itemNum).RandomMax)
+        writer.WriteByte(Item(itemNum).Randomize)
+        writer.WriteByte(Item(itemNum).RandomMin)
+        writer.WriteByte(Item(itemNum).RandomMax)
 
-        writer.Write(Item(itemNum).Stackable)
+        writer.WriteByte(Item(itemNum).Stackable)
 
-        writer.Write(Item(itemNum).ItemLevel)
+        writer.WriteByte(Item(itemNum).ItemLevel)
 
-        writer.Write(Item(itemNum).Projectile)
-        writer.Write(Item(itemNum).Ammo)
+        writer.WriteInt32(Item(itemNum).Projectile)
+        writer.WriteInt32(Item(itemNum).Ammo)
 
-        writer.Save(filename)
+        FileHandler.BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadItems()
@@ -827,70 +827,68 @@ Module ServerDatabase
 
     Sub LoadItem(ByVal ItemNum As Integer)
         Dim filename As String
-        Dim F As Integer
         Dim s As Integer
 
         filename = Path.Combine(Application.StartupPath, "data", "items", String.Format("item{0}.dat", ItemNum))
 
-        Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
+        Dim reader As New ByteStream()
+        FileHandler.BinaryFile.Load(filename, reader)
 
-        reader.Read(Item(ItemNum).Name)
-        reader.Read(Item(ItemNum).Pic)
-        reader.Read(Item(ItemNum).Description)
+        Item(ItemNum).Name = reader.ReadString()
+        Item(ItemNum).Pic = reader.ReadInt32()
+        Item(ItemNum).Description = reader.ReadString()
 
-        reader.Read(Item(ItemNum).Type)
-        reader.Read(Item(ItemNum).SubType)
-        reader.Read(Item(ItemNum).Data1)
-        reader.Read(Item(ItemNum).Data2)
-        reader.Read(Item(ItemNum).Data3)
-        reader.Read(Item(ItemNum).ClassReq)
-        reader.Read(Item(ItemNum).AccessReq)
-        reader.Read(Item(ItemNum).LevelReq)
-        reader.Read(Item(ItemNum).Mastery)
-        reader.Read(Item(ItemNum).Price)
-
-        For s = 0 To Stats.Count - 1
-            reader.Read(Item(ItemNum).Add_Stat(s))
-        Next
-
-        reader.Read(Item(ItemNum).Rarity)
-        reader.Read(Item(ItemNum).Speed)
-        reader.Read(Item(ItemNum).TwoHanded)
-        reader.Read(Item(ItemNum).BindType)
+        Item(ItemNum).Type = reader.ReadByte()
+        Item(ItemNum).SubType = reader.ReadByte()
+        Item(ItemNum).Data1 = reader.ReadInt32()
+        Item(ItemNum).Data2 = reader.ReadInt32()
+        Item(ItemNum).Data3 = reader.ReadInt32()
+        Item(ItemNum).ClassReq = reader.ReadInt32()
+        Item(ItemNum).AccessReq = reader.ReadInt32()
+        Item(ItemNum).LevelReq = reader.ReadInt32()
+        Item(ItemNum).Mastery = reader.ReadByte()
+        Item(ItemNum).Price = reader.ReadInt32()
 
         For s = 0 To Stats.Count - 1
-            reader.Read(Item(ItemNum).Stat_Req(s))
+            Item(ItemNum).Add_Stat(s) = reader.ReadByte()
         Next
 
-        reader.Read(Item(ItemNum).Animation)
-        reader.Read(Item(ItemNum).Paperdoll)
+        Item(ItemNum).Rarity = reader.ReadByte()
+        Item(ItemNum).Speed = reader.ReadInt32()
+        Item(ItemNum).TwoHanded = reader.ReadInt32()
+        Item(ItemNum).BindType = reader.ReadByte()
+
+        For s = 0 To Stats.Count - 1
+            Item(ItemNum).Stat_Req(s) = reader.ReadByte()
+        Next
+
+        Item(ItemNum).Animation = reader.ReadInt32()
+        Item(ItemNum).Paperdoll = reader.ReadInt32()
 
         'Housing
-        reader.Read(Item(ItemNum).FurnitureWidth)
-        reader.Read(Item(ItemNum).FurnitureHeight)
+        Item(ItemNum).FurnitureWidth = reader.ReadInt32()
+        Item(ItemNum).FurnitureHeight = reader.ReadInt32()
 
         For a = 1 To 3
             For b = 1 To 3
-                reader.Read(Item(ItemNum).FurnitureBlocks(a, b))
-                reader.Read(Item(ItemNum).FurnitureFringe(a, b))
+                Item(ItemNum).FurnitureBlocks(a, b) = reader.ReadInt32()
+                Item(ItemNum).FurnitureFringe(a, b) = reader.ReadInt32()
             Next
         Next
 
-        reader.Read(Item(ItemNum).KnockBack)
-        reader.Read(Item(ItemNum).KnockBackTiles)
+        Item(ItemNum).KnockBack = reader.ReadByte()
+        Item(ItemNum).KnockBackTiles = reader.ReadByte()
 
-        reader.Read(Item(ItemNum).Randomize)
-        reader.Read(Item(ItemNum).RandomMin)
-        reader.Read(Item(ItemNum).RandomMax)
+        Item(ItemNum).Randomize = reader.ReadByte()
+        Item(ItemNum).RandomMin = reader.ReadByte()
+        Item(ItemNum).RandomMax = reader.ReadByte()
 
-        reader.Read(Item(ItemNum).Stackable)
+        Item(ItemNum).Stackable = reader.ReadByte()
 
-        reader.Read(Item(ItemNum).ItemLevel)
+        Item(ItemNum).ItemLevel = reader.ReadByte()
 
-        reader.Read(Item(ItemNum).Projectile)
-        reader.Read(Item(ItemNum).Ammo)
-
-        FileClose(F)
+        Item(ItemNum).Projectile = reader.ReadInt32()
+        Item(ItemNum).Ammo = reader.ReadInt32()
 
     End Sub
 
@@ -948,40 +946,40 @@ Module ServerDatabase
         Dim i As Integer
         filename = Path.Combine(Application.StartupPath, "data", "npcs", String.Format("npc{0}.dat", NpcNum))
 
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer()
-        writer.Write(Npc(NpcNum).Name)
-        writer.Write(Npc(NpcNum).AttackSay)
-        writer.Write(Npc(NpcNum).Sprite)
-        writer.Write(Npc(NpcNum).SpawnTime)
-        writer.Write(Npc(NpcNum).SpawnSecs)
-        writer.Write(Npc(NpcNum).Behaviour)
-        writer.Write(Npc(NpcNum).Range)
+        Dim writer As New ByteStream()
+        writer.WriteString(Npc(NpcNum).Name)
+        writer.WriteString(Npc(NpcNum).AttackSay)
+        writer.WriteInt32(Npc(NpcNum).Sprite)
+        writer.WriteByte(Npc(NpcNum).SpawnTime)
+        writer.WriteInt32(Npc(NpcNum).SpawnSecs)
+        writer.WriteByte(Npc(NpcNum).Behaviour)
+        writer.WriteByte(Npc(NpcNum).Range)
 
         For i = 1 To 5
-            writer.Write(Npc(NpcNum).DropChance(i))
-            writer.Write(Npc(NpcNum).DropItem(i))
-            writer.Write(Npc(NpcNum).DropItemValue(i))
+            writer.WriteInt32(Npc(NpcNum).DropChance(i))
+            writer.WriteInt32(Npc(NpcNum).DropItem(i))
+            writer.WriteInt32(Npc(NpcNum).DropItemValue(i))
         Next
 
         For i = 0 To Stats.Count - 1
-            writer.Write(Npc(NpcNum).Stat(i))
+            writer.WriteByte(Npc(NpcNum).Stat(i))
         Next
 
-        writer.Write(Npc(NpcNum).Faction)
-        writer.Write(Npc(NpcNum).Hp)
-        writer.Write(Npc(NpcNum).Exp)
-        writer.Write(Npc(NpcNum).Animation)
+        writer.WriteByte(Npc(NpcNum).Faction)
+        writer.WriteInt32(Npc(NpcNum).Hp)
+        writer.WriteInt32(Npc(NpcNum).Exp)
+        writer.WriteInt32(Npc(NpcNum).Animation)
 
-        writer.Write(Npc(NpcNum).QuestNum)
+        writer.WriteInt32(Npc(NpcNum).QuestNum)
 
         For i = 1 To MAX_NPC_SKILLS
-            writer.Write(Npc(NpcNum).Skill(i))
+            writer.WriteByte(Npc(NpcNum).Skill(i))
         Next
 
-        writer.Write(Npc(NpcNum).Level)
-        writer.Write(Npc(NpcNum).Damage)
+        writer.WriteInt32(Npc(NpcNum).Level)
+        writer.WriteInt32(Npc(NpcNum).Damage)
 
-        writer.Save(filename)
+        FileHandler.BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadNpcs()
@@ -1001,39 +999,40 @@ Module ServerDatabase
         Dim n As Integer
 
         filename = Path.Combine(Application.StartupPath, "data", "npcs", String.Format("npc{0}.dat", NpcNum))
-        Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
+        Dim reader As New ByteStream()
+        FileHandler.BinaryFile.Load(filename, reader)
 
-        reader.Read(Npc(NpcNum).Name)
-        reader.Read(Npc(NpcNum).AttackSay)
-        reader.Read(Npc(NpcNum).Sprite)
-        reader.Read(Npc(NpcNum).SpawnTime)
-        reader.Read(Npc(NpcNum).SpawnSecs)
-        reader.Read(Npc(NpcNum).Behaviour)
-        reader.Read(Npc(NpcNum).Range)
+        Npc(NpcNum).Name = reader.ReadString()
+        Npc(NpcNum).AttackSay = reader.ReadString()
+        Npc(NpcNum).Sprite = reader.ReadInt32()
+        Npc(NpcNum).SpawnTime = reader.ReadByte()
+        Npc(NpcNum).SpawnSecs = reader.ReadInt32()
+        Npc(NpcNum).Behaviour = reader.ReadByte()
+        Npc(NpcNum).Range = reader.ReadByte()
 
         For i = 1 To 5
-            reader.Read(Npc(NpcNum).DropChance(i))
-            reader.Read(Npc(NpcNum).DropItem(i))
-            reader.Read(Npc(NpcNum).DropItemValue(i))
+            Npc(NpcNum).DropChance(i) = reader.ReadInt32()
+            Npc(NpcNum).DropItem(i) = reader.ReadInt32()
+            Npc(NpcNum).DropItemValue(i) = reader.ReadInt32()
         Next
 
         For n = 0 To Stats.Count - 1
-            reader.Read(Npc(NpcNum).Stat(n))
+            Npc(NpcNum).Stat(n) = reader.ReadByte()
         Next
 
-        reader.Read(Npc(NpcNum).Faction)
-        reader.Read(Npc(NpcNum).Hp)
-        reader.Read(Npc(NpcNum).Exp)
-        reader.Read(Npc(NpcNum).Animation)
+        Npc(NpcNum).Faction = reader.ReadByte()
+        Npc(NpcNum).Hp = reader.ReadInt32()
+        Npc(NpcNum).Exp = reader.ReadInt32()
+        Npc(NpcNum).Animation = reader.ReadInt32()
 
-        reader.Read(Npc(NpcNum).QuestNum)
+        Npc(NpcNum).QuestNum = reader.ReadInt32()
 
         For i = 1 To MAX_NPC_SKILLS
-            reader.Read(Npc(NpcNum).Skill(i))
+            Npc(NpcNum).Skill(i) = reader.ReadByte()
         Next
 
-        reader.Read(Npc(NpcNum).Level)
-        reader.Read(Npc(NpcNum).Damage)
+        Npc(NpcNum).Level = reader.ReadInt32()
+        Npc(NpcNum).Damage = reader.ReadInt32()
 
         If Npc(NpcNum).Name Is Nothing Then Npc(NpcNum).Name = ""
         If Npc(NpcNum).AttackSay Is Nothing Then Npc(NpcNum).AttackSay = ""
@@ -1121,24 +1120,24 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "resources", String.Format("resource{0}.dat", ResourceNum))
 
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer()
+        Dim writer As New ByteStream()
 
-        writer.Write(Resource(ResourceNum).Name)
-        writer.Write(Resource(ResourceNum).SuccessMessage)
-        writer.Write(Resource(ResourceNum).EmptyMessage)
-        writer.Write(Resource(ResourceNum).ResourceType)
-        writer.Write(Resource(ResourceNum).ResourceImage)
-        writer.Write(Resource(ResourceNum).ExhaustedImage)
-        writer.Write(Resource(ResourceNum).ExpReward)
-        writer.Write(Resource(ResourceNum).ItemReward)
-        writer.Write(Resource(ResourceNum).LvlRequired)
-        writer.Write(Resource(ResourceNum).ToolRequired)
-        writer.Write(Resource(ResourceNum).Health)
-        writer.Write(Resource(ResourceNum).RespawnTime)
-        writer.Write(Resource(ResourceNum).Walkthrough)
-        writer.Write(Resource(ResourceNum).Animation)
+        writer.WriteString(Resource(ResourceNum).Name)
+        writer.WriteString(Resource(ResourceNum).SuccessMessage)
+        writer.WriteString(Resource(ResourceNum).EmptyMessage)
+        writer.WriteInt32(Resource(ResourceNum).ResourceType)
+        writer.WriteInt32(Resource(ResourceNum).ResourceImage)
+        writer.WriteInt32(Resource(ResourceNum).ExhaustedImage)
+        writer.WriteInt32(Resource(ResourceNum).ExpReward)
+        writer.WriteInt32(Resource(ResourceNum).ItemReward)
+        writer.WriteInt32(Resource(ResourceNum).LvlRequired)
+        writer.WriteInt32(Resource(ResourceNum).ToolRequired)
+        writer.WriteInt32(Resource(ResourceNum).Health)
+        writer.WriteInt32(Resource(ResourceNum).RespawnTime)
+        writer.WriteBoolean(Resource(ResourceNum).Walkthrough)
+        writer.WriteInt32(Resource(ResourceNum).Animation)
 
-        writer.Save(filename)
+        FileHandler.BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadResources()
@@ -1157,22 +1156,23 @@ Module ServerDatabase
         Dim filename As String
 
         filename = Path.Combine(Application.StartupPath, "data", "resources", String.Format("resource{0}.dat", ResourceNum))
-        Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
+        Dim reader As New ByteStream()
+        FileHandler.BinaryFile.Load(filename, reader)
 
-        reader.Read(Resource(ResourceNum).Name)
-        reader.Read(Resource(ResourceNum).SuccessMessage)
-        reader.Read(Resource(ResourceNum).EmptyMessage)
-        reader.Read(Resource(ResourceNum).ResourceType)
-        reader.Read(Resource(ResourceNum).ResourceImage)
-        reader.Read(Resource(ResourceNum).ExhaustedImage)
-        reader.Read(Resource(ResourceNum).ExpReward)
-        reader.Read(Resource(ResourceNum).ItemReward)
-        reader.Read(Resource(ResourceNum).LvlRequired)
-        reader.Read(Resource(ResourceNum).ToolRequired)
-        reader.Read(Resource(ResourceNum).Health)
-        reader.Read(Resource(ResourceNum).RespawnTime)
-        reader.Read(Resource(ResourceNum).Walkthrough)
-        reader.Read(Resource(ResourceNum).Animation)
+        Resource(ResourceNum).Name = reader.ReadString()
+        Resource(ResourceNum).SuccessMessage = reader.ReadString()
+        Resource(ResourceNum).EmptyMessage = reader.ReadString()
+        Resource(ResourceNum).ResourceType = reader.ReadInt32()
+        Resource(ResourceNum).ResourceImage = reader.ReadInt32()
+        Resource(ResourceNum).ExhaustedImage = reader.ReadInt32()
+        Resource(ResourceNum).ExpReward = reader.ReadInt32()
+        Resource(ResourceNum).ItemReward = reader.ReadInt32()
+        Resource(ResourceNum).LvlRequired = reader.ReadInt32()
+        Resource(ResourceNum).ToolRequired = reader.ReadInt32()
+        Resource(ResourceNum).Health = reader.ReadInt32()
+        Resource(ResourceNum).RespawnTime = reader.ReadInt32()
+        Resource(ResourceNum).Walkthrough = reader.ReadBoolean()
+        Resource(ResourceNum).Animation = reader.ReadInt32()
 
         If Resource(ResourceNum).Name Is Nothing Then Resource(ResourceNum).Name = ""
         If Resource(ResourceNum).EmptyMessage Is Nothing Then Resource(ResourceNum).EmptyMessage = ""
@@ -1250,20 +1250,20 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "shops", String.Format("shop{0}.dat", shopNum))
 
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer()
+        Dim writer As New ByteStream()
 
-        writer.Write(Shop(shopNum).Name)
-        writer.Write(Shop(shopNum).Face)
-        writer.Write(Shop(shopNum).BuyRate)
+        writer.WriteString(Shop(shopNum).Name)
+        writer.WriteByte(Shop(shopNum).Face)
+        writer.WriteInt32(Shop(shopNum).BuyRate)
 
         For i = 1 To MAX_TRADES
-            writer.Write(Shop(shopNum).TradeItem(i).Item)
-            writer.Write(Shop(shopNum).TradeItem(i).ItemValue)
-            writer.Write(Shop(shopNum).TradeItem(i).CostItem)
-            writer.Write(Shop(shopNum).TradeItem(i).CostValue)
+            writer.WriteInt32(Shop(shopNum).TradeItem(i).Item)
+            writer.WriteInt32(Shop(shopNum).TradeItem(i).ItemValue)
+            writer.WriteInt32(Shop(shopNum).TradeItem(i).CostItem)
+            writer.WriteInt32(Shop(shopNum).TradeItem(i).CostValue)
         Next
 
-        writer.Save(filename)
+        FileHandler.BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadShops()
@@ -1284,17 +1284,18 @@ Module ServerDatabase
         Dim x As Integer
 
         filename = Path.Combine(Application.StartupPath, "data", "shops", String.Format("shop{0}.dat", ShopNum))
-        Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
+        Dim reader As New ByteStream()
+        FileHandler.BinaryFile.Load(filename, reader)
 
-        reader.Read(Shop(ShopNum).Name)
-        reader.Read(Shop(ShopNum).Face)
-        reader.Read(Shop(ShopNum).BuyRate)
+        Shop(ShopNum).Name = reader.ReadString()
+        Shop(ShopNum).Face = reader.ReadByte()
+        Shop(ShopNum).BuyRate = reader.ReadInt32()
 
         For x = 1 To MAX_TRADES
-            reader.Read(Shop(ShopNum).TradeItem(x).Item)
-            reader.Read(Shop(ShopNum).TradeItem(x).ItemValue)
-            reader.Read(Shop(ShopNum).TradeItem(x).CostItem)
-            reader.Read(Shop(ShopNum).TradeItem(x).CostValue)
+            Shop(ShopNum).TradeItem(x).Item = reader.ReadInt32()
+            Shop(ShopNum).TradeItem(x).ItemValue = reader.ReadInt32()
+            Shop(ShopNum).TradeItem(x).CostItem = reader.ReadInt32()
+            Shop(ShopNum).TradeItem(x).CostValue = reader.ReadInt32()
         Next
 
     End Sub
@@ -1353,38 +1354,38 @@ Module ServerDatabase
         Dim filename As String
         filename = Path.Combine(Application.StartupPath, "data", "skills", String.Format("skills{0}.dat", skillnum))
 
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer()
+        Dim writer As New ByteStream()
 
-        writer.Write(Skill(skillnum).Name)
-        writer.Write(Skill(skillnum).Type)
-        writer.Write(Skill(skillnum).MpCost)
-        writer.Write(Skill(skillnum).LevelReq)
-        writer.Write(Skill(skillnum).AccessReq)
-        writer.Write(Skill(skillnum).ClassReq)
-        writer.Write(Skill(skillnum).CastTime)
-        writer.Write(Skill(skillnum).CdTime)
-        writer.Write(Skill(skillnum).Icon)
-        writer.Write(Skill(skillnum).Map)
-        writer.Write(Skill(skillnum).X)
-        writer.Write(Skill(skillnum).Y)
-        writer.Write(Skill(skillnum).Dir)
-        writer.Write(Skill(skillnum).Vital)
-        writer.Write(Skill(skillnum).Duration)
-        writer.Write(Skill(skillnum).Interval)
-        writer.Write(Skill(skillnum).range)
-        writer.Write(Skill(skillnum).IsAoE)
-        writer.Write(Skill(skillnum).AoE)
-        writer.Write(Skill(skillnum).CastAnim)
-        writer.Write(Skill(skillnum).SkillAnim)
-        writer.Write(Skill(skillnum).StunDuration)
+        writer.WriteString(Skill(skillnum).Name)
+        writer.WriteByte(Skill(skillnum).Type)
+        writer.WriteInt32(Skill(skillnum).MpCost)
+        writer.WriteInt32(Skill(skillnum).LevelReq)
+        writer.WriteInt32(Skill(skillnum).AccessReq)
+        writer.WriteInt32(Skill(skillnum).ClassReq)
+        writer.WriteInt32(Skill(skillnum).CastTime)
+        writer.WriteInt32(Skill(skillnum).CdTime)
+        writer.WriteInt32(Skill(skillnum).Icon)
+        writer.WriteInt32(Skill(skillnum).Map)
+        writer.WriteInt32(Skill(skillnum).X)
+        writer.WriteInt32(Skill(skillnum).Y)
+        writer.WriteByte(Skill(skillnum).Dir)
+        writer.WriteInt32(Skill(skillnum).Vital)
+        writer.WriteInt32(Skill(skillnum).Duration)
+        writer.WriteInt32(Skill(skillnum).Interval)
+        writer.WriteInt32(Skill(skillnum).Range)
+        writer.WriteBoolean(Skill(skillnum).IsAoE)
+        writer.WriteInt32(Skill(skillnum).AoE)
+        writer.WriteInt32(Skill(skillnum).CastAnim)
+        writer.WriteInt32(Skill(skillnum).SkillAnim)
+        writer.WriteInt32(Skill(skillnum).StunDuration)
 
-        writer.Write(Skill(skillnum).IsProjectile)
-        writer.Write(Skill(skillnum).Projectile)
+        writer.WriteInt32(Skill(skillnum).IsProjectile)
+        writer.WriteInt32(Skill(skillnum).Projectile)
 
-        writer.Write(Skill(skillnum).KnockBack)
-        writer.Write(Skill(skillnum).KnockBackTiles)
+        writer.WriteByte(Skill(skillnum).KnockBack)
+        writer.WriteByte(Skill(skillnum).KnockBackTiles)
 
-        writer.Save(filename)
+        FileHandler.BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadSkills()
@@ -1403,36 +1404,37 @@ Module ServerDatabase
         Dim filename As String
 
         filename = Path.Combine(Application.StartupPath, "data", "skills", String.Format("skills{0}.dat", SkillNum))
-        Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
+        Dim reader As New ByteStream()
+        FileHandler.BinaryFile.Load(filename, reader)
 
-        reader.Read(Skill(SkillNum).Name)
-        reader.Read(Skill(SkillNum).Type)
-        reader.Read(Skill(SkillNum).MpCost)
-        reader.Read(Skill(SkillNum).LevelReq)
-        reader.Read(Skill(SkillNum).AccessReq)
-        reader.Read(Skill(SkillNum).ClassReq)
-        reader.Read(Skill(SkillNum).CastTime)
-        reader.Read(Skill(SkillNum).CdTime)
-        reader.Read(Skill(SkillNum).Icon)
-        reader.Read(Skill(SkillNum).Map)
-        reader.Read(Skill(SkillNum).X)
-        reader.Read(Skill(SkillNum).Y)
-        reader.Read(Skill(SkillNum).Dir)
-        reader.Read(Skill(SkillNum).Vital)
-        reader.Read(Skill(SkillNum).Duration)
-        reader.Read(Skill(SkillNum).Interval)
-        reader.Read(Skill(SkillNum).range)
-        reader.Read(Skill(SkillNum).IsAoE)
-        reader.Read(Skill(SkillNum).AoE)
-        reader.Read(Skill(SkillNum).CastAnim)
-        reader.Read(Skill(SkillNum).SkillAnim)
-        reader.Read(Skill(SkillNum).StunDuration)
+        Skill(SkillNum).Name = reader.ReadString()
+        Skill(SkillNum).Type = reader.ReadByte()
+        Skill(SkillNum).MpCost = reader.ReadInt32()
+        Skill(SkillNum).LevelReq = reader.ReadInt32()
+        Skill(SkillNum).AccessReq = reader.ReadInt32()
+        Skill(SkillNum).ClassReq = reader.ReadInt32()
+        Skill(SkillNum).CastTime = reader.ReadInt32()
+        Skill(SkillNum).CdTime = reader.ReadInt32()
+        Skill(SkillNum).Icon = reader.ReadInt32()
+        Skill(SkillNum).Map = reader.ReadInt32()
+        Skill(SkillNum).X = reader.ReadInt32()
+        Skill(SkillNum).Y = reader.ReadInt32()
+        Skill(SkillNum).Dir = reader.ReadByte()
+        Skill(SkillNum).Vital = reader.ReadInt32()
+        Skill(SkillNum).Duration = reader.ReadInt32()
+        Skill(SkillNum).Interval = reader.ReadInt32()
+        Skill(SkillNum).Range = reader.ReadInt32()
+        Skill(SkillNum).IsAoE = reader.ReadBoolean()
+        Skill(SkillNum).AoE = reader.ReadInt32()
+        Skill(SkillNum).CastAnim = reader.ReadInt32()
+        Skill(SkillNum).SkillAnim = reader.ReadInt32()
+        Skill(SkillNum).StunDuration = reader.ReadInt32()
 
-        reader.Read(Skill(SkillNum).IsProjectile)
-        reader.Read(Skill(SkillNum).Projectile)
+        Skill(SkillNum).IsProjectile = reader.ReadInt32()
+        Skill(SkillNum).Projectile = reader.ReadInt32()
 
-        reader.Read(Skill(SkillNum).KnockBack)
-        reader.Read(Skill(SkillNum).KnockBackTiles)
+        Skill(SkillNum).KnockBack = reader.ReadByte()
+        Skill(SkillNum).KnockBackTiles = reader.ReadByte()
 
     End Sub
 
@@ -1485,28 +1487,28 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "animations", String.Format("animation{0}.dat", AnimationNum))
 
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer()
+        Dim writer As New ByteStream()
 
-        writer.Write(Animation(AnimationNum).Name)
-        writer.Write(Animation(AnimationNum).Sound)
+        writer.WriteString(Animation(AnimationNum).Name)
+        writer.WriteString(Animation(AnimationNum).Sound)
 
         For x = 0 To UBound(Animation(AnimationNum).Sprite)
-            writer.Write(Animation(AnimationNum).Sprite(x))
+            writer.WriteInt32(Animation(AnimationNum).Sprite(x))
         Next
 
         For x = 0 To UBound(Animation(AnimationNum).Frames)
-            writer.Write(Animation(AnimationNum).Frames(x))
+            writer.WriteInt32(Animation(AnimationNum).Frames(x))
         Next
 
         For x = 0 To UBound(Animation(AnimationNum).LoopCount)
-            writer.Write(Animation(AnimationNum).LoopCount(x))
+            writer.WriteInt32(Animation(AnimationNum).LoopCount(x))
         Next
 
         For x = 0 To UBound(Animation(AnimationNum).LoopTime)
-            writer.Write(Animation(AnimationNum).LoopTime(x))
+            writer.WriteInt32(Animation(AnimationNum).LoopTime(x))
         Next
 
-        writer.Save(filename)
+        FileHandler.BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadAnimations()
@@ -1525,25 +1527,26 @@ Module ServerDatabase
         Dim filename As String
 
         filename = Path.Combine(Application.StartupPath, "data", "animations", String.Format("animation{0}.dat", AnimationNum))
-        Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
+        Dim reader As New ByteStream()
+        FileHandler.BinaryFile.Load(filename, reader)
 
-        reader.Read(Animation(AnimationNum).Name)
-        reader.Read(Animation(AnimationNum).Sound)
+        Animation(AnimationNum).Name = reader.ReadString()
+        Animation(AnimationNum).Sound = reader.ReadString()
 
         For x = 0 To UBound(Animation(AnimationNum).Sprite)
-            reader.Read(Animation(AnimationNum).Sprite(x))
+            Animation(AnimationNum).Sprite(x) = reader.ReadInt32()
         Next
 
         For x = 0 To UBound(Animation(AnimationNum).Frames)
-            reader.Read(Animation(AnimationNum).Frames(x))
+            Animation(AnimationNum).Frames(x) = reader.ReadInt32()
         Next
 
         For x = 0 To UBound(Animation(AnimationNum).LoopCount)
-            reader.Read(Animation(AnimationNum).LoopCount(x))
+            Animation(AnimationNum).LoopCount(x) = reader.ReadInt32()
         Next
 
         For x = 0 To UBound(Animation(AnimationNum).LoopTime)
-            reader.Read(Animation(AnimationNum).LoopTime(x))
+            Animation(AnimationNum).LoopTime(x) = reader.ReadInt32()
         Next
 
         If Animation(AnimationNum).Name Is Nothing Then Animation(AnimationNum).Name = ""
@@ -1606,9 +1609,10 @@ Module ServerDatabase
 
         If AccountExist(Name) Then
             filename = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Name), String.Format("{0}.bin", Trim$(Name)))
-            Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
-            reader.Read(namecheck)
-            reader.Read(RightPassword)
+            Dim reader As New ByteStream()
+            FileHandler.BinaryFile.Load(filename, reader)
+            namecheck = reader.ReadString()
+            RightPassword = reader.ReadString()
 
             If Trim(namecheck) <> Trim(Name) Then
                 Exit Function
@@ -1674,13 +1678,13 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "accounts", playername, String.Format("{0}.bin", playername))
 
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer()
+        Dim writer As New ByteStream()
 
-        writer.Write(Player(Index).Login)
-        writer.Write(Player(Index).Password)
-        writer.Write(Player(Index).Access)
+        writer.WriteString(Player(Index).Login)
+        writer.WriteString(Player(Index).Password)
+        writer.WriteByte(Player(Index).Access)
 
-        writer.Save(filename)
+        FileHandler.BinaryFile.Save(filename, writer)
 
         For i = 1 To MAX_CHARS
             SaveCharacter(Index, i)
@@ -1694,11 +1698,12 @@ Module ServerDatabase
         ClearPlayer(Index)
 
         filename = Path.Combine(Application.StartupPath, "data", "accounts", Name.Trim(), String.Format("{0}.bin", Name.Trim()))
-        Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
+        Dim reader As New ByteStream()
+        FileHandler.BinaryFile.Load(filename, reader)
 
-        reader.Read(Player(Index).Login)
-        reader.Read(Player(Index).Password)
-        reader.Read(Player(Index).Access)
+        Player(Index).Login = reader.ReadString()
+        Player(Index).Password = reader.ReadString()
+        Player(Index).Access = reader.ReadByte()
 
         For i = 1 To MAX_CHARS
             LoadCharacter(Index, i)
@@ -1738,57 +1743,56 @@ Module ServerDatabase
             Exit Sub
         End If
 
-        Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
+        Dim reader As New ByteStream()
+        FileHandler.BinaryFile.Load(filename, reader)
 
         For i = 1 To MAX_BANK
-            reader.Read(Bank(Index).Item(i).Num)
-            reader.Read(Bank(Index).Item(i).Value)
+            Bank(Index).Item(i).Num = reader.ReadByte()
+            Bank(Index).Item(i).Value = reader.ReadInt32()
 
-            reader.Read(Bank(Index).ItemRand(i).Prefix)
-            reader.Read(Bank(Index).ItemRand(i).Suffix)
-            reader.Read(Bank(Index).ItemRand(i).Rarity)
-            reader.Read(Bank(Index).ItemRand(i).Damage)
-            reader.Read(Bank(Index).ItemRand(i).Speed)
+            Bank(Index).ItemRand(i).Prefix = reader.ReadString()
+            Bank(Index).ItemRand(i).Suffix = reader.ReadString()
+            Bank(Index).ItemRand(i).Rarity = reader.ReadInt32()
+            Bank(Index).ItemRand(i).Damage = reader.ReadInt32()
+            Bank(Index).ItemRand(i).Speed = reader.ReadInt32()
 
             For x = 1 To Stats.Count - 1
-                reader.Read(Bank(Index).ItemRand(i).Stat(x))
+                Bank(Index).ItemRand(i).Stat(x) = reader.ReadInt32()
             Next
         Next
     End Sub
 
     Sub SaveBank(ByVal Index As Integer)
-        Dim filename As String
+        Dim filename = Path.Combine(Application.StartupPath, "data", "banks", String.Format("{0}.bin", Player(Index).Login.Trim()))
 
-        filename = Path.Combine(Application.StartupPath, "data", "banks", String.Format("{0}.bin", Player(Index).Login.Trim()))
-
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer()
+        Dim writer As New ByteStream()
 
         For i = 1 To MAX_BANK
-            writer.Write(Bank(Index).Item(i).Num)
-            writer.Write(Bank(Index).Item(i).Value)
+            writer.WriteByte(Bank(Index).Item(i).Num)
+            writer.WriteInt32(Bank(Index).Item(i).Value)
 
             If Bank(Index).ItemRand(i).Prefix = Nothing Then Bank(Index).ItemRand(i).Prefix = ""
             If Bank(Index).ItemRand(i).Suffix = Nothing Then Bank(Index).ItemRand(i).Suffix = ""
 
-            writer.Write(Bank(Index).ItemRand(i).Prefix)
-            writer.Write(Bank(Index).ItemRand(i).Suffix)
-            writer.Write(Bank(Index).ItemRand(i).Rarity)
-            writer.Write(Bank(Index).ItemRand(i).Damage)
-            writer.Write(Bank(Index).ItemRand(i).Speed)
+            writer.WriteString(Bank(Index).ItemRand(i).Prefix)
+            writer.WriteString(Bank(Index).ItemRand(i).Suffix)
+            writer.WriteInt32(Bank(Index).ItemRand(i).Rarity)
+            writer.WriteInt32(Bank(Index).ItemRand(i).Damage)
+            writer.WriteInt32(Bank(Index).ItemRand(i).Speed)
 
             For x = 1 To Stats.Count - 1
-                writer.Write(Bank(Index).ItemRand(i).Stat(x))
+                writer.WriteInt32(Bank(Index).ItemRand(i).Stat(x))
             Next
 
-            'writer.Write(Bank(Index).ItemRand(i).Stat(Stats.Strength))
-            'writer.Write(Bank(Index).ItemRand(i).Stat(Stats.Endurance))
-            'writer.Write(Bank(Index).ItemRand(i).Stat(Stats.Vitality))
-            'writer.Write(Bank(Index).ItemRand(i).Stat(Stats.Luck))
-            'writer.Write(Bank(Index).ItemRand(i).Stat(Stats.Intelligence))
-            'writer.Write(Bank(Index).ItemRand(i).Stat(Stats.Spirit))
+            'writer.WriteInt32(Bank(Index).ItemRand(i).Stat(Stats.Strength))
+            'writer.WriteInt32(Bank(Index).ItemRand(i).Stat(Stats.Endurance))
+            'writer.WriteInt32(Bank(Index).ItemRand(i).Stat(Stats.Vitality))
+            'writer.WriteInt32(Bank(Index).ItemRand(i).Stat(Stats.Luck))
+            'writer.WriteInt32(Bank(Index).ItemRand(i).Stat(Stats.Intelligence))
+            'writer.WriteInt32(Bank(Index).ItemRand(i).Stat(Stats.Spirit))
         Next
 
-        writer.Save(filename)
+        FileHandler.BinaryFile.Save(filename, writer)
     End Sub
 
     Sub ClearBank(ByVal Index As Integer)
@@ -1938,9 +1942,9 @@ Module ServerDatabase
         Player(Index).Character(CharNum).Pet.Mana = 0
         Player(Index).Character(CharNum).Pet.Level = 0
 
-        ReDim Player(Index).Character(CharNum).Pet.stat(Stats.Count - 1)
+        ReDim Player(Index).Character(CharNum).Pet.Stat(Stats.Count - 1)
         For i = 1 To Stats.Count - 1
-            Player(Index).Character(CharNum).Pet.stat(i) = 0
+            Player(Index).Character(CharNum).Pet.Stat(i) = 0
         Next
 
         ReDim Player(Index).Character(CharNum).Pet.Skill(4)
@@ -1948,8 +1952,8 @@ Module ServerDatabase
             Player(Index).Character(CharNum).Pet.Skill(i) = 0
         Next
 
-        Player(Index).Character(CharNum).Pet.x = 0
-        Player(Index).Character(CharNum).Pet.y = 0
+        Player(Index).Character(CharNum).Pet.X = 0
+        Player(Index).Character(CharNum).Pet.Y = 0
         Player(Index).Character(CharNum).Pet.Dir = 0
         Player(Index).Character(CharNum).Pet.Alive = 0
         Player(Index).Character(CharNum).Pet.AttackBehaviour = 0
@@ -1966,147 +1970,148 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Player(Index).Login), String.Format("{0}.bin", CharNum))
 
-        Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
+        Dim reader As New ByteStream()
+        FileHandler.BinaryFile.Load(filename, reader)
 
-        reader.Read(Player(Index).Character(CharNum).Classes)
-        reader.Read(Player(Index).Character(CharNum).Dir)
+        Player(Index).Character(CharNum).Classes = reader.ReadByte()
+        Player(Index).Character(CharNum).Dir = reader.ReadByte()
 
         For i = 1 To EquipmentType.Count - 1
-            reader.Read(Player(Index).Character(CharNum).Equipment(i))
+            Player(Index).Character(CharNum).Equipment(i) = reader.ReadByte()
         Next
 
-        reader.Read(Player(Index).Character(CharNum).Exp)
+        Player(Index).Character(CharNum).Exp = reader.ReadInt32()
 
         For i = 0 To MAX_INV
-            reader.Read(Player(Index).Character(CharNum).Inv(i).Num)
-            reader.Read(Player(Index).Character(CharNum).Inv(i).Value)
+            Player(Index).Character(CharNum).Inv(i).Num = reader.ReadByte()
+            Player(Index).Character(CharNum).Inv(i).Value = reader.ReadInt32()
         Next
 
-        reader.Read(Player(Index).Character(CharNum).Level)
-        reader.Read(Player(Index).Character(CharNum).Map)
-        reader.Read(Player(Index).Character(CharNum).Name)
-        reader.Read(Player(Index).Character(CharNum).Pk)
-        reader.Read(Player(Index).Character(CharNum).Points)
-        reader.Read(Player(Index).Character(CharNum).Sex)
+        Player(Index).Character(CharNum).Level = reader.ReadByte()
+        Player(Index).Character(CharNum).Map = reader.ReadInt32()
+        Player(Index).Character(CharNum).Name = reader.ReadString()
+        Player(Index).Character(CharNum).Pk = reader.ReadByte()
+        Player(Index).Character(CharNum).Points = reader.ReadByte()
+        Player(Index).Character(CharNum).Sex = reader.ReadByte()
 
         For i = 0 To MAX_PLAYER_SKILLS
-            reader.Read(Player(Index).Character(CharNum).Skill(i))
+            Player(Index).Character(CharNum).Skill(i) = reader.ReadByte()
         Next
 
-        reader.Read(Player(Index).Character(CharNum).Sprite)
+        Player(Index).Character(CharNum).Sprite = reader.ReadInt32()
 
         For i = 0 To Stats.Count - 1
-            reader.Read(Player(Index).Character(CharNum).Stat(i))
+            Player(Index).Character(CharNum).Stat(i) = reader.ReadByte()
         Next
 
         For i = 0 To Vitals.Count - 1
-            reader.Read(Player(Index).Character(CharNum).Vital(i))
+            Player(Index).Character(CharNum).Vital(i) = reader.ReadInt32()
         Next
 
-        reader.Read(Player(Index).Character(CharNum).X)
-        reader.Read(Player(Index).Character(CharNum).Y)
+        Player(Index).Character(CharNum).X = reader.ReadByte()
+        Player(Index).Character(CharNum).Y = reader.ReadByte()
 
         For i = 1 To MAX_QUESTS
-            reader.Read(Player(Index).Character(CharNum).PlayerQuest(i).Status)
-            reader.Read(Player(Index).Character(CharNum).PlayerQuest(i).ActualTask)
-            reader.Read(Player(Index).Character(CharNum).PlayerQuest(i).CurrentCount)
+            Player(Index).Character(CharNum).PlayerQuest(i).Status = reader.ReadInt32()
+            Player(Index).Character(CharNum).PlayerQuest(i).ActualTask = reader.ReadInt32()
+            Player(Index).Character(CharNum).PlayerQuest(i).CurrentCount = reader.ReadInt32()
         Next
 
         'Housing
-        reader.Read(Player(Index).Character(CharNum).House.HouseIndex)
-        reader.Read(Player(Index).Character(CharNum).House.FurnitureCount)
+        Player(Index).Character(CharNum).House.HouseIndex = reader.ReadInt32()
+        Player(Index).Character(CharNum).House.FurnitureCount = reader.ReadInt32()
         ReDim Player(Index).Character(CharNum).House.Furniture(Player(Index).Character(CharNum).House.FurnitureCount)
         For i = 0 To Player(Index).Character(CharNum).House.FurnitureCount
-            reader.Read(Player(Index).Character(CharNum).House.Furniture(i).ItemNum)
-            reader.Read(Player(Index).Character(CharNum).House.Furniture(i).X)
-            reader.Read(Player(Index).Character(CharNum).House.Furniture(i).Y)
+            Player(Index).Character(CharNum).House.Furniture(i).ItemNum = reader.ReadInt32()
+            Player(Index).Character(CharNum).House.Furniture(i).X = reader.ReadInt32()
+            Player(Index).Character(CharNum).House.Furniture(i).Y = reader.ReadInt32()
         Next
-        reader.Read(Player(Index).Character(CharNum).InHouse)
-        reader.Read(Player(Index).Character(CharNum).LastMap)
-        reader.Read(Player(Index).Character(CharNum).LastX)
-        reader.Read(Player(Index).Character(CharNum).LastY)
+        Player(Index).Character(CharNum).InHouse = reader.ReadInt32()
+        Player(Index).Character(CharNum).LastMap = reader.ReadInt32()
+        Player(Index).Character(CharNum).LastX = reader.ReadInt32()
+        Player(Index).Character(CharNum).LastY = reader.ReadInt32()
 
         For i = 1 To MAX_HOTBAR
-            reader.Read(Player(Index).Character(CharNum).Hotbar(i).Slot)
-            reader.Read(Player(Index).Character(CharNum).Hotbar(i).SlotType)
+            Player(Index).Character(CharNum).Hotbar(i).Slot = reader.ReadInt32()
+            Player(Index).Character(CharNum).Hotbar(i).SlotType = reader.ReadByte()
         Next
 
         ReDim Player(Index).Character(CharNum).Switches(MAX_SWITCHES)
         For i = 1 To MAX_SWITCHES
-            reader.Read(Player(Index).Character(CharNum).Switches(i))
+            Player(Index).Character(CharNum).Switches(i) = reader.ReadByte()
         Next
         ReDim Player(Index).Character(CharNum).Variables(MAX_VARIABLES)
         For i = 1 To MAX_VARIABLES
-            reader.Read(Player(Index).Character(CharNum).Variables(i))
+            Player(Index).Character(CharNum).Variables(i) = reader.ReadInt32()
         Next
 
         ReDim Player(Index).Character(CharNum).GatherSkills(ResourceSkills.Count - 1)
         For i = 0 To ResourceSkills.Count - 1
-            reader.Read(Player(Index).Character(CharNum).GatherSkills(i).SkillLevel)
-            reader.Read(Player(Index).Character(CharNum).GatherSkills(i).SkillCurExp)
-            reader.Read(Player(Index).Character(CharNum).GatherSkills(i).SkillNextLvlExp)
+            Player(Index).Character(CharNum).GatherSkills(i).SkillLevel = reader.ReadInt32()
+            Player(Index).Character(CharNum).GatherSkills(i).SkillCurExp = reader.ReadInt32()
+            Player(Index).Character(CharNum).GatherSkills(i).SkillNextLvlExp = reader.ReadInt32()
             If Player(Index).Character(CharNum).GatherSkills(i).SkillLevel = 0 Then Player(Index).Character(CharNum).GatherSkills(i).SkillLevel = 1
             If Player(Index).Character(CharNum).GatherSkills(i).SkillNextLvlExp = 0 Then Player(Index).Character(CharNum).GatherSkills(i).SkillNextLvlExp = 100
         Next
 
         ReDim Player(Index).Character(CharNum).RecipeLearned(MAX_RECIPE)
         For i = 1 To MAX_RECIPE
-            reader.Read(Player(Index).Character(CharNum).RecipeLearned(i))
+            Player(Index).Character(CharNum).RecipeLearned(i) = reader.ReadByte()
         Next
 
         'random items
         ReDim Player(Index).Character(CharNum).RandInv(MAX_INV)
         For i = 1 To MAX_INV
-            reader.Read(Player(Index).Character(CharNum).RandInv(i).Prefix)
-            reader.Read(Player(Index).Character(CharNum).RandInv(i).Suffix)
-            reader.Read(Player(Index).Character(CharNum).RandInv(i).Rarity)
-            reader.Read(Player(Index).Character(CharNum).RandInv(i).Damage)
-            reader.Read(Player(Index).Character(CharNum).RandInv(i).Speed)
+            Player(Index).Character(CharNum).RandInv(i).Prefix = reader.ReadString()
+            Player(Index).Character(CharNum).RandInv(i).Suffix = reader.ReadString()
+            Player(Index).Character(CharNum).RandInv(i).Rarity = reader.ReadInt32()
+            Player(Index).Character(CharNum).RandInv(i).Damage = reader.ReadInt32()
+            Player(Index).Character(CharNum).RandInv(i).Speed = reader.ReadInt32()
 
             ReDim Player(Index).Character(CharNum).RandInv(i).Stat(Stats.Count - 1)
             For x = 1 To Stats.Count - 1
-                reader.Read(Player(Index).Character(CharNum).RandInv(i).Stat(x))
+                Player(Index).Character(CharNum).RandInv(i).Stat(x) = reader.ReadInt32()
             Next
         Next
 
         ReDim Player(Index).Character(CharNum).RandEquip(EquipmentType.Count - 1)
         For i = 1 To EquipmentType.Count - 1
-            reader.Read(Player(Index).Character(CharNum).RandEquip(i).Prefix)
-            reader.Read(Player(Index).Character(CharNum).RandEquip(i).Suffix)
-            reader.Read(Player(Index).Character(CharNum).RandEquip(i).Rarity)
-            reader.Read(Player(Index).Character(CharNum).RandEquip(i).Damage)
-            reader.Read(Player(Index).Character(CharNum).RandEquip(i).Speed)
+            Player(Index).Character(CharNum).RandEquip(i).Prefix = reader.ReadString()
+            Player(Index).Character(CharNum).RandEquip(i).Suffix = reader.ReadString()
+            Player(Index).Character(CharNum).RandEquip(i).Rarity = reader.ReadInt32()
+            Player(Index).Character(CharNum).RandEquip(i).Damage = reader.ReadInt32()
+            Player(Index).Character(CharNum).RandEquip(i).Speed = reader.ReadInt32()
 
             ReDim Player(Index).Character(CharNum).RandEquip(i).Stat(Stats.Count - 1)
             For x = 1 To Stats.Count - 1
-                reader.Read(Player(Index).Character(CharNum).RandEquip(i).Stat(x))
+                Player(Index).Character(CharNum).RandEquip(i).Stat(x) = reader.ReadInt32()
             Next
         Next
 
         'pets
-        reader.Read(Player(Index).Character(CharNum).Pet.Num)
-        reader.Read(Player(Index).Character(CharNum).Pet.Health)
-        reader.Read(Player(Index).Character(CharNum).Pet.Mana)
-        reader.Read(Player(Index).Character(CharNum).Pet.Level)
+        Player(Index).Character(CharNum).Pet.Num = reader.ReadInt32()
+        Player(Index).Character(CharNum).Pet.Health = reader.ReadInt32()
+        Player(Index).Character(CharNum).Pet.Mana = reader.ReadInt32()
+        Player(Index).Character(CharNum).Pet.Level = reader.ReadInt32()
 
-        ReDim Player(Index).Character(CharNum).Pet.stat(Stats.Count - 1)
+        ReDim Player(Index).Character(CharNum).Pet.Stat(Stats.Count - 1)
         For i = 1 To Stats.Count - 1
-            reader.Read(Player(Index).Character(CharNum).Pet.stat(i))
+            Player(Index).Character(CharNum).Pet.Stat(i) = reader.ReadByte()
         Next
 
         ReDim Player(Index).Character(CharNum).Pet.Skill(4)
         For i = 1 To 4
-            reader.Read(Player(Index).Character(CharNum).Pet.Skill(i))
+            Player(Index).Character(CharNum).Pet.Skill(i) = reader.ReadInt32()
         Next
 
-        reader.Read(Player(Index).Character(CharNum).Pet.x)
-        reader.Read(Player(Index).Character(CharNum).Pet.y)
-        reader.Read(Player(Index).Character(CharNum).Pet.Dir)
-        reader.Read(Player(Index).Character(CharNum).Pet.Alive)
-        reader.Read(Player(Index).Character(CharNum).Pet.AttackBehaviour)
-        reader.Read(Player(Index).Character(CharNum).Pet.AdoptiveStats)
-        reader.Read(Player(Index).Character(CharNum).Pet.Points)
-        reader.Read(Player(Index).Character(CharNum).Pet.Exp)
+        Player(Index).Character(CharNum).Pet.X = reader.ReadInt32()
+        Player(Index).Character(CharNum).Pet.Y = reader.ReadInt32()
+        Player(Index).Character(CharNum).Pet.Dir = reader.ReadInt32()
+        Player(Index).Character(CharNum).Pet.Alive = reader.ReadByte()
+        Player(Index).Character(CharNum).Pet.AttackBehaviour = reader.ReadInt32()
+        Player(Index).Character(CharNum).Pet.AdoptiveStats = reader.ReadByte()
+        Player(Index).Character(CharNum).Pet.Points = reader.ReadInt32()
+        Player(Index).Character(CharNum).Pet.Exp = reader.ReadInt32()
 
     End Sub
 
@@ -2115,135 +2120,135 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Player(Index).Login), String.Format("{0}.bin", CharNum))
 
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer()
+        Dim writer As New ByteStream()
 
-        writer.Write(Player(Index).Character(CharNum).Classes)
-        writer.Write(Player(Index).Character(CharNum).Dir)
+        writer.WriteByte(Player(Index).Character(CharNum).Classes)
+        writer.WriteByte(Player(Index).Character(CharNum).Dir)
 
         For i = 1 To EquipmentType.Count - 1
-            writer.Write(Player(Index).Character(CharNum).Equipment(i))
+            writer.WriteByte(Player(Index).Character(CharNum).Equipment(i))
         Next
 
-        writer.Write(Player(Index).Character(CharNum).Exp)
+        writer.WriteInt32(Player(Index).Character(CharNum).Exp)
 
         For i = 0 To MAX_INV
-            writer.Write(Player(Index).Character(CharNum).Inv(i).Num)
-            writer.Write(Player(Index).Character(CharNum).Inv(i).Value)
+            writer.WriteByte(Player(Index).Character(CharNum).Inv(i).Num)
+            writer.WriteInt32(Player(Index).Character(CharNum).Inv(i).Value)
         Next
 
-        writer.Write(Player(Index).Character(CharNum).Level)
-        writer.Write(Player(Index).Character(CharNum).Map)
-        writer.Write(Player(Index).Character(CharNum).Name)
-        writer.Write(Player(Index).Character(CharNum).Pk)
-        writer.Write(Player(Index).Character(CharNum).Points)
-        writer.Write(Player(Index).Character(CharNum).Sex)
+        writer.WriteByte(Player(Index).Character(CharNum).Level)
+        writer.WriteInt32(Player(Index).Character(CharNum).Map)
+        writer.WriteString(Player(Index).Character(CharNum).Name)
+        writer.WriteByte(Player(Index).Character(CharNum).Pk)
+        writer.WriteByte(Player(Index).Character(CharNum).Points)
+        writer.WriteByte(Player(Index).Character(CharNum).Sex)
 
         For i = 0 To MAX_PLAYER_SKILLS
-            writer.Write(Player(Index).Character(CharNum).Skill(i))
+            writer.WriteByte(Player(Index).Character(CharNum).Skill(i))
         Next
 
-        writer.Write(Player(Index).Character(CharNum).Sprite)
+        writer.WriteInt32(Player(Index).Character(CharNum).Sprite)
 
         For i = 0 To Stats.Count - 1
-            writer.Write(Player(Index).Character(CharNum).Stat(i))
+            writer.WriteByte(Player(Index).Character(CharNum).Stat(i))
         Next
 
         For i = 0 To Vitals.Count - 1
-            writer.Write(Player(Index).Character(CharNum).Vital(i))
+            writer.WriteInt32(Player(Index).Character(CharNum).Vital(i))
         Next
 
-        writer.Write(Player(Index).Character(CharNum).X)
-        writer.Write(Player(Index).Character(CharNum).Y)
+        writer.WriteByte(Player(Index).Character(CharNum).X)
+        writer.WriteByte(Player(Index).Character(CharNum).Y)
 
         For i = 1 To MAX_QUESTS
-            writer.Write(Player(Index).Character(CharNum).PlayerQuest(i).Status)
-            writer.Write(Player(Index).Character(CharNum).PlayerQuest(i).ActualTask)
-            writer.Write(Player(Index).Character(CharNum).PlayerQuest(i).CurrentCount)
+            writer.WriteInt32(Player(Index).Character(CharNum).PlayerQuest(i).Status)
+            writer.WriteInt32(Player(Index).Character(CharNum).PlayerQuest(i).ActualTask)
+            writer.WriteInt32(Player(Index).Character(CharNum).PlayerQuest(i).CurrentCount)
         Next
 
         'Housing
-        writer.Write(Player(Index).Character(CharNum).House.HouseIndex)
-        writer.Write(Player(Index).Character(CharNum).House.FurnitureCount)
+        writer.WriteInt32(Player(Index).Character(CharNum).House.HouseIndex)
+        writer.WriteInt32(Player(Index).Character(CharNum).House.FurnitureCount)
         For i = 0 To Player(Index).Character(CharNum).House.FurnitureCount
-            writer.Write(Player(Index).Character(CharNum).House.Furniture(i).ItemNum)
-            writer.Write(Player(Index).Character(CharNum).House.Furniture(i).X)
-            writer.Write(Player(Index).Character(CharNum).House.Furniture(i).Y)
+            writer.WriteInt32(Player(Index).Character(CharNum).House.Furniture(i).ItemNum)
+            writer.WriteInt32(Player(Index).Character(CharNum).House.Furniture(i).X)
+            writer.WriteInt32(Player(Index).Character(CharNum).House.Furniture(i).Y)
         Next
-        writer.Write(Player(Index).Character(CharNum).InHouse)
-        writer.Write(Player(Index).Character(CharNum).LastMap)
-        writer.Write(Player(Index).Character(CharNum).LastX)
-        writer.Write(Player(Index).Character(CharNum).LastY)
+        writer.WriteInt32(Player(Index).Character(CharNum).InHouse)
+        writer.WriteInt32(Player(Index).Character(CharNum).LastMap)
+        writer.WriteInt32(Player(Index).Character(CharNum).LastX)
+        writer.WriteInt32(Player(Index).Character(CharNum).LastY)
 
         For i = 1 To MAX_HOTBAR
-            writer.Write(Player(Index).Character(CharNum).Hotbar(i).Slot)
-            writer.Write(Player(Index).Character(CharNum).Hotbar(i).SlotType)
+            writer.WriteInt32(Player(Index).Character(CharNum).Hotbar(i).Slot)
+            writer.WriteByte(Player(Index).Character(CharNum).Hotbar(i).SlotType)
         Next
 
         For i = 1 To MAX_SWITCHES
-            writer.Write(Player(Index).Character(CharNum).Switches(i))
+            writer.WriteByte(Player(Index).Character(CharNum).Switches(i))
         Next
 
         For i = 1 To MAX_VARIABLES
-            writer.Write(Player(Index).Character(CharNum).Variables(i))
+            writer.WriteInt32(Player(Index).Character(CharNum).Variables(i))
         Next
 
         For i = 0 To ResourceSkills.Count - 1
-            writer.Write(Player(Index).Character(CharNum).GatherSkills(i).SkillLevel)
-            writer.Write(Player(Index).Character(CharNum).GatherSkills(i).SkillCurExp)
-            writer.Write(Player(Index).Character(CharNum).GatherSkills(i).SkillNextLvlExp)
+            writer.WriteInt32(Player(Index).Character(CharNum).GatherSkills(i).SkillLevel)
+            writer.WriteInt32(Player(Index).Character(CharNum).GatherSkills(i).SkillCurExp)
+            writer.WriteInt32(Player(Index).Character(CharNum).GatherSkills(i).SkillNextLvlExp)
         Next
 
         For i = 1 To MAX_RECIPE
-            writer.Write(Player(Index).Character(CharNum).RecipeLearned(i))
+            writer.WriteByte(Player(Index).Character(CharNum).RecipeLearned(i))
         Next
 
         'random items
         For i = 1 To MAX_INV
-            writer.Write(Player(Index).Character(CharNum).RandInv(i).Prefix)
-            writer.Write(Player(Index).Character(CharNum).RandInv(i).Suffix)
-            writer.Write(Player(Index).Character(CharNum).RandInv(i).Rarity)
-            writer.Write(Player(Index).Character(CharNum).RandInv(i).Damage)
-            writer.Write(Player(Index).Character(CharNum).RandInv(i).Speed)
+            writer.WriteString(Player(Index).Character(CharNum).RandInv(i).Prefix)
+            writer.WriteString(Player(Index).Character(CharNum).RandInv(i).Suffix)
+            writer.WriteInt32(Player(Index).Character(CharNum).RandInv(i).Rarity)
+            writer.WriteInt32(Player(Index).Character(CharNum).RandInv(i).Damage)
+            writer.WriteInt32(Player(Index).Character(CharNum).RandInv(i).Speed)
             For x = 1 To Stats.Count - 1
-                writer.Write(Player(Index).Character(CharNum).RandInv(i).Stat(x))
+                writer.WriteInt32(Player(Index).Character(CharNum).RandInv(i).Stat(x))
             Next
         Next
 
         For i = 1 To EquipmentType.Count - 1
-            writer.Write(Player(Index).Character(CharNum).RandEquip(i).Prefix)
-            writer.Write(Player(Index).Character(CharNum).RandEquip(i).Suffix)
-            writer.Write(Player(Index).Character(CharNum).RandEquip(i).Rarity)
-            writer.Write(Player(Index).Character(CharNum).RandEquip(i).Damage)
-            writer.Write(Player(Index).Character(CharNum).RandEquip(i).Speed)
+            writer.WriteString(Player(Index).Character(CharNum).RandEquip(i).Prefix)
+            writer.WriteString(Player(Index).Character(CharNum).RandEquip(i).Suffix)
+            writer.WriteInt32(Player(Index).Character(CharNum).RandEquip(i).Rarity)
+            writer.WriteInt32(Player(Index).Character(CharNum).RandEquip(i).Damage)
+            writer.WriteInt32(Player(Index).Character(CharNum).RandEquip(i).Speed)
             For x = 1 To Stats.Count - 1
-                writer.Write(Player(Index).Character(CharNum).RandEquip(i).Stat(x))
+                writer.WriteInt32(Player(Index).Character(CharNum).RandEquip(i).Stat(x))
             Next
         Next
 
         'pets
-        writer.Write(Player(Index).Character(CharNum).Pet.Num)
-        writer.Write(Player(Index).Character(CharNum).Pet.Health)
-        writer.Write(Player(Index).Character(CharNum).Pet.Mana)
-        writer.Write(Player(Index).Character(CharNum).Pet.Level)
+        writer.WriteInt32(Player(Index).Character(CharNum).Pet.Num)
+        writer.WriteInt32(Player(Index).Character(CharNum).Pet.Health)
+        writer.WriteInt32(Player(Index).Character(CharNum).Pet.Mana)
+        writer.WriteInt32(Player(Index).Character(CharNum).Pet.Level)
 
         For i = 1 To Stats.Count - 1
-            writer.Write(Player(Index).Character(CharNum).Pet.stat(i))
+            writer.WriteByte(Player(Index).Character(CharNum).Pet.Stat(i))
         Next
 
         For i = 1 To 4
-            writer.Write(Player(Index).Character(CharNum).Pet.Skill(i))
+            writer.WriteInt32(Player(Index).Character(CharNum).Pet.Skill(i))
         Next
 
-        writer.Write(Player(Index).Character(CharNum).Pet.x)
-        writer.Write(Player(Index).Character(CharNum).Pet.y)
-        writer.Write(Player(Index).Character(CharNum).Pet.Dir)
-        writer.Write(Player(Index).Character(CharNum).Pet.Alive)
-        writer.Write(Player(Index).Character(CharNum).Pet.AttackBehaviour)
-        writer.Write(Player(Index).Character(CharNum).Pet.AdoptiveStats)
-        writer.Write(Player(Index).Character(CharNum).Pet.Points)
-        writer.Write(Player(Index).Character(CharNum).Pet.Exp)
+        writer.WriteInt32(Player(Index).Character(CharNum).Pet.X)
+        writer.WriteInt32(Player(Index).Character(CharNum).Pet.Y)
+        writer.WriteInt32(Player(Index).Character(CharNum).Pet.Dir)
+        writer.WriteByte(Player(Index).Character(CharNum).Pet.Alive)
+        writer.WriteInt32(Player(Index).Character(CharNum).Pet.AttackBehaviour)
+        writer.WriteByte(Player(Index).Character(CharNum).Pet.AdoptiveStats)
+        writer.WriteInt32(Player(Index).Character(CharNum).Pet.Points)
+        writer.WriteInt32(Player(Index).Character(CharNum).Pet.Exp)
 
-        writer.Save(filename)
+        FileHandler.BinaryFile.Save(filename, writer)
     End Sub
 
     Function CharExist(ByVal Index As Integer, ByVal CharNum As Integer) As Boolean

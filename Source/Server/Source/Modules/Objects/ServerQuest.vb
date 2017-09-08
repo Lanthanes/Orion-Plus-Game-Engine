@@ -1,4 +1,6 @@
 ﻿Imports System.IO
+Imports ASFW
+Imports ASFW.IO
 
 Public Module ServerQuest
 #Region "Constants"
@@ -89,52 +91,50 @@ Public Module ServerQuest
         Dim I As Integer
         filename = Path.Combine(Application.StartupPath, "data", "quests", String.Format("quest{0}.dat", QuestNum))
 
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer
+        Dim writer As New ByteStream()
 
-        writer.Write(Quest(QuestNum).Name)
-        writer.Write(Quest(QuestNum).QuestLog)
-        writer.Write(Quest(QuestNum).Repeat)
-        writer.Write(Quest(QuestNum).Cancelable)
+        writer.WriteString(Quest(QuestNum).Name)
+        writer.WriteString(Quest(QuestNum).QuestLog)
+        writer.WriteByte(Quest(QuestNum).Repeat)
+        writer.WriteByte(Quest(QuestNum).Cancelable)
 
-        writer.Write(Quest(QuestNum).ReqCount)
+        writer.WriteInt32(Quest(QuestNum).ReqCount)
         For I = 1 To Quest(QuestNum).ReqCount
-            writer.Write(Quest(QuestNum).Requirement(I))
-            writer.Write(Quest(QuestNum).RequirementIndex(I))
+            writer.WriteInt32(Quest(QuestNum).Requirement(I))
+            writer.WriteInt32(Quest(QuestNum).RequirementIndex(I))
         Next
 
-        writer.Write(Quest(QuestNum).QuestGiveItem)
-        writer.Write(Quest(QuestNum).QuestGiveItemValue)
-        writer.Write(Quest(QuestNum).QuestRemoveItem)
-        writer.Write(Quest(QuestNum).QuestRemoveItemValue)
+        writer.WriteInt32(Quest(QuestNum).QuestGiveItem)
+        writer.WriteInt32(Quest(QuestNum).QuestGiveItemValue)
+        writer.WriteInt32(Quest(QuestNum).QuestRemoveItem)
+        writer.WriteInt32(Quest(QuestNum).QuestRemoveItemValue)
 
         For I = 1 To 3
-            writer.Write(Quest(QuestNum).Chat(I))
+            writer.WriteString(Quest(QuestNum).Chat(I))
         Next
 
-        writer.Write(Quest(QuestNum).RewardCount)
+        writer.WriteInt32(Quest(QuestNum).RewardCount)
         For I = 1 To Quest(QuestNum).RewardCount
-            writer.Write(Quest(QuestNum).RewardItem(I))
-            writer.Write(Quest(QuestNum).RewardItemAmount(I))
+            writer.WriteInt32(Quest(QuestNum).RewardItem(I))
+            writer.WriteInt32(Quest(QuestNum).RewardItemAmount(I))
         Next
-        writer.Write(Quest(QuestNum).RewardExp)
+        writer.WriteInt32(Quest(QuestNum).RewardExp)
 
-        writer.Write(Quest(QuestNum).TaskCount)
+        writer.WriteInt32(Quest(QuestNum).TaskCount)
         For I = 1 To Quest(QuestNum).TaskCount
-            writer.Write(Quest(QuestNum).Task(I).Order)
-            writer.Write(Quest(QuestNum).Task(I).NPC)
-            writer.Write(Quest(QuestNum).Task(I).Item)
-            writer.Write(Quest(QuestNum).Task(I).Map)
-            writer.Write(Quest(QuestNum).Task(I).Resource)
-            writer.Write(Quest(QuestNum).Task(I).Amount)
-            writer.Write(Quest(QuestNum).Task(I).Speech)
-            writer.Write(Quest(QuestNum).Task(I).TaskLog)
-            writer.Write(Quest(QuestNum).Task(I).QuestEnd)
-            writer.Write(Quest(QuestNum).Task(I).TaskType)
+            writer.WriteInt32(Quest(QuestNum).Task(I).Order)
+            writer.WriteInt32(Quest(QuestNum).Task(I).NPC)
+            writer.WriteInt32(Quest(QuestNum).Task(I).Item)
+            writer.WriteInt32(Quest(QuestNum).Task(I).Map)
+            writer.WriteInt32(Quest(QuestNum).Task(I).Resource)
+            writer.WriteInt32(Quest(QuestNum).Task(I).Amount)
+            writer.WriteString(Quest(QuestNum).Task(I).Speech)
+            writer.WriteString(Quest(QuestNum).Task(I).TaskLog)
+            writer.WriteByte(Quest(QuestNum).Task(I).QuestEnd)
+            writer.WriteInt32(Quest(QuestNum).Task(I).TaskType)
         Next
 
-        writer.Save(filename)
-        'load it so see if it matches O.o
-        LoadQuest(QuestNum)
+        FileHandler.BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadQuests()
@@ -154,52 +154,53 @@ Public Module ServerQuest
 
         FileName = Path.Combine(Application.StartupPath, "data", "quests", String.Format("quest{0}.dat", QuestNum))
 
-        Dim reader As New ArchaicIO.File.BinaryStream.Reader(FileName)
+        Dim reader As New ByteStream()
+        FileHandler.BinaryFile.Load(FileName, reader)
 
-        reader.Read(Quest(QuestNum).Name)
-        reader.Read(Quest(QuestNum).QuestLog)
-        reader.Read(Quest(QuestNum).Repeat)
-        reader.Read(Quest(QuestNum).Cancelable)
+        Quest(QuestNum).Name = reader.ReadString()
+        Quest(QuestNum).QuestLog = reader.ReadString()
+        Quest(QuestNum).Repeat = reader.ReadByte()
+        Quest(QuestNum).Cancelable = reader.ReadByte()
 
-        reader.Read(Quest(QuestNum).ReqCount)
+        Quest(QuestNum).ReqCount = reader.ReadInt32()
         ReDim Quest(QuestNum).Requirement(Quest(QuestNum).ReqCount)
         ReDim Quest(QuestNum).RequirementIndex(Quest(QuestNum).ReqCount)
         For I = 1 To Quest(QuestNum).ReqCount
-            reader.Read(Quest(QuestNum).Requirement(I))
-            reader.Read(Quest(QuestNum).RequirementIndex(I))
+            Quest(QuestNum).Requirement(I) = reader.ReadInt32()
+            Quest(QuestNum).RequirementIndex(I) = reader.ReadInt32()
         Next
 
-        reader.Read(Quest(QuestNum).QuestGiveItem)
-        reader.Read(Quest(QuestNum).QuestGiveItemValue)
-        reader.Read(Quest(QuestNum).QuestRemoveItem)
-        reader.Read(Quest(QuestNum).QuestRemoveItemValue)
+        Quest(QuestNum).QuestGiveItem = reader.ReadInt32()
+        Quest(QuestNum).QuestGiveItemValue = reader.ReadInt32()
+        Quest(QuestNum).QuestRemoveItem = reader.ReadInt32()
+        Quest(QuestNum).QuestRemoveItemValue = reader.ReadInt32()
 
         For I = 1 To 3
-            reader.Read(Quest(QuestNum).Chat(I))
+            Quest(QuestNum).Chat(I) = reader.ReadString()
         Next
 
-        reader.Read(Quest(QuestNum).RewardCount)
+        Quest(QuestNum).RewardCount = reader.ReadInt32()
         ReDim Quest(QuestNum).RewardItem(Quest(QuestNum).RewardCount)
         ReDim Quest(QuestNum).RewardItemAmount(Quest(QuestNum).RewardCount)
         For I = 1 To Quest(QuestNum).RewardCount
-            reader.Read(Quest(QuestNum).RewardItem(I))
-            reader.Read(Quest(QuestNum).RewardItemAmount(I))
+            Quest(QuestNum).RewardItem(I) = reader.ReadInt32()
+            Quest(QuestNum).RewardItemAmount(I) = reader.ReadInt32()
         Next
-        reader.Read(Quest(QuestNum).RewardExp)
+        Quest(QuestNum).RewardExp = reader.ReadInt32()
 
-        reader.Read(Quest(QuestNum).TaskCount)
+        Quest(QuestNum).TaskCount = reader.ReadInt32()
         ReDim Quest(QuestNum).Task(Quest(QuestNum).TaskCount)
         For I = 1 To Quest(QuestNum).TaskCount
-            reader.Read(Quest(QuestNum).Task(I).Order)
-            reader.Read(Quest(QuestNum).Task(I).NPC)
-            reader.Read(Quest(QuestNum).Task(I).Item)
-            reader.Read(Quest(QuestNum).Task(I).Map)
-            reader.Read(Quest(QuestNum).Task(I).Resource)
-            reader.Read(Quest(QuestNum).Task(I).Amount)
-            reader.Read(Quest(QuestNum).Task(I).Speech)
-            reader.Read(Quest(QuestNum).Task(I).TaskLog)
-            reader.Read(Quest(QuestNum).Task(I).QuestEnd)
-            reader.Read(Quest(QuestNum).Task(I).TaskType)
+            Quest(QuestNum).Task(I).Order = reader.ReadInt32()
+            Quest(QuestNum).Task(I).NPC = reader.ReadInt32()
+            Quest(QuestNum).Task(I).Item = reader.ReadInt32()
+            Quest(QuestNum).Task(I).Map = reader.ReadInt32()
+            Quest(QuestNum).Task(I).Resource = reader.ReadInt32()
+            Quest(QuestNum).Task(I).Amount = reader.ReadInt32()
+            Quest(QuestNum).Task(I).Speech = reader.ReadString()
+            Quest(QuestNum).Task(I).TaskLog = reader.ReadString()
+            Quest(QuestNum).Task(I).QuestEnd = reader.ReadByte()
+            Quest(QuestNum).Task(I).TaskType = reader.ReadInt32()
         Next
     End Sub
 

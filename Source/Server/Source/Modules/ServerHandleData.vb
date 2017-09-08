@@ -1,4 +1,6 @@
 ﻿Imports System.IO
+Imports ASFW
+Imports ASFW.IO
 
 Module ServerHandleData
 
@@ -1052,7 +1054,7 @@ Module ServerHandleData
 
         Data = Buffer.ReadBytes(Data.Length - 4)
         Buffer = New ByteBuffer
-        Buffer.WriteBytes(ArchaicIO.Compression.Decompress(Data))
+        Buffer.WriteBytes(Compression.DecompressBytes(Data))
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
@@ -3484,7 +3486,7 @@ Module ServerHandleData
 
         Data = Buffer.ReadBytes(Data.Length - 4)
         Buffer = New ByteBuffer
-        Buffer.WriteBytes(ArchaicIO.Compression.Decompress(Data))
+        Buffer.WriteBytes(Compression.DecompressBytes(Data))
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub

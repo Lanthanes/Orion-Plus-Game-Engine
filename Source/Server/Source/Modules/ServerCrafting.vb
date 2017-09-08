@@ -1,4 +1,6 @@
 ﻿Imports System.IO
+Imports ASFW
+Imports ASFW.IO
 
 Public Module ServerCrafting
 #Region "Globals"
@@ -52,21 +54,21 @@ Public Module ServerCrafting
 
         filename = Path.Combine(Application.StartupPath, "data", "recipes", String.Format("recipe{0}.dat", RecipeNum))
 
-        Dim writer As New ArchaicIO.File.BinaryStream.Writer()
+        Dim writer As New ByteStream()
 
-        writer.Write(Recipe(RecipeNum).Name)
-        writer.Write(Recipe(RecipeNum).RecipeType)
-        writer.Write(Recipe(RecipeNum).MakeItemNum)
-        writer.Write(Recipe(RecipeNum).MakeItemAmount)
+        writer.WriteString(Recipe(RecipeNum).Name)
+        writer.WriteByte(Recipe(RecipeNum).RecipeType)
+        writer.WriteInt32(Recipe(RecipeNum).MakeItemNum)
+        writer.WriteInt32(Recipe(RecipeNum).MakeItemAmount)
 
         For i = 1 To MAX_INGREDIENT
-            writer.Write(Recipe(RecipeNum).Ingredients(i).ItemNum)
-            writer.Write(Recipe(RecipeNum).Ingredients(i).Value)
+            writer.WriteInt32(Recipe(RecipeNum).Ingredients(i).ItemNum)
+            writer.WriteInt32(Recipe(RecipeNum).Ingredients(i).Value)
         Next
 
-        writer.Write(Recipe(RecipeNum).CreateTime)
+        writer.WriteByte(Recipe(RecipeNum).CreateTime)
 
-        writer.Save(filename)
+        FileHandler.BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadRecipes()
@@ -86,20 +88,21 @@ Public Module ServerCrafting
         CheckRecipes()
 
         filename = Path.Combine(Application.StartupPath, "data", "recipes", String.Format("recipe{0}.dat", RecipeNum))
-        Dim reader As New ArchaicIO.File.BinaryStream.Reader(filename)
+        Dim reader As New ByteStream()
+        FileHandler.BinaryFile.Load(filename, reader)
 
-        reader.Read(Recipe(RecipeNum).Name)
-        reader.Read(Recipe(RecipeNum).RecipeType)
-        reader.Read(Recipe(RecipeNum).MakeItemNum)
-        reader.Read(Recipe(RecipeNum).MakeItemAmount)
+        Recipe(RecipeNum).Name = reader.ReadString()
+        Recipe(RecipeNum).RecipeType = reader.ReadByte()
+        Recipe(RecipeNum).MakeItemNum = reader.ReadInt32()
+        Recipe(RecipeNum).MakeItemAmount = reader.ReadInt32()
 
         ReDim Recipe(RecipeNum).Ingredients(MAX_INGREDIENT)
         For i = 1 To MAX_INGREDIENT
-            reader.Read(Recipe(RecipeNum).Ingredients(i).ItemNum)
-            reader.Read(Recipe(RecipeNum).Ingredients(i).Value)
+            Recipe(RecipeNum).Ingredients(i).ItemNum = reader.ReadInt32()
+            Recipe(RecipeNum).Ingredients(i).Value = reader.ReadInt32()
         Next
 
-        reader.Read(Recipe(RecipeNum).CreateTime)
+        Recipe(RecipeNum).CreateTime = reader.ReadByte()
 
     End Sub
 

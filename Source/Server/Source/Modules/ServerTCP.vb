@@ -1,6 +1,8 @@
 ﻿Imports System.Net.Sockets
 Imports System.Net
 Imports System.IO
+Imports ASFW
+Imports ASFW.IO
 
 Public Class Client
     Public Index As Integer
@@ -1478,7 +1480,7 @@ Module ServerTCP
             Buffer.WriteInteger(0)
         End If
 
-        data = ArchaicIO.Compression.Compress(Buffer.ToArray)
+        data = Compression.CompressBytes(Buffer.ToArray)
         Buffer = New ByteBuffer
         Buffer.WriteInteger(ServerPackets.SMapData)
         Buffer.WriteBytes(data)
@@ -1925,7 +1927,7 @@ Module ServerTCP
 
         data = buffer.ToArray
 
-        data = ArchaicIO.Compression.Compress(data)
+        data = Compression.CompressBytes(data)
 
         buffer = New ByteBuffer
 
