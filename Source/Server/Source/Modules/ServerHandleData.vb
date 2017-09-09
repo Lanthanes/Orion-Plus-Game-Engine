@@ -2924,9 +2924,9 @@ Module ServerHandleData
         If Not IsLoggedIn(index) Then
 
             ' Get the data
-            Name = Buffer.ReadString
-            Password = Buffer.ReadString
-            Version = Buffer.ReadString
+            Name = EKeyPair.DecryptString(Buffer.ReadString)
+            Password = EKeyPair.DecryptString(Buffer.ReadString)
+            Version = EKeyPair.DecryptString(Buffer.ReadString)
 
             ' Check versions
             If Version <> Application.ProductVersion Then
