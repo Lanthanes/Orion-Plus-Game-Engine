@@ -1905,7 +1905,7 @@ Module ClientGraphics
 
             If NumCharacters > 0 Then
                 ' Players
-                For I = 1 To TotalOnline 'MAX_PLAYERS
+                For I = 0 To TotalOnline 'MAX_PLAYERS
                     If IsPlaying(I) And GetPlayerMap(I) = GetPlayerMap(MyIndex) Then
                         If Player(I).Y = Y Then
                             DrawPlayer(I)
@@ -1947,7 +1947,7 @@ Module ClientGraphics
                     End If
                 End If
 
-                For I = 1 To TotalOnline 'MAX_PLAYERS
+                For I = 0 To TotalOnline 'MAX_PLAYERS
                     If IsPlaying(I) Then
                         If Player(I).Map = Player(MyIndex).Map Then
                             If CurX = Player(I).X And CurY = Player(I).Y Then
@@ -2006,8 +2006,8 @@ Module ClientGraphics
 
         ' blit out upper tiles
         If NumTileSets > 0 Then
-            For X = TileView.left To TileView.right + 1
-                For Y = TileView.top To TileView.bottom + 1
+            For X = TileView.Left To TileView.Right + 1
+                For Y = TileView.Top To TileView.Bottom + 1
                     If IsValidMapPoint(X, Y) Then
                         DrawMapFringeTile(X, Y)
                     End If
@@ -2040,8 +2040,8 @@ Module ClientGraphics
         End If
 
         If frmEditor_MapEditor.tabpages.SelectedTab Is frmEditor_MapEditor.tpDirBlock Then
-            For X = TileView.left To TileView.right
-                For Y = TileView.top To TileView.bottom
+            For X = TileView.Left To TileView.Right
+                For Y = TileView.Top To TileView.Bottom
                     If IsValidMapPoint(X, Y) Then
                         DrawDirections(X, Y)
                     End If
@@ -2066,7 +2066,7 @@ Module ClientGraphics
         End If
 
         ' draw player names
-        For I = 1 To TotalOnline 'MAX_PLAYERS
+        For I = 0 To TotalOnline 'MAX_PLAYERS
             If IsPlaying(I) And GetPlayerMap(I) = GetPlayerMap(MyIndex) Then
                 DrawPlayerName(I)
                 If PetAlive(I) Then

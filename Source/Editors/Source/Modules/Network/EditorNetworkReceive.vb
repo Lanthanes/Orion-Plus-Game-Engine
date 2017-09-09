@@ -1,179 +1,117 @@
 ﻿Imports ASFW
 Imports ASFW.IO
 
-Module EditorHandleData
-    Public PlayerBuffer As ByteBuffer
-    Private Delegate Sub Packet_(ByVal Data() As Byte)
-    Private Packets As Dictionary(Of Integer, Packet_)
+Module EditorNetworkReceive
+    Sub PacketRouter()
+        Socket.PacketId(ServerPackets.SAlertMsg) = AddressOf Packet_AlertMSG
+        Socket.PacketId(ServerPackets.SKeyPair) = AddressOf Packet_KeyPair
 
-    Public Sub HandleData(ByVal data() As Byte)
-        Dim pLength As Integer
+        Socket.PacketId(ServerPackets.SLoginOk) = AddressOf Packet_LoginOk
+        Socket.PacketId(ServerPackets.SClassesData) = AddressOf Packet_ClassesData
 
-        If PlayerBuffer Is Nothing Then PlayerBuffer = New ByteBuffer()
-        PlayerBuffer.WriteBytes(data.Clone)
+        Socket.PacketId(ServerPackets.SMapData) = AddressOf Packet_MapData
 
-        If PlayerBuffer.Count = 0 Then
-            PlayerBuffer.Clear()
-            Exit Sub
-        End If
+        Socket.PacketId(ServerPackets.SMapNpcData) = AddressOf Packet_MapNPCData
+        Socket.PacketId(ServerPackets.SMapNpcUpdate) = AddressOf Packet_MapNPCUpdate
 
-        If PlayerBuffer.Length >= 4 Then
-            pLength = PlayerBuffer.ReadInteger(False)
+        Socket.PacketId(ServerPackets.SItemEditor) = AddressOf Packet_EditItem
+        Socket.PacketId(ServerPackets.SUpdateItem) = AddressOf Packet_UpdateItem
 
-            If pLength <= 0 Then
-                PlayerBuffer.Clear()
-                Exit Sub
-            End If
-        End If
+        Socket.PacketId(ServerPackets.SREditor) = AddressOf Packet_ResourceEditor
 
-        If PlayerBuffer.Length >= 4 Then
-            pLength = PlayerBuffer.ReadInteger(False)
+        Socket.PacketId(ServerPackets.SNpcEditor) = AddressOf Packet_NPCEditor
+        Socket.PacketId(ServerPackets.SUpdateNpc) = AddressOf Packet_UpdateNPC
 
-            If pLength <= 0 Then
-                PlayerBuffer.Clear()
-                Exit Sub
-            End If
-        End If
+        Socket.PacketId(ServerPackets.SEditMap) = AddressOf Packet_EditMap
 
-        Do While pLength > 0 And pLength <= PlayerBuffer.Length - 4
+        Socket.PacketId(ServerPackets.SShopEditor) = AddressOf Packet_EditShop
+        Socket.PacketId(ServerPackets.SUpdateShop) = AddressOf Packet_UpdateShop
 
-            If pLength <= PlayerBuffer.Length - 4 Then
-                PlayerBuffer.ReadInteger()
-                HandleDataPackets(PlayerBuffer.ReadBytes(pLength))
-            End If
+        Socket.PacketId(ServerPackets.SSkillEditor) = AddressOf Packet_EditSkill
+        Socket.PacketId(ServerPackets.SUpdateSkill) = AddressOf Packet_UpdateSkill
 
-            pLength = 0
+        Socket.PacketId(ServerPackets.SResourceEditor) = AddressOf Packet_ResourceEditor
+        Socket.PacketId(ServerPackets.SUpdateResource) = AddressOf Packet_UpdateResource
 
-            If PlayerBuffer.Length >= 4 Then
-                pLength = PlayerBuffer.ReadInteger(False)
+        Socket.PacketId(ServerPackets.SAnimationEditor) = AddressOf Packet_EditAnimation
+        Socket.PacketId(ServerPackets.SUpdateAnimation) = AddressOf Packet_UpdateAnimation
 
-                If pLength < 0 Then
-                    PlayerBuffer.Clear()
-                    Exit Sub
-                End If
-            End If
+        Socket.PacketId(ServerPackets.SGameData) = AddressOf Packet_GameData
+        Socket.PacketId(ServerPackets.SMapReport) = AddressOf Packet_Mapreport 'Mapreport
 
-        Loop
-    End Sub
-
-    Public Sub InitMessages()
-        Packets = New Dictionary(Of Integer, Packet_)
-
-        Packets.Add(ServerPackets.SAlertMsg, AddressOf Packet_AlertMSG)
-        Packets.Add(ServerPackets.SKeyPair, AddressOf Packet_KeyPair)
-
-        Packets.Add(ServerPackets.SLoginOk, AddressOf Packet_LoginOk)
-        Packets.Add(ServerPackets.SClassesData, AddressOf Packet_ClassesData)
-
-        Packets.Add(ServerPackets.SMapData, AddressOf Packet_MapData)
-
-        Packets.Add(ServerPackets.SMapNpcData, AddressOf Packet_MapNPCData)
-        Packets.Add(ServerPackets.SMapNpcUpdate, AddressOf Packet_MapNPCUpdate)
-
-        Packets.Add(ServerPackets.SItemEditor, AddressOf Packet_EditItem)
-        Packets.Add(ServerPackets.SUpdateItem, AddressOf Packet_UpdateItem)
-
-        Packets.Add(ServerPackets.SREditor, AddressOf Packet_ResourceEditor)
-
-        Packets.Add(ServerPackets.SNpcEditor, AddressOf Packet_NPCEditor)
-        Packets.Add(ServerPackets.SUpdateNpc, AddressOf Packet_UpdateNPC)
-
-        Packets.Add(ServerPackets.SEditMap, AddressOf Packet_EditMap)
-
-        Packets.Add(ServerPackets.SShopEditor, AddressOf Packet_EditShop)
-        Packets.Add(ServerPackets.SUpdateShop, AddressOf Packet_UpdateShop)
-
-        Packets.Add(ServerPackets.SSkillEditor, AddressOf Packet_EditSkill)
-        Packets.Add(ServerPackets.SUpdateSkill, AddressOf Packet_UpdateSkill)
-
-        Packets.Add(ServerPackets.SResourceEditor, AddressOf Packet_ResourceEditor)
-        Packets.Add(ServerPackets.SUpdateResource, AddressOf Packet_UpdateResource)
-
-        Packets.Add(ServerPackets.SAnimationEditor, AddressOf Packet_EditAnimation)
-        Packets.Add(ServerPackets.SUpdateAnimation, AddressOf Packet_UpdateAnimation)
-
-        Packets.Add(ServerPackets.SGameData, AddressOf Packet_GameData)
-        Packets.Add(ServerPackets.SMapReport, AddressOf Packet_Mapreport) 'Mapreport
-
-        Packets.Add(ServerPackets.SMapNames, AddressOf Packet_MapNames)
+        Socket.PacketId(ServerPackets.SMapNames) = AddressOf Packet_MapNames
 
         'quests
-        Packets.Add(ServerPackets.SQuestEditor, AddressOf Packet_QuestEditor)
-        Packets.Add(ServerPackets.SUpdateQuest, AddressOf Packet_UpdateQuest)
+        Socket.PacketId(ServerPackets.SQuestEditor) = AddressOf Packet_QuestEditor
+        Socket.PacketId(ServerPackets.SUpdateQuest) = AddressOf Packet_UpdateQuest
 
         'Housing
-        'Packets.Add(ServerPackets.SHouseConfigs, AddressOf Packet_HouseConfigurations)
-        'Packets.Add(ServerPackets.SFurniture, AddressOf Packet_Furniture)
-        Packets.Add(ServerPackets.SHouseEdit, AddressOf Packet_EditHouses)
+        'Socket.PacketID(ServerPackets.SHouseConfigs) = AddressOf Packet_HouseConfigurations
+        'Socket.PacketID(ServerPackets.SFurniture) = AddressOf Packet_Furniture
+        Socket.PacketId(ServerPackets.SHouseEdit) = AddressOf Packet_EditHouses
 
         'Events
-        Packets.Add(ServerPackets.SSpawnEvent, AddressOf Packet_SpawnEvent)
-        Packets.Add(ServerPackets.SEventMove, AddressOf Packet_EventMove)
-        Packets.Add(ServerPackets.SEventDir, AddressOf Packet_EventDir)
-        Packets.Add(ServerPackets.SEventChat, AddressOf Packet_EventChat)
-        Packets.Add(ServerPackets.SEventStart, AddressOf Packet_EventStart)
-        Packets.Add(ServerPackets.SEventEnd, AddressOf Packet_EventEnd)
-        Packets.Add(ServerPackets.SSwitchesAndVariables, AddressOf Packet_SwitchesAndVariables)
-        Packets.Add(ServerPackets.SMapEventData, AddressOf Packet_MapEventData)
-        Packets.Add(ServerPackets.SHoldPlayer, AddressOf Packet_HoldPlayer)
+        Socket.PacketId(ServerPackets.SSpawnEvent) = AddressOf Packet_SpawnEvent
+        Socket.PacketId(ServerPackets.SEventMove) = AddressOf Packet_EventMove
+        Socket.PacketId(ServerPackets.SEventDir) = AddressOf Packet_EventDir
+        Socket.PacketId(ServerPackets.SEventChat) = AddressOf Packet_EventChat
+        Socket.PacketId(ServerPackets.SEventStart) = AddressOf Packet_EventStart
+        Socket.PacketId(ServerPackets.SEventEnd) = AddressOf Packet_EventEnd
+        Socket.PacketId(ServerPackets.SSwitchesAndVariables) = AddressOf Packet_SwitchesAndVariables
+        Socket.PacketId(ServerPackets.SMapEventData) = AddressOf Packet_MapEventData
+        Socket.PacketId(ServerPackets.SHoldPlayer) = AddressOf Packet_HoldPlayer
 
-        Packets.Add(ServerPackets.SProjectileEditor, AddressOf HandleProjectileEditor)
-        Packets.Add(ServerPackets.SUpdateProjectile, AddressOf HandleUpdateProjectile)
-        Packets.Add(ServerPackets.SMapProjectile, AddressOf HandleMapProjectile)
+        Socket.PacketId(ServerPackets.SProjectileEditor) = AddressOf HandleProjectileEditor
+        Socket.PacketId(ServerPackets.SUpdateProjectile) = AddressOf HandleUpdateProjectile
+        Socket.PacketId(ServerPackets.SMapProjectile) = AddressOf HandleMapProjectile
 
         'craft
-        Packets.Add(ServerPackets.SUpdateRecipe, AddressOf Packet_UpdateRecipe)
-        Packets.Add(ServerPackets.SRecipeEditor, AddressOf Packet_RecipeEditor)
+        Socket.PacketId(ServerPackets.SUpdateRecipe) = AddressOf Packet_UpdateRecipe
+        Socket.PacketId(ServerPackets.SRecipeEditor) = AddressOf Packet_RecipeEditor
 
-        Packets.Add(ServerPackets.SClassEditor, AddressOf Packet_ClassEditor)
+        Socket.PacketId(ServerPackets.SClassEditor) = AddressOf Packet_ClassEditor
 
         'Auto Mapper
-        Packets.Add(ServerPackets.SAutoMapper, AddressOf Packet_AutoMapper)
+        Socket.PacketId(ServerPackets.SAutoMapper) = AddressOf Packet_AutoMapper
 
         'pets
-        Packets.Add(ServerPackets.SPetEditor, AddressOf Packet_PetEditor)
-        Packets.Add(ServerPackets.SUpdatePet, AddressOf Packet_UpdatePet)
+        Socket.PacketId(ServerPackets.SPetEditor) = AddressOf Packet_PetEditor
+        Socket.PacketId(ServerPackets.SUpdatePet) = AddressOf Packet_UpdatePet
+
+
+        Socket.PacketId(ServerPackets.SNews) = AddressOf Packet_News
     End Sub
 
-    Sub HandleDataPackets(ByVal data() As Byte)
-        Dim packetnum As Integer, Packet As Packet_ = Nothing
-        packetnum = BitConverter.ToInt32(data, 0)
-
-        If packetnum = ServerPackets.SNews Then Exit Sub
-
-        If Packets.TryGetValue(packetnum, Packet) Then
-            Dim bytes As Byte() : ReDim bytes(data.Length - 5)
-            Buffer.BlockCopy(data, 4, bytes, 0, bytes.Length)
-            Packet.Invoke(bytes)
-        End If
+    Private Sub Packet_News(ByRef data() As Byte)
+        ' Do nothing we didnt want it anyway >.> ~SpiceyWolf
     End Sub
 
-    Sub Packet_AlertMSG(ByVal data() As Byte)
+    Private Sub Packet_AlertMSG(ByRef Data() As Byte)
         Dim Msg As String
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         Msg = Buffer.ReadString
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
         MsgBox(Msg, vbOKOnly, "OrionClient+ Editors")
 
         CloseEditor()
     End Sub
 
-    Sub Packet_KeyPair(ByVal Data() As Byte)
+    Private Sub Packet_KeyPair(ByRef Data() As Byte)
         Dim Buffer As New ByteStream(Data)
         EKeyPair.ImportKeyString(Buffer.ReadString())
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Sub Packet_LoginOk(ByVal Data() As Byte)
+    Private Sub Packet_LoginOk(ByRef Data() As Byte)
         InitEditor = True
     End Sub
 
-    Private Sub Packet_ClassesData(ByVal data() As Byte)
+    Private Sub Packet_ClassesData(ByRef Data() As Byte)
         Dim i As Integer
         Dim z As Integer, X As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         ' Max classes
         Max_Classes = Buffer.ReadInt32
         ReDim Classes(0 To Max_Classes)
@@ -237,10 +175,10 @@ Module EditorHandleData
 
         Next
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_MapData(ByVal Data() As Byte)
+    Private Sub Packet_MapData(ByRef Data() As Byte)
         Dim X As Integer, Y As Integer, i As Integer
         Dim MusicFile As String
         Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
@@ -471,7 +409,7 @@ Module EditorHandleData
                 End If
             End If
 
-            Buffer.Dispose
+            Buffer.Dispose()
 
         End SyncLock
 
@@ -497,7 +435,7 @@ Module EditorHandleData
         GettingMap = False
     End Sub
 
-    Private Sub Packet_MapNPCData(ByVal Data() As Byte)
+    Private Sub Packet_MapNPCData(ByRef Data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteStream(Data)
 
@@ -514,12 +452,12 @@ Module EditorHandleData
 
         Next
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_MapNPCUpdate(ByVal Data() As Byte)
+    Private Sub Packet_MapNPCUpdate(ByRef Data() As Byte)
         Dim NpcNum As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(Data)
 
         NpcNum = Buffer.ReadInt32
@@ -533,20 +471,20 @@ Module EditorHandleData
             .Vital(Vitals.MP) = Buffer.ReadInt32
         End With
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_EditItem(ByVal Data() As Byte)
-        Dim Buffer as ByteStream
+    Private Sub Packet_EditItem(ByRef Data() As Byte)
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(Data)
         InitItemEditor = True
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Sub Packet_UpdateItem(ByVal data() As Byte)
+    Private Sub Packet_UpdateItem(ByRef Data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         n = Buffer.ReadInt32
 
         ' Update the item
@@ -605,20 +543,20 @@ Module EditorHandleData
         Item(n).Projectile = Buffer.ReadInt32()
         Item(n).Ammo = Buffer.ReadInt32()
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
-    Sub Packet_NPCEditor(ByVal data() As Byte)
-        Dim Buffer As New ByteStream(data)
+    Private Sub Packet_NPCEditor(ByRef Data() As Byte)
+        Dim Buffer As New ByteStream(Data)
         InitNPCEditor = True
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Sub Packet_UpdateNPC(ByVal data() As Byte)
+    Private Sub Packet_UpdateNPC(ByRef Data() As Byte)
         Dim i As Integer, x As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
 
         i = Buffer.ReadInt32
         ' Update the Npc
@@ -659,20 +597,20 @@ Module EditorHandleData
         If Npc(i).AttackSay Is Nothing Then Npc(i).AttackSay = ""
         If Npc(i).Name Is Nothing Then Npc(i).Name = ""
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Sub Packet_EditMap(ByVal data() As Byte)
+    Private Sub Packet_EditMap(ByRef Data() As Byte)
         InitMapEditor = True
     End Sub
 
-    Sub Packet_EditShop(ByVal data() As Byte)
+    Private Sub Packet_EditShop(ByRef Data() As Byte)
         InitShopEditor = True
     End Sub
 
-    Sub Packet_UpdateShop(ByVal data() As Byte)
+    Private Sub Packet_UpdateShop(ByRef Data() As Byte)
         Dim shopnum As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         shopnum = Buffer.ReadInt32
 
         Shop(shopnum).BuyRate = Buffer.ReadInt32()
@@ -688,16 +626,16 @@ Module EditorHandleData
 
         If Shop(shopnum).Name Is Nothing Then Shop(shopnum).Name = ""
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Sub Packet_EditSkill(ByVal data() As Byte)
+    Private Sub Packet_EditSkill(ByRef Data() As Byte)
         InitSkillEditor = True
     End Sub
 
-    Sub Packet_UpdateSkill(ByVal data() As Byte)
+    Private Sub Packet_UpdateSkill(ByRef Data() As Byte)
         Dim skillnum As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         skillnum = Buffer.ReadInt32
 
         Skill(skillnum).AccessReq = Buffer.ReadInt32()
@@ -731,15 +669,15 @@ Module EditorHandleData
 
         If Skill(skillnum).Name Is Nothing Then Skill(skillnum).Name = ""
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
-    Private Sub Packet_ResourceEditor(ByVal Data() As Byte)
+    Private Sub Packet_ResourceEditor(ByRef Data() As Byte)
         InitResourceEditor = True
     End Sub
 
-    Private Sub Packet_UpdateResource(ByVal Data() As Byte)
+    Private Sub Packet_UpdateResource(ByRef Data() As Byte)
         Dim ResourceNum As Integer
         Dim Buffer As New ByteStream(Data)
         ResourceNum = Buffer.ReadInt32
@@ -763,14 +701,14 @@ Module EditorHandleData
         If Resource(ResourceNum).EmptyMessage Is Nothing Then Resource(ResourceNum).EmptyMessage = ""
         If Resource(ResourceNum).SuccessMessage Is Nothing Then Resource(ResourceNum).SuccessMessage = ""
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_EditAnimation(ByVal Data() As Byte)
+    Private Sub Packet_EditAnimation(ByRef Data() As Byte)
         InitAnimationEditor = True
     End Sub
 
-    Private Sub Packet_UpdateAnimation(ByVal Data() As Byte)
+    Private Sub Packet_UpdateAnimation(ByRef Data() As Byte)
         Dim n As Integer, i As Integer
         Dim Buffer As New ByteStream(Data)
         n = Buffer.ReadInt32
@@ -796,10 +734,10 @@ Module EditorHandleData
         For i = 0 To UBound(Animation(n).Sprite)
             Animation(n).Sprite(i) = Buffer.ReadInt32()
         Next
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_GameData(ByVal Data() As Byte)
+    Private Sub Packet_GameData(ByRef Data() As Byte)
         Dim n As Integer, i As Integer, z As Integer, x As Integer, a As Integer, b As Integer
         Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
 
@@ -820,8 +758,8 @@ Module EditorHandleData
         For i = 1 To Max_Classes
 
             With Classes(i)
-                .Name = Trim(buffer.ReadString)
-                .Desc = Trim$(buffer.ReadString)
+                .Name = Trim(Buffer.ReadString)
+                .Desc = Trim$(Buffer.ReadString)
 
                 .Vital(Vitals.HP) = Buffer.ReadInt32
                 .Vital(Vitals.MP) = Buffer.ReadInt32
@@ -897,7 +835,7 @@ Module EditorHandleData
             Item(n).TwoHanded = Buffer.ReadInt32()
             Item(n).LevelReq = Buffer.ReadInt32()
             Item(n).Mastery = Buffer.ReadInt32()
-            Item(n).Name = Trim$(buffer.ReadString())
+            Item(n).Name = Trim$(Buffer.ReadString())
             Item(n).Paperdoll = Buffer.ReadInt32()
             Item(n).Pic = Buffer.ReadInt32()
             Item(n).Price = Buffer.ReadInt32()
@@ -909,7 +847,7 @@ Module EditorHandleData
             Item(n).RandomMax = Buffer.ReadInt32()
 
             Item(n).Stackable = Buffer.ReadInt32()
-            Item(n).Description = Trim$(buffer.ReadString())
+            Item(n).Description = Trim$(Buffer.ReadString())
 
             For z = 0 To Stats.Count - 1
                 Item(n).Stat_Req(z) = Buffer.ReadInt32()
@@ -963,8 +901,8 @@ Module EditorHandleData
                 Animation(n).LoopTime(z) = Buffer.ReadInt32()
             Next
 
-            Animation(n).Name = Trim(buffer.ReadString)
-            Animation(n).Sound = Trim(buffer.ReadString)
+            Animation(n).Name = Trim(Buffer.ReadString)
+            Animation(n).Sound = Trim(Buffer.ReadString)
 
             If Animation(n).Name Is Nothing Then Animation(n).Name = ""
             If Animation(n).Sound Is Nothing Then Animation(n).Sound = ""
@@ -987,7 +925,7 @@ Module EditorHandleData
             n = Buffer.ReadInt32
             ' Update the Npc
             Npc(n).Animation = Buffer.ReadInt32()
-            Npc(n).AttackSay = Trim(buffer.ReadString())
+            Npc(n).AttackSay = Trim(Buffer.ReadString())
             Npc(n).Behaviour = Buffer.ReadInt32()
             For z = 1 To 5
                 Npc(n).DropChance(z) = Buffer.ReadInt32()
@@ -998,7 +936,7 @@ Module EditorHandleData
             Npc(n).Exp = Buffer.ReadInt32()
             Npc(n).Faction = Buffer.ReadInt32()
             Npc(n).Hp = Buffer.ReadInt32()
-            Npc(n).Name = Trim(buffer.ReadString())
+            Npc(n).Name = Trim(Buffer.ReadString())
             Npc(n).Range = Buffer.ReadInt32()
             Npc(n).SpawnTime = Buffer.ReadInt32()
             Npc(n).SpawnSecs = Buffer.ReadInt32()
@@ -1036,7 +974,7 @@ Module EditorHandleData
             n = Buffer.ReadInt32
 
             Shop(n).BuyRate = Buffer.ReadInt32()
-            Shop(n).Name = Trim(buffer.ReadString())
+            Shop(n).Name = Trim(Buffer.ReadString())
             Shop(n).Face = Buffer.ReadInt32()
 
             For z = 0 To MAX_TRADES
@@ -1076,7 +1014,7 @@ Module EditorHandleData
             Skill(n).LevelReq = Buffer.ReadInt32()
             Skill(n).Map = Buffer.ReadInt32()
             Skill(n).MpCost = Buffer.ReadInt32()
-            Skill(n).Name = Trim(buffer.ReadString())
+            Skill(n).Name = Trim(Buffer.ReadString())
             Skill(n).Range = Buffer.ReadInt32()
             Skill(n).SkillAnim = Buffer.ReadInt32()
             Skill(n).StunDuration = Buffer.ReadInt32()
@@ -1108,16 +1046,16 @@ Module EditorHandleData
             n = Buffer.ReadInt32
 
             Resource(n).Animation = Buffer.ReadInt32()
-            Resource(n).EmptyMessage = Trim(buffer.ReadString())
+            Resource(n).EmptyMessage = Trim(Buffer.ReadString())
             Resource(n).ExhaustedImage = Buffer.ReadInt32()
             Resource(n).Health = Buffer.ReadInt32()
             Resource(n).ExpReward = Buffer.ReadInt32()
             Resource(n).ItemReward = Buffer.ReadInt32()
-            Resource(n).Name = Trim(buffer.ReadString())
+            Resource(n).Name = Trim(Buffer.ReadString())
             Resource(n).ResourceImage = Buffer.ReadInt32()
             Resource(n).ResourceType = Buffer.ReadInt32()
             Resource(n).RespawnTime = Buffer.ReadInt32()
-            Resource(n).SuccessMessage = Trim(buffer.ReadString())
+            Resource(n).SuccessMessage = Trim(Buffer.ReadString())
             Resource(n).LvlRequired = Buffer.ReadInt32()
             Resource(n).ToolRequired = Buffer.ReadInt32()
             Resource(n).Walkthrough = Buffer.ReadInt32()
@@ -1134,10 +1072,10 @@ Module EditorHandleData
 
         '\\\End Read Resource Data\\\\\\\\\\\\
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Mapreport(ByVal Data() As Byte)
+    Private Sub Packet_Mapreport(ByRef Data() As Byte)
         Dim I As Integer
         Dim Buffer As New ByteStream(Data)
         For I = 1 To MAX_MAPS
@@ -1146,24 +1084,24 @@ Module EditorHandleData
 
         UpdateMapnames = True
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_MapNames(ByVal Data() As Byte)
+    Private Sub Packet_MapNames(ByRef Data() As Byte)
         Dim I As Integer
         Dim Buffer As New ByteStream(Data)
         For I = 1 To MAX_MAPS
             MapNames(I) = Trim(Buffer.ReadString())
         Next
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_ClassEditor(ByVal Data() As Byte)
+    Private Sub Packet_ClassEditor(ByRef Data() As Byte)
         InitClassEditor = True
     End Sub
 
-    Private Sub Packet_AutoMapper(ByVal Data() As Byte)
+    Private Sub Packet_AutoMapper(ByRef Data() As Byte)
         Dim Layer As Integer
         Dim Buffer As New ByteStream(Data)
         MapStart = Buffer.ReadInt32
@@ -1193,7 +1131,7 @@ Module EditorHandleData
             myXml.WriteString("Prefab" & Prefab, "Type", Buffer.ReadInt32)
         Next
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
         InitAutoMapper = True
 

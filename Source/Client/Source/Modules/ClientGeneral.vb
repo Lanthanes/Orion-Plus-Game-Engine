@@ -107,7 +107,6 @@ Module ClientGeneral
         CheckParallax()
 
         InitGraphics()
-        InitMessages()
 
         ' check if we have main-menu music
         If Options.Music = 1 AndAlso Len(Trim$(Options.MenuMusic)) > 0 Then
@@ -137,6 +136,8 @@ Module ClientGeneral
         pnlloadvisible = False
 
         pnlInventoryVisible = True
+
+        InitNetwork()
 
         GameLoop()
     End Sub
@@ -235,7 +236,7 @@ Module ClientGeneral
         ConnectToServer = False
 
         ' Check to see if we are already connected, if so just exit
-        If IsConnected() Then
+        If Socket.IsConnected() Then
             ConnectToServer = True
             Exit Function
         End If
@@ -248,13 +249,13 @@ Module ClientGeneral
         SetStatus(Strings.Get("mainmenu", "connectserver", i))
 
         ' Wait until connected or a few seconds have passed and report the server being down
-        Do While (Not IsConnected()) And (GetTickCount() <= until)
+        Do While (Not Socket.IsConnected()) And (GetTickCount() <= until)
             DoEvents()
             Thread.Sleep(10)
         Loop
 
         ' return value
-        If IsConnected() Then
+        If Socket.IsConnected() Then
             ConnectToServer = True
         End If
 
@@ -352,8 +353,7 @@ Module ClientGeneral
 
         DestroyGraphics()
         GameDestroyed = True
-        If Not PlayerSocket Is Nothing Then PlayerSocket.Close()
-        PlayerSocket = Nothing
+        DestroyNetwork()
         Application.Exit()
         End
     End Sub

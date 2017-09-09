@@ -192,7 +192,7 @@ Public Module ClientGuiFunctions
                         PlaySound("Click.ogg")
                         Buffer = New ByteStream(4)
                         Buffer.WriteInt32(ClientPackets.CSkills)
-                        SendData(Buffer.ToArray())
+                        Socket.SendData(Buffer.Data, Buffer.Head)
                         Buffer.Dispose()
                         pnlSkillsVisible = Not pnlSkillsVisible
                         pnlInventoryVisible = False
@@ -265,7 +265,7 @@ Public Module ClientGuiFunctions
                     Else
                         Buffer = New ByteStream(4)
                         Buffer.WriteInt32(ClientPackets.CSkills)
-                        SendData(Buffer.ToArray())
+                        Socket.SendData(Buffer.Data, Buffer.Head)
                         Buffer.Dispose()
                         pnlSkillsVisible = True
                         AddText("Click on the skill you want to place here", QColorType.TellColor)
@@ -497,7 +497,7 @@ Public Module ClientGuiFunctions
                             Buffer.WriteInt32(EventReplyID)
                             Buffer.WriteInt32(EventReplyPage)
                             Buffer.WriteInt32(1)
-                            SendData(Buffer.ToArray)
+                            Socket.SendData(Buffer.Data, Buffer.Head)
                             Buffer.Dispose()
                             ClearEventChat()
                             InEvent = False
@@ -515,7 +515,7 @@ Public Module ClientGuiFunctions
                             Buffer.WriteInt32(EventReplyID)
                             Buffer.WriteInt32(EventReplyPage)
                             Buffer.WriteInt32(2)
-                            SendData(Buffer.ToArray)
+                            Socket.SendData(Buffer.Data, Buffer.Head)
                             Buffer.Dispose()
                             ClearEventChat()
                             InEvent = False
@@ -533,7 +533,7 @@ Public Module ClientGuiFunctions
                             Buffer.WriteInt32(EventReplyID)
                             Buffer.WriteInt32(EventReplyPage)
                             Buffer.WriteInt32(3)
-                            SendData(Buffer.ToArray)
+                            Socket.SendData(Buffer.Data, Buffer.Head)
                             Buffer.Dispose()
                             ClearEventChat()
                             InEvent = False
@@ -551,7 +551,7 @@ Public Module ClientGuiFunctions
                             Buffer.WriteInt32(EventReplyID)
                             Buffer.WriteInt32(EventReplyPage)
                             Buffer.WriteInt32(4)
-                            SendData(Buffer.ToArray)
+                            Socket.SendData(Buffer.Data, Buffer.Head)
                             Buffer.Dispose()
                             ClearEventChat()
                             InEvent = False
@@ -569,7 +569,7 @@ Public Module ClientGuiFunctions
                             Buffer.WriteInt32(EventReplyID)
                             Buffer.WriteInt32(EventReplyPage)
                             Buffer.WriteInt32(0)
-                            SendData(Buffer.ToArray)
+                            Socket.SendData(Buffer.Data, Buffer.Head)
                             Buffer.Dispose()
                             ClearEventChat()
                             InEvent = False
@@ -889,7 +889,7 @@ Public Module ClientGuiFunctions
                             i = CurY
                             Buffer.WriteInt32(i)
                             Buffer.WriteInt32(FurnitureSelected)
-                            SendData(Buffer.ToArray)
+                            Socket.SendData(Buffer.Data, Buffer.Head)
                             Buffer.Dispose()
 
                             FurnitureSelected = 0
@@ -1087,7 +1087,7 @@ Public Module ClientGuiFunctions
                             Dim Buffer As ByteStream
                             Buffer = New ByteStream(4)
                             Buffer.WriteInt32(ClientPackets.CCloseShop)
-                            SendData(Buffer.ToArray())
+                            Socket.SendData(Buffer.Data, Buffer.Head)
                             Buffer.Dispose()
                             pnlShopVisible = False
                             InShop = 0

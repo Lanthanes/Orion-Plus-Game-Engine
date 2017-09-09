@@ -71,8 +71,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ASFW, Version=1.0.6461.27076, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CS-ASFW.0.9.9.1\lib\ASFW.dll</HintPath>
+    <Reference Include="ASFW, Version=1.0.6461.33365, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-ASFW.0.9.9.3\lib\ASFW.dll</HintPath>
     </Reference>
     <Reference Include="DarkUI">
       <HintPath>..\Editors\DarkUI.dll</HintPath>
@@ -143,7 +143,6 @@
     <Compile Include="Source\Modules\ClientCrafting.vb" />
     <Compile Include="Source\Modules\ClientEventSystem.vb" />
     <Compile Include="Source\Modules\ClientGuiFunctions.vb" />
-    <Compile Include="Source\Modules\ClientHandleData.vb" />
     <Compile Include="Source\Modules\ClientGlobals.vb" />
     <Compile Include="Source\Modules\ClientGeneral.vb" />
     <Compile Include="Source\Modules\ClientGameLogic.vb" />
@@ -174,6 +173,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Source\Modules\Network\ClientNetworkConfig.vb" />
+    <Compile Include="Source\Modules\Network\ClientNetworkReceive.vb" />
+    <Compile Include="Source\Modules\Network\ClientNetworkSend.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Source\Forms\frmAdmin.resx">

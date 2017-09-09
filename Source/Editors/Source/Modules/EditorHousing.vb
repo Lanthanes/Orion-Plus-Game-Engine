@@ -42,7 +42,7 @@ Public Module EditorHousing
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_HouseConfigurations(ByVal Data() As Byte)
+    Sub Packet_HouseConfigurations(ByRef Data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteStream(Data)
         For i = 1 To MAX_HOUSES
@@ -51,11 +51,11 @@ Public Module EditorHousing
             HouseConfig(i).MaxFurniture = Buffer.ReadInt32
             HouseConfig(i).Price = Buffer.ReadInt32
         Next
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
-    Sub Packet_Furniture(ByVal Data() As Byte)
+    Sub Packet_Furniture(ByRef Data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteStream(Data)
         FurnitureHouse = Buffer.ReadInt32
@@ -70,13 +70,13 @@ Public Module EditorHousing
             Next
         End If
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
-    Sub Packet_EditHouses(ByVal data() As Byte)
+    Sub Packet_EditHouses(ByRef Data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         For i = 1 To MAX_HOUSES
             With House(i)
                 .ConfigName = Trim$(Buffer.ReadString)
@@ -102,9 +102,9 @@ Public Module EditorHousing
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditHouse)
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -114,9 +114,9 @@ Public Module EditorHousing
 
         Buffer.WriteInt32(ClientPackets.CBuyHouse)
         Buffer.WriteInt32(Accepted)
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendInvite(ByVal Name As String)
@@ -125,9 +125,9 @@ Public Module EditorHousing
 
         Buffer.WriteInt32(ClientPackets.CVisit)
         Buffer.WriteString(Name)
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendVisit(ByVal Accepted As Byte)
@@ -136,9 +136,9 @@ Public Module EditorHousing
 
         Buffer.WriteInt32(ClientPackets.CAcceptVisit)
         Buffer.WriteInt32(Accepted)
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 #End Region
 
@@ -200,7 +200,7 @@ Public Module EditorHousing
             Next
         End If
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose
         FrmEditor_House.Dispose()
         Editor = 0

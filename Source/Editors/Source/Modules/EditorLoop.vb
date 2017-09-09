@@ -44,7 +44,6 @@ Module EditorLoop
         CheckProjectiles()
 
         InitGraphics()
-        InitMessages()
 
         ReDim Autotile(0 To Map.MaxX, 0 To Map.MaxY)
 
@@ -133,6 +132,8 @@ Module EditorLoop
 
         ' load options
         LoadOptions()
+
+        InitNetwork()
 
         GameDestroyed = False
         GameStarted = True

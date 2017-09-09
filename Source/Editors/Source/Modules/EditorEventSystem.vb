@@ -2325,7 +2325,7 @@ newlist:
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestSwitchesAndVariables)
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
 
         Buffer.Dispose()
     End Sub
@@ -2342,7 +2342,7 @@ newlist:
         For i = 1 To MAX_VARIABLES
             Buffer.WriteString(Trim$(Variables(i)))
         Next
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
 
         Buffer.Dispose()
     End Sub
@@ -2350,9 +2350,9 @@ newlist:
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_SpawnEvent(ByVal data() As Byte)
+    Sub Packet_SpawnEvent(ByRef Data() As Byte)
         Dim id As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         id = Buffer.ReadInt32
         If id > Map.CurrentEvents Then
             Map.CurrentEvents = id
@@ -2387,13 +2387,13 @@ newlist:
 
     End Sub
 
-    Sub Packet_EventMove(ByVal data() As Byte)
+    Sub Packet_EventMove(ByRef Data() As Byte)
         Dim id As Integer
         Dim X As Integer
         Dim Y As Integer
         Dim dir As Integer, ShowDir As Integer
         Dim MovementSpeed As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         id = Buffer.ReadInt32
         X = Buffer.ReadInt32
         Y = Buffer.ReadInt32
@@ -2427,10 +2427,10 @@ newlist:
 
     End Sub
 
-    Sub Packet_EventDir(ByVal data() As Byte)
+    Sub Packet_EventDir(ByRef Data() As Byte)
         Dim i As Integer
         Dim dir As Byte
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         i = Buffer.ReadInt32
         dir = Buffer.ReadInt32
         If i > Map.CurrentEvents Then Exit Sub
@@ -2445,9 +2445,9 @@ newlist:
 
     End Sub
 
-    Sub Packet_SwitchesAndVariables(ByVal data() As Byte)
+    Sub Packet_SwitchesAndVariables(ByRef Data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         For i = 1 To MAX_SWITCHES
             Switches(i) = Buffer.ReadString
         Next
@@ -2459,10 +2459,10 @@ newlist:
 
     End Sub
 
-    Sub Packet_MapEventData(ByVal data() As Byte)
+    Sub Packet_MapEventData(ByRef Data() As Byte)
         Dim i As Integer, X As Integer, Y As Integer, z As Integer, w As Integer
 
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         'Event Data!
         Map.EventCount = Buffer.ReadInt32
         If Map.EventCount > 0 Then
@@ -2579,10 +2579,10 @@ newlist:
 
     End Sub
 
-    Sub Packet_EventChat(ByVal data() As Byte)
+    Sub Packet_EventChat(ByRef Data() As Byte)
         Dim i As Integer
         Dim choices As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         EventReplyID = Buffer.ReadInt32
         EventReplyPage = Buffer.ReadInt32
         EventChatFace = Buffer.ReadInt32
@@ -2611,16 +2611,16 @@ newlist:
 
     End Sub
 
-    Sub Packet_EventStart(ByVal data() As Byte)
+    Sub Packet_EventStart(ByRef Data() As Byte)
         InEvent = True
     End Sub
 
-    Sub Packet_EventEnd(ByVal data() As Byte)
+    Sub Packet_EventEnd(ByRef Data() As Byte)
         InEvent = False
     End Sub
 
-    Sub Packet_HoldPlayer(ByVal data() As Byte)
-        Dim Buffer As New ByteStream(data)
+    Sub Packet_HoldPlayer(ByRef Data() As Byte)
+        Dim Buffer As New ByteStream(Data)
         If Buffer.ReadInt32 = 0 Then
             HoldPlayer = True
         Else

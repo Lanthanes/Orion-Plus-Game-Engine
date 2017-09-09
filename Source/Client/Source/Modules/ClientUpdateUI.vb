@@ -279,6 +279,7 @@
 #End Region
 
     Sub UpdateUI()
+
         If ReloadFrmMain = True Then
             ReloadFrmMain = False
         End If
@@ -487,10 +488,10 @@
         End If
 
         If InitEventEditorForm = True Then
-            frmEditor_Events.InitEventEditorForm()
+            FrmEditor_Events.InitEventEditorForm()
 
             ' populate form
-            With frmEditor_Events
+            With FrmEditor_Events
                 ' set the tabs
                 .tabPages.TabPages.Clear()
 
@@ -532,7 +533,7 @@
                 .nudShowChoicesFace.Maximum = NumFaces
             End With
             ' show the editor
-            frmEditor_Events.Show()
+            FrmEditor_Events.Show()
 
             InitEventEditorForm = False
         End If

@@ -279,19 +279,19 @@ Public Module ServerQuest
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_RequestEditQuest(ByVal Index As Integer, ByVal Data() As Byte)
+    Sub Packet_RequestEditQuest(ByVal Index As Integer, ByRef data() As Byte)
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
 
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SQuestEditor)
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
-    Sub Packet_SaveQuest(ByVal Index As Integer, ByVal Data() As Byte)
+    Sub Packet_SaveQuest(ByVal Index As Integer, ByRef data() As Byte)
         Dim QuestNum As Integer
-        Dim Buffer As New ByteStream(Data)
+        Dim Buffer As New ByteStream(data)
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
 
@@ -355,13 +355,13 @@ Public Module ServerQuest
         Addlog(GetPlayerLogin(Index) & " saved Quest #" & QuestNum & ".", ADMIN_LOG)
     End Sub
 
-    Sub Packet_RequestQuests(ByVal Index As Integer, ByVal Data() As Byte)
+    Sub Packet_RequestQuests(ByVal Index As Integer, ByRef data() As Byte)
         SendQuests(Index)
     End Sub
 
-    Sub Packet_PlayerHandleQuest(ByVal Index As Integer, ByVal Data() As Byte)
+    Sub Packet_PlayerHandleQuest(ByVal Index As Integer, ByRef data() As Byte)
         Dim QuestNum As Integer, Order As Integer ', I As Integer
-        Dim Buffer As New ByteStream(Data)
+        Dim Buffer As New ByteStream(data)
         QuestNum = Buffer.ReadInt32
         Order = Buffer.ReadInt32 '1 = accept, 2 = cancel
 
@@ -392,16 +392,16 @@ Public Module ServerQuest
         Buffer.Dispose()
     End Sub
 
-    Sub Packet_QuestLogUpdate(ByVal Index As Integer, ByVal Data() As Byte)
+    Sub Packet_QuestLogUpdate(ByVal Index As Integer, ByRef data() As Byte)
         SendPlayerQuests(Index)
     End Sub
 
-    Sub Packet_QuestReset(ByVal Index As Integer, ByVal Data() As Byte)
+    Sub Packet_QuestReset(ByVal Index As Integer, ByRef data() As Byte)
         Dim QuestNum As Integer
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
-        Dim Buffer As New ByteStream(Data)
+        Dim Buffer As New ByteStream(data)
         QuestNum = Buffer.ReadInt32
 
         ResetQuest(Index, QuestNum)
@@ -470,7 +470,7 @@ Public Module ServerQuest
             Buffer.WriteInt32(Quest(QuestNum).Task(I).TaskType)
         Next
 
-        SendDataToAll(Buffer.ToArray)
+        SendDataToAll(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -523,7 +523,7 @@ Public Module ServerQuest
             Buffer.WriteInt32(Quest(QuestNum).Task(I).TaskType)
         Next
 
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -540,7 +540,7 @@ Public Module ServerQuest
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(I).CurrentCount)
         Next
 
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -556,7 +556,7 @@ Public Module ServerQuest
         Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).ActualTask)
         Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).CurrentCount)
 
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -571,7 +571,7 @@ Public Module ServerQuest
         Buffer.WriteString(Trim$(message))
         Buffer.WriteInt32(QuestNumForStart)
 
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose
 
     End Sub

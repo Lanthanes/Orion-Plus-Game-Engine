@@ -83,9 +83,9 @@ Public Module ClientCrafting
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_UpdateRecipe(ByVal data() As Byte)
+    Sub Packet_UpdateRecipe(ByRef Data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         'recipe index
         n = Buffer.ReadInt32
 
@@ -106,13 +106,13 @@ Public Module ClientCrafting
 
     End Sub
 
-    Sub Packet_RecipeEditor(ByVal data() As Byte)
+    Sub Packet_RecipeEditor(ByRef Data() As Byte)
         InitRecipeEditor = True
     End Sub
 
-    Sub Packet_SendPlayerRecipe(ByVal data() As Byte)
+    Sub Packet_SendPlayerRecipe(ByRef Data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         For i = 1 To MAX_RECIPE
             Player(MyIndex).RecipeLearned(i) = Buffer.ReadInt32
         Next
@@ -120,13 +120,13 @@ Public Module ClientCrafting
         Buffer.Dispose()
     End Sub
 
-    Sub Packet_OpenCraft(ByVal data() As Byte)
+    Sub Packet_OpenCraft(ByRef Data() As Byte)
         InitCrafting = True
     End Sub
 
-    Sub Packet_UpdateCraft(ByVal data() As Byte)
+    Sub Packet_UpdateCraft(ByRef Data() As Byte)
         Dim done As Byte
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         done = Buffer.ReadInt32
 
         If done = 1 Then
@@ -146,7 +146,7 @@ Public Module ClientCrafting
 
         Buffer.WriteInt32(ClientPackets.CRequestRecipes)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -155,7 +155,7 @@ Public Module ClientCrafting
 
         Buffer.WriteInt32(EditorPackets.RequestEditRecipes)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -178,7 +178,7 @@ Public Module ClientCrafting
 
         Buffer.WriteInt32(Recipe(RecipeNum).CreateTime)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -210,7 +210,7 @@ Public Module ClientCrafting
         Buffer.WriteInt32(recipeindex)
         Buffer.WriteInt32(Amount)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
 
         Buffer.Dispose()
 
@@ -230,7 +230,7 @@ Public Module ClientCrafting
 
         Buffer.WriteInt32(ClientPackets.CCloseCraft)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
 
         Buffer.Dispose()
     End Sub

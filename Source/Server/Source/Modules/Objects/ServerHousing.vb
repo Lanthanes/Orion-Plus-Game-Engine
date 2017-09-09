@@ -47,7 +47,7 @@ Public Module ServerHousing
             HouseConfig(i).Y = Val(myXml.ReadString("House" & i, "Y"))
             DoEvents()
         Next
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
             If IsPlaying(i) Then
                 SendHouseConfigs(i)
             End If
@@ -84,127 +84,127 @@ Public Module ServerHousing
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_BuyHouse(ByVal index As Integer, ByVal data() As Byte)
+    Sub Packet_BuyHouse(ByVal Index As Integer, ByRef data() As Byte)
         Dim i As Integer, price As Integer
         Dim Buffer As New ByteStream(data)
         i = Buffer.ReadInt32
 
         If i = 1 Then
-            If TempPlayer(index).BuyHouseIndex > 0 Then
-                price = HouseConfig(TempPlayer(index).BuyHouseIndex).Price
-                If HasItem(index, 1) >= price Then
-                    TakeInvItem(index, 1, price)
-                    Player(index).Character(TempPlayer(index).CurChar).House.HouseIndex = TempPlayer(index).BuyHouseIndex
-                    PlayerMsg(index, "You just bought the " & Trim$(HouseConfig(TempPlayer(index).BuyHouseIndex).ConfigName) & " house!", ColorType.BrightGreen)
-                    Player(index).Character(TempPlayer(index).CurChar).LastMap = GetPlayerMap(index)
-                    Player(index).Character(TempPlayer(index).CurChar).LastX = GetPlayerX(index)
-                    Player(index).Character(TempPlayer(index).CurChar).LastY = GetPlayerY(index)
-                    Player(index).Character(TempPlayer(index).CurChar).InHouse = index
+            If TempPlayer(Index).BuyHouseIndex > 0 Then
+                price = HouseConfig(TempPlayer(Index).BuyHouseIndex).Price
+                If HasItem(Index, 1) >= price Then
+                    TakeInvItem(Index, 1, price)
+                    Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex = TempPlayer(Index).BuyHouseIndex
+                    PlayerMsg(Index, "You just bought the " & Trim$(HouseConfig(TempPlayer(Index).BuyHouseIndex).ConfigName) & " house!", ColorType.BrightGreen)
+                    Player(Index).Character(TempPlayer(Index).CurChar).LastMap = GetPlayerMap(Index)
+                    Player(Index).Character(TempPlayer(Index).CurChar).LastX = GetPlayerX(Index)
+                    Player(Index).Character(TempPlayer(Index).CurChar).LastY = GetPlayerY(Index)
+                    Player(Index).Character(TempPlayer(Index).CurChar).InHouse = Index
 
-                    PlayerWarp(index, HouseConfig(Player(index).Character(TempPlayer(index).CurChar).House.HouseIndex).BaseMap, HouseConfig(Player(index).Character(TempPlayer(index).CurChar).House.HouseIndex).X, HouseConfig(Player(index).Character(TempPlayer(index).CurChar).House.HouseIndex).Y, True)
-                    SavePlayer(index)
+                    PlayerWarp(Index, HouseConfig(Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex).BaseMap, HouseConfig(Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex).X, HouseConfig(Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex).Y, True)
+                    SavePlayer(Index)
                 Else
-                    PlayerMsg(index, "You cannot afford this house!", ColorType.BrightRed)
+                    PlayerMsg(Index, "You cannot afford this house!", ColorType.BrightRed)
                 End If
             End If
         End If
 
-        TempPlayer(index).BuyHouseIndex = 0
+        TempPlayer(Index).BuyHouseIndex = 0
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
-    Sub Packet_InviteToHouse(ByVal index As Integer, ByVal data() As Byte)
+    Sub Packet_InviteToHouse(ByVal Index As Integer, ByRef data() As Byte)
         Dim invitee As Integer, Name As String
         Dim Buffer As New ByteStream(data)
         Name = Trim$(Buffer.ReadString)
         invitee = FindPlayer(Name)
-        Buffer.Dispose
+        Buffer.Dispose()
 
         If invitee = 0 Then
-            PlayerMsg(index, "Player not found.", ColorType.BrightRed)
+            PlayerMsg(Index, "Player not found.", ColorType.BrightRed)
             Exit Sub
         End If
 
-        If index = invitee Then
-            PlayerMsg(index, "You cannot invite yourself to you own house!", ColorType.BrightRed)
+        If Index = invitee Then
+            PlayerMsg(Index, "You cannot invite yourself to you own house!", ColorType.BrightRed)
             Exit Sub
         End If
 
         If TempPlayer(invitee).InvitationIndex > 0 Then
             If TempPlayer(invitee).InvitationTimer > GetTimeMs() Then
-                PlayerMsg(index, Trim$(GetPlayerName(invitee)) & " is currently busy!", ColorType.Yellow)
+                PlayerMsg(Index, Trim$(GetPlayerName(invitee)) & " is currently busy!", ColorType.Yellow)
                 Exit Sub
             End If
         End If
 
-        If Player(index).Character(TempPlayer(index).CurChar).House.HouseIndex > 0 Then
-            If Player(index).Character(TempPlayer(index).CurChar).InHouse > 0 Then
-                If Player(index).Character(TempPlayer(index).CurChar).InHouse = index Then
+        If Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex > 0 Then
+            If Player(Index).Character(TempPlayer(Index).CurChar).InHouse > 0 Then
+                If Player(Index).Character(TempPlayer(Index).CurChar).InHouse = Index Then
                     If Player(invitee).Character(TempPlayer(invitee).CurChar).InHouse > 0 Then
-                        If Player(invitee).Character(TempPlayer(invitee).CurChar).InHouse = index Then
-                            PlayerMsg(index, Trim$(GetPlayerName(invitee)) & " is already in your house!", ColorType.Yellow)
+                        If Player(invitee).Character(TempPlayer(invitee).CurChar).InHouse = Index Then
+                            PlayerMsg(Index, Trim$(GetPlayerName(invitee)) & " is already in your house!", ColorType.Yellow)
                         Else
-                            PlayerMsg(index, Trim$(GetPlayerName(invitee)) & " is already visiting someone elses house!", ColorType.Yellow)
+                            PlayerMsg(Index, Trim$(GetPlayerName(invitee)) & " is already visiting someone elses house!", ColorType.Yellow)
                         End If
                     Else
                         'Send invite
                         Buffer = New ByteStream(4)
                         Buffer.WriteInt32(ServerPackets.SVisit)
-                        Buffer.WriteInt32(index)
-                        SendDataTo(invitee, Buffer.ToArray)
-                        TempPlayer(invitee).InvitationIndex = index
+                        Buffer.WriteInt32(Index)
+                        Socket.SendDataTo(invitee, Buffer.Data, Buffer.Head)
+                        TempPlayer(invitee).InvitationIndex = Index
                         TempPlayer(invitee).InvitationTimer = GetTimeMs() + 15000
-                        Buffer.Dispose
+                        Buffer.Dispose()
                     End If
                 Else
-                    PlayerMsg(index, "Only the house owner can invite other players into their house.", ColorType.BrightRed)
+                    PlayerMsg(Index, "Only the house owner can invite other players into their house.", ColorType.BrightRed)
                 End If
             Else
-                PlayerMsg(index, "You must be inside your house before you can invite someone to visit!", ColorType.BrightRed)
+                PlayerMsg(Index, "You must be inside your house before you can invite someone to visit!", ColorType.BrightRed)
             End If
         Else
-            PlayerMsg(index, "You do not have a house to invite anyone to!", ColorType.BrightRed)
+            PlayerMsg(Index, "You do not have a house to invite anyone to!", ColorType.BrightRed)
         End If
 
     End Sub
 
-    Sub Packet_AcceptInvite(ByVal index As Integer, ByVal data() As Byte)
+    Sub Packet_AcceptInvite(ByVal Index As Integer, ByRef data() As Byte)
         Dim response As Integer
         Dim Buffer As New ByteStream(data)
         response = Buffer.ReadInt32
-        Buffer.Dispose
+        Buffer.Dispose()
 
         If response = 1 Then
-            If TempPlayer(index).InvitationIndex > 0 Then
-                If TempPlayer(index).InvitationTimer > GetTimeMs() Then
+            If TempPlayer(Index).InvitationIndex > 0 Then
+                If TempPlayer(Index).InvitationTimer > GetTimeMs() Then
                     'Accept this invite
-                    If IsPlaying(TempPlayer(index).InvitationIndex) Then
-                        Player(index).Character(TempPlayer(index).CurChar).InHouse = TempPlayer(index).InvitationIndex
-                        Player(index).Character(TempPlayer(index).CurChar).LastX = GetPlayerX(index)
-                        Player(index).Character(TempPlayer(index).CurChar).LastY = GetPlayerY(index)
-                        Player(index).Character(TempPlayer(index).CurChar).LastMap = GetPlayerMap(index)
-                        TempPlayer(index).InvitationTimer = 0
-                        PlayerWarp(index, Player(TempPlayer(index).InvitationIndex).Character(TempPlayer(index).CurChar).Map, HouseConfig(Player(TempPlayer(index).InvitationIndex).Character(TempPlayer(TempPlayer(index).InvitationIndex).CurChar).House.HouseIndex).X, HouseConfig(Player(TempPlayer(index).InvitationIndex).Character(TempPlayer(TempPlayer(index).InvitationIndex).CurChar).House.HouseIndex).Y, True)
+                    If IsPlaying(TempPlayer(Index).InvitationIndex) Then
+                        Player(Index).Character(TempPlayer(Index).CurChar).InHouse = TempPlayer(Index).InvitationIndex
+                        Player(Index).Character(TempPlayer(Index).CurChar).LastX = GetPlayerX(Index)
+                        Player(Index).Character(TempPlayer(Index).CurChar).LastY = GetPlayerY(Index)
+                        Player(Index).Character(TempPlayer(Index).CurChar).LastMap = GetPlayerMap(Index)
+                        TempPlayer(Index).InvitationTimer = 0
+                        PlayerWarp(Index, Player(TempPlayer(Index).InvitationIndex).Character(TempPlayer(Index).CurChar).Map, HouseConfig(Player(TempPlayer(Index).InvitationIndex).Character(TempPlayer(TempPlayer(Index).InvitationIndex).CurChar).House.HouseIndex).X, HouseConfig(Player(TempPlayer(Index).InvitationIndex).Character(TempPlayer(TempPlayer(Index).InvitationIndex).CurChar).House.HouseIndex).Y, True)
                     Else
-                        TempPlayer(index).InvitationTimer = 0
-                        PlayerMsg(index, "Cannot find player!", ColorType.BrightRed)
+                        TempPlayer(Index).InvitationTimer = 0
+                        PlayerMsg(Index, "Cannot find player!", ColorType.BrightRed)
                     End If
                 Else
-                    PlayerMsg(index, "Your invitation has expired, have your friend re-invite you.", ColorType.Yellow)
+                    PlayerMsg(Index, "Your invitation has expired, have your friend re-invite you.", ColorType.Yellow)
                 End If
             End If
         Else
-            If IsPlaying(TempPlayer(index).InvitationIndex) Then
-                TempPlayer(index).InvitationTimer = 0
-                PlayerMsg(TempPlayer(index).InvitationIndex, Trim$(GetPlayerName(index)) & " rejected your invitation", ColorType.BrightRed)
+            If IsPlaying(TempPlayer(Index).InvitationIndex) Then
+                TempPlayer(Index).InvitationTimer = 0
+                PlayerMsg(TempPlayer(Index).InvitationIndex, Trim$(GetPlayerName(Index)) & " rejected your invitation", ColorType.BrightRed)
             End If
         End If
 
     End Sub
 
-    Sub Packet_PlaceFurniture(ByVal index As Integer, ByVal data() As Byte)
+    Sub Packet_PlaceFurniture(ByVal Index As Integer, ByRef data() As Byte)
         Dim i As Integer, x As Integer, y As Integer, invslot As Integer
         Dim ItemNum As Integer, x1 As Integer, y1 As Integer, widthoffset As Integer
 
@@ -212,58 +212,58 @@ Public Module ServerHousing
         x = Buffer.ReadInt32
         y = Buffer.ReadInt32
         invslot = Buffer.ReadInt32
-        Buffer.Dispose
+        Buffer.Dispose()
 
-        ItemNum = Player(index).Character(TempPlayer(index).CurChar).Inv(invslot).Num
+        ItemNum = Player(Index).Character(TempPlayer(Index).CurChar).Inv(invslot).Num
 
         ' Prevent hacking
         If ItemNum < 1 Or ItemNum > MAX_ITEMS Then Exit Sub
 
-        If Player(index).Character(TempPlayer(index).CurChar).InHouse = index Then
+        If Player(Index).Character(TempPlayer(Index).CurChar).InHouse = Index Then
             If Item(ItemNum).Type = ItemType.Furniture Then
                 ' stat requirements
                 For i = 1 To Stats.Count - 1
-                    If GetPlayerRawStat(index, i) < Item(ItemNum).Stat_Req(i) Then
-                        PlayerMsg(index, "You do not meet the stat requirements to use this item.", ColorType.BrightRed)
+                    If GetPlayerRawStat(Index, i) < Item(ItemNum).Stat_Req(i) Then
+                        PlayerMsg(Index, "You do not meet the stat requirements to use this item.", ColorType.BrightRed)
                         Exit Sub
                     End If
                 Next
 
                 ' level requirement
-                If GetPlayerLevel(index) < Item(ItemNum).LevelReq Then
-                    PlayerMsg(index, "You do not meet the level requirement to use this item.", ColorType.BrightRed)
+                If GetPlayerLevel(Index) < Item(ItemNum).LevelReq Then
+                    PlayerMsg(Index, "You do not meet the level requirement to use this item.", ColorType.BrightRed)
                     Exit Sub
                 End If
 
                 ' class requirement
                 If Item(ItemNum).ClassReq > 0 Then
-                    If Not GetPlayerClass(index) = Item(ItemNum).ClassReq Then
-                        PlayerMsg(index, "You do not meet the class requirement to use this item.", ColorType.BrightRed)
+                    If Not GetPlayerClass(Index) = Item(ItemNum).ClassReq Then
+                        PlayerMsg(Index, "You do not meet the class requirement to use this item.", ColorType.BrightRed)
                         Exit Sub
                     End If
                 End If
 
                 ' access requirement
-                If Not GetPlayerAccess(index) >= Item(ItemNum).AccessReq Then
-                    PlayerMsg(index, "You do not meet the access requirement to use this item.", ColorType.BrightRed)
+                If Not GetPlayerAccess(Index) >= Item(ItemNum).AccessReq Then
+                    PlayerMsg(Index, "You do not meet the access requirement to use this item.", ColorType.BrightRed)
                     Exit Sub
                 End If
 
                 'Ok, now we got to see what can be done about this furniture :/
-                If Player(index).Character(TempPlayer(index).CurChar).InHouse <> index Then
-                    PlayerMsg(index, "You must be inside your house to place furniture!", ColorType.Yellow)
+                If Player(Index).Character(TempPlayer(Index).CurChar).InHouse <> Index Then
+                    PlayerMsg(Index, "You must be inside your house to place furniture!", ColorType.Yellow)
                     Exit Sub
                 End If
 
-                If Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount >= HouseConfig(Player(index).Character(TempPlayer(index).CurChar).House.HouseIndex).MaxFurniture Then
-                    If HouseConfig(Player(index).Character(TempPlayer(index).CurChar).House.HouseIndex).MaxFurniture > 0 Then
-                        PlayerMsg(index, "Your house cannot hold any more furniture!", ColorType.BrightRed)
+                If Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount >= HouseConfig(Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex).MaxFurniture Then
+                    If HouseConfig(Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex).MaxFurniture > 0 Then
+                        PlayerMsg(Index, "Your house cannot hold any more furniture!", ColorType.BrightRed)
                         Exit Sub
                     End If
                 End If
 
-                If x < 0 Or x > Map(GetPlayerMap(index)).MaxX Then Exit Sub
-                If y < 0 Or y > Map(GetPlayerMap(index)).MaxY Then Exit Sub
+                If x < 0 Or x > Map(GetPlayerMap(Index)).MaxX Then Exit Sub
+                If y < 0 Or y > Map(GetPlayerMap(Index)).MaxY Then Exit Sub
 
                 If Item(ItemNum).FurnitureWidth > 2 Then
                     x1 = x + (Item(ItemNum).FurnitureWidth / 2)
@@ -282,11 +282,11 @@ Public Module ServerHousing
 
                     For x = x1 To x1 + widthoffset
                         For y = y1 To y1 - Item(ItemNum).FurnitureHeight + 1 Step -1
-                            If Map(GetPlayerMap(index)).Tile(x, y).Type = TileType.Blocked Then Exit Sub
+                            If Map(GetPlayerMap(Index)).Tile(x, y).Type = TileType.Blocked Then Exit Sub
 
-                            For i = 1 To GetPlayersOnline()
-                                If IsPlaying(i) AndAlso i <> index AndAlso GetPlayerMap(i) = GetPlayerMap(index) Then
-                                    If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(index).Character(TempPlayer(index).CurChar).InHouse Then
+                            For i = 0 To GetPlayersOnline()
+                                If IsPlaying(i) AndAlso i <> Index AndAlso GetPlayerMap(i) = GetPlayerMap(Index) Then
+                                    If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(Index).Character(TempPlayer(Index).CurChar).InHouse Then
                                         If Player(i).Character(TempPlayer(i).CurChar).X = x And Player(i).Character(TempPlayer(i).CurChar).Y = y Then
                                             Exit Sub
                                         End If
@@ -294,10 +294,10 @@ Public Module ServerHousing
                                 End If
                             Next
 
-                            If Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount > 0 Then
-                                For i = 1 To Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount
-                                    If x >= Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).X And x <= Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).X + Item(Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
-                                        If y <= Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).Y And y >= Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).Y - Item(Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
+                            If Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount > 0 Then
+                                For i = 1 To Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount
+                                    If x >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X And x <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X + Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
+                                        If y <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y And y >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y - Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
                                             'Blocked!
                                             Exit Sub
                                         End If
@@ -309,11 +309,11 @@ Public Module ServerHousing
 
                     For x = x1 To x1 - (Item(ItemNum).FurnitureWidth - widthoffset) Step -1
                         For y = y1 To y1 - Item(ItemNum).FurnitureHeight + 1 Step -1
-                            If Map(GetPlayerMap(index)).Tile(x, y).Type = TileType.Blocked Then Exit Sub
+                            If Map(GetPlayerMap(Index)).Tile(x, y).Type = TileType.Blocked Then Exit Sub
 
-                            For i = 1 To GetPlayersOnline()
-                                If IsPlaying(i) AndAlso i <> index AndAlso GetPlayerMap(i) = GetPlayerMap(index) Then
-                                    If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(index).Character(TempPlayer(index).CurChar).InHouse Then
+                            For i = 0 To GetPlayersOnline()
+                                If IsPlaying(i) AndAlso i <> Index AndAlso GetPlayerMap(i) = GetPlayerMap(Index) Then
+                                    If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(Index).Character(TempPlayer(Index).CurChar).InHouse Then
                                         If Player(i).Character(TempPlayer(i).CurChar).X = x And Player(i).Character(TempPlayer(i).CurChar).Y = y Then
                                             Exit Sub
                                         End If
@@ -321,10 +321,10 @@ Public Module ServerHousing
                                 End If
                             Next
 
-                            If Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount > 0 Then
-                                For i = 1 To Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount
-                                    If x >= Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).X And x <= Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).X + Item(Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
-                                        If y <= Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).Y And y >= Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).Y - Item(Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
+                            If Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount > 0 Then
+                                For i = 1 To Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount
+                                    If x >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X And x <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X + Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
+                                        If y <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y And y >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y - Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
                                             'Blocked!
                                             Exit Sub
                                         End If
@@ -336,11 +336,11 @@ Public Module ServerHousing
                 Else
                     For x = x1 To x1 + Item(ItemNum).FurnitureWidth - 1
                         For y = y1 To y1 - Item(ItemNum).FurnitureHeight + 1 Step -1
-                            If Map(GetPlayerMap(index)).Tile(x, y).Type = TileType.Blocked Then Exit Sub
+                            If Map(GetPlayerMap(Index)).Tile(x, y).Type = TileType.Blocked Then Exit Sub
 
-                            For i = 1 To GetPlayersOnline()
-                                If IsPlaying(i) AndAlso i <> index AndAlso GetPlayerMap(i) = GetPlayerMap(index) Then
-                                    If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(index).Character(TempPlayer(index).CurChar).InHouse Then
+                            For i = 0 To GetPlayersOnline()
+                                If IsPlaying(i) AndAlso i <> Index AndAlso GetPlayerMap(i) = GetPlayerMap(Index) Then
+                                    If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(Index).Character(TempPlayer(Index).CurChar).InHouse Then
                                         If Player(i).Character(TempPlayer(i).CurChar).X = x And Player(i).Character(TempPlayer(i).CurChar).Y = y Then
                                             Exit Sub
                                         End If
@@ -348,10 +348,10 @@ Public Module ServerHousing
                                 End If
                             Next
 
-                            If Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount > 0 Then
-                                For i = 1 To Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount
-                                    If x >= Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).X And x <= Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).X + Item(Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
-                                        If y <= Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).Y And y >= Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).Y - Item(Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
+                            If Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount > 0 Then
+                                For i = 1 To Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount
+                                    If x >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X And x <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X + Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
+                                        If y <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y And y >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y - Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
                                             'Blocked!
                                             Exit Sub
                                         End If
@@ -366,29 +366,29 @@ Public Module ServerHousing
                 y = y1
 
                 'If all checks out, place furniture and send the update to everyone in the player's house.
-                Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount = Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount + 1
-                ReDim Preserve Player(index).Character(TempPlayer(index).CurChar).House.Furniture(Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount)
-                Player(index).Character(TempPlayer(index).CurChar).House.Furniture(Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount).ItemNum = ItemNum
-                Player(index).Character(TempPlayer(index).CurChar).House.Furniture(Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount).X = x
-                Player(index).Character(TempPlayer(index).CurChar).House.Furniture(Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount).Y = y
+                Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount = Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount + 1
+                ReDim Preserve Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount)
+                Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount).ItemNum = ItemNum
+                Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount).X = x
+                Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount).Y = y
 
-                TakeInvItem(index, ItemNum, 0)
+                TakeInvItem(Index, ItemNum, 0)
 
-                SendFurnitureToHouse(Player(index).Character(TempPlayer(index).CurChar).InHouse)
+                SendFurnitureToHouse(Player(Index).Character(TempPlayer(Index).CurChar).InHouse)
 
-                SavePlayer(index)
+                SavePlayer(Index)
             End If
         Else
-            PlayerMsg(index, "You cannot place furniture unless you are in your own house!", ColorType.BrightRed)
+            PlayerMsg(Index, "You cannot place furniture unless you are in your own house!", ColorType.BrightRed)
         End If
 
     End Sub
 
-    Sub Packet_RequestEditHouse(ByVal index As Integer, ByVal data() As Byte)
+    Sub Packet_RequestEditHouse(ByVal Index As Integer, ByRef data() As Byte)
         Dim Buffer As ByteStream, i As Integer
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SHouseEdit)
@@ -400,16 +400,16 @@ Public Module ServerHousing
             Buffer.WriteInt32(HouseConfig(i).Price)
             Buffer.WriteInt32(HouseConfig(i).MaxFurniture)
         Next
-        SendDataTo(index, Buffer.ToArray)
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
 
     End Sub
 
-    Sub Packet_SaveHouses(ByVal index As Integer, ByVal data() As Byte)
+    Sub Packet_SaveHouses(ByVal Index As Integer, ByRef data() As Byte)
         Dim i As Integer, x As Integer, Count As Integer, z As Integer
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
 
         Dim Buffer As New ByteStream(data)
         Count = Buffer.ReadInt32
@@ -424,7 +424,7 @@ Public Module ServerHousing
                 HouseConfig(i).MaxFurniture = Buffer.ReadInt32
                 SaveHouse(i)
 
-                For x = 1 To GetPlayersOnline()
+                For x = 0 To GetPlayersOnline()
                     If IsPlaying(x) AndAlso Player(x).Character(TempPlayer(x).CurChar).InHouse = i Then
                         SendFurnitureToHouse(i)
                     End If
@@ -432,42 +432,42 @@ Public Module ServerHousing
             Next
         End If
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
-    Sub Packet_SellHouse(ByVal index As Integer, ByVal data() As Byte)
+    Sub Packet_SellHouse(ByVal Index As Integer, ByRef data() As Byte)
         Dim i As Integer, refund As Integer
         Dim TmpIndex As Integer
         Dim Buffer As New ByteStream(data)
-        TmpIndex = Player(index).Character(TempPlayer(index).CurChar).House.HouseIndex
+        TmpIndex = Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex
         If TmpIndex > 0 Then
             'get some money back
             refund = HouseConfig(TmpIndex).Price / 2
 
-            Player(index).Character(TempPlayer(index).CurChar).House.HouseIndex = 0
-            Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount = 0
-            ReDim Player(index).Character(TempPlayer(index).CurChar).House.Furniture(Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount)
+            Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex = 0
+            Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount = 0
+            ReDim Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount)
 
-            For i = 0 To Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount
-                Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).ItemNum = 0
-                Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).X = 0
-                Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).Y = 0
+            For i = 0 To Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount
+                Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum = 0
+                Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X = 0
+                Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y = 0
             Next
 
-            If Player(index).Character(TempPlayer(index).CurChar).InHouse = TmpIndex Then
-                PlayerWarp(index, Player(index).Character(TempPlayer(index).CurChar).LastMap, Player(index).Character(TempPlayer(index).CurChar).LastX, Player(index).Character(TempPlayer(index).CurChar).LastY)
+            If Player(Index).Character(TempPlayer(Index).CurChar).InHouse = TmpIndex Then
+                PlayerWarp(Index, Player(Index).Character(TempPlayer(Index).CurChar).LastMap, Player(Index).Character(TempPlayer(Index).CurChar).LastX, Player(Index).Character(TempPlayer(Index).CurChar).LastY)
             End If
 
-            SavePlayer(index)
+            SavePlayer(Index)
 
-            PlayerMsg(index, "You sold your House for " & refund & " Gold!", ColorType.BrightGreen)
-            GiveInvItem(index, 1, refund)
+            PlayerMsg(Index, "You sold your House for " & refund & " Gold!", ColorType.BrightGreen)
+            GiveInvItem(Index, 1, refund)
         Else
-            PlayerMsg(index, "You dont own a House!", ColorType.BrightRed)
+            PlayerMsg(Index, "You dont own a House!", ColorType.BrightRed)
         End If
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -486,8 +486,8 @@ Public Module ServerHousing
             Buffer.WriteInt32(HouseConfig(i).Price)
         Next
 
-        SendDataTo(Index, Buffer.ToArray)
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
 
     End Sub
 
@@ -505,10 +505,10 @@ Public Module ServerHousing
             Next
         End If
 
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
             If IsPlaying(i) Then
                 If Player(i).Character(TempPlayer(i).CurChar).InHouse = HouseIndex Then
-                    SendDataTo(i, Buffer.ToArray)
+                    Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
                 End If
             End If
         Next

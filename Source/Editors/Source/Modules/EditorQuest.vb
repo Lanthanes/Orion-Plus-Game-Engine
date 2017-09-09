@@ -285,13 +285,13 @@ Public Module EditorQuest
 #End Region
 
 #Region "Incoming Packets"
-    Public Sub Packet_QuestEditor(ByVal data() As Byte)
+    Public Sub Packet_QuestEditor(ByRef Data() As Byte)
         QuestEditorShow = True
     End Sub
 
-    Public Sub Packet_UpdateQuest(ByVal data() As Byte)
+    Public Sub Packet_UpdateQuest(ByRef Data() As Byte)
         Dim QuestNum As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         QuestNum = Buffer.ReadInt32
 
         ' Update the Quest
@@ -353,7 +353,7 @@ Public Module EditorQuest
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(EditorPackets.RequestEditQuest)
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -408,7 +408,7 @@ Public Module EditorQuest
             Buffer.WriteInt32(Quest(QuestNum).Task(I).TaskType)
         Next
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -418,7 +418,7 @@ Public Module EditorQuest
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CRequestQuests)
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -428,7 +428,7 @@ Public Module EditorQuest
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CQuestLogUpdate)
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -441,7 +441,7 @@ Public Module EditorQuest
         Buffer.WriteInt32(ClientPackets.CPlayerHandleQuest)
         Buffer.WriteInt32(QuestNum)
         Buffer.WriteInt32(Order) '1=accept quest, 2=cancel quest
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -451,7 +451,7 @@ Public Module EditorQuest
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CQuestReset)
         Buffer.WriteInt32(QuestNum)
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub

@@ -86,7 +86,6 @@ Module ServerTypes
 
     Public Structure TempPlayerRec
         ' Non saved local vars
-        Dim Buffer As ByteBuffer
         Dim InGame As Boolean
         Dim AttackTimer As Integer
         Dim DataTimer As Integer

@@ -6,7 +6,7 @@ Module ServerGameLogic
         Dim i As Integer, n As Integer
         n = 0
 
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
             If IsPlaying(i) And GetPlayerMap(i) = MapNum Then
                 n = n + 1
             End If
@@ -18,7 +18,7 @@ Module ServerGameLogic
     Public Function GetPlayersOnline() As Integer
         Dim x As Integer
         x = 0
-        For i = 1 To MAX_PLAYERS
+        For i = 0 To Socket.HighIndex
             If TempPlayer(i).InGame = True Then
                 x = x + 1
             End If
@@ -46,7 +46,7 @@ Module ServerGameLogic
     Function FindPlayer(ByVal Name As String) As Integer
         Dim i As Integer
 
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
             If IsPlaying(i) Then
                 ' Make sure we dont try to check a name thats to small
                 If Len(GetPlayerName(i)) >= Len(Trim$(Name)) Then
@@ -101,7 +101,7 @@ Module ServerGameLogic
                 Addlog("Sent SMSG: SSpawnItem MapItemSlot", PACKET_LOG)
                 TextAdd("Sent SMSG: SSpawnItem MapItemSlot")
 
-                SendDataToMap(MapNum, Buffer.ToArray())
+                SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             End If
 
         End If
@@ -252,7 +252,7 @@ Module ServerGameLogic
                     Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Vital(i))
                 Next
 
-                SendDataToMap(MapNum, Buffer.ToArray())
+                SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             End If
 
             SendMapNpcVitals(MapNum, MapNpcNum)
@@ -271,7 +271,7 @@ Module ServerGameLogic
         NpcTileIsOpen = True
 
         If PlayersOnMap(MapNum) Then
-            For LoopI = 1 To MAX_PLAYERS
+            For LoopI = 0 To Socket.HighIndex
                 If GetPlayerMap(LoopI) = MapNum AndAlso GetPlayerX(LoopI) = x AndAlso GetPlayerY(LoopI) = y Then
                     NpcTileIsOpen = False
                     Exit Function
@@ -338,7 +338,7 @@ Module ServerGameLogic
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 1 To GetPlayersOnline()
+                    For i = 0 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y - 1) Then
                                 CanNpcMove = False
@@ -371,7 +371,7 @@ Module ServerGameLogic
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 1 To GetPlayersOnline()
+                    For i = 0 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y + 1) Then
                                 CanNpcMove = False
@@ -404,7 +404,7 @@ Module ServerGameLogic
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 1 To GetPlayersOnline()
+                    For i = 0 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X - 1) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
                                 CanNpcMove = False
@@ -437,7 +437,7 @@ Module ServerGameLogic
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 1 To GetPlayersOnline()
+                    For i = 0 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X + 1) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
                                 CanNpcMove = False
@@ -487,7 +487,7 @@ Module ServerGameLogic
                 Addlog("Sent SMSG: SNpcMove Up", PACKET_LOG)
                 TextAdd("Sent SMSG: SNpcMove Up")
 
-                SendDataToMap(MapNum, Buffer.ToArray())
+                SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             Case Direction.Down
                 MapNpc(MapNum).Npc(MapNpcNum).Y = MapNpc(MapNum).Npc(MapNpcNum).Y + 1
 
@@ -501,7 +501,7 @@ Module ServerGameLogic
                 Addlog("Sent SMSG: SNpcMove Down", PACKET_LOG)
                 TextAdd("Sent SMSG: SNpcMove Down")
 
-                SendDataToMap(MapNum, Buffer.ToArray())
+                SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             Case Direction.Left
                 MapNpc(MapNum).Npc(MapNpcNum).X = MapNpc(MapNum).Npc(MapNpcNum).X - 1
 
@@ -515,7 +515,7 @@ Module ServerGameLogic
                 Addlog("Sent SMSG: SNpcMove Left", PACKET_LOG)
                 TextAdd("Sent SMSG: SNpcMove Left")
 
-                SendDataToMap(MapNum, Buffer.ToArray())
+                SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             Case Direction.Right
                 MapNpc(MapNum).Npc(MapNpcNum).X = MapNpc(MapNum).Npc(MapNpcNum).X + 1
 
@@ -529,7 +529,7 @@ Module ServerGameLogic
                 Addlog("Sent SMSG: SNpcMove Right", PACKET_LOG)
                 TextAdd("Sent SMSG: SNpcMove Right")
 
-                SendDataToMap(MapNum, Buffer.ToArray())
+                SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
         End Select
 
         Buffer.Dispose
@@ -552,7 +552,7 @@ Module ServerGameLogic
         Addlog("Sent SMSG: SNpcDir", PACKET_LOG)
         TextAdd("Sent SMSG: SNpcDir")
 
-        SendDataToMap(MapNum, Buffer.ToArray())
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
         Buffer.Dispose
     End Sub
@@ -593,7 +593,7 @@ Module ServerGameLogic
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(Vitals.MP))
         Next
 
-        SendDataToMap(MapNum, Buffer.ToArray())
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
         Buffer.Dispose
     End Sub

@@ -40,7 +40,7 @@ Public Module EditorProjectiles
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(EditorPackets.RequestEditProjectiles)
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -59,7 +59,7 @@ Public Module EditorProjectiles
         Buffer.WriteInt32(Projectiles(ProjectileNum).Speed)
         Buffer.WriteInt32(Projectiles(ProjectileNum).Damage)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -69,7 +69,7 @@ Public Module EditorProjectiles
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CRequestProjectiles)
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -83,7 +83,7 @@ Public Module EditorProjectiles
         Buffer.WriteInt32(CollisionIndex)
         Buffer.WriteInt32(CollisionType)
         Buffer.WriteInt32(CollisionZone)
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -91,15 +91,15 @@ Public Module EditorProjectiles
 #End Region
 
 #Region "Recieving"
-    Public Sub HandleProjectileEditor(ByVal data() As Byte)
+    Public Sub HandleProjectileEditor(ByRef Data() As Byte)
 
         InitProjectileEditor = True
 
     End Sub
 
-    Public Sub HandleUpdateProjectile(ByVal data() As Byte)
+    Public Sub HandleUpdateProjectile(ByRef Data() As Byte)
         Dim ProjectileNum As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         ProjectileNum = Buffer.ReadInt32
 
         Projectiles(ProjectileNum).Name = Buffer.ReadString
@@ -112,9 +112,9 @@ Public Module EditorProjectiles
 
     End Sub
 
-    Public Sub HandleMapProjectile(ByVal data() As Byte)
+    Public Sub HandleMapProjectile(ByRef Data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         i = Buffer.ReadInt32
 
         With MapProjectiles(i)

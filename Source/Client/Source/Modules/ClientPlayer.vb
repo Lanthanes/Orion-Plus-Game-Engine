@@ -66,7 +66,7 @@ Module ClientPlayer
                             Buffer = New ByteStream(4)
                             Buffer.WriteInt32(ClientPackets.CEvent)
                             Buffer.WriteInt32(i)
-                            SendData(Buffer.ToArray)
+                            Socket.SendData(Buffer.Data, Buffer.Head)
                             Buffer.Dispose()
                             Player(MyIndex).EventTimer = GetTickCount() + 200
                         End If
@@ -380,7 +380,7 @@ Module ClientPlayer
         End If
 
         ' Check to see if a player is already on that tile
-        For i = 1 To MAX_PLAYERS
+        For i = 0 To MAX_PLAYERS
             If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
                 If Player(i).InHouse = Player(MyIndex).InHouse Then
                     If GetPlayerX(i) = X Then
@@ -528,7 +528,7 @@ Module ClientPlayer
                     Buffer.WriteInt32(ClientPackets.CCast)
                     Buffer.WriteInt32(skillslot)
 
-                    SendData(Buffer.ToArray())
+                    Socket.SendData(Buffer.Data, Buffer.Head)
                     Buffer.Dispose()
 
                     SkillBuffer = skillslot

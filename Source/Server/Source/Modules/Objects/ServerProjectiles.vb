@@ -140,7 +140,7 @@ Public Module ServerProjectiles
 #End Region
 
 #Region "Incoming"
-    Sub HandleRequestEditProjectiles(ByVal Index As Integer, ByVal data() As Byte)
+    Sub HandleRequestEditProjectiles(ByVal Index As Integer, ByRef data() As Byte)
         Dim Buffer As New ByteStream(4)
 
         ' Prevent hacking
@@ -148,12 +148,12 @@ Public Module ServerProjectiles
 
         Buffer.WriteInt32(ServerPackets.SProjectileEditor)
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
 
-    Sub HandleSaveProjectile(ByVal Index As Integer, ByVal data() As Byte)
+    Sub HandleSaveProjectile(ByVal Index As Integer, ByRef data() As Byte)
         Dim ProjectileNum As Integer
         Dim Buffer As New ByteStream(data)
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
@@ -179,13 +179,13 @@ Public Module ServerProjectiles
 
     End Sub
 
-    Sub HandleRequestProjectiles(ByVal Index As Integer, ByVal data() As Byte)
+    Sub HandleRequestProjectiles(ByVal Index As Integer, ByRef data() As Byte)
 
         SendProjectiles(Index)
 
     End Sub
 
-    Sub HandleClearProjectile(ByVal Index As Integer, ByVal data() As Byte)
+    Sub HandleClearProjectile(ByVal Index As Integer, ByRef data() As Byte)
         Dim ProjectileNum As Integer
         Dim TargetIndex As Integer
         Dim TargetType As TargetType
@@ -272,7 +272,7 @@ Public Module ServerProjectiles
         Buffer.WriteInt32(Projectiles(ProjectileNum).Speed)
         Buffer.WriteInt32(Projectiles(ProjectileNum).Damage)
 
-        SendDataToAll(Buffer.ToArray)
+        SendDataToAll(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -290,7 +290,7 @@ Public Module ServerProjectiles
         Buffer.WriteInt32(Projectiles(ProjectileNum).Speed)
         Buffer.WriteInt32(Projectiles(ProjectileNum).Damage)
 
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -322,7 +322,7 @@ Public Module ServerProjectiles
             Buffer.WriteInt32(.Y)
         End With
 
-        SendDataToMap(MapNum, Buffer.ToArray)
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
         Buffer.Dispose
 
     End Sub

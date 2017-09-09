@@ -109,7 +109,7 @@ Module ClientPets
 
         Buffer.WriteInt32(Index)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -121,7 +121,7 @@ Module ClientPets
 
         Buffer.WriteInt32(StatNum)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -131,7 +131,7 @@ Module ClientPets
 
         Buffer.WriteInt32(ClientPackets.CRequestPets)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -142,7 +142,7 @@ Module ClientPets
         Buffer.WriteInt32(ClientPackets.CPetSkill)
         Buffer.WriteInt32(skill)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
         PetSkillBuffer = skill
@@ -154,7 +154,7 @@ Module ClientPets
 
         Buffer.WriteInt32(ClientPackets.CSummonPet)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -164,14 +164,14 @@ Module ClientPets
 
         Buffer.WriteInt32(ClientPackets.CReleasePet)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
 #End Region
 
 #Region "Incoming Packets"
-    Public Sub Packet_UpdatePlayerPet(ByVal Data() As Byte)
+    Public Sub Packet_UpdatePlayerPet(ByRef Data() As Byte)
         Dim n As Integer, i As Long
         Dim Buffer As New ByteStream(Data)
         n = Buffer.ReadInt32
@@ -207,7 +207,7 @@ Module ClientPets
         Buffer.Dispose()
     End Sub
 
-    Public Sub Packet_UpdatePet(ByVal Data() As Byte)
+    Public Sub Packet_UpdatePet(ByRef Data() As Byte)
         Dim n As Integer, i As Integer
         Dim Buffer As New ByteStream(Data)
         n = Buffer.ReadInt32
@@ -240,10 +240,10 @@ Module ClientPets
 
     End Sub
 
-    Public Sub Packet_PetMove(ByVal data() As Byte)
+    Public Sub Packet_PetMove(ByRef Data() As Byte)
         Dim i As Integer, X As Integer, Y As Integer
         Dim dir As Integer, Movement As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         i = Buffer.ReadInt32
         X = Buffer.ReadInt32
         Y = Buffer.ReadInt32
@@ -273,7 +273,7 @@ Module ClientPets
         Buffer.Dispose()
     End Sub
 
-    Public Sub Packet_PetDir(ByVal Data() As Byte)
+    Public Sub Packet_PetDir(ByRef Data() As Byte)
         Dim i As Integer
         Dim dir As Integer
         Dim Buffer As New ByteStream(Data)
@@ -285,7 +285,7 @@ Module ClientPets
         Buffer.Dispose()
     End Sub
 
-    Public Sub Packet_PetVital(ByVal Data() As Byte)
+    Public Sub Packet_PetVital(ByRef Data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteStream(Data)
         i = Buffer.ReadInt32
@@ -302,12 +302,12 @@ Module ClientPets
 
     End Sub
 
-    Public Sub Packet_ClearPetSkillBuffer(ByVal Data() As Byte)
+    Public Sub Packet_ClearPetSkillBuffer(ByRef Data() As Byte)
         PetSkillBuffer = 0
         PetSkillBufferTimer = 0
     End Sub
 
-    Public Sub Packet_PetAttack(ByVal Data() As Byte)
+    Public Sub Packet_PetAttack(ByRef Data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteStream(Data)
         i = Buffer.ReadInt32
@@ -319,7 +319,7 @@ Module ClientPets
         Buffer.Dispose()
     End Sub
 
-    Public Sub Packet_PetXY(ByVal Data() As Byte)
+    Public Sub Packet_PetXY(ByRef Data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteStream(Data)
         Player(i).Pet.X = Buffer.ReadInt32
@@ -328,7 +328,7 @@ Module ClientPets
         Buffer.Dispose()
     End Sub
 
-    Public Sub Packet_PetExperience(ByVal Data() As Byte)
+    Public Sub Packet_PetExperience(ByRef Data() As Byte)
         Dim Buffer As New ByteStream(Data)
         Player(MyIndex).Pet.Exp = Buffer.ReadInt32
         Player(MyIndex).Pet.TNL = Buffer.ReadInt32
@@ -397,7 +397,7 @@ Module ClientPets
         Buffer.WriteInt32(X)
         Buffer.WriteInt32(Y)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub

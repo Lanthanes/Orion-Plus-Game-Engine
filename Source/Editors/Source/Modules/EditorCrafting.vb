@@ -179,9 +179,9 @@ Public Module EditorCrafting
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_UpdateRecipe(ByVal data() As Byte)
+    Sub Packet_UpdateRecipe(ByRef Data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         'recipe index
         n = Buffer.ReadInt32
 
@@ -202,7 +202,7 @@ Public Module EditorCrafting
 
     End Sub
 
-    Sub Packet_RecipeEditor(ByVal data() As Byte)
+    Sub Packet_RecipeEditor(ByRef Data() As Byte)
         InitRecipeEditor = True
     End Sub
 
@@ -214,7 +214,7 @@ Public Module EditorCrafting
 
         Buffer.WriteInt32(ClientPackets.CRequestRecipes)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -224,7 +224,7 @@ Public Module EditorCrafting
 
         Buffer.WriteInt32(EditorPackets.RequestEditRecipes)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -248,7 +248,7 @@ Public Module EditorCrafting
 
         Buffer.WriteInt32(Recipe(RecipeNum).CreateTime)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 

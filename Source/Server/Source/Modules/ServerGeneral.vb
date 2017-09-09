@@ -194,6 +194,16 @@ Module ServerGeneral
             LoadOptions()
         End If
 
+        ' Get that network READY SUN! ~ SpiceyWOlf
+        InitNetwork()
+
+        ' Init all the player sockets
+        SetStatus("Initializing player array...")
+
+        For x = 0 To MAX_PLAYERS
+            ClearPlayer(x)
+        Next
+
         ' Serves as a constructor
         ClearGameData()
         LoadGameData()
@@ -206,20 +216,6 @@ Module ServerGeneral
         If Not FileExist("data\accounts\charlist.txt") Then
             F = FreeFile()
         End If
-
-        ' Get the listening socket ready to go
-        InitMessages()
-        InitNetwork()
-
-        ' Init all the player sockets
-        SetStatus("Initializing player array...")
-
-        ReDim Clients(0 To MAX_PLAYERS)
-
-        For x = 1 To MAX_PLAYERS
-            Clients(x) = New Client
-            ClearPlayer(x)
-        Next
 
         'resource system
         LoadSkillExp()
@@ -258,6 +254,9 @@ Module ServerGeneral
         AddCommandHandler("/ban", AddressOf HandleCommandBan)
         AddCommandHandler("/timespeed", AddressOf HandleCommandTimeSpeed)
 
+        ' Start listener now that everything is loaded
+        Socket.StartListening(Options.Port, 5)
+
         ' Starts the server loop
         ServerLoop.ServerLoop()
 
@@ -293,10 +292,12 @@ Module ServerGeneral
         SaveAllPlayersOnline()
 
         SetStatus("Unloading sockets...")
-        For i = 1 To MAX_PLAYERS
+        For i = 0 To MAX_PLAYERS
             SendLeftGame(i)
             LeftGame(i)
         Next
+
+        DestroyNetwork()
 
         ClearGameData()
         ServerDestroyed = True

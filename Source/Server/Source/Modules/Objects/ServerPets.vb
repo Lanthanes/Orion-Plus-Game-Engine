@@ -231,7 +231,7 @@ Module ServerPets
             Buffer.WriteInt32(.EvolveNum)
         End With
 
-        SendDataToAll(Buffer.ToArray)
+        SendDataToAll(Buffer.Data, Buffer.Head)
 
         Buffer.Dispose()
 
@@ -268,7 +268,7 @@ Module ServerPets
             Buffer.WriteInt32(.EvolveNum)
         End With
 
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Buffer.Dispose()
 
@@ -309,9 +309,9 @@ Module ServerPets
         Buffer.WriteInt32(GetPetNextLevel(Index))
 
         If OwnerOnly Then
-            SendDataTo(Index, Buffer.ToArray)
+            Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Else
-            SendDataToMap(GetPlayerMap(Index), Buffer.ToArray)
+            SendDataToMap(GetPlayerMap(Index), Buffer.Data, Buffer.Head)
         End If
 
         Buffer.Dispose()
@@ -322,7 +322,7 @@ Module ServerPets
 
         Buffer.WriteInt32(ServerPackets.SPetAttack)
         Buffer.WriteInt32(Index)
-        SendDataToMap(MapNum, Buffer.ToArray)
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -333,7 +333,7 @@ Module ServerPets
         Buffer.WriteInt32(Index)
         Buffer.WriteInt32(X)
         Buffer.WriteInt32(Y)
-        SendDataToMap(GetPlayerMap(Index), Buffer.ToArray)
+        SendDataToMap(GetPlayerMap(Index), Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -343,7 +343,7 @@ Module ServerPets
         Buffer.WriteInt32(ServerPackets.SPetExp)
         Buffer.WriteInt32(GetPetExp(Index))
         Buffer.WriteInt32(GetPetNextLevel(Index))
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -351,18 +351,18 @@ Module ServerPets
 
 #Region "Incoming Packets"
 
-    Sub Packet_RequestEditPet(ByVal Index As Integer, ByVal data() As Byte)
+    Sub Packet_RequestEditPet(ByVal Index As Integer, ByRef data() As Byte)
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
 
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPetEditor)
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Buffer.Dispose()
 
     End Sub
 
-    Sub Packet_SavePet(ByVal Index As Integer, ByVal data() As Byte)
+    Sub Packet_SavePet(ByVal Index As Integer, ByRef data() As Byte)
         Dim petNum As Integer
         Dim i As Integer
 
@@ -407,13 +407,13 @@ Module ServerPets
         SendPets(Index)
     End Sub
 
-    Sub Packet_RequestPets(ByVal Index As Integer, ByVal data() As Byte)
+    Sub Packet_RequestPets(ByVal Index As Integer, ByRef data() As Byte)
 
         SendPets(Index)
 
     End Sub
 
-    Sub Packet_SummonPet(ByVal Index As Integer, ByVal data() As Byte)
+    Sub Packet_SummonPet(ByVal Index As Integer, ByRef data() As Byte)
         If PetAlive(Index) Then
             ReCallPet(Index)
         Else
@@ -421,7 +421,7 @@ Module ServerPets
         End If
     End Sub
 
-    Sub Packet_PetMove(ByVal Index As Integer, ByVal data() As Byte)
+    Sub Packet_PetMove(ByVal Index As Integer, ByRef data() As Byte)
         Dim x As Integer, y As Integer, i As Integer
         Dim Buffer As New ByteStream(data)
         x = Buffer.ReadInt32
@@ -431,7 +431,7 @@ Module ServerPets
         If x < 0 Or x > Map(GetPlayerMap(Index)).MaxX Or y < 0 Or y > Map(GetPlayerMap(Index)).MaxY Then Exit Sub
 
         ' Check for a player
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
 
             If IsPlaying(i) Then
                 If GetPlayerMap(Index) = GetPlayerMap(i) AndAlso GetPlayerX(i) = x AndAlso GetPlayerY(i) = y Then
@@ -521,7 +521,7 @@ Module ServerPets
 
     End Sub
 
-    Sub Packet_SetPetBehaviour(ByVal Index As Integer, ByVal data() As Byte)
+    Sub Packet_SetPetBehaviour(ByVal Index As Integer, ByRef data() As Byte)
         Dim behaviour As Integer
         Dim Buffer As New ByteStream(data)
         behaviour = Buffer.ReadInt32
@@ -541,11 +541,11 @@ Module ServerPets
 
     End Sub
 
-    Sub Packet_ReleasePet(ByVal Index As Integer, ByVal data() As Byte)
+    Sub Packet_ReleasePet(ByVal Index As Integer, ByRef data() As Byte)
         If GetPetNum(Index) > 0 Then ReleasePet(Index)
     End Sub
 
-    Sub Packet_PetSkill(ByVal Index As Integer, ByVal data() As Byte)
+    Sub Packet_PetSkill(ByVal Index As Integer, ByRef data() As Byte)
         Dim n As Integer
         Dim Buffer As New ByteStream(data)
         ' Skill slot
@@ -558,7 +558,7 @@ Module ServerPets
 
     End Sub
 
-    Sub Packet_UsePetStatPoint(ByVal Index As Integer, ByVal data() As Byte)
+    Sub Packet_UsePetStatPoint(ByVal Index As Integer, ByRef data() As Byte)
         Dim PointType As Byte
         Dim sMes As String = ""
         Dim Buffer As New ByteStream(data)
@@ -621,7 +621,7 @@ Module ServerPets
         Dim Target As Integer, TargetTypes As Byte, TargetX As Integer, TargetY As Integer, target_verify As Boolean
 
         For MapNum = 1 To MAX_CACHED_MAPS
-            For PlayerIndex = 1 To GetPlayersOnline()
+            For PlayerIndex = 0 To GetPlayersOnline()
                 TickCount = GetTimeMs()
 
                 If GetPlayerMap(PlayerIndex) = MapNum AndAlso PetAlive(PlayerIndex) Then
@@ -633,7 +633,7 @@ Module ServerPets
                         ' make sure it's not stunned
                         If Not TempPlayer(PlayerIndex).PetStunDuration > 0 Then
 
-                            For i = 1 To MAX_PLAYERS
+                            For i = 0 To Socket.HighIndex
                                 If TempPlayer(PlayerIndex).PetTargetType > 0 Then
                                     If TempPlayer(PlayerIndex).PetTargetType = 1 And TempPlayer(PlayerIndex).PetTarget = PlayerIndex Then
                                     Else
@@ -1051,7 +1051,7 @@ Module ServerPets
         Buffer.WriteInt32(GetPetY(Index))
         Buffer.WriteInt32(GetPetDir(Index))
         Buffer.WriteInt32(movement)
-        SendDataToMap(MapNum, Buffer.ToArray)
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -1093,7 +1093,7 @@ Module ServerPets
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 1 To GetPlayersOnline()
+                    For i = 0 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = GetPetX(Index) + 1) And (GetPlayerY(i) = GetPetY(Index) - 1) Then
                                 CanPetMove = False
@@ -1134,7 +1134,7 @@ Module ServerPets
                         Exit Function
                     End If
 
-                    For i = 1 To GetPlayersOnline()
+                    For i = 0 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = GetPetX(Index)) And (GetPlayerY(i) = GetPetY(Index) + 1) Then
                                 CanPetMove = False
@@ -1175,7 +1175,7 @@ Module ServerPets
                         Exit Function
                     End If
 
-                    For i = 1 To GetPlayersOnline()
+                    For i = 0 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = GetPetX(Index) - 1) And (GetPlayerY(i) = GetPetY(Index)) Then
                                 CanPetMove = False
@@ -1216,7 +1216,7 @@ Module ServerPets
                         Exit Function
                     End If
 
-                    For i = 1 To GetPlayersOnline()
+                    For i = 0 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = GetPetX(Index) + 1) And (GetPlayerY(i) = GetPetY(Index)) Then
                                 CanPetMove = False
@@ -1262,7 +1262,7 @@ Module ServerPets
         Buffer.WriteInt32(ServerPackets.SPetDir)
         Buffer.WriteInt32(Index)
         Buffer.WriteInt32(Dir)
-        SendDataToMap(GetPlayerMap(Index), Buffer.ToArray)
+        SendDataToMap(GetPlayerMap(Index), Buffer.Data, Buffer.Head)
 
         Buffer.Dispose()
 
@@ -1961,7 +1961,7 @@ Module ServerPets
             SendNpcDead(MapNum, mapnpcnum)
 
             'Loop through entire map and purge NPC from targets
-            For i = 1 To MAX_PLAYERS
+            For i = 0 To Socket.HighIndex
 
                 If IsPlaying(i) Then
                     If GetPlayerMap(i) = MapNum Then
@@ -2278,7 +2278,7 @@ Module ServerPets
                 Buffer.WriteInt32(GetPetVital(Index, Vitals.MP))
         End Select
 
-        SendDataToMap(GetPlayerMap(Index), Buffer.ToArray)
+        SendDataToMap(GetPlayerMap(Index), Buffer.Data, Buffer.Head)
 
         Buffer.Dispose()
 
@@ -2443,9 +2443,9 @@ Module ServerPets
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SClearPetSkillBuffer)
 
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -2555,7 +2555,7 @@ Module ServerPets
                     Case SkillType.DamageHp
                         DidCast = True
 
-                        For i = 1 To GetPlayersOnline()
+                        For i = 0 To GetPlayersOnline()
                             If IsPlaying(i) AndAlso i <> Index Then
                                 If GetPlayerMap(i) = GetPlayerMap(Index) Then
                                     If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
@@ -2604,7 +2604,7 @@ Module ServerPets
 
                         DidCast = True
 
-                        For i = 1 To GetPlayersOnline()
+                        For i = 0 To GetPlayersOnline()
                             If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(Index) Then
                                 If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
                                     SpellPlayer_Effect(VitalType, increment, i, Vital, Skillnum)
@@ -2889,9 +2889,9 @@ Module ServerPets
             End If
 
             ' purge target info of anyone who targetted dead guy
-            For i = 1 To MAX_PLAYERS
+            For i = 0 To Socket.HighIndex
 
-                If IsPlaying(i) And IsConnected(i) Then
+                If IsPlaying(i) And Socket.IsConnected(i) Then
                     If GetPlayerMap(i) = GetPlayerMap(Attacker) Then
                         If TempPlayer(i).TargetType = TargetType.Player Then
                             If TempPlayer(i).Target = Victim Then
@@ -3098,9 +3098,9 @@ Module ServerPets
             End If
 
             ' purge target info of anyone who targetted dead guy
-            For i = 1 To MAX_PLAYERS
+            For i = 0 To Socket.HighIndex
 
-                If IsPlaying(i) And IsConnected(i) Then
+                If IsPlaying(i) And Socket.IsConnected(i) Then
                     If GetPlayerMap(i) = GetPlayerMap(Attacker) Then
                         If TempPlayer(i).TargetType = TargetType.Player Then
                             If TempPlayer(i).Target = Victim Then
@@ -3529,8 +3529,8 @@ Module ServerPets
             End If
 
             ' purge target info of anyone who targetted dead guy
-            For i = 1 To GetPlayersOnline()
-                If IsPlaying(i) And IsConnected(i) AndAlso GetPlayerMap(i) = GetPlayerMap(Attacker) Then
+            For i = 0 To GetPlayersOnline()
+                If IsPlaying(i) And Socket.IsConnected(i) AndAlso GetPlayerMap(i) = GetPlayerMap(Attacker) Then
                     If TempPlayer(i).Target = TargetType.Pet AndAlso TempPlayer(i).Target = Victim Then
                         TempPlayer(i).Target = 0
                         TempPlayer(i).TargetType = TargetType.None

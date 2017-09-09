@@ -33,7 +33,7 @@ Public Module ServerTime
         Buffer.WriteInt32(ServerPackets.SClock)
         Buffer.WriteInt32(Time.Instance.GameSpeed)
         Buffer.WriteBytes(BitConverter.GetBytes(Time.Instance.Time.Ticks))
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SClock", PACKET_LOG)
         TextAdd("Sent SMSG: SClock")
@@ -41,13 +41,13 @@ Public Module ServerTime
         Addlog(" Player: " & GetPlayerName(Index) & " : " & " GameSpeed: " & Time.Instance.GameSpeed & " Instance Time Ticks: " & Time.Instance.Time.Ticks, PLAYER_LOG)
         TextAdd(" Player: " & GetPlayerName(Index) & " : " & " GameSpeed: " & Time.Instance.GameSpeed & " Instance Time Ticks: " & Time.Instance.Time.Ticks)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendGameClockToAll()
         Dim I As Integer
 
-        For I = 1 To GetPlayersOnline()
+        For I = 0 To GetPlayersOnline()
             If IsPlaying(I) Then
                 SendGameClockTo(I)
             End If
@@ -59,7 +59,7 @@ Public Module ServerTime
 
         Buffer.WriteInt32(ServerPackets.STime)
         Buffer.WriteByte(Time.Instance.TimeOfDay)
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: STime", PACKET_LOG)
         TextAdd("Sent SMSG: STime")
@@ -67,13 +67,13 @@ Public Module ServerTime
         Addlog(" Player: " & GetPlayerName(Index) & " : " & " Time Of Day: " & Time.Instance.TimeOfDay, PLAYER_LOG)
         TextAdd(" Player: " & GetPlayerName(Index) & " : " & " Time Of Day: " & Time.Instance.TimeOfDay)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendTimeToAll()
         Dim I As Integer
 
-        For I = 1 To GetPlayersOnline()
+        For I = 0 To GetPlayersOnline()
             If IsPlaying(I) Then
                 SendTimeTo(I)
             End If

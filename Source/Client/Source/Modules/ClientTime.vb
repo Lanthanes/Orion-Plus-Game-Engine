@@ -3,16 +3,16 @@ Imports ASFW
 Imports Orion
 
 Public Module ClientTime
-    Sub Packet_Clock(ByVal data() As Byte)
-        Dim Buffer As New ByteStream(data)
+    Sub Packet_Clock(ByRef Data() As Byte)
+        Dim Buffer As New ByteStream(Data)
         Time.Instance.GameSpeed = Buffer.ReadInt32()
         Time.Instance.Time = New Date(BitConverter.ToInt64(Buffer.ReadBytes(), 0))
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Sub Packet_Time(ByVal data() As Byte)
-        Dim Buffer As New ByteStream(data)
+    Sub Packet_Time(ByRef Data() As Byte)
+        Dim Buffer As New ByteStream(Data)
 
         Time.Instance.TimeOfDay = Buffer.ReadByte
 
@@ -34,6 +34,6 @@ Public Module ClientTime
                 Exit Select
         End Select
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 End Module

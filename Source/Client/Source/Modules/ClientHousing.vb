@@ -42,7 +42,7 @@ Public Module ClientHousing
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_HouseConfigurations(ByVal Data() As Byte)
+    Sub Packet_HouseConfigurations(ByRef Data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteStream(Data)
         For i = 1 To MAX_HOUSES
@@ -52,16 +52,16 @@ Public Module ClientHousing
             HouseConfig(i).Price = Buffer.ReadInt32
         Next
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
-    Sub Packet_HouseOffer(ByVal Data() As Byte)
+    Sub Packet_HouseOffer(ByRef Data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteStream(Data)
         i = Buffer.ReadInt32
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
         DialogType = DIALOGUE_TYPE_BUYHOME
         If HouseConfig(i).MaxFurniture > 0 Then
@@ -77,11 +77,11 @@ Public Module ClientHousing
 
         UpdateDialog = True
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
-    Sub Packet_Visit(ByVal Data() As Byte)
+    Sub Packet_Visit(ByRef Data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteStream(Data)
         i = Buffer.ReadInt32
@@ -92,13 +92,13 @@ Public Module ClientHousing
         DialogMsg2 = ""
         DialogMsg3 = ""
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
         UpdateDialog = True
 
     End Sub
 
-    Sub Packet_Furniture(ByVal Data() As Byte)
+    Sub Packet_Furniture(ByRef Data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteStream(Data)
         FurnitureHouse = Buffer.ReadInt32
@@ -113,12 +113,12 @@ Public Module ClientHousing
             Next
         End If
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
-    Sub Packet_EditHouses(ByVal data() As Byte)
-        Dim Buffer As New ByteStream(data)
+    Sub Packet_EditHouses(ByRef Data() As Byte)
+        Dim Buffer As New ByteStream(Data)
         Dim i As Integer
         For i = 1 To MAX_HOUSES
             With House(i)
@@ -133,7 +133,7 @@ Public Module ClientHousing
 
         HouseEdit = True
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 #End Region
@@ -144,8 +144,8 @@ Public Module ClientHousing
 
         Buffer.WriteInt32(EditorPackets.RequestEditHouse)
 
-        SendData(Buffer.ToArray)
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
 
     End Sub
 
@@ -155,8 +155,8 @@ Public Module ClientHousing
         Buffer.WriteInt32(ClientPackets.CBuyHouse)
         Buffer.WriteInt32(Accepted)
 
-        SendData(Buffer.ToArray)
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendInvite(ByVal Name As String)
@@ -165,8 +165,8 @@ Public Module ClientHousing
         Buffer.WriteInt32(ClientPackets.CVisit)
         Buffer.WriteString(Name)
 
-        SendData(Buffer.ToArray)
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendVisit(ByVal Accepted As Byte)
@@ -175,7 +175,7 @@ Public Module ClientHousing
         Buffer.WriteInt32(ClientPackets.CAcceptVisit)
         Buffer.WriteInt32(Accepted)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose
     End Sub
 #End Region

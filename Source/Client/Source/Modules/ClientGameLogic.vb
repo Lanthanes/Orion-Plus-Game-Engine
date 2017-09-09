@@ -30,7 +30,7 @@ Module ClientGameLogic
 
             If frmmenuvisible = True Then
                 If tmrconnect < GetTickCount() Then
-                    If IsConnected() = True Then
+                    If Socket.IsConnected() = True Then
                         FrmMenu.lblServerStatus.ForeColor = Color.LightGreen
                         FrmMenu.lblServerStatus.Text = Strings.Get("mainmenu", "serveronline")
                     Else
@@ -200,7 +200,7 @@ Module ClientGameLogic
                     ' Process input before rendering, otherwise input will be behind by 1 frame
                     If WalkTimer < Tick Then
 
-                        For i = 1 To TotalOnline 'MAX_PLAYERS
+                        For i = 0 To TotalOnline 'MAX_PLAYERS
                             If IsPlaying(i) Then
                                 ProcessMovement(i)
                                 If PetAlive(i) Then
@@ -502,7 +502,7 @@ Module ClientGameLogic
                 Buffer.WriteInt32(EventReplyID)
                 Buffer.WriteInt32(EventReplyPage)
                 Buffer.WriteInt32(0)
-                SendData(Buffer.ToArray)
+                Socket.SendData(Buffer.Data, Buffer.Head)
                 Buffer.Dispose()
                 ClearEventChat()
                 InEvent = False
@@ -607,7 +607,7 @@ Module ClientGameLogic
                 Case "/sellhouse"
                     Buffer = New ByteStream(4)
                     Buffer.WriteInt32(ClientPackets.CSellHouse)
-                    SendData(Buffer.ToArray())
+                    Socket.SendData(Buffer.Data, Buffer.Head)
                     Buffer.Dispose()
                 Case "/info"
 
@@ -625,7 +625,7 @@ Module ClientGameLogic
                     Buffer = New ByteStream(4)
                     Buffer.WriteInt32(ClientPackets.CPlayerInfoRequest)
                     Buffer.WriteString(Command(1))
-                    SendData(Buffer.ToArray())
+                    Socket.SendData(Buffer.Data, Buffer.Head)
                     Buffer.Dispose()
                 ' Whos Online
                 Case "/who"
@@ -639,7 +639,7 @@ Module ClientGameLogic
                 Case "/stats"
                     Buffer = New ByteStream(4)
                     Buffer.WriteInt32(ClientPackets.CGetStats)
-                    SendData(Buffer.ToArray())
+                    Socket.SendData(Buffer.Data, Buffer.Head)
                     Buffer.Dispose()
                 Case "/party"
                     ' Make sure they are actually sending something
@@ -930,7 +930,7 @@ Continue1:
             If Trim$(ChatInput.CurrentMessage) = "" Then
                 Player(MyIndex).MapGetTimer = GetTickCount()
                 Buffer.WriteInt32(ClientPackets.CMapGetItem)
-                SendData(Buffer.ToArray())
+                Socket.SendData(Buffer.Data, Buffer.Head)
             End If
         End If
 

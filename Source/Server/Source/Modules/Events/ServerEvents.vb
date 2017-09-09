@@ -504,7 +504,7 @@ Public Module ServerEvents
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 1 To MAX_PLAYERS
+                    For i = 0 To Socket.HighIndex
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = x) And (GetPlayerY(i) = y - 1) Then
                                 CanEventMove = False
@@ -589,7 +589,7 @@ Public Module ServerEvents
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 1 To MAX_PLAYERS
+                    For i = 0 To Socket.HighIndex
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = x) And (GetPlayerY(i) = y + 1) Then
                                 CanEventMove = False
@@ -675,7 +675,7 @@ Public Module ServerEvents
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 1 To MAX_PLAYERS
+                    For i = 0 To Socket.HighIndex
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = x - 1) And (GetPlayerY(i) = y) Then
                                 CanEventMove = False
@@ -761,7 +761,7 @@ Public Module ServerEvents
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 1 To MAX_PLAYERS
+                    For i = 0 To Socket.HighIndex
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = x + 1) And (GetPlayerY(i) = y) Then
                                 CanEventMove = False
@@ -872,7 +872,7 @@ Public Module ServerEvents
             Buffer.WriteInt32(TempPlayer(PlayerIndex).EventMap.EventPages(eventIndex).Dir)
         End If
 
-        SendDataToMap(MapNum, Buffer.ToArray)
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
         Buffer.Dispose
 
@@ -926,11 +926,11 @@ Public Module ServerEvents
                     TextAdd("Sent SMSG: SEventMove Dir Up GlobalEvent")
 
                     If globalevent Then
-                        SendDataToMap(MapNum, Buffer.ToArray)
+                        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
                     Else
-                        SendDataTo(Index, Buffer.ToArray)
+                        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
                     End If
-                    Buffer.Dispose
+                    Buffer.Dispose()
                 Else
                     TempPlayer(Index).EventMap.EventPages(eventIndex).Y = TempPlayer(Index).EventMap.EventPages(eventIndex).Y - 1
                     Buffer.WriteInt32(ServerPackets.SEventMove)
@@ -945,11 +945,11 @@ Public Module ServerEvents
                     TextAdd("Sent SMSG: SEventMove Dir Up")
 
                     If globalevent Then
-                        SendDataToMap(MapNum, Buffer.ToArray)
+                        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
                     Else
-                        SendDataTo(Index, Buffer.ToArray)
+                        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
                     End If
-                    Buffer.Dispose
+                    Buffer.Dispose()
                 End If
 
             Case Direction.Down
@@ -967,11 +967,11 @@ Public Module ServerEvents
                     TextAdd("Sent SMSG: SEventMove Down GlobalEvent")
 
                     If globalevent Then
-                        SendDataToMap(MapNum, Buffer.ToArray)
+                        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
                     Else
-                        SendDataTo(Index, Buffer.ToArray)
+                        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
                     End If
-                    Buffer.Dispose
+                    Buffer.Dispose()
                 Else
                     TempPlayer(Index).EventMap.EventPages(eventIndex).Y = TempPlayer(Index).EventMap.EventPages(eventIndex).Y + 1
                     Buffer.WriteInt32(ServerPackets.SEventMove)
@@ -986,11 +986,11 @@ Public Module ServerEvents
                     TextAdd("Sent SMSG: SEventMove")
 
                     If globalevent Then
-                        SendDataToMap(MapNum, Buffer.ToArray)
+                        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
                     Else
-                        SendDataTo(Index, Buffer.ToArray)
+                        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
                     End If
-                    Buffer.Dispose
+                    Buffer.Dispose()
                 End If
             Case Direction.Left
                 If globalevent Then
@@ -1007,11 +1007,11 @@ Public Module ServerEvents
                     TextAdd("Sent SMSG: SEventMove Left GlobalEvent")
 
                     If globalevent Then
-                        SendDataToMap(MapNum, Buffer.ToArray)
+                        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
                     Else
-                        SendDataTo(Index, Buffer.ToArray)
+                        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
                     End If
-                    Buffer.Dispose
+                    Buffer.Dispose()
                 Else
                     TempPlayer(Index).EventMap.EventPages(eventIndex).X = TempPlayer(Index).EventMap.EventPages(eventIndex).X - 1
                     Buffer.WriteInt32(ServerPackets.SEventMove)
@@ -1026,11 +1026,11 @@ Public Module ServerEvents
                     TextAdd("Sent SMSG: SEventMove")
 
                     If globalevent Then
-                        SendDataToMap(MapNum, Buffer.ToArray)
+                        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
                     Else
-                        SendDataTo(Index, Buffer.ToArray)
+                        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
                     End If
-                    Buffer.Dispose
+                    Buffer.Dispose()
                 End If
             Case Direction.Right
                 If globalevent Then
@@ -1047,11 +1047,11 @@ Public Module ServerEvents
                     TextAdd("Sent SMSG: SEventMove GlobalEvent")
 
                     If globalevent Then
-                        SendDataToMap(MapNum, Buffer.ToArray)
+                        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
                     Else
-                        SendDataTo(Index, Buffer.ToArray)
+                        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
                     End If
-                    Buffer.Dispose
+                    Buffer.Dispose()
                 Else
                     TempPlayer(Index).EventMap.EventPages(eventIndex).X = TempPlayer(Index).EventMap.EventPages(eventIndex).X + 1
                     Buffer.WriteInt32(ServerPackets.SEventMove)
@@ -1066,11 +1066,11 @@ Public Module ServerEvents
                     TextAdd("Sent SMSG: SEventMove")
 
                     If globalevent Then
-                        SendDataToMap(MapNum, Buffer.ToArray)
+                        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
                     Else
-                        SendDataTo(Index, Buffer.ToArray)
+                        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
                     End If
-                    Buffer.Dispose
+                    Buffer.Dispose()
                 End If
         End Select
 
@@ -1759,7 +1759,7 @@ Public Module ServerEvents
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_EventChatReply(index As Integer, data() As Byte)
+    Sub Packet_EventChatReply(ByVal Index As Integer, ByRef data() As Byte)
         Dim eventID As Integer, pageID As Integer, reply As Integer, i As Integer
         Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CEventChatReply", PACKET_LOG)
@@ -1770,47 +1770,47 @@ Public Module ServerEvents
         pageID = Buffer.ReadInt32
         reply = Buffer.ReadInt32
 
-        If TempPlayer(index).EventProcessingCount > 0 Then
-            For i = 1 To TempPlayer(index).EventProcessingCount
-                If TempPlayer(index).EventProcessing(i).EventID = eventID And TempPlayer(index).EventProcessing(i).PageID = pageID Then
-                    If TempPlayer(index).EventProcessing(i).WaitingForResponse = 1 Then
+        If TempPlayer(Index).EventProcessingCount > 0 Then
+            For i = 1 To TempPlayer(Index).EventProcessingCount
+                If TempPlayer(Index).EventProcessing(i).EventID = eventID And TempPlayer(Index).EventProcessing(i).PageID = pageID Then
+                    If TempPlayer(Index).EventProcessing(i).WaitingForResponse = 1 Then
                         If reply = 0 Then
-                            If Map(GetPlayerMap(index)).Events(eventID).Pages(pageID).CommandList(TempPlayer(index).EventProcessing(i).CurList).Commands(TempPlayer(index).EventProcessing(i).CurSlot - 1).Index = EventType.evShowText Then
-                                TempPlayer(index).EventProcessing(i).WaitingForResponse = 0
+                            If Map(GetPlayerMap(Index)).Events(eventID).Pages(pageID).CommandList(TempPlayer(Index).EventProcessing(i).CurList).Commands(TempPlayer(Index).EventProcessing(i).CurSlot - 1).Index = EventType.evShowText Then
+                                TempPlayer(Index).EventProcessing(i).WaitingForResponse = 0
                             End If
                         ElseIf reply > 0 Then
-                            If Map(GetPlayerMap(index)).Events(eventID).Pages(pageID).CommandList(TempPlayer(index).EventProcessing(i).CurList).Commands(TempPlayer(index).EventProcessing(i).CurSlot - 1).Index = EventType.evShowChoices Then
+                            If Map(GetPlayerMap(Index)).Events(eventID).Pages(pageID).CommandList(TempPlayer(Index).EventProcessing(i).CurList).Commands(TempPlayer(Index).EventProcessing(i).CurSlot - 1).Index = EventType.evShowChoices Then
                                 Select Case reply
                                     Case 1
-                                        TempPlayer(index).EventProcessing(i).ListLeftOff(TempPlayer(index).EventProcessing(i).CurList) = TempPlayer(index).EventProcessing(i).CurSlot - 1
-                                        TempPlayer(index).EventProcessing(i).CurList = Map(GetPlayerMap(index)).Events(eventID).Pages(pageID).CommandList(TempPlayer(index).EventProcessing(i).CurList).Commands(TempPlayer(index).EventProcessing(i).CurSlot - 1).Data1
-                                        TempPlayer(index).EventProcessing(i).CurSlot = 1
+                                        TempPlayer(Index).EventProcessing(i).ListLeftOff(TempPlayer(Index).EventProcessing(i).CurList) = TempPlayer(Index).EventProcessing(i).CurSlot - 1
+                                        TempPlayer(Index).EventProcessing(i).CurList = Map(GetPlayerMap(Index)).Events(eventID).Pages(pageID).CommandList(TempPlayer(Index).EventProcessing(i).CurList).Commands(TempPlayer(Index).EventProcessing(i).CurSlot - 1).Data1
+                                        TempPlayer(Index).EventProcessing(i).CurSlot = 1
                                     Case 2
-                                        TempPlayer(index).EventProcessing(i).ListLeftOff(TempPlayer(index).EventProcessing(i).CurList) = TempPlayer(index).EventProcessing(i).CurSlot - 1
-                                        TempPlayer(index).EventProcessing(i).CurList = Map(GetPlayerMap(index)).Events(eventID).Pages(pageID).CommandList(TempPlayer(index).EventProcessing(i).CurList).Commands(TempPlayer(index).EventProcessing(i).CurSlot - 1).Data2
-                                        TempPlayer(index).EventProcessing(i).CurSlot = 1
+                                        TempPlayer(Index).EventProcessing(i).ListLeftOff(TempPlayer(Index).EventProcessing(i).CurList) = TempPlayer(Index).EventProcessing(i).CurSlot - 1
+                                        TempPlayer(Index).EventProcessing(i).CurList = Map(GetPlayerMap(Index)).Events(eventID).Pages(pageID).CommandList(TempPlayer(Index).EventProcessing(i).CurList).Commands(TempPlayer(Index).EventProcessing(i).CurSlot - 1).Data2
+                                        TempPlayer(Index).EventProcessing(i).CurSlot = 1
                                     Case 3
-                                        TempPlayer(index).EventProcessing(i).ListLeftOff(TempPlayer(index).EventProcessing(i).CurList) = TempPlayer(index).EventProcessing(i).CurSlot - 1
-                                        TempPlayer(index).EventProcessing(i).CurList = Map(GetPlayerMap(index)).Events(eventID).Pages(pageID).CommandList(TempPlayer(index).EventProcessing(i).CurList).Commands(TempPlayer(index).EventProcessing(i).CurSlot - 1).Data3
-                                        TempPlayer(index).EventProcessing(i).CurSlot = 1
+                                        TempPlayer(Index).EventProcessing(i).ListLeftOff(TempPlayer(Index).EventProcessing(i).CurList) = TempPlayer(Index).EventProcessing(i).CurSlot - 1
+                                        TempPlayer(Index).EventProcessing(i).CurList = Map(GetPlayerMap(Index)).Events(eventID).Pages(pageID).CommandList(TempPlayer(Index).EventProcessing(i).CurList).Commands(TempPlayer(Index).EventProcessing(i).CurSlot - 1).Data3
+                                        TempPlayer(Index).EventProcessing(i).CurSlot = 1
                                     Case 4
-                                        TempPlayer(index).EventProcessing(i).ListLeftOff(TempPlayer(index).EventProcessing(i).CurList) = TempPlayer(index).EventProcessing(i).CurSlot - 1
-                                        TempPlayer(index).EventProcessing(i).CurList = Map(GetPlayerMap(index)).Events(eventID).Pages(pageID).CommandList(TempPlayer(index).EventProcessing(i).CurList).Commands(TempPlayer(index).EventProcessing(i).CurSlot - 1).Data4
-                                        TempPlayer(index).EventProcessing(i).CurSlot = 1
+                                        TempPlayer(Index).EventProcessing(i).ListLeftOff(TempPlayer(Index).EventProcessing(i).CurList) = TempPlayer(Index).EventProcessing(i).CurSlot - 1
+                                        TempPlayer(Index).EventProcessing(i).CurList = Map(GetPlayerMap(Index)).Events(eventID).Pages(pageID).CommandList(TempPlayer(Index).EventProcessing(i).CurList).Commands(TempPlayer(Index).EventProcessing(i).CurSlot - 1).Data4
+                                        TempPlayer(Index).EventProcessing(i).CurSlot = 1
                                 End Select
                             End If
-                            TempPlayer(index).EventProcessing(i).WaitingForResponse = 0
+                            TempPlayer(Index).EventProcessing(i).WaitingForResponse = 0
                         End If
                     End If
                 End If
             Next
         End If
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
-    Sub Packet_Event(index As Integer, data() As Byte)
+    Sub Packet_Event(ByVal Index As Integer, ByRef data() As Byte)
         Dim i As Integer, begineventprocessing As Boolean, z As Integer
         Dim x As Integer, y As Integer
         Dim Buffer As New ByteStream(data)
@@ -1818,34 +1818,34 @@ Public Module ServerEvents
         TextAdd("Recieved CMSG: CEvent")
 
         i = Buffer.ReadInt32
-        Buffer.Dispose
+        Buffer.Dispose()
 
-        Select Case GetPlayerDir(index)
+        Select Case GetPlayerDir(Index)
             Case Direction.Up
 
-                If GetPlayerY(index) = 0 Then Exit Sub
-                x = GetPlayerX(index)
-                y = GetPlayerY(index) - 1
+                If GetPlayerY(Index) = 0 Then Exit Sub
+                x = GetPlayerX(Index)
+                y = GetPlayerY(Index) - 1
             Case Direction.Down
 
-                If GetPlayerY(index) = Map(GetPlayerMap(index)).MaxY Then Exit Sub
-                x = GetPlayerX(index)
-                y = GetPlayerY(index) + 1
+                If GetPlayerY(Index) = Map(GetPlayerMap(Index)).MaxY Then Exit Sub
+                x = GetPlayerX(Index)
+                y = GetPlayerY(Index) + 1
             Case Direction.Left
 
-                If GetPlayerX(index) = 0 Then Exit Sub
-                x = GetPlayerX(index) - 1
-                y = GetPlayerY(index)
+                If GetPlayerX(Index) = 0 Then Exit Sub
+                x = GetPlayerX(Index) - 1
+                y = GetPlayerY(Index)
             Case Direction.Right
 
-                If GetPlayerX(index) = Map(GetPlayerMap(index)).MaxX Then Exit Sub
-                x = GetPlayerX(index) + 1
-                y = GetPlayerY(index)
+                If GetPlayerX(Index) = Map(GetPlayerMap(Index)).MaxX Then Exit Sub
+                x = GetPlayerX(Index) + 1
+                y = GetPlayerY(Index)
         End Select
 
-        If TempPlayer(index).EventMap.CurrentEvents > 0 Then
-            For z = 1 To TempPlayer(index).EventMap.CurrentEvents
-                If TempPlayer(index).EventMap.EventPages(z).EventID = i Then
+        If TempPlayer(Index).EventMap.CurrentEvents > 0 Then
+            For z = 1 To TempPlayer(Index).EventMap.CurrentEvents
+                If TempPlayer(Index).EventMap.EventPages(z).EventID = i Then
                     i = z
                     begineventprocessing = True
                     Exit For
@@ -1854,18 +1854,18 @@ Public Module ServerEvents
         End If
 
         If begineventprocessing = True Then
-            If Map(GetPlayerMap(index)).Events(TempPlayer(index).EventMap.EventPages(i).EventID).Pages(TempPlayer(index).EventMap.EventPages(i).PageID).CommandListCount > 0 Then
+            If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount > 0 Then
                 'Process this event, it is action button and everything checks out.
-                If (TempPlayer(index).EventProcessing(TempPlayer(index).EventMap.EventPages(i).EventID).Active = 0) Then
-                    TempPlayer(index).EventProcessing(TempPlayer(index).EventMap.EventPages(i).EventID).Active = 1
-                    With TempPlayer(index).EventProcessing(TempPlayer(index).EventMap.EventPages(i).EventID)
+                If (TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 0) Then
+                    TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID).Active = 1
+                    With TempPlayer(Index).EventProcessing(TempPlayer(Index).EventMap.EventPages(i).EventID)
                         .ActionTimer = GetTimeMs()
                         .CurList = 1
                         .CurSlot = 1
-                        .EventID = TempPlayer(index).EventMap.EventPages(i).EventID
-                        .PageID = TempPlayer(index).EventMap.EventPages(i).PageID
+                        .EventID = TempPlayer(Index).EventMap.EventPages(i).EventID
+                        .PageID = TempPlayer(Index).EventMap.EventPages(i).PageID
                         .WaitingForResponse = 0
-                        ReDim .ListLeftOff(0 To Map(GetPlayerMap(index)).Events(TempPlayer(index).EventMap.EventPages(i).EventID).Pages(TempPlayer(index).EventMap.EventPages(i).PageID).CommandListCount)
+                        ReDim .ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
                     End With
                 End If
             End If
@@ -1874,13 +1874,13 @@ Public Module ServerEvents
 
     End Sub
 
-    Sub Packet_RequestSwitchesAndVariables(index As Integer, data() As Byte)
+    Sub Packet_RequestSwitchesAndVariables(ByVal Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CRequestSwitchesAndVariables", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestSwitchesAndVariables")
-        SendSwitchesAndVariables(index)
+        SendSwitchesAndVariables(Index)
     End Sub
 
-    Sub Packet_SwitchesAndVariables(index As Integer, data() As Byte)
+    Sub Packet_SwitchesAndVariables(ByVal Index As Integer, ByRef data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteStream(data)
 
@@ -1898,7 +1898,7 @@ Public Module ServerEvents
         SaveSwitches()
         SaveVariables()
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
         SendSwitchesAndVariables(0, True)
 
@@ -1939,8 +1939,8 @@ Public Module ServerEvents
                 Buffer.WriteInt32(Data4) 'alpha
         End Select
 
-        SendDataTo(Index, Buffer.ToArray)
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
 
     End Sub
 
@@ -1961,12 +1961,12 @@ Public Module ServerEvents
         Next
 
         If everyone Then
-            SendDataToAll(Buffer.ToArray)
+            SendDataToAll(Buffer.Data, Buffer.Head)
         Else
-            SendDataTo(Index, Buffer.ToArray)
+            Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         End If
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -2098,7 +2098,7 @@ Public Module ServerEvents
         End If
 
         'End Event Data
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose
         SendSwitchesAndVariables(Index)
 

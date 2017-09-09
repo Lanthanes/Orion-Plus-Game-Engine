@@ -1660,7 +1660,7 @@ Module ServerDatabase
     Sub SaveAllPlayersOnline()
         Dim i As Integer
 
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
             If IsPlaying(i) Then
                 SavePlayer(i)
                 SaveBank(i)
@@ -1715,7 +1715,6 @@ Module ServerDatabase
     Sub ClearPlayer(ByVal Index As Integer)
         Dim i As Integer
 
-        TempPlayer(Index).Buffer = New ByteBuffer
         ReDim TempPlayer(Index).SkillCD(MAX_PLAYER_SKILLS)
 
         Player(Index).Login = ""
@@ -2474,7 +2473,7 @@ Module ServerDatabase
         End If
 
         ' Cut off last portion of ip
-        IP = GetPlayerIP(BanPlayerIndex)
+        IP = Socket.ClientIp(BanPlayerIndex)
 
         For i = Len(IP) To 1 Step -1
 
@@ -2504,7 +2503,7 @@ Module ServerDatabase
         End If
 
         ' Cut off last portion of ip
-        IP = GetPlayerIP(BanPlayerIndex)
+        IP = Socket.ClientIp(BanPlayerIndex)
 
         For i = Len(IP) To 1 Step -1
 

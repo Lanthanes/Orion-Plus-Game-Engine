@@ -172,13 +172,13 @@ Public Module ClientQuest
 #End Region
 
 #Region "Incoming Packets"
-    Public Sub Packet_QuestEditor(ByVal data() As Byte)
+    Public Sub Packet_QuestEditor(ByRef Data() As Byte)
         QuestEditorShow = True
     End Sub
 
-    Public Sub Packet_UpdateQuest(ByVal data() As Byte)
+    Public Sub Packet_UpdateQuest(ByRef Data() As Byte)
         Dim QuestNum As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         QuestNum = Buffer.ReadInt32
 
         ' Update the Quest
@@ -232,9 +232,9 @@ Public Module ClientQuest
         Buffer.Dispose()
     End Sub
 
-    Public Sub Packet_PlayerQuest(ByVal data() As Byte)
+    Public Sub Packet_PlayerQuest(ByRef Data() As Byte)
         Dim QuestNum As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         QuestNum = Buffer.ReadInt32
 
         Player(MyIndex).PlayerQuest(QuestNum).Status = Buffer.ReadInt32
@@ -246,9 +246,9 @@ Public Module ClientQuest
         Buffer.Dispose()
     End Sub
 
-    Public Sub Packet_PlayerQuests(ByVal data() As Byte)
+    Public Sub Packet_PlayerQuests(ByRef Data() As Byte)
         Dim I As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         For I = 1 To MAX_QUESTS
             Player(MyIndex).PlayerQuest(I).Status = Buffer.ReadInt32
             Player(MyIndex).PlayerQuest(I).ActualTask = Buffer.ReadInt32
@@ -260,8 +260,8 @@ Public Module ClientQuest
         Buffer.Dispose()
     End Sub
 
-    Public Sub Packet_QuestMessage(ByVal data() As Byte)
-        Dim Buffer As New ByteStream(data)
+    Public Sub Packet_QuestMessage(ByRef Data() As Byte)
+        Dim Buffer As New ByteStream(Data)
         QuestNum = Buffer.ReadInt32
         QuestMessage = Trim$(Buffer.ReadString)
         QuestMessage = QuestMessage.Replace("$playername$", GetPlayerName(MyIndex))
@@ -280,7 +280,7 @@ Public Module ClientQuest
 
         Buffer.WriteInt32(ClientPackets.CRequestQuests)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -290,7 +290,7 @@ Public Module ClientQuest
 
         Buffer.WriteInt32(ClientPackets.CQuestLogUpdate)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -302,7 +302,7 @@ Public Module ClientQuest
         Buffer.WriteInt32(QuestNum)
         Buffer.WriteInt32(Order) '1=accept quest, 2=cancel quest
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
@@ -312,7 +312,7 @@ Public Module ClientQuest
         Buffer.WriteInt32(ClientPackets.CQuestReset)
         Buffer.WriteInt32(QuestNum)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub

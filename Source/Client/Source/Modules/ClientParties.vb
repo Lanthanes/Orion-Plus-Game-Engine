@@ -16,7 +16,7 @@ Module ClientParties
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_PartyInvite(ByVal Data() As Byte)
+    Sub Packet_PartyInvite(ByRef Data() As Byte)
         Dim Name As String
         Dim Buffer As New ByteStream(Data)
         Name = Buffer.ReadString
@@ -28,10 +28,10 @@ Module ClientParties
 
         UpdateDialog = True
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Sub Packet_PartyUpdate(ByVal Data() As Byte)
+    Sub Packet_PartyUpdate(ByRef Data() As Byte)
         Dim I As Integer, InParty As Integer
         Dim Buffer As New ByteStream(Data)
         InParty = Buffer.ReadInt32
@@ -40,7 +40,7 @@ Module ClientParties
         If InParty = 0 Then
             ClearParty()
             ' exit out early
-            Buffer.Dispose
+            Buffer.Dispose()
             Exit Sub
         End If
 
@@ -51,10 +51,10 @@ Module ClientParties
         Next
         Party.MemberCount = Buffer.ReadInt32
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Sub Packet_PartyVitals(ByVal Data() As Byte)
+    Sub Packet_PartyVitals(ByRef Data() As Byte)
         Dim playerNum As Integer, partyIndex As Integer
         Dim Buffer As New ByteStream(Data)
         ' which player?
@@ -90,8 +90,8 @@ Module ClientParties
         Buffer.WriteInt32(ClientPackets.CRequestParty)
         Buffer.WriteString(Name)
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendAcceptParty()
@@ -99,8 +99,8 @@ Module ClientParties
 
         Buffer.WriteInt32(ClientPackets.CAcceptParty)
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendDeclineParty()
@@ -108,8 +108,8 @@ Module ClientParties
 
         Buffer.WriteInt32(ClientPackets.CDeclineParty)
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendLeaveParty()
@@ -117,8 +117,8 @@ Module ClientParties
 
         Buffer.WriteInt32(ClientPackets.CLeaveParty)
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendPartyChatMsg(ByVal Text As String)
@@ -127,7 +127,7 @@ Module ClientParties
         Buffer.WriteInt32(ClientPackets.CPartyChatMsg)
         Buffer.WriteString(Text)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose
     End Sub
 #End Region

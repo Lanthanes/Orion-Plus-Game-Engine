@@ -101,12 +101,9 @@ Module ServerLoop
                     Select New With {Key .Index = p.Index, Key .Success = HandlePlayerHouse(p.Index)}
                 ).ToArray()
 
-                ' Check for disconnected players.
-                Dim _playerdisconnects = (
-                    From p In OnlinePlayers
-                    Where Not (Clients(p.Index) Is Nothing) AndAlso Not (Clients(p.Index).Socket Is Nothing) AndAlso Not (Clients(p.Index).Socket.Connected)
-                    Select New With {Key .Index = p.Index, Key .Success = HandleCloseSocket(p.Index)}
-                ).ToArray()
+                ' Disconnect timer removed, it didnt do anything useful by a correctly made network.
+                ' Proper check needs to attempt to send a checkalive packet to get accurate results im not adding this tho xD
+                ' ~SpiceyWolf
 
                 ' Move the timer up 500ms.
                 tmr500 = GetTimeMs() + 500
@@ -154,7 +151,7 @@ Module ServerLoop
             TextAdd("Saving all online players...")
             GlobalMsg("Saving all online players...")
 
-            For i = 1 To GetPlayersOnline()
+            For i = 0 To GetPlayersOnline()
                 If IsPlaying(i) Then
                     SavePlayer(i)
                     SaveBank(i)
@@ -196,7 +193,7 @@ Module ServerLoop
     Private Sub UpdatePlayerVitals()
         Dim i As Integer
 
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
 
             If IsPlaying(i) Then
                 If GetPlayerVital(i, Vitals.HP) <> GetPlayerMaxVital(i, Vitals.HP) Then
@@ -298,7 +295,7 @@ Module ServerLoop
                                 ' make sure it's not stunned
                                 If Not MapNpc(MapNum).Npc(x).StunDuration > 0 Then
 
-                                    For i = 1 To GetPlayersOnline()
+                                    For i = 0 To GetPlayersOnline()
                                         If IsPlaying(i) Then
                                             If GetPlayerMap(i) = MapNum And MapNpc(MapNum).Npc(x).Target = 0 And GetPlayerAccess(i) <= AdminType.Monitor Then
                                                 If PetAlive(i) Then
@@ -617,7 +614,7 @@ Module ServerLoop
     End Function
 
     Public Function HandleCloseSocket(ByVal Index As Integer) As Boolean
-        CloseSocket(Index)
+        Socket.Disconnect(Index)
         HandleCloseSocket = True
     End Function
 
@@ -1056,7 +1053,7 @@ Module ServerLoop
                 Select Case Skill(skillnum).Type
                     Case SkillType.DamageHp
                         DidCast = True
-                        For i = 1 To GetPlayersOnline()
+                        For i = 0 To GetPlayersOnline()
                             If IsPlaying(i) Then
                                 If GetPlayerMap(i) = MapNum Then
                                     If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
@@ -1097,7 +1094,7 @@ Module ServerLoop
                         End If
 
                         DidCast = True
-                        For i = 1 To GetPlayersOnline()
+                        For i = 0 To GetPlayersOnline()
                             If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(NpcNum) Then
                                 If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
                                     SkillPlayer_Effect(VitalType, increment, i, Vital, skillnum)

@@ -50,8 +50,8 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ASFW, Version=1.0.6461.27076, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CS-ASFW.0.9.9.1\lib\ASFW.dll</HintPath>
+    <Reference Include="ASFW, Version=1.0.6461.33365, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-ASFW.0.9.9.3\lib\ASFW.dll</HintPath>
     </Reference>
     <Reference Include="DarkUI">
       <HintPath>.\DarkUI.dll</HintPath>
@@ -213,10 +213,11 @@
     <Compile Include="Source\Modules\GameEditors.vb" />
     <Compile Include="Source\Modules\EditorQuest.vb" />
     <Compile Include="Source\Modules\EditorGlobals.vb" />
-    <Compile Include="Source\Modules\EditorHandleData.vb" />
     <Compile Include="Source\Modules\EditorTypes.vb" />
-    <Compile Include="Source\Modules\EditorTCP.vb" />
     <Compile Include="Source\Modules\EditorAutoMap.vb" />
+    <Compile Include="Source\Modules\Network\EditorNetworkConfig.vb" />
+    <Compile Include="Source\Modules\Network\EditorNetworkReceive.vb" />
+    <Compile Include="Source\Modules\Network\EditorNetworkSend.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

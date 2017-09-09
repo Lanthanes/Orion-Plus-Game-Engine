@@ -43,7 +43,7 @@ Public Module ClientProjectiles
 
         Buffer.WriteInt32(ClientPackets.CRequestProjectiles)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -57,7 +57,7 @@ Public Module ClientProjectiles
         Buffer.WriteInt32(CollisionType)
         Buffer.WriteInt32(CollisionZone)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -66,9 +66,9 @@ Public Module ClientProjectiles
 
 #Region "Recieving"
 
-    Public Sub HandleUpdateProjectile(ByVal data() As Byte)
+    Public Sub HandleUpdateProjectile(ByRef Data() As Byte)
         Dim ProjectileNum As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         ProjectileNum = Buffer.ReadInt32
 
         Projectiles(ProjectileNum).Name = Buffer.ReadString
@@ -81,9 +81,9 @@ Public Module ClientProjectiles
 
     End Sub
 
-    Public Sub HandleMapProjectile(ByVal data() As Byte)
+    Public Sub HandleMapProjectile(ByRef Data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(data)
+        Dim Buffer As New ByteStream(Data)
         i = Buffer.ReadInt32
 
         With MapProjectiles(i)
@@ -207,7 +207,7 @@ Public Module ClientProjectiles
         Next
 
         'Check for player collision
-        For i = 1 To MAX_PLAYERS
+        For i = 0 To MAX_PLAYERS
             If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
                 If GetPlayerX(i) = X And GetPlayerY(i) = Y Then
                     CanClearProjectile = True

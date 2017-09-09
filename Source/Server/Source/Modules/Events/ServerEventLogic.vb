@@ -5,7 +5,7 @@ Public Module ServerEventLogic
     Public Sub RemoveDeadEvents()
         Dim i As Integer, MapNum As Integer, Buffer As New ByteStream(4), x As Integer, id As Integer, page As Integer, compare As Integer
 
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
             If Gettingmap = True Then Exit Sub
 
             If IsPlaying(i) = False Then
@@ -116,12 +116,12 @@ Public Module ServerEventLogic
                                     Buffer.WriteInt32(Map(MapNum).Events(id).Pages(page).ShowName)
                                     Buffer.WriteInt32(.QuestNum)
                                 End With
-                                SendDataTo(i, Buffer.ToArray)
+                                Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                 Addlog("Sent SMSG: SSpawnEvent Remove Dead Events", PACKET_LOG)
                                 TextAdd("Sent SMSG: SSpawnEvent Remove Dead Events")
 
-                                Buffer.Dispose
+                                Buffer.Dispose()
                             End If
                         End If
                     End If
@@ -137,7 +137,7 @@ Public Module ServerEventLogic
 
         'That was only removing events... now we gotta worry about spawning them again, luckily, it is almost the same exact thing, but backwards!
 
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
             If Gettingmap = True Then Exit Sub
 
             If TempPlayer(i).EventMap.CurrentEvents > 0 Then
@@ -335,12 +335,12 @@ Public Module ServerEventLogic
                                 Buffer.WriteInt32(Map(MapNum).Events(id).Pages(z).QuestNum)
                                 Buffer.WriteInt32(.QuestNum)
                             End With
-                            SendDataTo(i, Buffer.ToArray)
+                            Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                             Addlog("Sent SMSG: SSpawnEvent Spawn New Events", PACKET_LOG)
                             TextAdd("Sent SMSG: SSpawnEvent Spawn New Events")
 
-                            Buffer.Dispose
+                            Buffer.Dispose()
                             z = 1
                         End If
                     Next
@@ -698,12 +698,12 @@ Public Module ServerEventLogic
                                                             Buffer.WriteInt32(.ShowName)
                                                             Buffer.WriteInt32(.QuestNum)
                                                         End With
-                                                        SendDataToMap(i, Buffer.ToArray)
+                                                        SendDataToMap(i, Buffer.Data, Buffer.Head)
 
                                                         Addlog("Sent SMSG: SSpawnEvent Process Event Movement", PACKET_LOG)
                                                         TextAdd("Sent SMSG: SSpawnEvent Process Event Movement")
 
-                                                        Buffer.Dispose
+                                                        Buffer.Dispose()
                                                     End If
                                                 End If
                                                 donotprocessmoveroute = False
@@ -738,7 +738,7 @@ Public Module ServerEventLogic
         Dim isglobal As Boolean, MapNum As Integer, actualmovespeed As Integer, Buffer As ByteStream, z As Integer, sendupdate As Boolean
         Dim donotprocessmoveroute As Boolean
 
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
 
             If Gettingmap = True Then Exit Sub
 
@@ -1099,8 +1099,8 @@ Public Module ServerEventLogic
                                                                 Buffer.WriteInt32(.ShowName)
                                                                 Buffer.WriteInt32(.QuestNum)
                                                             End With
-                                                            SendDataTo(playerID, Buffer.ToArray)
-                                                            Buffer.Dispose
+                                                            Socket.SendDataTo(playerID, Buffer.Data, Buffer.Head)
+                                                            Buffer.Dispose()
                                                         End If
                                                     End If
                                                     donotprocessmoveroute = False
@@ -1136,7 +1136,7 @@ Public Module ServerEventLogic
 
         'Now, we process the damn things for commands :P
 
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
             If Gettingmap = True Then Exit Sub
 
             If IsPlaying(i) AndAlso TempPlayer(i).GettingMap = 0 Then
@@ -1181,7 +1181,7 @@ Public Module ServerEventLogic
         Next
 
         'That is it for starting parallel processes :D now we just have to make the code that actually processes the events to their fullest
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
             If Gettingmap = True Then Exit Sub
 
             If IsPlaying(i) AndAlso TempPlayer(i).GettingMap = 0 Then
@@ -1279,8 +1279,8 @@ Public Module ServerEventLogic
                                                             Else
                                                                 Buffer.WriteInt32(2)
                                                             End If
-                                                            SendDataTo(i, Buffer.ToArray)
-                                                            Buffer.Dispose
+                                                            Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
+                                                            Buffer.Dispose()
                                                             .WaitingForResponse = 1
                                                         Case EventType.evShowChoices
                                                             Buffer = New ByteStream(4)
@@ -1329,8 +1329,8 @@ Public Module ServerEventLogic
                                                             Else
                                                                 Buffer.WriteInt32(2)
                                                             End If
-                                                            SendDataTo(i, Buffer.ToArray)
-                                                            Buffer.Dispose
+                                                            Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
+                                                            Buffer.Dispose()
                                                             .WaitingForResponse = 1
                                                         Case EventType.evPlayerVar
                                                             Select Case Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data2
@@ -1810,40 +1810,40 @@ Public Module ServerEventLogic
                                                             Buffer = New ByteStream(4)
                                                             Buffer.WriteInt32(ServerPackets.SPlayBGM)
                                                             Buffer.WriteString(Trim(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Text1))
-                                                            SendDataTo(i, Buffer.ToArray)
+                                                            Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SPlayBGM", PACKET_LOG)
                                                             TextAdd("Sent SMSG: SPlayBGM")
 
-                                                            Buffer.Dispose
+                                                            Buffer.Dispose()
                                                         Case EventType.evFadeoutBGM
                                                             Buffer = New ByteStream(4)
                                                             Buffer.WriteInt32(ServerPackets.SFadeoutBGM)
-                                                            SendDataTo(i, Buffer.ToArray)
+                                                            Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SFadeoutBGM", PACKET_LOG)
                                                             TextAdd("Sent SMSG: SFadeoutBGM")
 
-                                                            Buffer.Dispose
+                                                            Buffer.Dispose()
                                                         Case EventType.evPlaySound
                                                             Buffer = New ByteStream(4)
                                                             Buffer.WriteInt32(ServerPackets.SPlaySound)
                                                             Buffer.WriteString(Trim(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Text1))
-                                                            SendDataTo(i, Buffer.ToArray)
+                                                            Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SPlaySound", PACKET_LOG)
                                                             TextAdd("Sent SMSG: SPlaySound")
 
-                                                            Buffer.Dispose
+                                                            Buffer.Dispose()
                                                         Case EventType.evStopSound
                                                             Buffer = New ByteStream(4)
                                                             Buffer.WriteInt32(ServerPackets.SStopSound)
-                                                            SendDataTo(i, Buffer.ToArray)
+                                                            Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SStopSound", PACKET_LOG)
                                                             TextAdd("Sent SMSG: SStopSound")
 
-                                                            Buffer.Dispose
+                                                            Buffer.Dispose()
                                                         Case EventType.evSetAccess
                                                             Player(i).Access = Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1
                                                             SendPlayerData(i)
@@ -1920,23 +1920,23 @@ Public Module ServerEventLogic
                                                             Buffer.WriteInt32(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data3)
                                                             Buffer.WriteInt32(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data4)
                                                             Buffer.WriteInt32(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data5)
-                                                            SendDataTo(i, Buffer.ToArray)
+                                                            Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SPic evShowPicture", PACKET_LOG)
                                                             TextAdd("Sent SMSG: SPic evShowPicture")
 
-                                                            Buffer.Dispose
+                                                            Buffer.Dispose()
                                                         Case EventType.evHidePicture
                                                             Buffer = New ByteStream(4)
                                                             Buffer.WriteInt32(ServerPackets.SPic)
                                                             Buffer.WriteInt32(1)
                                                             Buffer.WriteInt32(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1 + 1)
-                                                            SendDataTo(i, Buffer.ToArray)
+                                                            Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SPic evHidePicture", PACKET_LOG)
                                                             TextAdd("Sent SMSG: SPic evHidePicture")
 
-                                                            Buffer.Dispose
+                                                            Buffer.Dispose()
                                                         Case EventType.evWaitMovement
                                                             If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1 <= Map(GetPlayerMap(i)).EventCount Then
                                                                 If Map(GetPlayerMap(i)).Events(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1).Globals = 1 Then
@@ -1953,22 +1953,22 @@ Public Module ServerEventLogic
                                                             Buffer = New ByteStream(4)
                                                             Buffer.WriteInt32(ServerPackets.SHoldPlayer)
                                                             Buffer.WriteInt32(0)
-                                                            SendDataTo(i, Buffer.ToArray)
+                                                            Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SHoldPlayer", PACKET_LOG)
                                                             TextAdd("Sent SMSG: SHoldPlayer")
 
-                                                            Buffer.Dispose
+                                                            Buffer.Dispose()
                                                         Case EventType.evReleasePlayer
                                                             Buffer = New ByteStream(4)
                                                             Buffer.WriteInt32(ServerPackets.SHoldPlayer)
                                                             Buffer.WriteInt32(1)
-                                                            SendDataTo(i, Buffer.ToArray)
+                                                            Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SHoldPlayer Release", PACKET_LOG)
                                                             TextAdd("Sent SMSG: SHoldPlayer Release")
 
-                                                            Buffer.Dispose
+                                                            Buffer.Dispose()
                                                     End Select
                                                 End If
                                             Loop
@@ -2611,7 +2611,7 @@ nextevent:
                     Buffer.WriteInt32(Map(MapNum).Events(.EventID).Pages(.PageID).ShowName)
                     Buffer.WriteInt32(Map(MapNum).Events(.EventID).Pages(.PageID).QuestNum)
                 End With
-                SendDataTo(Index, Buffer.ToArray)
+                Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
                 Addlog("Sent SMSG: SSpawnEvent For Player", PACKET_LOG)
                 TextAdd("Sent SMSG: SSpawnEvent For Player")

@@ -427,7 +427,7 @@ Public Class FrmMenu
     ''' Handle Play button press.
     ''' </summary>
     Private Sub BtnPlay_Click(sender As Object, e As EventArgs) Handles btnPlay.Click
-        If IsConnected() = True Then
+        If Socket.IsConnected() = True Then
             PlaySound("Click.ogg")
             pnlRegisterVisible = False
             pnlLoginVisible = True
@@ -461,7 +461,7 @@ Public Class FrmMenu
     ''' Handle Register button press.
     ''' </summary>
     Private Sub BtnRegister_Click(sender As Object, e As EventArgs) Handles btnRegister.Click
-        If IsConnected() = True Then
+        If Socket.IsConnected() = True Then
             PlaySound("Click.ogg")
             pnlRegisterVisible = True
             pnlLoginVisible = False
@@ -684,10 +684,10 @@ Public Class FrmMenu
         frmmenuvisible = False
 
         Dim Buffer As ByteStream
-        Buffer = New ByteStream(4)
+        Buffer = New ByteStream(8)
         Buffer.WriteInt32(ClientPackets.CUseChar)
         Buffer.WriteInt32(SelectedChar)
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
 
         Buffer.Dispose()
     End Sub
@@ -701,7 +701,7 @@ Public Class FrmMenu
             Dim Buffer As New ByteStream(4)
             Buffer.WriteInt32(ClientPackets.CDelChar)
             Buffer.WriteInt32(SelectedChar)
-            SendData(Buffer.ToArray)
+            Socket.SendData(Buffer.Data, Buffer.Head)
             Buffer.Dispose()
         End If
     End Sub

@@ -50,8 +50,8 @@ Public Module ClientHotBar
         Buffer.WriteInt32(Num)
         Buffer.WriteInt32(Type)
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendDeleteHotbar(ByVal Slot As Integer)
@@ -60,8 +60,8 @@ Public Module ClientHotBar
 
         Buffer.WriteInt32(Slot)
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendUseHotbarSlot(ByVal Slot As Integer)
@@ -71,7 +71,7 @@ Public Module ClientHotBar
 
         Buffer.WriteInt32(Slot)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose
     End Sub
 

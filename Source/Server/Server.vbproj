@@ -65,8 +65,8 @@
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
-    <Reference Include="ASFW, Version=1.0.6461.27076, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CS-ASFW.0.9.9.1\lib\ASFW.dll</HintPath>
+    <Reference Include="ASFW, Version=1.0.6461.33365, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-ASFW.0.9.9.3\lib\ASFW.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -86,6 +86,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.vb" />
+    <Compile Include="Source\Modules\Network\ServerNetworkConfig.vb" />
+    <Compile Include="Source\Modules\Network\ServerNetworkReceive.vb" />
+    <Compile Include="Source\Modules\Network\ServerNetworkSend.vb" />
     <Compile Include="Source\Modules\Objects\ServerItems.vb" />
     <Compile Include="Source\Modules\Objects\ServerNpc.vb" />
     <Compile Include="Source\Modules\ServerAutoMap.vb" />
@@ -109,7 +112,6 @@
     <Compile Include="Source\Modules\Objects\ServerQuest.vb" />
     <Compile Include="Source\Modules\Objects\ServerRandomItems.vb" />
     <Compile Include="Source\Modules\Objects\ServerResources.vb" />
-    <Compile Include="Source\Modules\ServerTCP.vb" />
     <Compile Include="Source\Modules\ServerTime.vb" />
     <Compile Include="Source\Modules\ServerTypes.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

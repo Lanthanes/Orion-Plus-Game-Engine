@@ -210,7 +210,7 @@ Module ServerNpc
         ' Send this packet so they can see the npc attacking
         Buffer.WriteInt32(ServerPackets.SNpcAttack)
         Buffer.WriteInt32(MapNpcNum)
-        SendDataToMap(MapNum, Buffer.ToArray)
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
         If Damage <= 0 Then Exit Sub
@@ -329,7 +329,7 @@ Module ServerNpc
         ' Send this packet so they can see the person attacking
         Buffer.WriteInt32(ServerPackets.SNpcAttack)
         Buffer.WriteInt32(Attacker)
-        SendDataToMap(MapNum, Buffer.ToArray())
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
         If Damage >= MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) Then
@@ -358,7 +358,7 @@ Module ServerNpc
             Buffer = New ByteStream(4)
             Buffer.WriteInt32(ServerPackets.SNpcDead)
             Buffer.WriteInt32(Victim)
-            SendDataToMap(MapNum, Buffer.ToArray())
+            SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             Buffer.Dispose()
         Else
             ' npc not dead, just do the damage

@@ -1,111 +1,8 @@
-﻿Imports System.Net.Sockets
-Imports System.IO
+﻿Imports System.Windows.Forms
 Imports ASFW
 Imports ASFW.IO
 
-Module EditorTCP
-    Private PlayerBuffer As ByteBuffer
-    Public PlayerSocket As TcpClient
-    Private SckConnecting As Boolean
-    Private SckConnected As Boolean
-    Private myStream As NetworkStream
-    Private myReader As StreamReader
-    Private myWriter As StreamWriter
-    Private asyncBuff As Byte()
-    Private asyncBuffs As New List(Of Byte())
-    Public shouldHandleData As Boolean
-
-    Public Sub Connect()
-        If Not PlayerSocket Is Nothing Then
-            Try
-                If PlayerSocket.Connected Or SckConnecting Then Exit Sub
-                PlayerSocket.Close()
-                PlayerSocket = Nothing
-            Catch ex As Exception
-
-            End Try
-        End If
-        PlayerSocket = New TcpClient()
-        PlayerSocket.ReceiveBufferSize = 4096
-        PlayerSocket.SendBufferSize = 4096
-        PlayerSocket.NoDelay = False
-        ReDim asyncBuff(8192)
-        PlayerSocket.BeginConnect(Options.IP, Options.Port, New AsyncCallback(AddressOf ConnectCallback), PlayerSocket)
-        SckConnecting = True
-    End Sub
-
-    Sub ConnectCallback(asyncConnect As IAsyncResult)
-        If Not PlayerSocket Is Nothing Then
-            Try
-                PlayerSocket.EndConnect(asyncConnect)
-                If (PlayerSocket.Connected = False) Then
-                    SckConnecting = False
-                    SckConnected = False
-                    Exit Sub
-                Else
-                    PlayerSocket.NoDelay = True
-                    myStream = PlayerSocket.GetStream()
-                    myStream.BeginRead(asyncBuff, 0, 8192, AddressOf OnReceive, Nothing)
-                    SckConnected = True
-                    SckConnecting = False
-                End If
-            Catch ex As Exception
-                SckConnecting = False
-                SckConnected = False
-            End Try
-        End If
-    End Sub
-
-    Sub OnReceive(ar As IAsyncResult)
-        If Not PlayerSocket Is Nothing Then
-            Try
-                If PlayerSocket Is Nothing Then Exit Sub
-                Dim byteAmt As Integer = myStream.EndRead(ar)
-                Dim myBytes() As Byte
-                ReDim myBytes(byteAmt - 1)
-                Buffer.BlockCopy(asyncBuff, 0, myBytes, 0, byteAmt)
-                If byteAmt = 0 Then
-                    MsgBox("Disconnected.")
-                    Exit Sub
-                End If
-                HandleData(myBytes)
-                If PlayerSocket Is Nothing Then Exit Sub
-                myStream.BeginRead(asyncBuff, 0, 8192, AddressOf OnReceive, Nothing)
-            Catch ex As Exception
-                MsgBox("Disconnected.")
-                Exit Sub
-            End Try
-        End If
-    End Sub
-
-    Public Function IsConnected() As Boolean
-        IsConnected = False
-
-        If PlayerSocket Is Nothing Then Exit Function
-        If PlayerSocket.Connected = True Then
-            IsConnected = True
-        Else
-            IsConnected = False
-        End If
-
-    End Function
-
-    Public Sub SendData(ByVal bytes() As Byte)
-        Try
-            If IsConnected() = False Then Exit Sub
-            Dim Buffer As New ByteStream(4)
-            Dim len = UBound(bytes) - LBound(bytes) + 1
-            Buffer.WriteBytes(bytes)
-            'Send data in the socket stream to the server
-            myStream.Write(Buffer.Data, 0, len + 4)
-            Buffer.Dispose
-            'writes the packet size and sends the data.....
-        Catch ex As Exception
-            MsgBox("Disconnected.")
-            Application.Exit()
-        End Try
-    End Sub
-
+Module EditorNetworkSend
     Public Sub SendEditorLogin(ByVal Name As String, ByVal Password As String)
         Dim Buffer As New ByteStream(4)
 
@@ -113,8 +10,8 @@ Module EditorTCP
         Buffer.WriteString(EKeyPair.EncryptString(Name))
         Buffer.WriteString(EKeyPair.EncryptString(Password))
         Buffer.WriteString(EKeyPair.EncryptString(Application.ProductVersion))
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendEditorMap()
@@ -286,16 +183,16 @@ Module EditorTCP
         Buffer.WriteInt32(EditorPackets.EditorSaveMap)
         Buffer.WriteBlock(Compression.CompressBytes(data))
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendRequestItems()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestItems)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendSaveItem(ByVal itemNum As Integer)
@@ -358,32 +255,32 @@ Module EditorTCP
         Buffer.WriteInt32(Item(itemNum).Projectile)
         Buffer.WriteInt32(Item(itemNum).Ammo)
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendRequestEditItem()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditItem)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendRequestEditResource()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditResource)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendRequestResources()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestResources)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendSaveResource(ByVal ResourceNum As Integer)
@@ -407,16 +304,16 @@ Module EditorTCP
         Buffer.WriteInt32(Resource(ResourceNum).ToolRequired)
         Buffer.WriteInt32(Resource(ResourceNum).Walkthrough)
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendRequestEditNpc()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditNpc)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendSaveNpc(ByVal NpcNum As Integer)
@@ -434,9 +331,9 @@ Module EditorTCP
             Buffer.WriteInt32(Npc(NpcNum).DropItemValue(i))
         Next
 
-        Buffer.WriteInt32(Npc(NpcNum).EXP)
+        Buffer.WriteInt32(Npc(NpcNum).Exp)
         Buffer.WriteInt32(Npc(NpcNum).Faction)
-        Buffer.WriteInt32(Npc(NpcNum).HP)
+        Buffer.WriteInt32(Npc(NpcNum).Hp)
         Buffer.WriteString(Npc(NpcNum).Name)
         Buffer.WriteInt32(Npc(NpcNum).Range)
         Buffer.WriteInt32(Npc(NpcNum).SpawnTime)
@@ -456,32 +353,32 @@ Module EditorTCP
         Buffer.WriteInt32(Npc(NpcNum).Level)
         Buffer.WriteInt32(Npc(NpcNum).Damage)
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendRequestNPCS()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestNPCS)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendRequestEditSkill()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditSkill)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendRequestSkills()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestSkills)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendSaveSkill(ByVal skillnum As Integer)
@@ -494,7 +391,7 @@ Module EditorTCP
         Buffer.WriteInt32(Skill(skillnum).AoE)
         Buffer.WriteInt32(Skill(skillnum).CastAnim)
         Buffer.WriteInt32(Skill(skillnum).CastTime)
-        Buffer.WriteInt32(Skill(skillnum).CDTime)
+        Buffer.WriteInt32(Skill(skillnum).CdTime)
         Buffer.WriteInt32(Skill(skillnum).ClassReq)
         Buffer.WriteInt32(Skill(skillnum).Dir)
         Buffer.WriteInt32(Skill(skillnum).Duration)
@@ -503,7 +400,7 @@ Module EditorTCP
         Buffer.WriteInt32(Skill(skillnum).IsAoE)
         Buffer.WriteInt32(Skill(skillnum).LevelReq)
         Buffer.WriteInt32(Skill(skillnum).Map)
-        Buffer.WriteInt32(Skill(skillnum).MPCost)
+        Buffer.WriteInt32(Skill(skillnum).MpCost)
         Buffer.WriteString(Skill(skillnum).Name)
         Buffer.WriteInt32(Skill(skillnum).Range)
         Buffer.WriteInt32(Skill(skillnum).SkillAnim)
@@ -519,17 +416,17 @@ Module EditorTCP
         Buffer.WriteInt32(Skill(skillnum).KnockBack)
         Buffer.WriteInt32(Skill(skillnum).KnockBackTiles)
 
-        SendData(Buffer.ToArray())
+        Socket.SendData(Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendRequestShops()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestShops)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendSaveShop(ByVal shopnum As Integer)
@@ -549,8 +446,8 @@ Module EditorTCP
             Buffer.WriteInt32(Shop(shopnum).TradeItem(i).ItemValue)
         Next
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
 
     End Sub
 
@@ -558,8 +455,8 @@ Module EditorTCP
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditShop)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendSaveAnimation(ByVal Animationnum As Integer)
@@ -576,8 +473,8 @@ Module EditorTCP
             Buffer.WriteInt32(Animation(Animationnum).LoopCount(i))
         Next
 
-        For i = 0 To UBound(Animation(Animationnum).looptime)
-            Buffer.WriteInt32(Animation(Animationnum).looptime(i))
+        For i = 0 To UBound(Animation(Animationnum).LoopTime)
+            Buffer.WriteInt32(Animation(Animationnum).LoopTime(i))
         Next
 
         Buffer.WriteString(Trim$(Animation(Animationnum).Name))
@@ -587,48 +484,48 @@ Module EditorTCP
             Buffer.WriteInt32(Animation(Animationnum).Sprite(i))
         Next
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendRequestAnimations()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestAnimations)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendRequestEditAnimation()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditAnimation)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendRequestMapreport()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CMapReport)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendRequestClasses()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestClasses)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendRequestEditClass()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditClasses)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendSaveClasses()
@@ -684,16 +581,16 @@ Module EditorTCP
             Buffer.WriteInt32(Classes(i).BaseExp)
         Next
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendLeaveGame()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CQuit)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendEditorRequestMap(ByVal MapNum As Integer)
@@ -701,21 +598,21 @@ Module EditorTCP
 
         Buffer.WriteInt32(EditorPackets.EditorRequestMap)
         Buffer.WriteInt32(MapNum)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendRequestAutoMapper()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestAutoMap)
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendSaveAutoMapper()
         Dim myXml As New XmlClass With {
-            .Filename = Path.Combine(Application.StartupPath, "Data", "AutoMapper.xml"),
+            .Filename = Application.StartupPath & "\Data\AutoMapper.xml",
             .Root = "Options"
         }
         Dim Buffer As New ByteStream(4)
@@ -746,7 +643,7 @@ Module EditorTCP
             Buffer.WriteInt32(Val(myXml.ReadString("Prefab" & Prefab, "Type")))
         Next
 
-        SendData(Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendData(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 End Module

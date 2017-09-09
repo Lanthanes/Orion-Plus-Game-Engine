@@ -198,7 +198,7 @@ Module ServerPlayers
             Buffer = New ByteStream(4)
             Buffer.WriteInt32(ServerPackets.SAttack)
             Buffer.WriteInt32(Attacker)
-            SendDataToMapBut(Attacker, GetPlayerMap(Attacker), Buffer.ToArray())
+            SendDataToMapBut(Attacker, GetPlayerMap(Attacker), Buffer.Data, Buffer.Head)
             Buffer.Dispose
 
             If Damage >= GetPlayerVital(Victim, Vitals.HP) Then
@@ -274,7 +274,7 @@ Module ServerPlayers
             Buffer = New ByteStream(4)
             Buffer.WriteInt32(ServerPackets.SNpcAttack)
             Buffer.WriteInt32(Attacker)
-            SendDataToMap(mapnum, Buffer.ToArray())
+            SendDataToMap(mapnum, Buffer.Data, Buffer.Head)
             Buffer.Dispose
 
             If Damage >= GetPlayerVital(Victim, Vitals.HP) Then
@@ -858,11 +858,6 @@ Module ServerPlayers
         GetPlayerLogin = Trim$(Player(Index).Login)
     End Function
 
-    Function GetPlayerIP(ByVal Index As Integer) As String
-        GetPlayerIP = ""
-        GetPlayerIP = GetClientIP(Index)
-    End Function
-
     Function GetPlayerName(ByVal Index As Integer) As String
         GetPlayerName = ""
         If Index > MAX_PLAYERS Then Exit Function
@@ -1114,7 +1109,7 @@ Module ServerPlayers
 
         Buffer.WriteInt32(ServerPackets.SLeftMap)
         Buffer.WriteInt32(Index)
-        SendDataToMapBut(Index, MapNum, Buffer.ToArray())
+        SendDataToMapBut(Index, MapNum, Buffer.Data, Buffer.Head)
 
         Buffer.Dispose
     End Sub
@@ -1202,7 +1197,7 @@ Module ServerPlayers
 
         ' send equipment of all people on new map
         If GetTotalMapPlayers(MapNum) > 0 Then
-            For i = 1 To GetPlayersOnline()
+            For i = 0 To GetPlayersOnline()
                 If IsPlaying(i) Then
                     If GetPlayerMap(i) = MapNum Then
                         SendMapEquipmentTo(i, Index)
@@ -1240,9 +1235,9 @@ Module ServerPlayers
         Buffer.WriteInt32(ServerPackets.SCheckForMap)
         Buffer.WriteInt32(MapNum)
         Buffer.WriteInt32(Map(MapNum).Revision)
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -1596,7 +1591,8 @@ Module ServerPlayers
                     Player(Index).Character(TempPlayer(Index).CurChar).LastX = GetPlayerX(Index)
                     Player(Index).Character(TempPlayer(Index).CurChar).LastY = GetPlayerY(Index)
                     Player(Index).Character(TempPlayer(Index).CurChar).InHouse = Index
-                    SendDataTo(Index, PlayerData(Index))
+                    Dim data = PlayerData(Index)
+                    Socket.SendDataTo(Index, data, data.Length)
                     PlayerWarp(Index, HouseConfig(Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex).BaseMap, HouseConfig(Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex).X, HouseConfig(Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex).Y, True)
                     DidWarp = True
                     Exit Sub
@@ -1605,7 +1601,7 @@ Module ServerPlayers
                     Buffer = New ByteStream(4)
                     Buffer.WriteInt32(ServerPackets.SBuyHouse)
                     Buffer.WriteInt32(.Data1)
-                    SendDataTo(Index, Buffer.ToArray)
+                    Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
                     Buffer.Dispose
                     TempPlayer(Index).BuyHouseIndex = .Data1
                 End If

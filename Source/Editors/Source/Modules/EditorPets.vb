@@ -82,7 +82,7 @@ Module EditorPets
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CRequestPets)
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
     End Sub
@@ -93,7 +93,7 @@ Module EditorPets
 
         Buffer.WriteInt32(EditorPackets.CRequestEditPet)
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
 
         Buffer.Dispose()
 
@@ -132,7 +132,7 @@ Module EditorPets
             Buffer.WriteInt32(.EvolveNum)
         End With
 
-        SendData(Buffer.ToArray)
+        Socket.SendData(Buffer.Data, Buffer.Head)
 
         Buffer.Dispose()
 
@@ -140,11 +140,11 @@ Module EditorPets
 #End Region
 
 #Region "Incoming Packets"
-    Public Sub Packet_PetEditor(ByVal Data() As Byte)
+    Public Sub Packet_PetEditor(ByRef Data() As Byte)
         InitPetEditor = True
     End Sub
 
-    Public Sub Packet_UpdatePet(ByVal Data() As Byte)
+    Public Sub Packet_UpdatePet(ByRef Data() As Byte)
         Dim n As Integer, i As Long
         Dim Buffer As New ByteStream(Data)
         n = Buffer.ReadInt32

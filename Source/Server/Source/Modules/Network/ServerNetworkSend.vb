@@ -1,189 +1,37 @@
-﻿Imports System.Net.Sockets
-Imports System.Net
-Imports System.IO
-Imports ASFW
+﻿Imports ASFW
 Imports ASFW.IO
 
-Public Class Client
-    Public Index As Integer
-    Public IP As String
-    Public Socket As TcpClient
-    Public myStream As NetworkStream
-    Public Closing As Boolean
-    Private readBuff As Byte()
-
-    Public Sub Start()
-        Socket.SendBufferSize = 4096
-        Socket.ReceiveBufferSize = 4096
-        myStream = Socket.GetStream()
-        ReDim readBuff(Socket.ReceiveBufferSize - 1)
-        myStream.BeginRead(readBuff, 0, Socket.ReceiveBufferSize, AddressOf OnReceiveData, Nothing)
-        Closing = False
-    End Sub
-
-    Private Sub OnReceiveData(ByVal ar As IAsyncResult)
-        Try
-            Dim readbytes As Integer = myStream.EndRead(ar)
-            If Socket Is Nothing Then Exit Sub
-            If (readbytes <= 0) Then
-                CloseSocket(Index) 'Disconnect
-                Exit Sub
-            End If
-            Dim newBytes As Byte()
-            ReDim newBytes(readbytes - 1)
-            Buffer.BlockCopy(readBuff, 0, newBytes, 0, readbytes)
-            HandleData(Index, newBytes)
-            If Socket Is Nothing Then Exit Sub
-            myStream.BeginRead(readBuff, 0, Socket.ReceiveBufferSize, AddressOf OnReceiveData, Nothing)
-        Catch ex As Exception
-            CloseSocket(Index) 'Disconnect
-            Exit Sub
-        End Try
-
-    End Sub
-End Class
-Module ServerTCP
-    Public Clients() As Client
-    Public ServerSocket As TcpListener
-
-    Public Sub InitNetwork()
-        ServerSocket = New TcpListener(IPAddress.Any, Options.Port)
-        ServerSocket.Start()
-        ServerSocket.BeginAcceptTcpClient(AddressOf OnClientConnect, Nothing)
-    End Sub
-
-    Private Sub OnClientConnect(ByVal ar As IAsyncResult)
-        Dim client As TcpClient = ServerSocket.EndAcceptTcpClient(ar)
-        client.NoDelay = False
-        ServerSocket.BeginAcceptTcpClient(AddressOf OnClientConnect, Nothing)
-        For i = 1 To MAX_PLAYERS
-            If Clients(i).Socket Is Nothing Then
-                Clients(i).Socket = client
-                Clients(i).Index = i
-                Clients(i).IP = DirectCast(client.Client.RemoteEndPoint, IPEndPoint).Address.ToString
-                Clients(i).Start()
-                TextAdd("Connection received from " & Clients(i).IP)
-                SendKeyPair(i)
-                SendNews(i)
-                Exit For
-            End If
-        Next
-    End Sub
-
-    Public Sub SendDataTo(ByVal Index As Integer, ByRef Data() As Byte)
-        Try
-            If Not IsConnected(Index) Then Exit Sub
-            Dim Buffer as ByteStream
-            Buffer = New ByteStream(4)
-            Dim len = (UBound(Data) - LBound(Data)) + 1
-            Buffer.WriteBytes(Data)
-            Clients(Index).myStream.BeginWrite(Buffer.Data, 0, len + 4, Nothing, Nothing)
-            Buffer.Dispose
-        Catch ex As Exception
-
-        End Try
-    End Sub
-
-    Public Sub SendDataToAll(ByRef data() As Byte)
-        Dim i As Integer
-
-        For i = 1 To GetPlayersOnline()
-
-            If IsPlaying(i) Then
-                SendDataTo(i, data)
-            End If
-
-        Next
-    End Sub
-
-    Sub SendDataToAllBut(ByVal Index As Integer, ByRef Data() As Byte)
-        Dim i As Integer
-
-        For i = 1 To GetPlayersOnline()
-
-            If IsPlaying(i) Then
-                If i <> Index Then
-                    SendDataTo(i, Data)
-                End If
-            End If
-
-        Next
-
-    End Sub
-
-    Sub SendDataToMapBut(ByVal Index As Integer, ByVal MapNum As Integer, ByRef Data() As Byte)
-        Dim i As Integer
-
-        For i = 1 To GetPlayersOnline()
-
-            If IsPlaying(i) Then
-                If GetPlayerMap(i) = MapNum Then
-                    If i <> Index Then
-                        SendDataTo(i, Data)
-                    End If
-                End If
-            End If
-
-        Next
-
-    End Sub
-
-    Sub SendDataToMap(ByVal MapNum As Integer, ByRef Data() As Byte)
-        Dim i As Integer
-
-        For i = 1 To GetPlayersOnline()
-
-            If IsPlaying(i) Then
-                If GetPlayerMap(i) = MapNum Then
-                    SendDataTo(i, Data)
-                End If
-            End If
-
-        Next
-
-    End Sub
-
-    Private Function GetIPAddr() As String
-        'This function will return the users IP address as a string
-        'Note: If the user is on a machine with multiple IPs, it will ONLY
-        '   return the TOP element in the list (.AddressList(0))
-        Dim strHostName As String
-        Dim strIPAddress As String
-        strHostName = Dns.GetHostName()
-        strIPAddress = Dns.GetHostEntry(strHostName).AddressList(0).ToString()
-        GetIPAddr = strIPAddress
-    End Function
-
-    Public Sub AlertMsg(ByVal Index As Integer, ByVal Msg As String)
-        Dim Buffer as ByteStream
+Module ServerNetworkSend
+    Sub AlertMsg(ByVal Index As Integer, ByVal Msg As String)
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SAlertMsg)
         Buffer.WriteString(Msg)
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SAlertMsg", PACKET_LOG)
         TextAdd("Sent SMSG: SAlertMsg")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Public Sub GlobalMsg(ByVal Msg As String)
-        Dim Buffer as ByteStream
+    Sub GlobalMsg(ByVal Msg As String)
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SGlobalMsg)
         'Buffer.WriteString(Msg)
         Buffer.WriteBytes(WriteUnicodeString(Msg))
-        SendDataToAll(Buffer.ToArray)
+        SendDataToAll(Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SGlobalMsg", PACKET_LOG)
         TextAdd("Sent SMSG: SGlobalMsg")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Public Sub PlayerMsg(ByVal Index As Integer, ByVal Msg As String, ByVal Colour As Integer)
-        Dim Buffer as ByteStream
+    Sub PlayerMsg(ByVal Index As Integer, ByVal Msg As String, ByVal Colour As Integer)
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPlayerMsg)
         'Buffer.WriteString(Msg)
@@ -193,8 +41,8 @@ Module ServerTCP
         Addlog("Sent SMSG: SPlayerMsg", PACKET_LOG)
         TextAdd("Sent SMSG: SPlayerMsg")
 
-        SendDataTo(Index, Buffer.ToArray)
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendAnimations(ByVal Index As Integer)
@@ -212,7 +60,7 @@ Module ServerTCP
 
     Sub SendNewCharClasses(ByVal Index As Integer)
         Dim i As Integer, n As Integer, q As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SNewCharClasses)
         Buffer.WriteInt32(Max_Classes)
@@ -265,29 +113,25 @@ Module ServerTCP
             Buffer.WriteInt32(Classes(i).BaseExp)
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
-    Public Function GetClientIP(ByVal index As Integer) As String
-        GetClientIP = Clients(index).IP
-    End Function
-
     Sub SendCloseTrade(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SCloseTrade)
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SCloseTrade", PACKET_LOG)
         TextAdd("Sent SMSG: SCloseTrade")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendExp(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPlayerEXP)
@@ -298,110 +142,48 @@ Module ServerTCP
         Addlog("Sent SMSG: SPlayerEXP", PACKET_LOG)
         TextAdd("Sent SMSG: SPlayerEXP")
 
-        SendDataTo(Index, Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
-
-    Sub CloseSocket(ByVal Index As Integer)
-        Try
-            If Index > 0 Then
-                If (Clients(Index).Closing = True) Then Exit Sub
-                Clients(Index).Closing = True
-                LeftGame(Index)
-                TextAdd("Connection from " & GetPlayerIP(Index) & " has been terminated.")
-                Clients(Index).Socket.Close()
-                Clients(Index).Socket = Nothing
-                ClearPlayer(Index)
-            End If
-        Catch ex As Exception
-
-        End Try
-    End Sub
-
-    Function IsPlaying(ByVal Index As Integer) As Boolean
-        IsPlaying = False
-        If TempPlayer(Index).InGame = True Then
-            IsPlaying = True
-        End If
-
-    End Function
-
-    Function IsLoggedIn(ByVal Index As Integer) As Boolean
-        IsLoggedIn = False
-        If Len(Trim$(Player(Index).Login)) > 0 Then
-            IsLoggedIn = True
-        End If
-
-    End Function
-
-    Public Function IsConnected(ByVal Index As Integer) As Boolean
-        If Clients(Index).Socket Is Nothing Then
-            IsConnected = False
-        Else
-            If Clients(Index).Socket.Connected Then
-                IsConnected = True
-            Else
-                IsConnected = False
-            End If
-        End If
-    End Function
-
-    Function IsMultiAccounts(ByVal Login As String) As Boolean
-        Dim i As Integer
-
-        IsMultiAccounts = False
-
-        For i = 1 To GetPlayersOnline()
-            If LCase$(Trim$(Player(i).Login)) = LCase$(Login) Then
-                IsMultiAccounts = True
-                Exit Function
-            Else
-                IsMultiAccounts = False
-                Exit Function
-            End If
-
-        Next
-
-    End Function
 
     Sub SendLoadCharOk(ByVal index As Integer)
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SLoadCharOk)
         Buffer.WriteInt32(index)
-        SendDataTo(index, buffer.ToArray)
+        Socket.SendDataTo(index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SLoadCharOk", PACKET_LOG)
         TextAdd("Sent SMSG: SLoadCharOk")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendEditorLoadOk(ByVal index As Integer)
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SLoginOk)
         Buffer.WriteInt32(index)
-        SendDataTo(index, Buffer.ToArray)
+        Socket.SendDataTo(index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SLoginOk", PACKET_LOG)
         TextAdd("Sent SMSG: SLoginOk")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendInGame(ByVal Index As Integer)
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SInGame)
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SInGame", PACKET_LOG)
         TextAdd("Sent SMSG: SInGame")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendClasses(ByVal Index As Integer)
         Dim i As Integer, n As Integer, q As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SClassesData)
         Buffer.WriteInt32(Max_Classes)
@@ -458,13 +240,13 @@ Module ServerTCP
             Buffer.WriteInt32(Classes(i).BaseExp)
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendClassesToAll()
         Dim i As Integer, n As Integer, q As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SClassesData)
         Buffer.WriteInt32(Max_Classes)
@@ -521,13 +303,13 @@ Module ServerTCP
             Buffer.WriteInt32(Classes(i).BaseExp)
         Next
 
-        SendDataToAll(Buffer.ToArray())
-        Buffer.Dispose
+        SendDataToAll(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendInventory(ByVal Index As Integer)
         Dim i As Integer, n As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPlayerInv)
@@ -548,9 +330,9 @@ Module ServerTCP
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(i).Speed)
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendItems(ByVal Index As Integer)
@@ -567,7 +349,7 @@ Module ServerTCP
     End Sub
 
     Sub SendUpdateItemTo(ByVal Index As Integer, ByVal itemNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateItem)
         Buffer.WriteInt32(itemNum)
@@ -629,12 +411,12 @@ Module ServerTCP
         Buffer.WriteInt32(Item(itemNum).Projectile)
         Buffer.WriteInt32(Item(itemNum).Ammo)
 
-        SendDataTo(Index, Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendUpdateItemToAll(ByVal itemNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateItem)
         Buffer.WriteInt32(itemNum)
@@ -696,8 +478,8 @@ Module ServerTCP
         Buffer.WriteInt32(Item(itemNum).Projectile)
         Buffer.WriteInt32(Item(itemNum).Ammo)
 
-        SendDataToAll(Buffer.ToArray())
-        Buffer.Dispose
+        SendDataToAll(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendLeftMap(ByVal Index As Integer)
@@ -705,25 +487,25 @@ Module ServerTCP
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SLeftMap)
         Buffer.WriteInt32(Index)
-        SendDataToAllBut(Index, Buffer.ToArray())
+        SendDataToAllBut(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SLeftMap", PACKET_LOG)
         TextAdd("Sent SMSG: SLeftMap")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendLeftGame(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SLeftGame)
 
-        SendDataTo(Index, Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendMapEquipment(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapWornEq)
@@ -738,13 +520,13 @@ Module ServerTCP
         Addlog("Sent SMSG: SMapWornEq", PACKET_LOG)
         TextAdd("Sent SMSG: SMapWornEq")
 
-        SendDataToMap(GetPlayerMap(Index), Buffer.ToArray())
+        SendDataToMap(GetPlayerMap(Index), Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendMapEquipmentTo(ByVal PlayerNum As Integer, ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapWornEq)
@@ -759,9 +541,9 @@ Module ServerTCP
         Addlog("Sent SMSG: SMapWornEq To", PACKET_LOG)
         TextAdd("Sent SMSG: SMapWornEq To")
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendNpcs(ByVal Index As Integer)
@@ -778,7 +560,7 @@ Module ServerTCP
     End Sub
 
     Sub SendUpdateNpcTo(ByVal Index As Integer, ByVal NpcNum As Integer)
-        Dim Buffer as ByteStream, i As Integer
+        Dim Buffer As ByteStream, i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateNpc)
 
@@ -818,12 +600,12 @@ Module ServerTCP
         Buffer.WriteInt32(Npc(NpcNum).Level)
         Buffer.WriteInt32(Npc(NpcNum).Damage)
 
-        SendDataTo(Index, Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendUpdateNpcToAll(ByVal NpcNum As Integer)
-        Dim Buffer as ByteStream, i As Integer
+        Dim Buffer As ByteStream, i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateNpc)
 
@@ -863,12 +645,12 @@ Module ServerTCP
         Buffer.WriteInt32(Npc(NpcNum).Level)
         Buffer.WriteInt32(Npc(NpcNum).Damage)
 
-        SendDataToAll(Buffer.ToArray())
-        Buffer.Dispose
+        SendDataToAll(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendResourceCacheTo(ByVal Index As Integer, ByVal Resource_num As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Dim i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SResourceCache)
@@ -887,8 +669,8 @@ Module ServerTCP
 
         End If
 
-        SendDataTo(Index, Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendResources(ByVal Index As Integer)
@@ -905,7 +687,7 @@ Module ServerTCP
     End Sub
 
     Sub SendUpdateResourceTo(ByVal Index As Integer, ByVal ResourceNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -929,8 +711,8 @@ Module ServerTCP
         Addlog("Sent SMSG: SUpdateResources", PACKET_LOG)
         TextAdd("Sent SMSG: SUpdateResources")
 
-        SendDataTo(Index, Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendShops(ByVal Index As Integer)
@@ -947,7 +729,7 @@ Module ServerTCP
     End Sub
 
     Sub SendUpdateShopTo(ByVal Index As Integer, ByVal shopNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -967,12 +749,12 @@ Module ServerTCP
             Buffer.WriteInt32(Shop(shopNum).TradeItem(i).ItemValue)
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendUpdateShopToAll(ByVal shopNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -992,8 +774,8 @@ Module ServerTCP
             Buffer.WriteInt32(Shop(shopNum).TradeItem(i).ItemValue)
         Next
 
-        SendDataToAll(Buffer.ToArray())
-        Buffer.Dispose
+        SendDataToAll(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendSkills(ByVal Index As Integer)
@@ -1010,7 +792,7 @@ Module ServerTCP
     End Sub
 
     Sub SendUpdateSkillTo(ByVal Index As Integer, ByVal skillnum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -1049,12 +831,12 @@ Module ServerTCP
         Buffer.WriteInt32(Skill(skillnum).KnockBack)
         Buffer.WriteInt32(Skill(skillnum).KnockBackTiles)
 
-        SendDataTo(Index, Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendUpdateSkillToAll(ByVal skillnum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -1093,8 +875,8 @@ Module ServerTCP
         Buffer.WriteInt32(Skill(skillnum).KnockBack)
         Buffer.WriteInt32(Skill(skillnum).KnockBackTiles)
 
-        SendDataToAll(Buffer.ToArray())
-        Buffer.Dispose
+        SendDataToAll(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendStats(ByVal Index As Integer)
@@ -1108,12 +890,12 @@ Module ServerTCP
         Buffer.WriteInt32(GetPlayerStat(Index, Stats.Luck))
         Buffer.WriteInt32(GetPlayerStat(Index, Stats.Intelligence))
         Buffer.WriteInt32(GetPlayerStat(Index, Stats.Spirit))
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SPlayerStats", PACKET_LOG)
         TextAdd("Sent SMSG: SPlayerStats")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendUpdateAnimationTo(ByVal Index As Integer, ByVal AnimationNum As Integer)
@@ -1144,12 +926,12 @@ Module ServerTCP
             Buffer.WriteInt32(Animation(AnimationNum).Sprite(i))
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendUpdateAnimationToAll(ByVal AnimationNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -1178,8 +960,8 @@ Module ServerTCP
             Buffer.WriteInt32(Animation(AnimationNum).Sprite(i))
         Next
 
-        SendDataToAll(Buffer.ToArray())
-        Buffer.Dispose
+        SendDataToAll(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendVitals(ByVal Index As Integer)
@@ -1189,7 +971,7 @@ Module ServerTCP
     End Sub
 
     Sub SendVital(ByVal Index As Integer, ByVal Vital As Vitals)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         ' Get our packet type.
@@ -1211,9 +993,9 @@ Module ServerTCP
         ' Set and send related data.
         Buffer.WriteInt32(GetPlayerMaxVital(Index, Vital))
         Buffer.WriteInt32(GetPlayerVital(Index, Vital))
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendWelcome(ByVal Index As Integer)
@@ -1232,7 +1014,7 @@ Module ServerTCP
         Dim n As Integer
         Dim i As Integer
         s = ""
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
 
             If IsPlaying(i) Then
                 If i <> Index Then
@@ -1254,7 +1036,7 @@ Module ServerTCP
     End Sub
 
     Sub SendWornEquipment(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPlayerWornEq)
@@ -1277,13 +1059,13 @@ Module ServerTCP
             Next
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendMapData(ByVal Index As Integer, ByVal MapNum As Integer, ByVal SendMap As Boolean)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Dim data() As Byte
 
@@ -1485,38 +1267,36 @@ Module ServerTCP
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SMapData)
         Buffer.WriteBlock(data)
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SMapData", PACKET_LOG)
         TextAdd("Sent SMSG: SMapData")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendJoinMap(ByVal Index As Integer)
         Dim i As Integer
-        Dim Buffer as ByteStream
-        Buffer = New ByteStream(4)
-
+        Dim data As Byte()
         ' Send all players on current map to index
-        For i = 1 To GetPlayersOnline()
+        For i = 0 To GetPlayersOnline()
             If IsPlaying(i) Then
                 If i <> Index Then
                     If GetPlayerMap(i) = GetPlayerMap(Index) Then
-                        SendDataTo(Index, PlayerData(i))
+                        data = PlayerData(i)
+                        Socket.SendDataTo(Index, data, data.Length)
                     End If
                 End If
             End If
         Next
 
         ' Send index's player data to everyone on the map including himself
-        SendDataToMap(GetPlayerMap(Index), PlayerData(Index))
-
-        Buffer.Dispose
+        data = PlayerData(Index)
+        SendDataToMap(GetPlayerMap(Index), data, data.Length)
     End Sub
 
     Function PlayerData(ByVal Index As Integer) As Byte()
-        Dim Buffer as ByteStream, i As Integer
+        Dim Buffer As ByteStream, i As Integer
         PlayerData = Nothing
         If Index > MAX_PLAYERS Then Exit Function
         Buffer = New ByteStream(4)
@@ -1556,12 +1336,12 @@ Module ServerTCP
 
         PlayerData = Buffer.ToArray()
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Function
 
     Sub SendMapItemsTo(ByVal Index As Integer, ByVal MapNum As Integer)
         Dim i As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapItemData)
@@ -1576,14 +1356,14 @@ Module ServerTCP
             Buffer.WriteInt32(MapItem(MapNum, i).Y)
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendMapNpcsTo(ByVal Index As Integer, ByVal MapNum As Integer)
         Dim i As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapNpcData)
@@ -1600,13 +1380,13 @@ Module ServerTCP
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(Vitals.MP))
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendMapNpcTo(ByVal MapNum As Integer, ByVal MapNpcNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapNpcUpdate)
@@ -1625,28 +1405,28 @@ Module ServerTCP
             Buffer.WriteInt32(.Vital(Vitals.MP))
         End With
 
-        SendDataToMap(MapNum, Buffer.ToArray())
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendPlayerXY(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPlayerXY)
         Buffer.WriteInt32(GetPlayerX(Index))
         Buffer.WriteInt32(GetPlayerY(Index))
         Buffer.WriteInt32(GetPlayerDir(Index))
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SPlayerXY", PACKET_LOG)
         TextAdd("Sent SMSG: SPlayerXY")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendPlayerMove(ByVal Index As Integer, ByVal Movement As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPlayerMove)
@@ -1655,16 +1435,16 @@ Module ServerTCP
         Buffer.WriteInt32(GetPlayerY(Index))
         Buffer.WriteInt32(GetPlayerDir(Index))
         Buffer.WriteInt32(Movement)
-        SendDataToMapBut(Index, GetPlayerMap(Index), Buffer.ToArray())
+        SendDataToMapBut(Index, GetPlayerMap(Index), Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SPlayerMove", PACKET_LOG)
         TextAdd("Sent SMSG: SPlayerMove")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendDoorAnimation(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SDoorAnimation)
@@ -1674,13 +1454,13 @@ Module ServerTCP
         Addlog("Sent SMSG: SDoorAnimation", PACKET_LOG)
         TextAdd("Sent SMSG: SDoorAnimation")
 
-        SendDataToMap(MapNum, Buffer.ToArray())
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendMapKey(ByVal Index As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal Value As Byte)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SMapKey)
@@ -1691,13 +1471,13 @@ Module ServerTCP
         Addlog("Sent SMSG: SMapKey", PACKET_LOG)
         TextAdd("Sent SMSG: SMapKey")
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Public Sub MapMsg(ByVal MapNum As Integer, ByVal Msg As String, ByVal Color As Byte)
-        Dim Buffer as ByteStream
+    Sub MapMsg(ByVal MapNum As Integer, ByVal Msg As String, ByVal Color As Byte)
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapMsg)
@@ -1707,13 +1487,13 @@ Module ServerTCP
         Addlog("Sent SMSG: SMapMsg", PACKET_LOG)
         TextAdd("Sent SMSG: SMapMsg")
 
-        SendDataToMap(MapNum, Buffer.ToArray)
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendActionMsg(ByVal MapNum As Integer, ByVal Message As String, ByVal Color As Integer, ByVal MsgType As Integer, ByVal X As Integer, ByVal Y As Integer, Optional ByVal PlayerOnlyNum As Integer = 0)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SActionMsg)
@@ -1728,16 +1508,16 @@ Module ServerTCP
         TextAdd("Sent SMSG: SActionMsg")
 
         If PlayerOnlyNum > 0 Then
-            SendDataTo(PlayerOnlyNum, Buffer.ToArray())
+            Socket.SendDataTo(PlayerOnlyNum, Buffer.Data, Buffer.Head)
         Else
-            SendDataToMap(MapNum, Buffer.ToArray())
+            SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
         End If
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SayMsg_Map(ByVal MapNum As Integer, ByVal Index As Integer, ByVal Message As String, ByVal SayColour As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SSayMsg)
@@ -1752,17 +1532,18 @@ Module ServerTCP
         Addlog("Sent SMSG: SSayMsg", PACKET_LOG)
         TextAdd("Sent SMSG: SSayMsg")
 
-        SendDataToMap(MapNum, Buffer.ToArray())
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendPlayerData(ByVal Index As Integer)
-        SendDataToMap(GetPlayerMap(Index), PlayerData(Index))
+        Dim data = PlayerData(Index)
+        SendDataToMap(GetPlayerMap(Index), data, data.Length)
     End Sub
 
     Sub SendUpdateResourceToAll(ByVal ResourceNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -1787,13 +1568,13 @@ Module ServerTCP
         Buffer.WriteInt32(Resource(ResourceNum).ToolRequired)
         Buffer.WriteInt32(Resource(ResourceNum).Walkthrough)
 
-        SendDataToAll(Buffer.ToArray())
-        Buffer.Dispose
+        SendDataToAll(Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendMapNpcVitals(ByVal MapNum As Integer, ByVal MapNpcNum As Byte)
         Dim i As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapNpcVitals)
@@ -1806,29 +1587,29 @@ Module ServerTCP
             Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Vital(i))
         Next
 
-        SendDataToMap(MapNum, Buffer.ToArray())
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendMapKeyToMap(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal Value As Byte)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SMapKey)
         Buffer.WriteInt32(X)
         Buffer.WriteInt32(Y)
         Buffer.WriteInt32(Value)
-        SendDataToMap(MapNum, Buffer.ToArray())
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SMapKey", PACKET_LOG)
         TextAdd("Sent SMSG: SMapKey")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendResourceCacheToMap(ByVal MapNum As Integer, ByVal Resource_num As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Dim i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SResourceCache)
@@ -1847,12 +1628,12 @@ Module ServerTCP
 
         End If
 
-        SendDataToMap(MapNum, Buffer.ToArray())
-        Buffer.Dispose
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendGameData(ByVal index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Dim i As Integer
         Dim data() As Byte
         Buffer = New ByteStream(4)
@@ -1937,13 +1718,13 @@ Module ServerTCP
 
         Buffer.WriteBlock(data)
 
-        SendDataTo(index, buffer.ToArray)
+        Socket.SendDataTo(index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SayMsg_Global(ByVal Index As Integer, ByVal Message As String, ByVal SayColour As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SSayMsg)
@@ -1958,13 +1739,13 @@ Module ServerTCP
         Addlog("Sent SMSG: SSayMsg Global", PACKET_LOG)
         TextAdd("Sent SMSG: SSayMsg Global")
 
-        SendDataToAll(Buffer.ToArray())
+        SendDataToAll(Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendInventoryUpdate(ByVal Index As Integer, ByVal InvSlot As Integer)
-        Dim Buffer as ByteStream, n As Integer
+        Dim Buffer As ByteStream, n As Integer
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPlayerInvUpdate)
@@ -1984,13 +1765,13 @@ Module ServerTCP
         Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvSlot).Damage)
         Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvSlot).Speed)
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendAnimation(ByVal MapNum As Integer, ByVal Anim As Integer, ByVal X As Integer, ByVal Y As Integer, Optional ByVal LockType As Byte = 0, Optional ByVal LockIndex As Integer = 0)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SAnimation)
@@ -2003,27 +1784,27 @@ Module ServerTCP
         Addlog("Sent SMSG: SAnimation", PACKET_LOG)
         TextAdd("Sent SMSG: SAnimation")
 
-        SendDataToMap(MapNum, Buffer.ToArray())
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendOpenShop(ByVal Index As Integer, ByVal ShopNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SOpenShop)
         Buffer.WriteInt32(ShopNum)
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SOpenShop", PACKET_LOG)
         TextAdd("Sent SMSG: SOpenShop")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub ResetShopAction(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SResetShopAction)
@@ -2031,13 +1812,13 @@ Module ServerTCP
         Addlog("Sent SMSG: SResetShopAction", PACKET_LOG)
         TextAdd("Sent SMSG: SResetShopAction")
 
-        SendDataToAll(Buffer.ToArray())
+        SendDataToAll(Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendBank(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Dim i As Integer
 
         Buffer = New ByteStream(4)
@@ -2061,13 +1842,13 @@ Module ServerTCP
             Next
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendClearSkillBuffer(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SClearSkillBuffer)
@@ -2075,13 +1856,13 @@ Module ServerTCP
         Addlog("Sent SMSG: SClearSkillBuffer", PACKET_LOG)
         TextAdd("Sent SMSG: SClearSkillBuffer")
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendClearTradeTimer(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SClearTradeTimer)
@@ -2089,13 +1870,13 @@ Module ServerTCP
         Addlog("Sent SMSG: SClearTradeTimer", PACKET_LOG)
         TextAdd("Sent SMSG: SClearTradeTimer")
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendTradeInvite(ByVal Index As Integer, ByVal TradeIndex As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.STradeInvite)
@@ -2105,28 +1886,28 @@ Module ServerTCP
 
         Buffer.WriteInt32(TradeIndex)
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendTrade(ByVal Index As Integer, ByVal TradeTarget As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.STrade)
         Buffer.WriteInt32(TradeTarget)
         Buffer.WriteString(Trim$(GetPlayerName(TradeTarget)))
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: STrade", PACKET_LOG)
         TextAdd("Sent SMSG: STrade")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendTradeUpdate(ByVal Index As Integer, ByVal DataType As Byte)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Dim i As Integer
         Dim tradeTarget As Integer
         Dim totalWorth As Integer
@@ -2179,28 +1960,28 @@ Module ServerTCP
         ' send total worth of trade
         Buffer.WriteInt32(totalWorth)
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendTradeStatus(ByVal Index As Integer, ByVal Status As Byte)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.STradeStatus)
         Buffer.WriteInt32(Status)
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: STradeStatus", PACKET_LOG)
         TextAdd("Sent SMSG: STradeStatus")
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendMapItemsToAll(ByVal MapNum As Integer)
         Dim i As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapItemData)
@@ -2215,13 +1996,13 @@ Module ServerTCP
             Buffer.WriteInt32(MapItem(MapNum, i).Y)
         Next
 
-        SendDataToMap(MapNum, Buffer.ToArray())
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendStunned(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SStunned)
@@ -2230,13 +2011,13 @@ Module ServerTCP
         Addlog("Sent SMSG: SStunned", PACKET_LOG)
         TextAdd("Sent SMSG: SStunned")
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendBlood(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SBlood)
@@ -2246,14 +2027,14 @@ Module ServerTCP
         Addlog("Sent SMSG: SBlood", PACKET_LOG)
         TextAdd("Sent SMSG: SBlood")
 
-        SendDataToMap(MapNum, Buffer.ToArray())
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendPlayerSkills(ByVal Index As Integer)
         Dim i As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SSkills)
 
@@ -2264,12 +2045,12 @@ Module ServerTCP
             Buffer.WriteInt32(GetPlayerSkill(Index, i))
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
-        Buffer.Dispose
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendCooldown(ByVal Index As Integer, ByVal Slot As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SCooldown)
@@ -2278,33 +2059,13 @@ Module ServerTCP
         Addlog("Sent SMSG: SCooldown", PACKET_LOG)
         TextAdd("Sent SMSG: SCooldown")
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Public Function GetIP() As String
-
-        'Return "127.0.0.1"
-
-        Dim uri_val As New Uri("http://ascensiongamedev.com/resources/myip.php")
-        Dim request As HttpWebRequest = HttpWebRequest.Create(uri_val)
-
-        request.Method = WebRequestMethods.Http.Get
-
-        Try
-            Dim response As HttpWebResponse = request.GetResponse()
-            Dim reader As New StreamReader(response.GetResponseStream())
-            Dim myIP As String = reader.ReadToEnd()
-            response.Close()
-            Return myIP
-        Catch e As Exception
-            Return "127.0.0.1"
-        End Try
-    End Function
-
     Sub SendTarget(ByVal Index As Integer, ByVal Target As Integer, ByVal TargetType As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.STarget)
@@ -2314,14 +2075,14 @@ Module ServerTCP
         Addlog("Sent SMSG: STarget", PACKET_LOG)
         TextAdd("Sent SMSG: STarget")
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     'Mapreport
     Sub SendMapReport(ByVal Index As Integer)
-        Dim Buffer as ByteStream, I As Integer
+        Dim Buffer As ByteStream, I As Integer
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SMapReport)
@@ -2333,13 +2094,13 @@ Module ServerTCP
             Buffer.WriteString(Trim(Map(I).Name))
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendAdminPanel(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SAdmin)
@@ -2347,13 +2108,13 @@ Module ServerTCP
         Addlog("Sent SMSG: SAdmin", PACKET_LOG)
         TextAdd("Sent SMSG: SAdmin")
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendMapNames(ByVal Index As Integer)
-        Dim Buffer as ByteStream, I As Integer
+        Dim Buffer As ByteStream, I As Integer
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SMapNames)
@@ -2365,13 +2126,13 @@ Module ServerTCP
             Buffer.WriteString(Trim(Map(I).Name))
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendHotbar(ByVal Index As Integer)
-        Dim Buffer as ByteStream, i As Integer
+        Dim Buffer As ByteStream, i As Integer
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SHotbar)
@@ -2384,13 +2145,13 @@ Module ServerTCP
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).Hotbar(i).SlotType)
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendCritical(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SCritical)
@@ -2398,24 +2159,24 @@ Module ServerTCP
         Addlog("Sent SMSG: SCritical", PACKET_LOG)
         TextAdd("Sent SMSG: SCritical")
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendKeyPair(ByVal index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SKeyPair)
         Buffer.WriteString(EKeyPair.ExportKeyString(False))
-        SendDataTo(index, Buffer.ToArray())
+        Socket.SendDataTo(index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendNews(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SNews)
@@ -2424,15 +2185,15 @@ Module ServerTCP
         TextAdd("Sent SMSG: SNews")
 
         Buffer.WriteString(Trim(Options.GameName))
-        Buffer.WriteString(Trim(GetFileContents(Path.Combine(Application.StartupPath, "data", "news.txt"))))
+        Buffer.WriteString(Trim(GetFileContents(Application.StartupPath & "\data\news.txt")))
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendRightClick(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SrClick)
@@ -2440,13 +2201,13 @@ Module ServerTCP
         Addlog("Sent SMSG: SrClick", PACKET_LOG)
         TextAdd("Sent SMSG: SrClick")
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendClassEditor(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SClassEditor)
@@ -2454,15 +2215,15 @@ Module ServerTCP
         Addlog("Sent SMSG: SClassEditor", PACKET_LOG)
         TextAdd("Sent SMSG: SClassEditor")
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendAutoMapper(ByVal Index As Integer)
-        Dim Buffer as ByteStream, Prefab As Integer
+        Dim Buffer As ByteStream, Prefab As Integer
         Dim myXml As New XmlClass With {
-            .Filename = Path.Combine(Application.StartupPath, "Data", "AutoMapper.xml"),
+            .Filename = Application.StartupPath & "\Data\AutoMapper.xml",
             .Root = "Options"
         }
         Buffer = New ByteStream(4)
@@ -2495,13 +2256,13 @@ Module ServerTCP
             Buffer.WriteInt32(Val(myXml.ReadString("Prefab" & Prefab, "Type")))
         Next
 
-        SendDataTo(Index, Buffer.ToArray())
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendEmote(ByVal Index As Integer, ByVal Emote As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SEmote)
@@ -2512,13 +2273,13 @@ Module ServerTCP
         Buffer.WriteInt32(Index)
         Buffer.WriteInt32(Emote)
 
-        SendDataToMap(GetPlayerMap(Index), Buffer.ToArray())
+        SendDataToMap(GetPlayerMap(Index), Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendChatBubble(ByVal MapNum As Integer, ByVal Target As Integer, ByVal TargetType As Integer, ByVal Message As String, ByVal Colour As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SChatBubble)
@@ -2531,13 +2292,13 @@ Module ServerTCP
         'Buffer.WriteString(Message)
         Buffer.WriteBytes(WriteUnicodeString(Message))
         Buffer.WriteInt32(Colour)
-        SendDataToMap(MapNum, Buffer.ToArray)
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
-    Public Sub SendPlayerAttack(ByVal Index As Integer)
+    Sub SendPlayerAttack(ByVal Index As Integer)
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SAttack)
 
@@ -2545,8 +2306,8 @@ Module ServerTCP
         TextAdd("Sent SMSG: SPlayerAttack")
 
         Buffer.WriteInt32(Index)
-        SendDataToMapBut(Index, GetPlayerMap(Index), Buffer.ToArray())
-        Buffer.Dispose
+        SendDataToMapBut(Index, GetPlayerMap(Index), Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
     Sub SendNpcAttack(ByVal Index As Integer, ByVal NpcNum As Integer)
@@ -2557,11 +2318,11 @@ Module ServerTCP
         TextAdd("Sent SMSG: SNpcAttack")
 
         Buffer.WriteInt32(NpcNum)
-        SendDataToMap(GetPlayerMap(Index), Buffer.ToArray())
-        Buffer.Dispose
+        SendDataToMap(GetPlayerMap(Index), Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
-    Public Sub SendNpcDead(ByVal MapNum As Integer, ByVal Index As Integer)
+    Sub SendNpcDead(ByVal MapNum As Integer, ByVal Index As Integer)
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SNpcDead)
 
@@ -2569,11 +2330,11 @@ Module ServerTCP
         TextAdd("Sent SMSG: SNpcDead")
 
         Buffer.WriteInt32(Index)
-        SendDataToMap(MapNum, Buffer.ToArray())
-        Buffer.Dispose
+        SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
+        Buffer.Dispose()
     End Sub
 
-    Public Sub SendTotalOnlineTo(ByVal Index As Integer)
+    Sub SendTotalOnlineTo(ByVal Index As Integer)
         Dim Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.STotalOnline)
@@ -2582,12 +2343,12 @@ Module ServerTCP
         TextAdd("Sent SMSG: STotalOnline")
 
         Buffer.WriteInt32(GetPlayersOnline)
-        SendDataTo(Index, Buffer.ToArray)
+        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
-    Public Sub SendTotalOnlineToAll()
+    Sub SendTotalOnlineToAll()
         Dim Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.STotalOnline)
@@ -2596,8 +2357,8 @@ Module ServerTCP
         TextAdd("Sent SMSG: STotalOnline To All")
 
         Buffer.WriteInt32(GetPlayersOnline)
-        SendDataToAll(Buffer.ToArray)
+        SendDataToAll(Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 End Module
