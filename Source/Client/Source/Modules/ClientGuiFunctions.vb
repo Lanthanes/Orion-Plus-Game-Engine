@@ -1,5 +1,6 @@
 ﻿Imports System.Drawing
 Imports System.Windows.Forms
+Imports ASFW
 
 Public Module ClientGuiFunctions
     Public Sub CheckGuiMove(ByVal X As Integer, ByVal Y As Integer)
@@ -171,7 +172,7 @@ Public Module ClientGuiFunctions
     Public Function CheckGuiClick(ByVal X As Integer, ByVal Y As Integer, ByVal e As MouseEventArgs) As Boolean
         Dim EqNum As Integer, InvNum As Integer
         Dim slotnum As Integer, hotbarslot As Integer
-        Dim Buffer As ByteBuffer
+        Dim Buffer as ByteStream
 
         CheckGuiClick = False
         'action panel
@@ -189,10 +190,10 @@ Public Module ClientGuiFunctions
                         'Skills
                     ElseIf X > ActionPanelX + SkillBtnX And X < ActionPanelX + SkillBtnX + 48 And Y > ActionPanelY + SkillBtnY And Y < ActionPanelY + SkillBtnY + 32 Then
                         PlaySound("Click.ogg")
-                        Buffer = New ByteBuffer
-                        Buffer.WriteInteger(ClientPackets.CSkills)
+                        Buffer = New ByteStream(4)
+                        Buffer.WriteInt32(ClientPackets.CSkills)
                         SendData(Buffer.ToArray())
-                        Buffer = Nothing
+                        Buffer.Dispose()
                         pnlSkillsVisible = Not pnlSkillsVisible
                         pnlInventoryVisible = False
                         pnlCharacterVisible = False
@@ -262,10 +263,10 @@ Public Module ClientGuiFunctions
 
                         CheckGuiClick = True
                     Else
-                        Buffer = New ByteBuffer
-                        Buffer.WriteInteger(ClientPackets.CSkills)
+                        Buffer = New ByteStream(4)
+                        Buffer.WriteInt32(ClientPackets.CSkills)
                         SendData(Buffer.ToArray())
-                        Buffer = Nothing
+                        Buffer.Dispose()
                         pnlSkillsVisible = True
                         AddText("Click on the skill you want to place here", QColorType.TellColor)
                         SelSkillSlot = True
@@ -491,13 +492,13 @@ Public Module ClientGuiFunctions
                     If X > EventChatX + 10 And X < EventChatX + 10 + GetTextWidth(EventChoices(1)) Then
                         If Y > EventChatY + 124 And Y < EventChatY + 124 + 13 Then
                             PlaySound("Click.ogg")
-                            Buffer = New ByteBuffer
-                            Buffer.WriteInteger(ClientPackets.CEventChatReply)
-                            Buffer.WriteInteger(EventReplyID)
-                            Buffer.WriteInteger(EventReplyPage)
-                            Buffer.WriteInteger(1)
+                            Buffer = New ByteStream(4)
+                            Buffer.WriteInt32(ClientPackets.CEventChatReply)
+                            Buffer.WriteInt32(EventReplyID)
+                            Buffer.WriteInt32(EventReplyPage)
+                            Buffer.WriteInt32(1)
                             SendData(Buffer.ToArray)
-                            Buffer = Nothing
+                            Buffer.Dispose()
                             ClearEventChat()
                             InEvent = False
                         End If
@@ -509,13 +510,13 @@ Public Module ClientGuiFunctions
                     If X > EventChatX + 10 And X < EventChatX + 10 + GetTextWidth(EventChoices(2)) Then
                         If Y > EventChatY + 146 And Y < EventChatY + 146 + 13 Then
                             PlaySound("Click.ogg")
-                            Buffer = New ByteBuffer
-                            Buffer.WriteInteger(ClientPackets.CEventChatReply)
-                            Buffer.WriteInteger(EventReplyID)
-                            Buffer.WriteInteger(EventReplyPage)
-                            Buffer.WriteInteger(2)
+                            Buffer = New ByteStream(4)
+                            Buffer.WriteInt32(ClientPackets.CEventChatReply)
+                            Buffer.WriteInt32(EventReplyID)
+                            Buffer.WriteInt32(EventReplyPage)
+                            Buffer.WriteInt32(2)
                             SendData(Buffer.ToArray)
-                            Buffer = Nothing
+                            Buffer.Dispose()
                             ClearEventChat()
                             InEvent = False
                         End If
@@ -527,13 +528,13 @@ Public Module ClientGuiFunctions
                     If X > EventChatX + 226 And X < EventChatX + 226 + GetTextWidth(EventChoices(3)) Then
                         If Y > EventChatY + 124 And Y < EventChatY + 124 + 13 Then
                             PlaySound("Click.ogg")
-                            Buffer = New ByteBuffer
-                            Buffer.WriteInteger(ClientPackets.CEventChatReply)
-                            Buffer.WriteInteger(EventReplyID)
-                            Buffer.WriteInteger(EventReplyPage)
-                            Buffer.WriteInteger(3)
+                            Buffer = New ByteStream(4)
+                            Buffer.WriteInt32(ClientPackets.CEventChatReply)
+                            Buffer.WriteInt32(EventReplyID)
+                            Buffer.WriteInt32(EventReplyPage)
+                            Buffer.WriteInt32(3)
                             SendData(Buffer.ToArray)
-                            Buffer = Nothing
+                            Buffer.Dispose()
                             ClearEventChat()
                             InEvent = False
                         End If
@@ -545,13 +546,13 @@ Public Module ClientGuiFunctions
                     If X > EventChatX + 226 And X < EventChatX + 226 + GetTextWidth(EventChoices(4)) Then
                         If Y > EventChatY + 146 And Y < EventChatY + 146 + 13 Then
                             PlaySound("Click.ogg")
-                            Buffer = New ByteBuffer
-                            Buffer.WriteInteger(ClientPackets.CEventChatReply)
-                            Buffer.WriteInteger(EventReplyID)
-                            Buffer.WriteInteger(EventReplyPage)
-                            Buffer.WriteInteger(4)
+                            Buffer = New ByteStream(4)
+                            Buffer.WriteInt32(ClientPackets.CEventChatReply)
+                            Buffer.WriteInt32(EventReplyID)
+                            Buffer.WriteInt32(EventReplyPage)
+                            Buffer.WriteInt32(4)
                             SendData(Buffer.ToArray)
-                            Buffer = Nothing
+                            Buffer.Dispose()
                             ClearEventChat()
                             InEvent = False
                         End If
@@ -563,13 +564,13 @@ Public Module ClientGuiFunctions
                     If X > EventChatX + 410 And X < EventChatX + 410 + GetTextWidth("Continue") Then
                         If Y > EventChatY + 156 And Y < EventChatY + 156 + 13 Then
                             PlaySound("Click.ogg")
-                            Buffer = New ByteBuffer
-                            Buffer.WriteInteger(ClientPackets.CEventChatReply)
-                            Buffer.WriteInteger(EventReplyID)
-                            Buffer.WriteInteger(EventReplyPage)
-                            Buffer.WriteInteger(0)
+                            Buffer = New ByteStream(4)
+                            Buffer.WriteInt32(ClientPackets.CEventChatReply)
+                            Buffer.WriteInt32(EventReplyID)
+                            Buffer.WriteInt32(EventReplyPage)
+                            Buffer.WriteInt32(0)
                             SendData(Buffer.ToArray)
-                            Buffer = Nothing
+                            Buffer.Dispose()
                             ClearEventChat()
                             InEvent = False
                         End If
@@ -834,7 +835,7 @@ Public Module ClientGuiFunctions
     End Function
 
     Public Function CheckGuiMouseUp(ByVal X As Integer, ByVal Y As Integer, ByVal e As MouseEventArgs) As Boolean
-        Dim i As Integer, rec_pos As Rectangle, buffer As ByteBuffer
+        Dim i As Integer, rec_pos As Rectangle, Buffer As ByteStream
         Dim hotbarslot As Integer
 
         'Inventory
@@ -868,7 +869,7 @@ Public Module ClientGuiFunctions
                 End If
 
                 DragInvSlotNum = 0
-            ElseIf Abovehotbar(X, Y) Then
+            ElseIf AboveHotbar(X, Y) Then
                 If DragInvSlotNum > 0 Then
                     hotbarslot = IsHotBarSlot(e.Location.X, e.Location.Y)
                     If hotbarslot > 0 Then
@@ -881,15 +882,15 @@ Public Module ClientGuiFunctions
                 If FurnitureSelected > 0 Then
                     If Player(MyIndex).InHouse = MyIndex Then
                         If Item(PlayerInv(FurnitureSelected).Num).Type = ItemType.Furniture Then
-                            buffer = New ByteBuffer
-                            buffer.WriteInteger(ClientPackets.CPlaceFurniture)
+                            Buffer = New ByteStream(4)
+                            Buffer.WriteInt32(ClientPackets.CPlaceFurniture)
                             i = CurX
-                            buffer.WriteInteger(i)
+                            Buffer.WriteInt32(i)
                             i = CurY
-                            buffer.WriteInteger(i)
-                            buffer.WriteInteger(FurnitureSelected)
-                            SendData(buffer.ToArray)
-                            buffer = Nothing
+                            Buffer.WriteInt32(i)
+                            Buffer.WriteInt32(FurnitureSelected)
+                            SendData(Buffer.ToArray)
+                            Buffer.Dispose()
 
                             FurnitureSelected = 0
                         End If
@@ -929,7 +930,7 @@ Public Module ClientGuiFunctions
                 End If
 
                 DragSkillSlotNum = 0
-            ElseIf Abovehotbar(X, Y) Then
+            ElseIf AboveHotbar(X, Y) Then
                 If DragSkillSlotNum > 0 Then
                     hotbarslot = IsHotBarSlot(e.Location.X, e.Location.Y)
                     If hotbarslot > 0 Then
@@ -1083,11 +1084,11 @@ Public Module ClientGuiFunctions
                     ' check for close button
                     If X > ShopWindowX + ShopButtonCloseX And X < ShopWindowX + ShopButtonCloseX + ButtonGFXInfo.Width Then
                         If Y > ShopWindowY + ShopButtonCloseY And Y < ShopWindowY + ShopButtonCloseY + ButtonGFXInfo.Height Then
-                            Dim Buffer As ByteBuffer
-                            Buffer = New ByteBuffer
-                            Buffer.WriteInteger(ClientPackets.CCloseShop)
+                            Dim Buffer As ByteStream
+                            Buffer = New ByteStream(4)
+                            Buffer.WriteInt32(ClientPackets.CCloseShop)
                             SendData(Buffer.ToArray())
-                            Buffer = Nothing
+                            Buffer.Dispose()
                             pnlShopVisible = False
                             InShop = 0
                             ShopAction = 0

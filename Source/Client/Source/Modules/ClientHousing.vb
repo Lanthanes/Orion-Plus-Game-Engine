@@ -1,4 +1,5 @@
 ﻿Imports System.Windows.Forms
+Imports ASFW
 Imports SFML.Graphics
 Imports SFML.Window
 
@@ -42,35 +43,25 @@ Public Module ClientHousing
 
 #Region "Incoming Packets"
     Sub Packet_HouseConfigurations(ByVal Data() As Byte)
-        Dim buffer As New ByteBuffer, i As Integer
-
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SHouseConfigs Then Exit Sub
-
+        Dim i As Integer
+        Dim Buffer As New ByteStream(Data)
         For i = 1 To MAX_HOUSES
-            HouseConfig(i).ConfigName = buffer.ReadString
-            HouseConfig(i).BaseMap = buffer.ReadInteger
-            HouseConfig(i).MaxFurniture = buffer.ReadInteger
-            HouseConfig(i).Price = buffer.ReadInteger
+            HouseConfig(i).ConfigName = Buffer.ReadString
+            HouseConfig(i).BaseMap = Buffer.ReadInt32
+            HouseConfig(i).MaxFurniture = Buffer.ReadInt32
+            HouseConfig(i).Price = Buffer.ReadInt32
         Next
 
-        buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub Packet_HouseOffer(ByVal Data() As Byte)
-        Dim buffer As New ByteBuffer, i As Integer
+        Dim i As Integer
+        Dim Buffer As New ByteStream(Data)
+        i = Buffer.ReadInt32
 
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SBuyHouse Then Exit Sub
-
-        i = buffer.ReadInteger
-
-        buffer = Nothing
+        Buffer.Dispose
 
         DialogType = DIALOGUE_TYPE_BUYHOME
         If HouseConfig(i).MaxFurniture > 0 Then
@@ -86,19 +77,14 @@ Public Module ClientHousing
 
         UpdateDialog = True
 
-        buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub Packet_Visit(ByVal Data() As Byte)
-        Dim buffer As New ByteBuffer, i As Integer
-
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SVisit Then Exit Sub
-
-        i = buffer.ReadInteger
+        Dim i As Integer
+        Dim Buffer As New ByteStream(Data)
+        i = Buffer.ReadInt32
 
         DialogType = DIALOGUE_TYPE_VISIT
 
@@ -106,102 +92,91 @@ Public Module ClientHousing
         DialogMsg2 = ""
         DialogMsg3 = ""
 
-        buffer = Nothing
+        Buffer.Dispose
 
         UpdateDialog = True
 
     End Sub
 
     Sub Packet_Furniture(ByVal Data() As Byte)
-        Dim buffer As New ByteBuffer, i As Integer
-
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SFurniture Then Exit Sub
-
-        FurnitureHouse = buffer.ReadInteger
-        FurnitureCount = buffer.ReadInteger
+        Dim i As Integer
+        Dim Buffer As New ByteStream(Data)
+        FurnitureHouse = Buffer.ReadInt32
+        FurnitureCount = Buffer.ReadInt32
 
         ReDim Furniture(FurnitureCount)
         If FurnitureCount > 0 Then
             For i = 1 To FurnitureCount
-                Furniture(i).ItemNum = buffer.ReadInteger
-                Furniture(i).X = buffer.ReadInteger
-                Furniture(i).Y = buffer.ReadInteger
+                Furniture(i).ItemNum = Buffer.ReadInt32
+                Furniture(i).X = Buffer.ReadInt32
+                Furniture(i).Y = Buffer.ReadInt32
             Next
         End If
 
-        buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub Packet_EditHouses(ByVal data() As Byte)
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(data)
         Dim i As Integer
-
-        buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SHouseEdit Then Exit Sub
-
         For i = 1 To MAX_HOUSES
             With House(i)
-                .ConfigName = Trim$(buffer.ReadString)
-                .BaseMap = buffer.ReadInteger
-                .X = buffer.ReadInteger
-                .Y = buffer.ReadInteger
-                .Price = buffer.ReadInteger
-                .MaxFurniture = buffer.ReadInteger
+                .ConfigName = Trim$(Buffer.ReadString)
+                .BaseMap = Buffer.ReadInt32
+                .X = Buffer.ReadInt32
+                .Y = Buffer.ReadInt32
+                .Price = Buffer.ReadInt32
+                .MaxFurniture = Buffer.ReadInt32
             End With
         Next
 
         HouseEdit = True
 
-        buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 #End Region
 
 #Region "Outgoing Packets"
     Public Sub SendRequestEditHouse()
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(EditorPackets.RequestEditHouse)
+        Buffer.WriteInt32(EditorPackets.RequestEditHouse)
 
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        SendData(Buffer.ToArray)
+        Buffer.Dispose
 
     End Sub
 
     Public Sub SendBuyHouse(ByVal Accepted As Byte)
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CBuyHouse)
-        buffer.WriteInteger(Accepted)
+        Buffer.WriteInt32(ClientPackets.CBuyHouse)
+        Buffer.WriteInt32(Accepted)
 
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        SendData(Buffer.ToArray)
+        Buffer.Dispose
     End Sub
 
     Public Sub SendInvite(ByVal Name As String)
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CVisit)
-        buffer.WriteString(Name)
+        Buffer.WriteInt32(ClientPackets.CVisit)
+        Buffer.WriteString(Name)
 
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        SendData(Buffer.ToArray)
+        Buffer.Dispose
     End Sub
 
     Public Sub SendVisit(ByVal Accepted As Byte)
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CAcceptVisit)
-        buffer.WriteInteger(Accepted)
+        Buffer.WriteInt32(ClientPackets.CAcceptVisit)
+        Buffer.WriteInt32(Accepted)
 
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        SendData(Buffer.ToArray)
+        Buffer.Dispose
     End Sub
 #End Region
 

@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports ASFW
 
 Public Module ServerHousing
 #Region "Globals & Types"
@@ -84,14 +85,9 @@ Public Module ServerHousing
 
 #Region "Incoming Packets"
     Sub Packet_BuyHouse(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer, i As Integer, price As Integer
-
-        Buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ClientPackets.CBuyHouse Then Exit Sub
-
-        i = Buffer.ReadInteger
+        Dim i As Integer, price As Integer
+        Dim Buffer As New ByteStream(data)
+        i = Buffer.ReadInt32
 
         If i = 1 Then
             If TempPlayer(index).BuyHouseIndex > 0 Then
@@ -115,21 +111,16 @@ Public Module ServerHousing
 
         TempPlayer(index).BuyHouseIndex = 0
 
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub Packet_InviteToHouse(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer, invitee As Integer, Name As String
-
-        Buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ClientPackets.CVisit Then Exit Sub
-
+        Dim invitee As Integer, Name As String
+        Dim Buffer As New ByteStream(data)
         Name = Trim$(Buffer.ReadString)
         invitee = FindPlayer(Name)
-        Buffer = Nothing
+        Buffer.Dispose
 
         If invitee = 0 Then
             PlayerMsg(index, "Player not found.", ColorType.BrightRed)
@@ -159,13 +150,13 @@ Public Module ServerHousing
                         End If
                     Else
                         'Send invite
-                        Buffer = New ByteBuffer
-                        Buffer.WriteInteger(ServerPackets.SVisit)
-                        Buffer.WriteInteger(index)
+                        Buffer = New ByteStream(4)
+                        Buffer.WriteInt32(ServerPackets.SVisit)
+                        Buffer.WriteInt32(index)
                         SendDataTo(invitee, Buffer.ToArray)
                         TempPlayer(invitee).InvitationIndex = index
                         TempPlayer(invitee).InvitationTimer = GetTimeMs() + 15000
-                        Buffer = Nothing
+                        Buffer.Dispose
                     End If
                 Else
                     PlayerMsg(index, "Only the house owner can invite other players into their house.", ColorType.BrightRed)
@@ -180,15 +171,10 @@ Public Module ServerHousing
     End Sub
 
     Sub Packet_AcceptInvite(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer, response As Integer
-
-        Buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ClientPackets.CAcceptVisit Then Exit Sub
-
-        response = Buffer.ReadInteger
-        Buffer = Nothing
+        Dim response As Integer
+        Dim Buffer As New ByteStream(data)
+        response = Buffer.ReadInt32
+        Buffer.Dispose
 
         If response = 1 Then
             If TempPlayer(index).InvitationIndex > 0 Then
@@ -219,18 +205,14 @@ Public Module ServerHousing
     End Sub
 
     Sub Packet_PlaceFurniture(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer, i As Integer, x As Integer, y As Integer, invslot As Integer
+        Dim i As Integer, x As Integer, y As Integer, invslot As Integer
         Dim ItemNum As Integer, x1 As Integer, y1 As Integer, widthoffset As Integer
 
-        Buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ClientPackets.CPlaceFurniture Then Exit Sub
-
-        x = Buffer.ReadInteger
-        y = Buffer.ReadInteger
-        invslot = Buffer.ReadInteger
-        Buffer = Nothing
+        Dim Buffer As New ByteStream(data)
+        x = Buffer.ReadInt32
+        y = Buffer.ReadInt32
+        invslot = Buffer.ReadInt32
+        Buffer.Dispose
 
         ItemNum = Player(index).Character(TempPlayer(index).CurChar).Inv(invslot).Num
 
@@ -403,54 +385,43 @@ Public Module ServerHousing
     End Sub
 
     Sub Packet_RequestEditHouse(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer, i As Integer
-
-        Buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> EditorPackets.RequestEditHouse Then Exit Sub
-
-        Buffer = Nothing
+        Dim Buffer As ByteStream, i As Integer
 
         ' Prevent hacking
         If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
 
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SHouseEdit)
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SHouseEdit)
         For i = 1 To MAX_HOUSES
             Buffer.WriteString(Trim$(HouseConfig(i).ConfigName))
-            Buffer.WriteInteger(HouseConfig(i).BaseMap)
-            Buffer.WriteInteger(HouseConfig(i).X)
-            Buffer.WriteInteger(HouseConfig(i).Y)
-            Buffer.WriteInteger(HouseConfig(i).Price)
-            Buffer.WriteInteger(HouseConfig(i).MaxFurniture)
+            Buffer.WriteInt32(HouseConfig(i).BaseMap)
+            Buffer.WriteInt32(HouseConfig(i).X)
+            Buffer.WriteInt32(HouseConfig(i).Y)
+            Buffer.WriteInt32(HouseConfig(i).Price)
+            Buffer.WriteInt32(HouseConfig(i).MaxFurniture)
         Next
         SendDataTo(index, Buffer.ToArray)
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub Packet_SaveHouses(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer, i As Integer, x As Integer, Count As Integer, z As Integer
+        Dim i As Integer, x As Integer, Count As Integer, z As Integer
 
         ' Prevent hacking
         If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
 
-        Buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> EditorPackets.SaveHouses Then Exit Sub
-
-        Count = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        Count = Buffer.ReadInt32
         If Count > 0 Then
             For z = 1 To Count
-                i = Buffer.ReadInteger
+                i = Buffer.ReadInt32
                 HouseConfig(i).ConfigName = Trim$(Buffer.ReadString)
-                HouseConfig(i).BaseMap = Buffer.ReadInteger
-                HouseConfig(i).X = Buffer.ReadInteger
-                HouseConfig(i).Y = Buffer.ReadInteger
-                HouseConfig(i).Price = Buffer.ReadInteger
-                HouseConfig(i).MaxFurniture = Buffer.ReadInteger
+                HouseConfig(i).BaseMap = Buffer.ReadInt32
+                HouseConfig(i).X = Buffer.ReadInt32
+                HouseConfig(i).Y = Buffer.ReadInt32
+                HouseConfig(i).Price = Buffer.ReadInt32
+                HouseConfig(i).MaxFurniture = Buffer.ReadInt32
                 SaveHouse(i)
 
                 For x = 1 To GetPlayersOnline()
@@ -461,19 +432,14 @@ Public Module ServerHousing
             Next
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub Packet_SellHouse(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer, i As Integer, refund As Integer
+        Dim i As Integer, refund As Integer
         Dim TmpIndex As Integer
-
-        Buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ClientPackets.CSellHouse Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         TmpIndex = Player(index).Character(TempPlayer(index).CurChar).House.HouseIndex
         If TmpIndex > 0 Then
             'get some money back
@@ -501,7 +467,7 @@ Public Module ServerHousing
             PlayerMsg(index, "You dont own a House!", ColorType.BrightRed)
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
@@ -509,33 +475,33 @@ Public Module ServerHousing
 
 #Region "OutGoing Packets"
     Sub SendHouseConfigs(ByVal Index As Integer)
-        Dim Buffer As New ByteBuffer, i As Integer
+        Dim Buffer As New ByteStream(4), i As Integer
 
-        Buffer.WriteInteger(ServerPackets.SHouseConfigs)
+        Buffer.WriteInt32(ServerPackets.SHouseConfigs)
 
         For i = 1 To MAX_HOUSES
             Buffer.WriteString(Trim(HouseConfig(i).ConfigName))
-            Buffer.WriteInteger(HouseConfig(i).BaseMap)
-            Buffer.WriteInteger(HouseConfig(i).MaxFurniture)
-            Buffer.WriteInteger(HouseConfig(i).Price)
+            Buffer.WriteInt32(HouseConfig(i).BaseMap)
+            Buffer.WriteInt32(HouseConfig(i).MaxFurniture)
+            Buffer.WriteInt32(HouseConfig(i).Price)
         Next
 
         SendDataTo(Index, Buffer.ToArray)
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub SendFurnitureToHouse(ByVal HouseIndex As Integer)
-        Dim Buffer As New ByteBuffer, i As Integer
+        Dim Buffer As New ByteStream(4), i As Integer
 
-        Buffer.WriteInteger(ServerPackets.SFurniture)
-        Buffer.WriteInteger(HouseIndex)
-        Buffer.WriteInteger(Player(HouseIndex).Character(TempPlayer(HouseIndex).CurChar).House.FurnitureCount)
+        Buffer.WriteInt32(ServerPackets.SFurniture)
+        Buffer.WriteInt32(HouseIndex)
+        Buffer.WriteInt32(Player(HouseIndex).Character(TempPlayer(HouseIndex).CurChar).House.FurnitureCount)
         If Player(HouseIndex).Character(TempPlayer(HouseIndex).CurChar).House.FurnitureCount > 0 Then
             For i = 1 To Player(HouseIndex).Character(TempPlayer(HouseIndex).CurChar).House.FurnitureCount
-                Buffer.WriteInteger(Player(HouseIndex).Character(TempPlayer(HouseIndex).CurChar).House.Furniture(i).ItemNum)
-                Buffer.WriteInteger(Player(HouseIndex).Character(TempPlayer(HouseIndex).CurChar).House.Furniture(i).X)
-                Buffer.WriteInteger(Player(HouseIndex).Character(TempPlayer(HouseIndex).CurChar).House.Furniture(i).Y)
+                Buffer.WriteInt32(Player(HouseIndex).Character(TempPlayer(HouseIndex).CurChar).House.Furniture(i).ItemNum)
+                Buffer.WriteInt32(Player(HouseIndex).Character(TempPlayer(HouseIndex).CurChar).House.Furniture(i).X)
+                Buffer.WriteInt32(Player(HouseIndex).Character(TempPlayer(HouseIndex).CurChar).House.Furniture(i).Y)
             Next
         End If
 
@@ -547,7 +513,7 @@ Public Module ServerHousing
             End If
         Next
 
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 #End Region

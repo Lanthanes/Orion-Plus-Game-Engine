@@ -1,4 +1,6 @@
 ﻿
+Imports ASFW
+
 Public Module EditorCrafting
 #Region "Globals"
 
@@ -179,89 +181,75 @@ Public Module EditorCrafting
 #Region "Incoming Packets"
     Sub Packet_UpdateRecipe(ByVal data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SUpdateRecipe Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         'recipe index
-        n = Buffer.ReadInteger
+        n = Buffer.ReadInt32
 
         ' Update the Recipe
         Recipe(n).Name = Trim$(Buffer.ReadString)
-        Recipe(n).RecipeType = Buffer.ReadInteger
-        Recipe(n).MakeItemNum = Buffer.ReadInteger
-        Recipe(n).MakeItemAmount = Buffer.ReadInteger
+        Recipe(n).RecipeType = Buffer.ReadInt32
+        Recipe(n).MakeItemNum = Buffer.ReadInt32
+        Recipe(n).MakeItemAmount = Buffer.ReadInt32
 
         For i = 1 To MAX_INGREDIENT
-            Recipe(n).Ingredients(i).ItemNum = Buffer.ReadInteger()
-            Recipe(n).Ingredients(i).Value = Buffer.ReadInteger()
+            Recipe(n).Ingredients(i).ItemNum = Buffer.ReadInt32()
+            Recipe(n).Ingredients(i).Value = Buffer.ReadInt32()
         Next
 
-        Recipe(n).CreateTime = Buffer.ReadInteger
+        Recipe(n).CreateTime = Buffer.ReadInt32
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
     Sub Packet_RecipeEditor(ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SRecipeEditor Then Exit Sub
-
         InitRecipeEditor = True
-
-        Buffer = Nothing
     End Sub
 
 #End Region
 
 #Region "OutGoing Packets"
     Sub SendRequestRecipes()
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(ClientPackets.CRequestRecipes)
+        Buffer.WriteInt32(ClientPackets.CRequestRecipes)
 
         SendData(Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub SendRequestEditRecipes()
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As ByteStream
+        Buffer = New ByteStream(4)
 
-        Buffer.WriteInteger(EditorPackets.RequestEditRecipes)
+        Buffer.WriteInt32(EditorPackets.RequestEditRecipes)
 
         SendData(Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub SendSaveRecipe(ByVal RecipeNum As Integer)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As ByteStream
+        Buffer = New ByteStream(4)
 
-        Buffer.WriteInteger(EditorPackets.SaveRecipe)
+        Buffer.WriteInt32(EditorPackets.SaveRecipe)
 
-        Buffer.WriteInteger(RecipeNum)
+        Buffer.WriteInt32(RecipeNum)
 
         Buffer.WriteString(Trim$(Recipe(RecipeNum).Name))
-        Buffer.WriteInteger(Recipe(RecipeNum).RecipeType)
-        Buffer.WriteInteger(Recipe(RecipeNum).MakeItemNum)
-        Buffer.WriteInteger(Recipe(RecipeNum).MakeItemAmount)
+        Buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
+        Buffer.WriteInt32(Recipe(RecipeNum).MakeItemNum)
+        Buffer.WriteInt32(Recipe(RecipeNum).MakeItemAmount)
 
         For i = 1 To MAX_INGREDIENT
-            Buffer.WriteInteger(Recipe(RecipeNum).Ingredients(i).ItemNum)
-            Buffer.WriteInteger(Recipe(RecipeNum).Ingredients(i).Value)
+            Buffer.WriteInt32(Recipe(RecipeNum).Ingredients(i).ItemNum)
+            Buffer.WriteInt32(Recipe(RecipeNum).Ingredients(i).Value)
         Next
 
-        Buffer.WriteInteger(Recipe(RecipeNum).CreateTime)
+        Buffer.WriteInt32(Recipe(RecipeNum).CreateTime)
 
         SendData(Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
 #End Region

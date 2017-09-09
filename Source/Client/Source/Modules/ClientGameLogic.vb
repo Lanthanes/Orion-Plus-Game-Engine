@@ -1,6 +1,7 @@
 ﻿Imports System.Drawing
 Imports System.Threading
 Imports System.Windows.Forms
+Imports ASFW
 Imports Orion
 
 Module ClientGameLogic
@@ -11,7 +12,7 @@ Module ClientGameLogic
         Dim dest As Point = New Point(FrmMainGame.PointToScreen(FrmMainGame.picscreen.Location))
         Dim g As Graphics = FrmMainGame.picscreen.CreateGraphics
         Dim starttime As Integer, Tick As Integer, fogtmr As Integer
-        Dim tmpfps As Integer, tmplps as integer, WalkTimer As Integer, FrameTime As Integer
+        Dim tmpfps As Integer, tmplps As Integer, WalkTimer As Integer, FrameTime As Integer
         Dim tmr10000 As Integer, tmr1000 As Integer, tmrweather As Integer
         Dim tmr100 As Integer, tmr500 As Integer, tmrconnect As Integer
         Dim rendercount As Integer, Fadetmr As Integer
@@ -166,7 +167,7 @@ Module ClientGameLogic
                     For i = 1 To MAX_PLAYER_SKILLS
                         If PlayerSkills(i) > 0 Then
                             If SkillCD(i) > 0 Then
-                                If SkillCD(i) + (Skill(PlayerSkills(i)).CDTime * 1000) < Tick Then
+                                If SkillCD(i) + (Skill(PlayerSkills(i)).CdTime * 1000) < Tick Then
                                     SkillCD(i) = 0
                                     DrawPlayerSkills()
                                 End If
@@ -305,12 +306,12 @@ Module ClientGameLogic
                 Fadetmr = Tick + 30
             End If
 
-            If rendercount < tick Then
+            If rendercount < Tick Then
                 'Actual Game Loop Stuff :/
                 Render_Graphics()
                 tmplps = tmplps + 1
                 rendercount = Tick + 16
-            End if
+            End If
 
             Application.DoEvents()
 
@@ -487,7 +488,7 @@ Module ClientGameLogic
         Dim i As Integer
         Dim n As Integer
         Dim Command() As String
-        Dim Buffer As ByteBuffer
+        Dim Buffer As ByteStream
         ChatText = Trim$(ChatInput.CurrentMessage)
         Name = ""
 
@@ -496,13 +497,13 @@ Module ClientGameLogic
 
         If EventChat = True Then
             If EventChatType = 0 Then
-                Buffer = New ByteBuffer
-                Buffer.WriteInteger(ClientPackets.CEventChatReply)
-                Buffer.WriteInteger(EventReplyID)
-                Buffer.WriteInteger(EventReplyPage)
-                Buffer.WriteInteger(0)
+                Buffer = New ByteStream(4)
+                Buffer.WriteInt32(ClientPackets.CEventChatReply)
+                Buffer.WriteInt32(EventReplyID)
+                Buffer.WriteInt32(EventReplyPage)
+                Buffer.WriteInt32(0)
                 SendData(Buffer.ToArray)
-                Buffer = Nothing
+                Buffer.Dispose()
                 ClearEventChat()
                 InEvent = False
                 Exit Sub
@@ -604,10 +605,10 @@ Module ClientGameLogic
                     SendInvite(Command(1))
 
                 Case "/sellhouse"
-                    Buffer = New ByteBuffer
-                    Buffer.WriteInteger(ClientPackets.CSellHouse)
+                    Buffer = New ByteStream(4)
+                    Buffer.WriteInt32(ClientPackets.CSellHouse)
                     SendData(Buffer.ToArray())
-                    Buffer = Nothing
+                    Buffer.Dispose()
                 Case "/info"
 
                     ' Checks to make sure we have more than one string in the array
@@ -621,11 +622,11 @@ Module ClientGameLogic
                         GoTo Continue1
                     End If
 
-                    Buffer = New ByteBuffer
-                    Buffer.WriteInteger(ClientPackets.CPlayerInfoRequest)
+                    Buffer = New ByteStream(4)
+                    Buffer.WriteInt32(ClientPackets.CPlayerInfoRequest)
                     Buffer.WriteString(Command(1))
                     SendData(Buffer.ToArray())
-                    Buffer = Nothing
+                    Buffer.Dispose()
                 ' Whos Online
                 Case "/who"
                     SendWhosOnline()
@@ -636,10 +637,10 @@ Module ClientGameLogic
                     BLPS = Not BLPS
                 ' Request stats
                 Case "/stats"
-                    Buffer = New ByteBuffer
-                    Buffer.WriteInteger(ClientPackets.CGetStats)
+                    Buffer = New ByteStream(4)
+                    Buffer.WriteInt32(ClientPackets.CGetStats)
                     SendData(Buffer.ToArray())
-                    Buffer = Nothing
+                    Buffer.Dispose()
                 Case "/party"
                     ' Make sure they are actually sending something
                     If UBound(Command) < 1 Then
@@ -922,18 +923,18 @@ Continue1:
     End Sub
 
     Sub CheckMapGetItem()
-        Dim Buffer As New ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As New ByteStream(4)
+        Buffer = New ByteStream(4)
 
         If GetTickCount() > Player(MyIndex).MapGetTimer + 250 Then
             If Trim$(ChatInput.CurrentMessage) = "" Then
                 Player(MyIndex).MapGetTimer = GetTickCount()
-                Buffer.WriteInteger(ClientPackets.CMapGetItem)
+                Buffer.WriteInt32(ClientPackets.CMapGetItem)
                 SendData(Buffer.ToArray())
             End If
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Public Sub UpdateDescWindow(ByVal itemnum As Integer, ByVal Amount As Integer, ByVal InvNum As Integer, ByVal WindowType As Byte)
@@ -1320,7 +1321,7 @@ Continue1:
                 SkillDescType = Strings.Get("skilldescription", "warp")
         End Select
 
-        SkillDescReqMp = Skill(skillnum).MPCost
+        SkillDescReqMp = Skill(skillnum).MpCost
         SkillDescReqLvl = Skill(skillnum).LevelReq
         SkillDescReqAccess = Skill(skillnum).AccessReq
 
@@ -1331,7 +1332,7 @@ Continue1:
         End If
 
         SkillDescCastTime = Skill(skillnum).CastTime & "s"
-        SkillDescCoolDown = Skill(skillnum).CDTime & "s"
+        SkillDescCoolDown = Skill(skillnum).CdTime & "s"
         SkillDescDamage = Skill(skillnum).Vital
 
         If Skill(skillnum).IsAoE Then
@@ -1361,7 +1362,7 @@ Continue1:
 
         For Layer = 0 To 1
             If AnimInstance(Index).Used(Layer) Then
-                looptime = Animation(AnimInstance(Index).Animation).looptime(Layer)
+                looptime = Animation(AnimInstance(Index).Animation).LoopTime(Layer)
                 FrameCount = Animation(AnimInstance(Index).Animation).Frames(Layer)
 
 

@@ -1,4 +1,6 @@
-﻿Module ClientPlayer
+﻿Imports ASFW
+
+Module ClientPlayer
     Function IsPlaying(ByVal Index As Integer) As Boolean
 
         ' if the player doesn't exist, the name will equal 0
@@ -16,7 +18,7 @@
 
     Sub CheckAttack()
         Dim attackspeed As Integer, X As Integer, Y As Integer
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
         If VbKeyControl Then
             If InEvent = True Then Exit Sub
@@ -61,11 +63,11 @@
                 For i = 1 To Map.CurrentEvents
                     If Map.MapEvents(i).Visible = 1 Then
                         If Map.MapEvents(i).X = X And Map.MapEvents(i).Y = Y Then
-                            Buffer = New ByteBuffer
-                            Buffer.WriteInteger(ClientPackets.CEvent)
-                            Buffer.WriteInteger(i)
+                            Buffer = New ByteStream(4)
+                            Buffer.WriteInt32(ClientPackets.CEvent)
+                            Buffer.WriteInt32(i)
                             SendData(Buffer.ToArray)
-                            Buffer = Nothing
+                            Buffer.Dispose()
                             Player(MyIndex).EventTimer = GetTickCount() + 200
                         End If
                     End If
@@ -316,7 +318,7 @@
     Function CheckDirection(ByVal Direction As Byte) As Boolean
         Dim X As Integer, Y As Integer
         Dim i As Integer, z As Integer
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
         CheckDirection = False
 
@@ -504,7 +506,7 @@
     End Function
 
     Public Sub PlayerCastSkill(ByVal skillslot As Integer)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
         If skillslot < 1 Or skillslot > MAX_PLAYER_SKILLS Then Exit Sub
@@ -515,7 +517,7 @@
         End If
 
         ' Check if player has enough MP
-        If GetPlayerVital(MyIndex, Vitals.MP) < Skill(PlayerSkills(skillslot)).MPCost Then
+        If GetPlayerVital(MyIndex, Vitals.MP) < Skill(PlayerSkills(skillslot)).MpCost Then
             AddText("Not enough MP to cast " & Trim$(Skill(PlayerSkills(skillslot)).Name) & ".", QColorType.AlertColor)
             Exit Sub
         End If
@@ -523,11 +525,11 @@
         If PlayerSkills(skillslot) > 0 Then
             If GetTickCount() > Player(MyIndex).AttackTimer + 1000 Then
                 If Player(MyIndex).Moving = 0 Then
-                    Buffer.WriteInteger(ClientPackets.CCast)
-                    Buffer.WriteInteger(skillslot)
+                    Buffer.WriteInt32(ClientPackets.CCast)
+                    Buffer.WriteInt32(skillslot)
 
                     SendData(Buffer.ToArray())
-                    Buffer = Nothing
+                    Buffer.Dispose()
 
                     SkillBuffer = skillslot
                     SkillBufferTimer = GetTickCount()
@@ -809,19 +811,19 @@
         Player(Index).Pet.Mana = 0
         Player(Index).Pet.Level = 0
 
-        ReDim Player(Index).Pet.stat(Stats.Count - 1)
+        ReDim Player(Index).Pet.Stat(Stats.Count - 1)
         For i = 1 To Stats.Count - 1
-            Player(Index).Pet.stat(i) = 0
+            Player(Index).Pet.Stat(i) = 0
         Next
 
-        ReDim Player(Index).Pet.skill(4)
+        ReDim Player(Index).Pet.Skill(4)
         For i = 1 To 4
-            Player(Index).Pet.skill(i) = 0
+            Player(Index).Pet.Skill(i) = 0
         Next
 
         Player(Index).Pet.X = 0
         Player(Index).Pet.Y = 0
-        Player(Index).Pet.dir = 0
+        Player(Index).Pet.Dir = 0
         Player(Index).Pet.MaxHp = 0
         Player(Index).Pet.MaxMP = 0
         Player(Index).Pet.Alive = 0

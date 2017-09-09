@@ -129,67 +129,51 @@ Public Module ServerCrafting
 
 #Region "Incoming Packets"
     Sub Packet_RequestRecipes(ByVal Index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CRequestRecipes Then Exit Sub
-
         Addlog("Recieved CMSG: CRequestRecipes", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestRecipes")
 
         SendRecipes(Index)
-
-        Buffer = Nothing
-
     End Sub
 
     Sub Packet_RequestEditRecipes(ByVal Index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
-
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
 
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SRecipeEditor)
+        Dim Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SRecipeEditor)
         SendDataTo(Index, Buffer.ToArray())
 
         Addlog("Sent SMSG: SRecipeEditor", PACKET_LOG)
         TextAdd("Sent SMSG: SRecipeEditor")
 
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub Packet_SaveRecipe(ByVal Index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer, n As Integer
-        Buffer = New ByteBuffer
+        Dim n As Integer
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> EditorPackets.SaveRecipe Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved EMSG: SaveRecipe", PACKET_LOG)
         TextAdd("Recieved EMSG: SaveRecipe")
 
         'recipe index
-        n = Buffer.ReadInteger
+        n = Buffer.ReadInt32
 
         ' Update the Recipe
         Recipe(n).Name = Trim$(Buffer.ReadString)
-        Recipe(n).RecipeType = Buffer.ReadInteger
-        Recipe(n).MakeItemNum = Buffer.ReadInteger
-        Recipe(n).MakeItemAmount = Buffer.ReadInteger
+        Recipe(n).RecipeType = Buffer.ReadInt32
+        Recipe(n).MakeItemNum = Buffer.ReadInt32
+        Recipe(n).MakeItemAmount = Buffer.ReadInt32
 
         For i = 1 To MAX_INGREDIENT
-            Recipe(n).Ingredients(i).ItemNum = Buffer.ReadInteger()
-            Recipe(n).Ingredients(i).Value = Buffer.ReadInteger()
+            Recipe(n).Ingredients(i).ItemNum = Buffer.ReadInt32()
+            Recipe(n).Ingredients(i).Value = Buffer.ReadInt32()
         Next
 
-        Recipe(n).CreateTime = Buffer.ReadInteger
+        Recipe(n).CreateTime = Buffer.ReadInt32
 
         'save
         SaveRecipe(n)
@@ -197,40 +181,25 @@ Public Module ServerCrafting
         'send to all
         SendUpdateRecipeToAll(n)
 
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub Packet_CloseCraft(ByVal Index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CCloseCraft Then Exit Sub
-
         Addlog("Recieved CMSG: CCloseCraft", PACKET_LOG)
         TextAdd("Recieved CMSG: CCloseCraft")
 
         TempPlayer(Index).IsCrafting = False
-
-        Buffer = Nothing
-
     End Sub
 
     Sub Packet_StartCraft(ByVal Index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
         Dim recipeindex As Integer, amount As Integer
-
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CStartCraft Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CStartCraft", PACKET_LOG)
         TextAdd("Recieved CMSG: CStartCraft")
 
-        recipeindex = Buffer.ReadInteger
-        amount = Buffer.ReadInteger
+        recipeindex = Buffer.ReadInt32
+        amount = Buffer.ReadInt32
 
         If TempPlayer(Index).IsCrafting = False Then Exit Sub
 
@@ -240,7 +209,7 @@ Public Module ServerCrafting
 
         StartCraft(Index, recipeindex, amount)
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
@@ -261,101 +230,101 @@ Public Module ServerCrafting
     End Sub
 
     Sub SendUpdateRecipeTo(ByVal Index As Integer, ByVal RecipeNum As Integer)
-        Dim Buffer As ByteBuffer, i As Integer
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SUpdateRecipe)
-        Buffer.WriteInteger(RecipeNum)
+        Dim Buffer as ByteStream, i As Integer
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SUpdateRecipe)
+        Buffer.WriteInt32(RecipeNum)
 
         Addlog("Sent SMSG: SUpdateRecipe", PACKET_LOG)
         TextAdd("Sent SMSG: SUpdateRecipe")
 
         Buffer.WriteString(Trim$(Recipe(RecipeNum).Name))
-        Buffer.WriteInteger(Recipe(RecipeNum).RecipeType)
-        Buffer.WriteInteger(Recipe(RecipeNum).MakeItemNum)
-        Buffer.WriteInteger(Recipe(RecipeNum).MakeItemAmount)
+        Buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
+        Buffer.WriteInt32(Recipe(RecipeNum).MakeItemNum)
+        Buffer.WriteInt32(Recipe(RecipeNum).MakeItemAmount)
 
         For i = 1 To MAX_INGREDIENT
-            Buffer.WriteInteger(Recipe(RecipeNum).Ingredients(i).ItemNum)
-            Buffer.WriteInteger(Recipe(RecipeNum).Ingredients(i).Value)
+            Buffer.WriteInt32(Recipe(RecipeNum).Ingredients(i).ItemNum)
+            Buffer.WriteInt32(Recipe(RecipeNum).Ingredients(i).Value)
         Next
 
-        Buffer.WriteInteger(Recipe(RecipeNum).CreateTime)
+        Buffer.WriteInt32(Recipe(RecipeNum).CreateTime)
 
         SendDataTo(Index, Buffer.ToArray())
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub SendUpdateRecipeToAll(ByVal RecipeNum As Integer)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SUpdateRecipe)
-        Buffer.WriteInteger(RecipeNum)
+        Dim Buffer as ByteStream
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SUpdateRecipe)
+        Buffer.WriteInt32(RecipeNum)
 
         Addlog("Sent SMSG: SUpdateRecipe To All", PACKET_LOG)
         TextAdd("Sent SMSG: SUpdateRecipe To All")
 
         Buffer.WriteString(Trim$(Recipe(RecipeNum).Name))
-        Buffer.WriteInteger(Recipe(RecipeNum).RecipeType)
-        Buffer.WriteInteger(Recipe(RecipeNum).MakeItemNum)
-        Buffer.WriteInteger(Recipe(RecipeNum).MakeItemAmount)
+        Buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
+        Buffer.WriteInt32(Recipe(RecipeNum).MakeItemNum)
+        Buffer.WriteInt32(Recipe(RecipeNum).MakeItemAmount)
 
         For i = 1 To MAX_INGREDIENT
-            Buffer.WriteInteger(Recipe(RecipeNum).Ingredients(i).ItemNum)
-            Buffer.WriteInteger(Recipe(RecipeNum).Ingredients(i).Value)
+            Buffer.WriteInt32(Recipe(RecipeNum).Ingredients(i).ItemNum)
+            Buffer.WriteInt32(Recipe(RecipeNum).Ingredients(i).Value)
         Next
 
-        Buffer.WriteInteger(Recipe(RecipeNum).CreateTime)
+        Buffer.WriteInt32(Recipe(RecipeNum).CreateTime)
 
         SendDataToAll(Buffer.ToArray())
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub SendPlayerRecipes(ByVal Index As Integer)
         Dim i As Integer
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SSendPlayerRecipe)
+        Dim Buffer as ByteStream
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SSendPlayerRecipe)
 
         Addlog("Sent SMSG: SSendPlayerRecipe", PACKET_LOG)
         TextAdd("Sent SMSG: SSendPlayerRecipe")
 
         For i = 1 To MAX_RECIPE
-            Buffer.WriteInteger(Player(Index).Character(TempPlayer(Index).CurChar).RecipeLearned(i))
+            Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RecipeLearned(i))
         Next
 
         SendDataTo(Index, Buffer.ToArray())
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub SendOpenCraft(ByVal Index As Integer)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SOpenCraft)
+        Dim Buffer as ByteStream
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SOpenCraft)
 
         Addlog("Sent SMSG: SOpenCraft", PACKET_LOG)
         TextAdd("Sent SMSG: SOpenCraft")
 
         SendDataTo(Index, Buffer.ToArray())
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub SendCraftUpdate(ByVal Index As Integer, ByVal done As Byte)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SUpdateCraft)
+        Dim Buffer as ByteStream
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SUpdateCraft)
 
         Addlog("Sent SMSG: SUpdateCraft", PACKET_LOG)
         TextAdd("Sent SMSG: SUpdateCraft")
 
-        Buffer.WriteInteger(done)
+        Buffer.WriteInt32(done)
 
         SendDataTo(Index, Buffer.ToArray())
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 #End Region
 

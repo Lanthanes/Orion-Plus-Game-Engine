@@ -1,4 +1,6 @@
-﻿Module ServerNpc
+﻿Imports ASFW
+
+Module ServerNpc
 #Region "Npcombat"
     Public Sub TryNpcAttackPlayer(mapnpcnum As Integer, Index As Integer)
 
@@ -193,7 +195,7 @@
     Public Sub NpcAttackPlayer(MapNpcNum As Integer, Victim As Integer, Damage As Integer)
         Dim Name As String, MapNum As Integer
         Dim z As Integer, InvCount As Integer, EqCount As Integer, j As Integer, x As Integer
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
 
@@ -206,10 +208,10 @@
         Name = Trim$(Npc(MapNpc(MapNum).Npc(MapNpcNum).Num).Name)
 
         ' Send this packet so they can see the npc attacking
-        Buffer.WriteInteger(ServerPackets.SNpcAttack)
-        Buffer.WriteInteger(MapNpcNum)
+        Buffer.WriteInt32(ServerPackets.SNpcAttack)
+        Buffer.WriteInt32(MapNpcNum)
         SendDataToMap(MapNum, Buffer.ToArray)
-        Buffer = Nothing
+        Buffer.Dispose()
 
         If Damage <= 0 Then Exit Sub
 
@@ -308,7 +310,7 @@
     End Sub
 
     Sub NpcAttackNpc(MapNum As Integer, Attacker As Integer, Victim As Integer, Damage As Integer)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
         Dim aNpcNum As Integer
         Dim vNpcNum As Integer
         Dim n As Integer
@@ -325,10 +327,10 @@
         If vNpcNum <= 0 Then Exit Sub
 
         ' Send this packet so they can see the person attacking
-        Buffer.WriteInteger(ServerPackets.SNpcAttack)
-        Buffer.WriteInteger(Attacker)
+        Buffer.WriteInt32(ServerPackets.SNpcAttack)
+        Buffer.WriteInt32(Attacker)
         SendDataToMap(MapNum, Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose()
 
         If Damage >= MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) Then
             SendActionMsg(MapNum, "-" & Damage, ColorType.BrightRed, 1, (MapNpc(MapNum).Npc(Victim).X * 32), (MapNpc(MapNum).Npc(Victim).Y * 32))
@@ -353,11 +355,11 @@
             MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) = 0
 
             ' send npc death packet to map
-            Buffer = New ByteBuffer
-            Buffer.WriteInteger(ServerPackets.SNpcDead)
-            Buffer.WriteInteger(Victim)
+            Buffer = New ByteStream(4)
+            Buffer.WriteInt32(ServerPackets.SNpcDead)
+            Buffer.WriteInt32(Victim)
             SendDataToMap(MapNum, Buffer.ToArray())
-            Buffer = Nothing
+            Buffer.Dispose()
         Else
             ' npc not dead, just do the damage
             MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) = MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) - Damage

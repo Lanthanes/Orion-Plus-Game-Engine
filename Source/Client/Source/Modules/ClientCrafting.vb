@@ -1,4 +1,5 @@
 ﻿Imports System.Drawing
+Imports ASFW
 
 Public Module ClientCrafting
 #Region "Globals"
@@ -84,78 +85,49 @@ Public Module ClientCrafting
 #Region "Incoming Packets"
     Sub Packet_UpdateRecipe(ByVal data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SUpdateRecipe Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         'recipe index
-        n = Buffer.ReadInteger
+        n = Buffer.ReadInt32
 
         ' Update the Recipe
         Recipe(n).Name = Trim$(Buffer.ReadString)
-        Recipe(n).RecipeType = Buffer.ReadInteger
-        Recipe(n).MakeItemNum = Buffer.ReadInteger
-        Recipe(n).MakeItemAmount = Buffer.ReadInteger
+        Recipe(n).RecipeType = Buffer.ReadInt32
+        Recipe(n).MakeItemNum = Buffer.ReadInt32
+        Recipe(n).MakeItemAmount = Buffer.ReadInt32
 
         For i = 1 To MAX_INGREDIENT
-            Recipe(n).Ingredients(i).ItemNum = Buffer.ReadInteger()
-            Recipe(n).Ingredients(i).Value = Buffer.ReadInteger()
+            Recipe(n).Ingredients(i).ItemNum = Buffer.ReadInt32()
+            Recipe(n).Ingredients(i).Value = Buffer.ReadInt32()
         Next
 
-        Recipe(n).CreateTime = Buffer.ReadInteger
+        Recipe(n).CreateTime = Buffer.ReadInt32
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
     Sub Packet_RecipeEditor(ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SRecipeEditor Then Exit Sub
-
         InitRecipeEditor = True
-
-        Buffer = Nothing
     End Sub
 
     Sub Packet_SendPlayerRecipe(ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer, i As Integer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SSendPlayerRecipe Then Exit Sub
-
+        Dim i As Integer
+        Dim Buffer As New ByteStream(data)
         For i = 1 To MAX_RECIPE
-            Player(MyIndex).RecipeLearned(i) = Buffer.ReadInteger
+            Player(MyIndex).RecipeLearned(i) = Buffer.ReadInt32
         Next
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_OpenCraft(ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SOpenCraft Then Exit Sub
-
         InitCrafting = True
-
-        Buffer = Nothing
     End Sub
 
     Sub Packet_UpdateCraft(ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer, done As Byte
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SUpdateCraft Then Exit Sub
-
-        done = Buffer.ReadInteger
+        Dim done As Byte
+        Dim Buffer As New ByteStream(data)
+        done = Buffer.ReadInt32
 
         If done = 1 Then
             InitCrafting = True
@@ -164,54 +136,54 @@ Public Module ClientCrafting
             CraftTimerEnabled = True
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 #End Region
 
 #Region "OutGoing Packets"
     Sub SendRequestRecipes()
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(ClientPackets.CRequestRecipes)
+        Buffer.WriteInt32(ClientPackets.CRequestRecipes)
 
         SendData(Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub SendRequestEditRecipes()
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(EditorPackets.RequestEditRecipes)
+        Buffer.WriteInt32(EditorPackets.RequestEditRecipes)
 
         SendData(Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub SendSaveRecipe(ByVal RecipeNum As Integer)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(EditorPackets.SaveRecipe)
+        Buffer.WriteInt32(EditorPackets.SaveRecipe)
 
-        Buffer.WriteInteger(RecipeNum)
+        Buffer.WriteInt32(RecipeNum)
 
         Buffer.WriteString(Trim$(Recipe(RecipeNum).Name))
-        Buffer.WriteInteger(Recipe(RecipeNum).RecipeType)
-        Buffer.WriteInteger(Recipe(RecipeNum).MakeItemNum)
-        Buffer.WriteInteger(Recipe(RecipeNum).MakeItemAmount)
+        Buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
+        Buffer.WriteInt32(Recipe(RecipeNum).MakeItemNum)
+        Buffer.WriteInt32(Recipe(RecipeNum).MakeItemAmount)
 
         For i = 1 To MAX_INGREDIENT
-            Buffer.WriteInteger(Recipe(RecipeNum).Ingredients(i).ItemNum)
-            Buffer.WriteInteger(Recipe(RecipeNum).Ingredients(i).Value)
+            Buffer.WriteInt32(Recipe(RecipeNum).Ingredients(i).ItemNum)
+            Buffer.WriteInt32(Recipe(RecipeNum).Ingredients(i).Value)
         Next
 
-        Buffer.WriteInteger(Recipe(RecipeNum).CreateTime)
+        Buffer.WriteInt32(Recipe(RecipeNum).CreateTime)
 
         SendData(Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendCraftIt(ByVal RecipeName As String, ByVal Amount As Integer)
-        Dim Buffer As New ByteBuffer, i As Integer
+        Dim Buffer As New ByteStream(4), i As Integer
         Dim recipeindex As Integer
 
         recipeindex = GetRecipeIndex(RecipeName)
@@ -233,14 +205,14 @@ Public Module ClientCrafting
 
         'all seems fine...
 
-        Buffer.WriteInteger(ClientPackets.CStartCraft)
+        Buffer.WriteInt32(ClientPackets.CStartCraft)
 
-        Buffer.WriteInteger(recipeindex)
-        Buffer.WriteInteger(Amount)
+        Buffer.WriteInt32(recipeindex)
+        Buffer.WriteInt32(Amount)
 
         SendData(Buffer.ToArray())
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
         CraftTimer = GetTickCount()
         CraftTimerEnabled = True
@@ -254,13 +226,13 @@ Public Module ClientCrafting
     End Sub
 
     Sub SendCloseCraft()
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(ClientPackets.CCloseCraft)
+        Buffer.WriteInt32(ClientPackets.CCloseCraft)
 
         SendData(Buffer.ToArray())
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 #End Region
 

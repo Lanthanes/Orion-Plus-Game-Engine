@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports ASFW
 
 Public Module ServerEvents
 #Region "Globals"
@@ -828,7 +829,7 @@ Public Module ServerEvents
     End Function
 
     Sub EventDir(PlayerIndex As Integer, MapNum As Integer, eventID As Integer, Dir As Integer, Optional globalevent As Boolean = False)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
         Dim eventIndex As Integer, i As Integer
 
         ' Check for subscript out of range
@@ -859,26 +860,26 @@ Public Module ServerEvents
             If Map(MapNum).Events(eventID).Pages(TempPlayer(PlayerIndex).EventMap.EventPages(eventIndex).PageID).DirFix = 0 Then TempPlayer(PlayerIndex).EventMap.EventPages(eventIndex).Dir = Dir
         End If
 
-        Buffer.WriteInteger(ServerPackets.SEventDir)
-        Buffer.WriteInteger(eventID)
+        Buffer.WriteInt32(ServerPackets.SEventDir)
+        Buffer.WriteInt32(eventID)
 
         Addlog("Sent SMSG: SEventDir", PACKET_LOG)
         TextAdd("Sent SMSG: SEventDir")
 
         If globalevent Then
-            Buffer.WriteInteger(TempEventMap(MapNum).Events(eventID).Dir)
+            Buffer.WriteInt32(TempEventMap(MapNum).Events(eventID).Dir)
         Else
-            Buffer.WriteInteger(TempPlayer(PlayerIndex).EventMap.EventPages(eventIndex).Dir)
+            Buffer.WriteInt32(TempPlayer(PlayerIndex).EventMap.EventPages(eventIndex).Dir)
         End If
 
         SendDataToMap(MapNum, Buffer.ToArray)
 
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub EventMove(Index As Integer, MapNum As Integer, eventID As Integer, Dir As Integer, movementspeed As Integer, Optional globalevent As Boolean = False)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
         Dim eventIndex As Integer, i As Integer
 
         ' Check for subscript out of range
@@ -913,13 +914,13 @@ Public Module ServerEvents
             Case Direction.Up
                 If globalevent Then
                     TempEventMap(MapNum).Events(eventIndex).Y = TempEventMap(MapNum).Events(eventIndex).Y - 1
-                    Buffer.WriteInteger(ServerPackets.SEventMove)
-                    Buffer.WriteInteger(eventID)
-                    Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).X)
-                    Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).Y)
-                    Buffer.WriteInteger(Dir)
-                    Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).Dir)
-                    Buffer.WriteInteger(movementspeed)
+                    Buffer.WriteInt32(ServerPackets.SEventMove)
+                    Buffer.WriteInt32(eventID)
+                    Buffer.WriteInt32(TempEventMap(MapNum).Events(eventIndex).X)
+                    Buffer.WriteInt32(TempEventMap(MapNum).Events(eventIndex).Y)
+                    Buffer.WriteInt32(Dir)
+                    Buffer.WriteInt32(TempEventMap(MapNum).Events(eventIndex).Dir)
+                    Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove Dir Up GlobalEvent", PACKET_LOG)
                     TextAdd("Sent SMSG: SEventMove Dir Up GlobalEvent")
@@ -929,16 +930,16 @@ Public Module ServerEvents
                     Else
                         SendDataTo(Index, Buffer.ToArray)
                     End If
-                    Buffer = Nothing
+                    Buffer.Dispose
                 Else
                     TempPlayer(Index).EventMap.EventPages(eventIndex).Y = TempPlayer(Index).EventMap.EventPages(eventIndex).Y - 1
-                    Buffer.WriteInteger(ServerPackets.SEventMove)
-                    Buffer.WriteInteger(eventID)
-                    Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).X)
-                    Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).Y)
-                    Buffer.WriteInteger(Dir)
-                    Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).Dir)
-                    Buffer.WriteInteger(movementspeed)
+                    Buffer.WriteInt32(ServerPackets.SEventMove)
+                    Buffer.WriteInt32(eventID)
+                    Buffer.WriteInt32(TempPlayer(Index).EventMap.EventPages(eventIndex).X)
+                    Buffer.WriteInt32(TempPlayer(Index).EventMap.EventPages(eventIndex).Y)
+                    Buffer.WriteInt32(Dir)
+                    Buffer.WriteInt32(TempPlayer(Index).EventMap.EventPages(eventIndex).Dir)
+                    Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove Dir Up", PACKET_LOG)
                     TextAdd("Sent SMSG: SEventMove Dir Up")
@@ -948,19 +949,19 @@ Public Module ServerEvents
                     Else
                         SendDataTo(Index, Buffer.ToArray)
                     End If
-                    Buffer = Nothing
+                    Buffer.Dispose
                 End If
 
             Case Direction.Down
                 If globalevent Then
                     TempEventMap(MapNum).Events(eventIndex).Y = TempEventMap(MapNum).Events(eventIndex).Y + 1
-                    Buffer.WriteInteger(ServerPackets.SEventMove)
-                    Buffer.WriteInteger(eventID)
-                    Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).X)
-                    Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).Y)
-                    Buffer.WriteInteger(Dir)
-                    Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).Dir)
-                    Buffer.WriteInteger(movementspeed)
+                    Buffer.WriteInt32(ServerPackets.SEventMove)
+                    Buffer.WriteInt32(eventID)
+                    Buffer.WriteInt32(TempEventMap(MapNum).Events(eventIndex).X)
+                    Buffer.WriteInt32(TempEventMap(MapNum).Events(eventIndex).Y)
+                    Buffer.WriteInt32(Dir)
+                    Buffer.WriteInt32(TempEventMap(MapNum).Events(eventIndex).Dir)
+                    Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove Down GlobalEvent", PACKET_LOG)
                     TextAdd("Sent SMSG: SEventMove Down GlobalEvent")
@@ -970,16 +971,16 @@ Public Module ServerEvents
                     Else
                         SendDataTo(Index, Buffer.ToArray)
                     End If
-                    Buffer = Nothing
+                    Buffer.Dispose
                 Else
                     TempPlayer(Index).EventMap.EventPages(eventIndex).Y = TempPlayer(Index).EventMap.EventPages(eventIndex).Y + 1
-                    Buffer.WriteInteger(ServerPackets.SEventMove)
-                    Buffer.WriteInteger(eventID)
-                    Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).X)
-                    Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).Y)
-                    Buffer.WriteInteger(Dir)
-                    Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).Dir)
-                    Buffer.WriteInteger(movementspeed)
+                    Buffer.WriteInt32(ServerPackets.SEventMove)
+                    Buffer.WriteInt32(eventID)
+                    Buffer.WriteInt32(TempPlayer(Index).EventMap.EventPages(eventIndex).X)
+                    Buffer.WriteInt32(TempPlayer(Index).EventMap.EventPages(eventIndex).Y)
+                    Buffer.WriteInt32(Dir)
+                    Buffer.WriteInt32(TempPlayer(Index).EventMap.EventPages(eventIndex).Dir)
+                    Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove", PACKET_LOG)
                     TextAdd("Sent SMSG: SEventMove")
@@ -989,18 +990,18 @@ Public Module ServerEvents
                     Else
                         SendDataTo(Index, Buffer.ToArray)
                     End If
-                    Buffer = Nothing
+                    Buffer.Dispose
                 End If
             Case Direction.Left
                 If globalevent Then
                     TempEventMap(MapNum).Events(eventIndex).X = TempEventMap(MapNum).Events(eventIndex).X - 1
-                    Buffer.WriteInteger(ServerPackets.SEventMove)
-                    Buffer.WriteInteger(eventID)
-                    Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).X)
-                    Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).Y)
-                    Buffer.WriteInteger(Dir)
-                    Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).Dir)
-                    Buffer.WriteInteger(movementspeed)
+                    Buffer.WriteInt32(ServerPackets.SEventMove)
+                    Buffer.WriteInt32(eventID)
+                    Buffer.WriteInt32(TempEventMap(MapNum).Events(eventIndex).X)
+                    Buffer.WriteInt32(TempEventMap(MapNum).Events(eventIndex).Y)
+                    Buffer.WriteInt32(Dir)
+                    Buffer.WriteInt32(TempEventMap(MapNum).Events(eventIndex).Dir)
+                    Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove Left GlobalEvent", PACKET_LOG)
                     TextAdd("Sent SMSG: SEventMove Left GlobalEvent")
@@ -1010,16 +1011,16 @@ Public Module ServerEvents
                     Else
                         SendDataTo(Index, Buffer.ToArray)
                     End If
-                    Buffer = Nothing
+                    Buffer.Dispose
                 Else
                     TempPlayer(Index).EventMap.EventPages(eventIndex).X = TempPlayer(Index).EventMap.EventPages(eventIndex).X - 1
-                    Buffer.WriteInteger(ServerPackets.SEventMove)
-                    Buffer.WriteInteger(eventID)
-                    Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).X)
-                    Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).Y)
-                    Buffer.WriteInteger(Dir)
-                    Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).Dir)
-                    Buffer.WriteInteger(movementspeed)
+                    Buffer.WriteInt32(ServerPackets.SEventMove)
+                    Buffer.WriteInt32(eventID)
+                    Buffer.WriteInt32(TempPlayer(Index).EventMap.EventPages(eventIndex).X)
+                    Buffer.WriteInt32(TempPlayer(Index).EventMap.EventPages(eventIndex).Y)
+                    Buffer.WriteInt32(Dir)
+                    Buffer.WriteInt32(TempPlayer(Index).EventMap.EventPages(eventIndex).Dir)
+                    Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove", PACKET_LOG)
                     TextAdd("Sent SMSG: SEventMove")
@@ -1029,18 +1030,18 @@ Public Module ServerEvents
                     Else
                         SendDataTo(Index, Buffer.ToArray)
                     End If
-                    Buffer = Nothing
+                    Buffer.Dispose
                 End If
             Case Direction.Right
                 If globalevent Then
                     TempEventMap(MapNum).Events(eventIndex).X = TempEventMap(MapNum).Events(eventIndex).X + 1
-                    Buffer.WriteInteger(ServerPackets.SEventMove)
-                    Buffer.WriteInteger(eventID)
-                    Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).X)
-                    Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).Y)
-                    Buffer.WriteInteger(Dir)
-                    Buffer.WriteInteger(TempEventMap(MapNum).Events(eventIndex).Dir)
-                    Buffer.WriteInteger(movementspeed)
+                    Buffer.WriteInt32(ServerPackets.SEventMove)
+                    Buffer.WriteInt32(eventID)
+                    Buffer.WriteInt32(TempEventMap(MapNum).Events(eventIndex).X)
+                    Buffer.WriteInt32(TempEventMap(MapNum).Events(eventIndex).Y)
+                    Buffer.WriteInt32(Dir)
+                    Buffer.WriteInt32(TempEventMap(MapNum).Events(eventIndex).Dir)
+                    Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove GlobalEvent", PACKET_LOG)
                     TextAdd("Sent SMSG: SEventMove GlobalEvent")
@@ -1050,16 +1051,16 @@ Public Module ServerEvents
                     Else
                         SendDataTo(Index, Buffer.ToArray)
                     End If
-                    Buffer = Nothing
+                    Buffer.Dispose
                 Else
                     TempPlayer(Index).EventMap.EventPages(eventIndex).X = TempPlayer(Index).EventMap.EventPages(eventIndex).X + 1
-                    Buffer.WriteInteger(ServerPackets.SEventMove)
-                    Buffer.WriteInteger(eventID)
-                    Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).X)
-                    Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).Y)
-                    Buffer.WriteInteger(Dir)
-                    Buffer.WriteInteger(TempPlayer(Index).EventMap.EventPages(eventIndex).Dir)
-                    Buffer.WriteInteger(movementspeed)
+                    Buffer.WriteInt32(ServerPackets.SEventMove)
+                    Buffer.WriteInt32(eventID)
+                    Buffer.WriteInt32(TempPlayer(Index).EventMap.EventPages(eventIndex).X)
+                    Buffer.WriteInt32(TempPlayer(Index).EventMap.EventPages(eventIndex).Y)
+                    Buffer.WriteInt32(Dir)
+                    Buffer.WriteInt32(TempPlayer(Index).EventMap.EventPages(eventIndex).Dir)
+                    Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove", PACKET_LOG)
                     TextAdd("Sent SMSG: SEventMove")
@@ -1069,7 +1070,7 @@ Public Module ServerEvents
                     Else
                         SendDataTo(Index, Buffer.ToArray)
                     End If
-                    Buffer = Nothing
+                    Buffer.Dispose
                 End If
         End Select
 
@@ -1759,20 +1760,15 @@ Public Module ServerEvents
 
 #Region "Incoming Packets"
     Sub Packet_EventChatReply(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim eventID As Integer, pageID As Integer, reply As Integer, i As Integer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CEventChatReply Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CEventChatReply", PACKET_LOG)
         TextAdd("Recieved CMSG: CEventChatReply")
 
 
-        eventID = Buffer.ReadInteger
-        pageID = Buffer.ReadInteger
-        reply = Buffer.ReadInteger
+        eventID = Buffer.ReadInt32
+        pageID = Buffer.ReadInt32
+        reply = Buffer.ReadInt32
 
         If TempPlayer(index).EventProcessingCount > 0 Then
             For i = 1 To TempPlayer(index).EventProcessingCount
@@ -1810,23 +1806,19 @@ Public Module ServerEvents
             Next
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub Packet_Event(index As Integer, data() As Byte)
-        Dim i As Integer, begineventprocessing As Boolean, z As Integer, Buffer As New ByteBuffer
+        Dim i As Integer, begineventprocessing As Boolean, z As Integer
         Dim x As Integer, y As Integer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CEvent Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CEvent", PACKET_LOG)
         TextAdd("Recieved CMSG: CEvent")
 
-        i = Buffer.ReadInteger
-        Buffer = Nothing
+        i = Buffer.ReadInt32
+        Buffer.Dispose
 
         Select Case GetPlayerDir(index)
             Case Direction.Up
@@ -1883,28 +1875,14 @@ Public Module ServerEvents
     End Sub
 
     Sub Packet_RequestSwitchesAndVariables(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CRequestSwitchesAndVariables Then Exit Sub
-
         Addlog("Recieved CMSG: CRequestSwitchesAndVariables", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestSwitchesAndVariables")
-
-        Buffer = Nothing
-
         SendSwitchesAndVariables(index)
-
     End Sub
 
     Sub Packet_SwitchesAndVariables(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer, i As Integer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CSwitchesAndVariables Then Exit Sub
-
+        Dim i As Integer
+        Dim Buffer As New ByteStream(data)
 
         Addlog("Recieved CMSG: CSwitchesAndVariables", PACKET_LOG)
         TextAdd("Recieved CMSG: CSwitchesAndVariables")
@@ -1920,7 +1898,7 @@ Public Module ServerEvents
         SaveSwitches()
         SaveVariables()
 
-        Buffer = Nothing
+        Buffer.Dispose
 
         SendSwitchesAndVariables(0, True)
 
@@ -1930,46 +1908,46 @@ Public Module ServerEvents
 
 #Region "Outgoing Packets"
     Sub SendSpecialEffect(Index As Integer, EffectType As Integer, Optional Data1 As Integer = 0, Optional Data2 As Integer = 0, Optional Data3 As Integer = 0, Optional Data4 As Integer = 0)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(ServerPackets.SSpecialEffect)
+        Buffer.WriteInt32(ServerPackets.SSpecialEffect)
 
         Addlog("Sent SMSG: SSpecialEffect", PACKET_LOG)
         TextAdd("Sent SMSG: SPecialEffect")
 
         Select Case EffectType
             Case EFFECT_TYPE_FADEIN
-                Buffer.WriteInteger(EffectType)
+                Buffer.WriteInt32(EffectType)
             Case EFFECT_TYPE_FADEOUT
-                Buffer.WriteInteger(EffectType)
+                Buffer.WriteInt32(EffectType)
             Case EFFECT_TYPE_FLASH
-                Buffer.WriteInteger(EffectType)
+                Buffer.WriteInt32(EffectType)
             Case EFFECT_TYPE_FOG
-                Buffer.WriteInteger(EffectType)
-                Buffer.WriteInteger(Data1) 'fognum
-                Buffer.WriteInteger(Data2) 'fog movement speed
-                Buffer.WriteInteger(Data3) 'opacity
+                Buffer.WriteInt32(EffectType)
+                Buffer.WriteInt32(Data1) 'fognum
+                Buffer.WriteInt32(Data2) 'fog movement speed
+                Buffer.WriteInt32(Data3) 'opacity
             Case EFFECT_TYPE_WEATHER
-                Buffer.WriteInteger(EffectType)
-                Buffer.WriteInteger(Data1) 'weather type
-                Buffer.WriteInteger(Data2) 'weather intensity
+                Buffer.WriteInt32(EffectType)
+                Buffer.WriteInt32(Data1) 'weather type
+                Buffer.WriteInt32(Data2) 'weather intensity
             Case EFFECT_TYPE_TINT
-                Buffer.WriteInteger(EffectType)
-                Buffer.WriteInteger(Data1) 'red
-                Buffer.WriteInteger(Data2) 'green
-                Buffer.WriteInteger(Data3) 'blue
-                Buffer.WriteInteger(Data4) 'alpha
+                Buffer.WriteInt32(EffectType)
+                Buffer.WriteInt32(Data1) 'red
+                Buffer.WriteInt32(Data2) 'green
+                Buffer.WriteInt32(Data3) 'blue
+                Buffer.WriteInt32(Data4) 'alpha
         End Select
 
         SendDataTo(Index, Buffer.ToArray)
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub SendSwitchesAndVariables(Index As Integer, Optional everyone As Boolean = False)
-        Dim Buffer As New ByteBuffer, i As Integer
+        Dim Buffer As New ByteStream(4), i As Integer
 
-        Buffer.WriteInteger(ServerPackets.SSwitchesAndVariables)
+        Buffer.WriteInt32(ServerPackets.SSwitchesAndVariables)
 
         Addlog("Sent SMSG: SSwitchesAndVariables", PACKET_LOG)
         TextAdd("Sent SMSG: SSwitchesAndVariables")
@@ -1988,125 +1966,125 @@ Public Module ServerEvents
             SendDataTo(Index, Buffer.ToArray)
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub SendMapEventData(Index As Integer)
-        Dim Buffer As New ByteBuffer, i As Integer, x As Integer, y As Integer
+        Dim Buffer As New ByteStream(4), i As Integer, x As Integer, y As Integer
         Dim z As Integer, MapNum As Integer, w As Integer
 
-        Buffer.WriteInteger(ServerPackets.SMapEventData)
+        Buffer.WriteInt32(ServerPackets.SMapEventData)
         MapNum = GetPlayerMap(Index)
 
         Addlog("Sent SMSG: SMapEventData", PACKET_LOG)
         TextAdd("Sent SMSG: SMapEventData")
 
         'Event Data
-        Buffer.WriteInteger(Map(MapNum).EventCount)
+        Buffer.WriteInt32(Map(MapNum).EventCount)
 
         If Map(MapNum).EventCount > 0 Then
             For i = 1 To Map(MapNum).EventCount
                 With Map(MapNum).Events(i)
                     Buffer.WriteString(Trim(.Name))
-                    Buffer.WriteInteger(.Globals)
-                    Buffer.WriteInteger(.X)
-                    Buffer.WriteInteger(.Y)
-                    Buffer.WriteInteger(.PageCount)
+                    Buffer.WriteInt32(.Globals)
+                    Buffer.WriteInt32(.X)
+                    Buffer.WriteInt32(.Y)
+                    Buffer.WriteInt32(.PageCount)
                 End With
                 If Map(MapNum).Events(i).PageCount > 0 Then
                     For x = 1 To Map(MapNum).Events(i).PageCount
                         With Map(MapNum).Events(i).Pages(x)
-                            Buffer.WriteInteger(.chkVariable)
-                            Buffer.WriteInteger(.VariableIndex)
-                            Buffer.WriteInteger(.VariableCondition)
-                            Buffer.WriteInteger(.VariableCompare)
+                            Buffer.WriteInt32(.chkVariable)
+                            Buffer.WriteInt32(.VariableIndex)
+                            Buffer.WriteInt32(.VariableCondition)
+                            Buffer.WriteInt32(.VariableCompare)
 
-                            Buffer.WriteInteger(.chkSwitch)
-                            Buffer.WriteInteger(.SwitchIndex)
-                            Buffer.WriteInteger(.SwitchCompare)
+                            Buffer.WriteInt32(.chkSwitch)
+                            Buffer.WriteInt32(.SwitchIndex)
+                            Buffer.WriteInt32(.SwitchCompare)
 
-                            Buffer.WriteInteger(.chkHasItem)
-                            Buffer.WriteInteger(.HasItemIndex)
-                            Buffer.WriteInteger(.HasItemAmount)
+                            Buffer.WriteInt32(.chkHasItem)
+                            Buffer.WriteInt32(.HasItemIndex)
+                            Buffer.WriteInt32(.HasItemAmount)
 
-                            Buffer.WriteInteger(.chkSelfSwitch)
-                            Buffer.WriteInteger(.SelfSwitchIndex)
-                            Buffer.WriteInteger(.SelfSwitchCompare)
+                            Buffer.WriteInt32(.chkSelfSwitch)
+                            Buffer.WriteInt32(.SelfSwitchIndex)
+                            Buffer.WriteInt32(.SelfSwitchCompare)
 
-                            Buffer.WriteInteger(.GraphicType)
-                            Buffer.WriteInteger(.Graphic)
-                            Buffer.WriteInteger(.GraphicX)
-                            Buffer.WriteInteger(.GraphicY)
-                            Buffer.WriteInteger(.GraphicX2)
-                            Buffer.WriteInteger(.GraphicY2)
+                            Buffer.WriteInt32(.GraphicType)
+                            Buffer.WriteInt32(.Graphic)
+                            Buffer.WriteInt32(.GraphicX)
+                            Buffer.WriteInt32(.GraphicY)
+                            Buffer.WriteInt32(.GraphicX2)
+                            Buffer.WriteInt32(.GraphicY2)
 
-                            Buffer.WriteInteger(.MoveType)
-                            Buffer.WriteInteger(.MoveSpeed)
-                            Buffer.WriteInteger(.MoveFreq)
-                            Buffer.WriteInteger(.MoveRouteCount)
+                            Buffer.WriteInt32(.MoveType)
+                            Buffer.WriteInt32(.MoveSpeed)
+                            Buffer.WriteInt32(.MoveFreq)
+                            Buffer.WriteInt32(.MoveRouteCount)
 
-                            Buffer.WriteInteger(.IgnoreMoveRoute)
-                            Buffer.WriteInteger(.RepeatMoveRoute)
+                            Buffer.WriteInt32(.IgnoreMoveRoute)
+                            Buffer.WriteInt32(.RepeatMoveRoute)
 
                             If .MoveRouteCount > 0 Then
                                 For y = 1 To .MoveRouteCount
-                                    Buffer.WriteInteger(.MoveRoute(y).Index)
-                                    Buffer.WriteInteger(.MoveRoute(y).Data1)
-                                    Buffer.WriteInteger(.MoveRoute(y).Data2)
-                                    Buffer.WriteInteger(.MoveRoute(y).Data3)
-                                    Buffer.WriteInteger(.MoveRoute(y).Data4)
-                                    Buffer.WriteInteger(.MoveRoute(y).Data5)
-                                    Buffer.WriteInteger(.MoveRoute(y).Data6)
+                                    Buffer.WriteInt32(.MoveRoute(y).Index)
+                                    Buffer.WriteInt32(.MoveRoute(y).Data1)
+                                    Buffer.WriteInt32(.MoveRoute(y).Data2)
+                                    Buffer.WriteInt32(.MoveRoute(y).Data3)
+                                    Buffer.WriteInt32(.MoveRoute(y).Data4)
+                                    Buffer.WriteInt32(.MoveRoute(y).Data5)
+                                    Buffer.WriteInt32(.MoveRoute(y).Data6)
                                 Next
                             End If
 
-                            Buffer.WriteInteger(.WalkAnim)
-                            Buffer.WriteInteger(.DirFix)
-                            Buffer.WriteInteger(.WalkThrough)
-                            Buffer.WriteInteger(.ShowName)
-                            Buffer.WriteInteger(.Trigger)
-                            Buffer.WriteInteger(.CommandListCount)
+                            Buffer.WriteInt32(.WalkAnim)
+                            Buffer.WriteInt32(.DirFix)
+                            Buffer.WriteInt32(.WalkThrough)
+                            Buffer.WriteInt32(.ShowName)
+                            Buffer.WriteInt32(.Trigger)
+                            Buffer.WriteInt32(.CommandListCount)
 
-                            Buffer.WriteInteger(.Position)
-                            Buffer.WriteInteger(.QuestNum)
+                            Buffer.WriteInt32(.Position)
+                            Buffer.WriteInt32(.QuestNum)
                         End With
 
                         If Map(MapNum).Events(i).Pages(x).CommandListCount > 0 Then
                             For y = 1 To Map(MapNum).Events(i).Pages(x).CommandListCount
-                                Buffer.WriteInteger(Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount)
-                                Buffer.WriteInteger(Map(MapNum).Events(i).Pages(x).CommandList(y).ParentList)
+                                Buffer.WriteInt32(Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount)
+                                Buffer.WriteInt32(Map(MapNum).Events(i).Pages(x).CommandList(y).ParentList)
                                 If Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount > 0 Then
                                     For z = 1 To Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount
                                         With Map(MapNum).Events(i).Pages(x).CommandList(y).Commands(z)
-                                            Buffer.WriteInteger(.Index)
+                                            Buffer.WriteInt32(.Index)
                                             Buffer.WriteString(.Text1)
                                             Buffer.WriteString(.Text2)
                                             Buffer.WriteString(.Text3)
                                             Buffer.WriteString(.Text4)
                                             Buffer.WriteString(.Text5)
-                                            Buffer.WriteInteger(.Data1)
-                                            Buffer.WriteInteger(.Data2)
-                                            Buffer.WriteInteger(.Data3)
-                                            Buffer.WriteInteger(.Data4)
-                                            Buffer.WriteInteger(.Data5)
-                                            Buffer.WriteInteger(.Data6)
-                                            Buffer.WriteInteger(.ConditionalBranch.CommandList)
-                                            Buffer.WriteInteger(.ConditionalBranch.Condition)
-                                            Buffer.WriteInteger(.ConditionalBranch.Data1)
-                                            Buffer.WriteInteger(.ConditionalBranch.Data2)
-                                            Buffer.WriteInteger(.ConditionalBranch.Data3)
-                                            Buffer.WriteInteger(.ConditionalBranch.ElseCommandList)
-                                            Buffer.WriteInteger(.MoveRouteCount)
+                                            Buffer.WriteInt32(.Data1)
+                                            Buffer.WriteInt32(.Data2)
+                                            Buffer.WriteInt32(.Data3)
+                                            Buffer.WriteInt32(.Data4)
+                                            Buffer.WriteInt32(.Data5)
+                                            Buffer.WriteInt32(.Data6)
+                                            Buffer.WriteInt32(.ConditionalBranch.CommandList)
+                                            Buffer.WriteInt32(.ConditionalBranch.Condition)
+                                            Buffer.WriteInt32(.ConditionalBranch.Data1)
+                                            Buffer.WriteInt32(.ConditionalBranch.Data2)
+                                            Buffer.WriteInt32(.ConditionalBranch.Data3)
+                                            Buffer.WriteInt32(.ConditionalBranch.ElseCommandList)
+                                            Buffer.WriteInt32(.MoveRouteCount)
                                             If .MoveRouteCount > 0 Then
                                                 For w = 1 To .MoveRouteCount
-                                                    Buffer.WriteInteger(.MoveRoute(w).Index)
-                                                    Buffer.WriteInteger(.MoveRoute(w).Data1)
-                                                    Buffer.WriteInteger(.MoveRoute(w).Data2)
-                                                    Buffer.WriteInteger(.MoveRoute(w).Data3)
-                                                    Buffer.WriteInteger(.MoveRoute(w).Data4)
-                                                    Buffer.WriteInteger(.MoveRoute(w).Data5)
-                                                    Buffer.WriteInteger(.MoveRoute(w).Data6)
+                                                    Buffer.WriteInt32(.MoveRoute(w).Index)
+                                                    Buffer.WriteInt32(.MoveRoute(w).Data1)
+                                                    Buffer.WriteInt32(.MoveRoute(w).Data2)
+                                                    Buffer.WriteInt32(.MoveRoute(w).Data3)
+                                                    Buffer.WriteInt32(.MoveRoute(w).Data4)
+                                                    Buffer.WriteInt32(.MoveRoute(w).Data5)
+                                                    Buffer.WriteInt32(.MoveRoute(w).Data6)
                                                 Next
                                             End If
                                         End With
@@ -2121,7 +2099,7 @@ Public Module ServerEvents
 
         'End Event Data
         SendDataTo(Index, Buffer.ToArray)
-        Buffer = Nothing
+        Buffer.Dispose
         SendSwitchesAndVariables(Index)
 
     End Sub

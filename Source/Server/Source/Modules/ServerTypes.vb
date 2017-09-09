@@ -1,4 +1,6 @@
-﻿Module ServerTypes
+﻿Imports ASFW
+
+Module ServerTypes
     Public Options As New ServerOptions()
     ' Public data structures
     Public Map(MAX_CACHED_MAPS) As MapRec

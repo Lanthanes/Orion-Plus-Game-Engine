@@ -1,4 +1,6 @@
-﻿Public Module EditorQuest
+﻿Imports ASFW
+
+Public Module EditorQuest
 #Region "Global Info"
     'Constants
     Public Const MAX_QUESTS As Byte = 250
@@ -284,188 +286,173 @@
 
 #Region "Incoming Packets"
     Public Sub Packet_QuestEditor(ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ServerPackets.SQuestEditor Then Exit Sub
-
         QuestEditorShow = True
-
-        buffer = Nothing
     End Sub
 
     Public Sub Packet_UpdateQuest(ByVal data() As Byte)
         Dim QuestNum As Integer
-        Dim buffer As ByteBuffer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ServerPackets.SUpdateQuest Then Exit Sub
-
-        QuestNum = buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        QuestNum = Buffer.ReadInt32
 
         ' Update the Quest
-        Quest(QuestNum).Name = buffer.ReadString
-        Quest(QuestNum).QuestLog = buffer.ReadString
-        Quest(QuestNum).Repeat = buffer.ReadInteger
-        Quest(QuestNum).Cancelable = buffer.ReadInteger
+        Quest(QuestNum).Name = Buffer.ReadString
+        Quest(QuestNum).QuestLog = Buffer.ReadString
+        Quest(QuestNum).Repeat = Buffer.ReadInt32
+        Quest(QuestNum).Cancelable = Buffer.ReadInt32
 
-        Quest(QuestNum).ReqCount = buffer.ReadInteger
+        Quest(QuestNum).ReqCount = Buffer.ReadInt32
         ReDim Quest(QuestNum).Requirement(Quest(QuestNum).ReqCount)
         ReDim Quest(QuestNum).RequirementIndex(Quest(QuestNum).ReqCount)
         For I = 1 To Quest(QuestNum).ReqCount
-            Quest(QuestNum).Requirement(I) = buffer.ReadInteger
-            Quest(QuestNum).RequirementIndex(I) = buffer.ReadInteger
+            Quest(QuestNum).Requirement(I) = Buffer.ReadInt32
+            Quest(QuestNum).RequirementIndex(I) = Buffer.ReadInt32
         Next
 
-        Quest(QuestNum).QuestGiveItem = buffer.ReadInteger
-        Quest(QuestNum).QuestGiveItemValue = buffer.ReadInteger
-        Quest(QuestNum).QuestRemoveItem = buffer.ReadInteger
-        Quest(QuestNum).QuestRemoveItemValue = buffer.ReadInteger
+        Quest(QuestNum).QuestGiveItem = Buffer.ReadInt32
+        Quest(QuestNum).QuestGiveItemValue = Buffer.ReadInt32
+        Quest(QuestNum).QuestRemoveItem = Buffer.ReadInt32
+        Quest(QuestNum).QuestRemoveItemValue = Buffer.ReadInt32
 
         For I = 1 To 3
-            Quest(QuestNum).Chat(I) = buffer.ReadString
+            Quest(QuestNum).Chat(I) = Buffer.ReadString
         Next
 
-        Quest(QuestNum).RewardCount = buffer.ReadInteger
+        Quest(QuestNum).RewardCount = Buffer.ReadInt32
         ReDim Quest(QuestNum).RewardItem(Quest(QuestNum).RewardCount)
         ReDim Quest(QuestNum).RewardItemAmount(Quest(QuestNum).RewardCount)
         For i = 1 To Quest(QuestNum).RewardCount
-            Quest(QuestNum).RewardItem(i) = buffer.ReadInteger
-            Quest(QuestNum).RewardItemAmount(i) = buffer.ReadInteger
+            Quest(QuestNum).RewardItem(i) = Buffer.ReadInt32
+            Quest(QuestNum).RewardItemAmount(i) = Buffer.ReadInt32
         Next
 
-        Quest(QuestNum).RewardExp = buffer.ReadInteger
+        Quest(QuestNum).RewardExp = Buffer.ReadInt32
 
-        Quest(QuestNum).TaskCount = buffer.ReadInteger
+        Quest(QuestNum).TaskCount = Buffer.ReadInt32
         ReDim Quest(QuestNum).Task(Quest(QuestNum).TaskCount)
         For I = 1 To Quest(QuestNum).TaskCount
-            Quest(QuestNum).Task(I).Order = buffer.ReadInteger
-            Quest(QuestNum).Task(I).Npc = buffer.ReadInteger
-            Quest(QuestNum).Task(I).Item = buffer.ReadInteger
-            Quest(QuestNum).Task(I).Map = buffer.ReadInteger
-            Quest(QuestNum).Task(I).Resource = buffer.ReadInteger
-            Quest(QuestNum).Task(I).Amount = buffer.ReadInteger
-            Quest(QuestNum).Task(I).Speech = buffer.ReadString
-            Quest(QuestNum).Task(I).TaskLog = buffer.ReadString
-            Quest(QuestNum).Task(I).QuestEnd = buffer.ReadInteger
-            Quest(QuestNum).Task(I).TaskType = buffer.ReadInteger
+            Quest(QuestNum).Task(I).Order = Buffer.ReadInt32
+            Quest(QuestNum).Task(I).Npc = Buffer.ReadInt32
+            Quest(QuestNum).Task(I).Item = Buffer.ReadInt32
+            Quest(QuestNum).Task(I).Map = Buffer.ReadInt32
+            Quest(QuestNum).Task(I).Resource = Buffer.ReadInt32
+            Quest(QuestNum).Task(I).Amount = Buffer.ReadInt32
+            Quest(QuestNum).Task(I).Speech = Buffer.ReadString
+            Quest(QuestNum).Task(I).TaskLog = Buffer.ReadString
+            Quest(QuestNum).Task(I).QuestEnd = Buffer.ReadInt32
+            Quest(QuestNum).Task(I).TaskType = Buffer.ReadInt32
         Next
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
 #End Region
 
 #Region "Outgoing Packets"
     Public Sub SendRequestEditQuest()
-        Dim buffer As ByteBuffer
+        Dim Buffer As ByteStream
 
-        buffer = New ByteBuffer
-        buffer.WriteInteger(EditorPackets.RequestEditQuest)
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(EditorPackets.RequestEditQuest)
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
     End Sub
 
     Public Sub SendSaveQuest(ByVal QuestNum As Integer)
-        Dim buffer As ByteBuffer
+        Dim Buffer As ByteStream
 
-        buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
-        buffer.WriteInteger(EditorPackets.SaveQuest)
-        buffer.WriteInteger(QuestNum)
+        Buffer.WriteInt32(EditorPackets.SaveQuest)
+        Buffer.WriteInt32(QuestNum)
 
-        buffer.WriteString(Trim(Quest(QuestNum).Name))
-        buffer.WriteString(Trim(Quest(QuestNum).QuestLog))
-        buffer.WriteInteger(Quest(QuestNum).Repeat)
-        buffer.WriteInteger(Quest(QuestNum).Cancelable)
+        Buffer.WriteString(Trim(Quest(QuestNum).Name))
+        Buffer.WriteString(Trim(Quest(QuestNum).QuestLog))
+        Buffer.WriteInt32(Quest(QuestNum).Repeat)
+        Buffer.WriteInt32(Quest(QuestNum).Cancelable)
 
-        buffer.WriteInteger(Quest(QuestNum).ReqCount)
+        Buffer.WriteInt32(Quest(QuestNum).ReqCount)
         For I = 1 To Quest(QuestNum).ReqCount
-            buffer.WriteInteger(Quest(QuestNum).Requirement(I))
-            buffer.WriteInteger(Quest(QuestNum).RequirementIndex(I))
+            Buffer.WriteInt32(Quest(QuestNum).Requirement(I))
+            Buffer.WriteInt32(Quest(QuestNum).RequirementIndex(I))
         Next
 
-        buffer.WriteInteger(Quest(QuestNum).QuestGiveItem)
-        buffer.WriteInteger(Quest(QuestNum).QuestGiveItemValue)
-        buffer.WriteInteger(Quest(QuestNum).QuestRemoveItem)
-        buffer.WriteInteger(Quest(QuestNum).QuestRemoveItemValue)
+        Buffer.WriteInt32(Quest(QuestNum).QuestGiveItem)
+        Buffer.WriteInt32(Quest(QuestNum).QuestGiveItemValue)
+        Buffer.WriteInt32(Quest(QuestNum).QuestRemoveItem)
+        Buffer.WriteInt32(Quest(QuestNum).QuestRemoveItemValue)
 
         For I = 1 To 3
-            buffer.WriteString(Trim(Quest(QuestNum).Chat(I)))
+            Buffer.WriteString(Trim(Quest(QuestNum).Chat(I)))
         Next
 
-        buffer.WriteInteger(Quest(QuestNum).RewardCount)
+        Buffer.WriteInt32(Quest(QuestNum).RewardCount)
         For i = 1 To Quest(QuestNum).RewardCount
-            buffer.WriteInteger(Quest(QuestNum).RewardItem(i))
-            buffer.WriteInteger(Quest(QuestNum).RewardItemAmount(i))
+            Buffer.WriteInt32(Quest(QuestNum).RewardItem(i))
+            Buffer.WriteInt32(Quest(QuestNum).RewardItemAmount(i))
         Next
 
-        buffer.WriteInteger(Quest(QuestNum).RewardExp)
+        Buffer.WriteInt32(Quest(QuestNum).RewardExp)
 
-        buffer.WriteInteger(Quest(QuestNum).TaskCount)
+        Buffer.WriteInt32(Quest(QuestNum).TaskCount)
         For I = 1 To Quest(QuestNum).TaskCount
-            buffer.WriteInteger(Quest(QuestNum).Task(I).Order)
-            buffer.WriteInteger(Quest(QuestNum).Task(I).Npc)
-            buffer.WriteInteger(Quest(QuestNum).Task(I).Item)
-            buffer.WriteInteger(Quest(QuestNum).Task(I).Map)
-            buffer.WriteInteger(Quest(QuestNum).Task(I).Resource)
-            buffer.WriteInteger(Quest(QuestNum).Task(I).Amount)
-            buffer.WriteString(Trim(Quest(QuestNum).Task(I).Speech))
-            buffer.WriteString(Trim(Quest(QuestNum).Task(I).TaskLog))
-            buffer.WriteInteger(Quest(QuestNum).Task(I).QuestEnd)
-            buffer.WriteInteger(Quest(QuestNum).Task(I).TaskType)
+            Buffer.WriteInt32(Quest(QuestNum).Task(I).Order)
+            Buffer.WriteInt32(Quest(QuestNum).Task(I).Npc)
+            Buffer.WriteInt32(Quest(QuestNum).Task(I).Item)
+            Buffer.WriteInt32(Quest(QuestNum).Task(I).Map)
+            Buffer.WriteInt32(Quest(QuestNum).Task(I).Resource)
+            Buffer.WriteInt32(Quest(QuestNum).Task(I).Amount)
+            Buffer.WriteString(Trim(Quest(QuestNum).Task(I).Speech))
+            Buffer.WriteString(Trim(Quest(QuestNum).Task(I).TaskLog))
+            Buffer.WriteInt32(Quest(QuestNum).Task(I).QuestEnd)
+            Buffer.WriteInt32(Quest(QuestNum).Task(I).TaskType)
         Next
 
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
     End Sub
 
     Sub SendRequestQuests()
-        Dim buffer As ByteBuffer
+        Dim Buffer As ByteStream
 
-        buffer = New ByteBuffer
-        buffer.WriteInteger(ClientPackets.CRequestQuests)
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ClientPackets.CRequestQuests)
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
     End Sub
 
     Public Sub UpdateQuestLog()
-        Dim buffer As ByteBuffer
+        Dim Buffer As ByteStream
 
-        buffer = New ByteBuffer
-        buffer.WriteInteger(ClientPackets.CQuestLogUpdate)
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ClientPackets.CQuestLogUpdate)
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
     End Sub
 
     Public Sub PlayerHandleQuest(ByVal QuestNum As Integer, ByVal Order As Integer)
-        Dim buffer As ByteBuffer
+        Dim Buffer As ByteStream
 
-        buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CPlayerHandleQuest)
-        buffer.WriteInteger(QuestNum)
-        buffer.WriteInteger(Order) '1=accept quest, 2=cancel quest
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        Buffer.WriteInt32(ClientPackets.CPlayerHandleQuest)
+        Buffer.WriteInt32(QuestNum)
+        Buffer.WriteInt32(Order) '1=accept quest, 2=cancel quest
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
     End Sub
 
     Public Sub QuestReset(ByVal QuestNum As Integer)
-        Dim buffer As ByteBuffer
+        Dim Buffer As ByteStream
 
-        buffer = New ByteBuffer
-        buffer.WriteInteger(ClientPackets.CQuestReset)
-        buffer.WriteInteger(QuestNum)
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ClientPackets.CQuestReset)
+        Buffer.WriteInt32(QuestNum)
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
     End Sub
 #End Region

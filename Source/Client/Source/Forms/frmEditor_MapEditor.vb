@@ -1,5 +1,6 @@
 ﻿Imports System.Drawing
 Imports System.Windows.Forms
+Imports ASFW
 
 Public Class frmEditor_MapEditor
 #Region "Frm"
@@ -640,8 +641,8 @@ Public Class frmEditor_MapEditor
         InMapEditor = True
 
         ' set the scrolly bars
-        If Map.tileset = 0 Then Map.tileset = 1
-        If Map.tileset > NumTileSets Then Map.tileset = 1
+        If Map.Tileset = 0 Then Map.Tileset = 1
+        If Map.Tileset > NumTileSets Then Map.Tileset = 1
 
         EditorTileSelStart = New Point(0, 0)
         EditorTileSelEnd = New Point(1, 1)
@@ -936,10 +937,10 @@ Public Class frmEditor_MapEditor
     End Sub
 
     Public Sub MapEditorCancel()
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ClientPackets.CNeedMap)
-        Buffer.WriteInteger(1)
+        Dim Buffer As ByteStream
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ClientPackets.CNeedMap)
+        Buffer.WriteInt32(1)
         SendData(Buffer.ToArray())
         InMapEditor = False
         Visible = False

@@ -1,4 +1,6 @@
-﻿Module EditorPets
+﻿Imports ASFW
+
+Module EditorPets
 #Region "Globals etc"
     Public Pet(MAX_PETS) As PetRec
     Public Const EDITOR_PET As Byte = 7
@@ -76,117 +78,104 @@
 
 #Region "Outgoing Packets"
     Sub SendRequestPets()
-        Dim buffer As ByteBuffer
+        Dim Buffer As ByteStream
 
-        buffer = New ByteBuffer
-        buffer.WriteInteger(ClientPackets.CRequestPets)
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ClientPackets.CRequestPets)
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
     End Sub
 
     Public Sub SendRequestEditPet()
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
+        Dim Buffer As ByteStream
+        Buffer = New ByteStream(4)
 
-        buffer.WriteInteger(EditorPackets.CRequestEditPet)
+        Buffer.WriteInt32(EditorPackets.CRequestEditPet)
 
-        SendData(buffer.ToArray)
+        SendData(Buffer.ToArray)
 
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
     Public Sub SendSavePet(ByVal petNum As Integer)
-        Dim buffer As ByteBuffer
+        Dim Buffer As ByteStream
         Dim i As Integer
 
-        buffer = New ByteBuffer
-        buffer.WriteInteger(EditorPackets.CSavePet)
-        buffer.WriteInteger(petNum)
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(EditorPackets.CSavePet)
+        Buffer.WriteInt32(petNum)
 
         With Pet(petNum)
-            buffer.WriteInteger(.Num)
-            buffer.WriteString(Trim$(.Name))
-            buffer.WriteInteger(.Sprite)
-            buffer.WriteInteger(.Range)
-            buffer.WriteInteger(.Level)
-            buffer.WriteInteger(.MaxLevel)
-            buffer.WriteInteger(.ExpGain)
-            buffer.WriteInteger(.LevelPnts)
-            buffer.WriteInteger(.StatType)
-            buffer.WriteInteger(.LevelingType)
+            Buffer.WriteInt32(.Num)
+            Buffer.WriteString(Trim$(.Name))
+            Buffer.WriteInt32(.Sprite)
+            Buffer.WriteInt32(.Range)
+            Buffer.WriteInt32(.Level)
+            Buffer.WriteInt32(.MaxLevel)
+            Buffer.WriteInt32(.ExpGain)
+            Buffer.WriteInt32(.LevelPnts)
+            Buffer.WriteInt32(.StatType)
+            Buffer.WriteInt32(.LevelingType)
 
             For i = 1 To Stats.Count - 1
-                buffer.WriteInteger(.stat(i))
+                Buffer.WriteInt32(.Stat(i))
             Next
 
             For i = 1 To 4
-                buffer.WriteInteger(.skill(i))
+                Buffer.WriteInt32(.Skill(i))
             Next
 
-            buffer.WriteInteger(.Evolvable)
-            buffer.WriteInteger(.EvolveLevel)
-            buffer.WriteInteger(.EvolveNum)
+            Buffer.WriteInt32(.Evolvable)
+            Buffer.WriteInt32(.EvolveLevel)
+            Buffer.WriteInt32(.EvolveNum)
         End With
 
-        SendData(buffer.ToArray)
+        SendData(Buffer.ToArray)
 
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 #End Region
 
 #Region "Incoming Packets"
     Public Sub Packet_PetEditor(ByVal Data() As Byte)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ServerPackets.SPetEditor Then Exit Sub
-
         InitPetEditor = True
-
     End Sub
 
     Public Sub Packet_UpdatePet(ByVal Data() As Byte)
         Dim n As Integer, i As Long
-        Dim buffer = New ByteBuffer
-        buffer.WriteBytes(Data)
+        Dim Buffer As New ByteStream(Data)
+        n = Buffer.ReadInt32
 
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SUpdatePet Then Exit Sub
-
-        n = buffer.ReadInteger
-
-        ReDim Pet(n).stat(Stats.Count - 1)
-        ReDim Pet(n).skill(4)
+        ReDim Pet(n).Stat(Stats.Count - 1)
+        ReDim Pet(n).Skill(4)
 
         With Pet(n)
-            .Num = buffer.ReadInteger
-            .Name = buffer.ReadString
-            .Sprite = buffer.ReadInteger
-            .Range = buffer.ReadInteger
-            .Level = buffer.ReadInteger
-            .MaxLevel = buffer.ReadInteger
-            .ExpGain = buffer.ReadInteger
-            .LevelPnts = buffer.ReadInteger
-            .StatType = buffer.ReadInteger
-            .LevelingType = buffer.ReadInteger
+            .Num = Buffer.ReadInt32
+            .Name = Buffer.ReadString
+            .Sprite = Buffer.ReadInt32
+            .Range = Buffer.ReadInt32
+            .Level = Buffer.ReadInt32
+            .MaxLevel = Buffer.ReadInt32
+            .ExpGain = Buffer.ReadInt32
+            .LevelPnts = Buffer.ReadInt32
+            .StatType = Buffer.ReadInt32
+            .LevelingType = Buffer.ReadInt32
             For i = 1 To Stats.Count - 1
-                .stat(i) = buffer.ReadInteger
+                .Stat(i) = Buffer.ReadInt32
             Next
             For i = 1 To 4
-                .skill(i) = buffer.ReadInteger
+                .Skill(i) = Buffer.ReadInt32
             Next
 
-            .Evolvable = buffer.ReadInteger
-            .EvolveLevel = buffer.ReadInteger
-            .EvolveNum = buffer.ReadInteger
+            .Evolvable = Buffer.ReadInt32
+            .EvolveLevel = Buffer.ReadInt32
+            .EvolveNum = Buffer.ReadInt32
         End With
 
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 

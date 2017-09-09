@@ -1,24 +1,18 @@
 ﻿Imports System.Runtime.InteropServices.Marshal
+Imports ASFW
 Imports Orion
 
 Public Module ClientTime
     Sub Packet_Clock(ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer
-        Buffer.WriteBytes(data)
+        Dim Buffer As New ByteStream(data)
+        Time.Instance.GameSpeed = Buffer.ReadInt32()
+        Time.Instance.Time = New Date(BitConverter.ToInt64(Buffer.ReadBytes(), 0))
 
-        If Buffer.ReadInteger <> ServerPackets.SClock Then Exit Sub
-
-        Time.Instance.GameSpeed = Buffer.ReadInteger()
-        Time.Instance.Time = New Date(BitConverter.ToInt64(Buffer.ReadBytes(SizeOf(GetType(Long))), 0))
-
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_Time(ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.STime Then Exit Sub
+        Dim Buffer As New ByteStream(data)
 
         Time.Instance.TimeOfDay = Buffer.ReadByte
 
@@ -40,6 +34,6 @@ Public Module ClientTime
                 Exit Select
         End Select
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 End Module

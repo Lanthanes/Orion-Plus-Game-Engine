@@ -2524,380 +2524,380 @@ Module ServerDatabase
 #Region "Data Functions"
     Function ClassData() As Byte()
         Dim i As Integer, n As Integer, q As Integer
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(Max_Classes)
+        Dim Buffer as ByteStream
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(Max_Classes)
 
         For i = 1 To Max_Classes
             Buffer.WriteString(Trim$(GetClassName(i)))
             Buffer.WriteString(Trim(Classes(i).Desc))
-            Buffer.WriteInteger(GetClassMaxVital(i, Vitals.HP))
-            Buffer.WriteInteger(GetClassMaxVital(i, Vitals.MP))
-            Buffer.WriteInteger(GetClassMaxVital(i, Vitals.SP))
+            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.HP))
+            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.MP))
+            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.SP))
 
             ' set sprite array size
             n = UBound(Classes(i).MaleSprite)
 
             ' send array size
-            Buffer.WriteInteger(n)
+            Buffer.WriteInt32(n)
 
             ' loop around sending each sprite
             For q = 0 To n
-                Buffer.WriteInteger(Classes(i).MaleSprite(q))
+                Buffer.WriteInt32(Classes(i).MaleSprite(q))
             Next
 
             ' set sprite array size
             n = UBound(Classes(i).FemaleSprite)
 
             ' send array size
-            Buffer.WriteInteger(n)
+            Buffer.WriteInt32(n)
 
             ' loop around sending each sprite
             For q = 0 To n
-                Buffer.WriteInteger(Classes(i).FemaleSprite(q))
+                Buffer.WriteInt32(Classes(i).FemaleSprite(q))
             Next
 
-            Buffer.WriteInteger(Classes(i).Stat(Stats.Strength))
-            Buffer.WriteInteger(Classes(i).Stat(Stats.Endurance))
-            Buffer.WriteInteger(Classes(i).Stat(Stats.Vitality))
-            Buffer.WriteInteger(Classes(i).Stat(Stats.Intelligence))
-            Buffer.WriteInteger(Classes(i).Stat(Stats.Luck))
-            Buffer.WriteInteger(Classes(i).Stat(Stats.Spirit))
+            Buffer.WriteInt32(Classes(i).Stat(Stats.Strength))
+            Buffer.WriteInt32(Classes(i).Stat(Stats.Endurance))
+            Buffer.WriteInt32(Classes(i).Stat(Stats.Vitality))
+            Buffer.WriteInt32(Classes(i).Stat(Stats.Intelligence))
+            Buffer.WriteInt32(Classes(i).Stat(Stats.Luck))
+            Buffer.WriteInt32(Classes(i).Stat(Stats.Spirit))
 
             For q = 1 To 5
-                Buffer.WriteInteger(Classes(i).StartItem(q))
-                Buffer.WriteInteger(Classes(i).StartValue(q))
+                Buffer.WriteInt32(Classes(i).StartItem(q))
+                Buffer.WriteInt32(Classes(i).StartValue(q))
             Next
 
-            Buffer.WriteInteger(Classes(i).StartMap)
-            Buffer.WriteInteger(Classes(i).StartX)
-            Buffer.WriteInteger(Classes(i).StartY)
+            Buffer.WriteInt32(Classes(i).StartMap)
+            Buffer.WriteInt32(Classes(i).StartX)
+            Buffer.WriteInt32(Classes(i).StartY)
 
-            Buffer.WriteInteger(Classes(i).BaseExp)
+            Buffer.WriteInt32(Classes(i).BaseExp)
         Next
 
         Return Buffer.ToArray()
-        Buffer = Nothing
+        Buffer.Dispose
     End Function
 
     Function ItemsData() As Byte()
-        Dim buffer As ByteBuffer
+        Dim Buffer as ByteStream
         Dim i As Integer
-        buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
         For i = 1 To MAX_ITEMS
             If Len(Trim$(Item(i).Name)) > 0 Then
-                buffer.WriteBytes(ItemData(i))
+                CombineBufferAndData(Buffer, ItemData(i))
             End If
         Next
 
         Return buffer.ToArray
-        buffer = Nothing
+        Buffer.Dispose
 
     End Function
 
     Function ItemData(ByVal itemNum As Integer) As Byte()
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(itemNum)
-        Buffer.WriteInteger(Item(itemNum).AccessReq)
+        Dim Buffer as ByteStream
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(itemNum)
+        Buffer.WriteInt32(Item(itemNum).AccessReq)
 
         For i = 0 To Stats.Count - 1
-            Buffer.WriteInteger(Item(itemNum).Add_Stat(i))
+            Buffer.WriteInt32(Item(itemNum).Add_Stat(i))
         Next
 
-        Buffer.WriteInteger(Item(itemNum).Animation)
-        Buffer.WriteInteger(Item(itemNum).BindType)
-        Buffer.WriteInteger(Item(itemNum).ClassReq)
-        Buffer.WriteInteger(Item(itemNum).Data1)
-        Buffer.WriteInteger(Item(itemNum).Data2)
-        Buffer.WriteInteger(Item(itemNum).Data3)
-        Buffer.WriteInteger(Item(itemNum).TwoHanded)
-        Buffer.WriteInteger(Item(itemNum).LevelReq)
-        Buffer.WriteInteger(Item(itemNum).Mastery)
+        Buffer.WriteInt32(Item(itemNum).Animation)
+        Buffer.WriteInt32(Item(itemNum).BindType)
+        Buffer.WriteInt32(Item(itemNum).ClassReq)
+        Buffer.WriteInt32(Item(itemNum).Data1)
+        Buffer.WriteInt32(Item(itemNum).Data2)
+        Buffer.WriteInt32(Item(itemNum).Data3)
+        Buffer.WriteInt32(Item(itemNum).TwoHanded)
+        Buffer.WriteInt32(Item(itemNum).LevelReq)
+        Buffer.WriteInt32(Item(itemNum).Mastery)
         Buffer.WriteString(Trim$(Item(itemNum).Name))
-        Buffer.WriteInteger(Item(itemNum).Paperdoll)
-        Buffer.WriteInteger(Item(itemNum).Pic)
-        Buffer.WriteInteger(Item(itemNum).Price)
-        Buffer.WriteInteger(Item(itemNum).Rarity)
-        Buffer.WriteInteger(Item(itemNum).Speed)
+        Buffer.WriteInt32(Item(itemNum).Paperdoll)
+        Buffer.WriteInt32(Item(itemNum).Pic)
+        Buffer.WriteInt32(Item(itemNum).Price)
+        Buffer.WriteInt32(Item(itemNum).Rarity)
+        Buffer.WriteInt32(Item(itemNum).Speed)
 
-        Buffer.WriteInteger(Item(itemNum).Randomize)
-        Buffer.WriteInteger(Item(itemNum).RandomMin)
-        Buffer.WriteInteger(Item(itemNum).RandomMax)
+        Buffer.WriteInt32(Item(itemNum).Randomize)
+        Buffer.WriteInt32(Item(itemNum).RandomMin)
+        Buffer.WriteInt32(Item(itemNum).RandomMax)
 
-        Buffer.WriteInteger(Item(itemNum).Stackable)
+        Buffer.WriteInt32(Item(itemNum).Stackable)
         Buffer.WriteString(Trim$(Item(itemNum).Description))
 
         For i = 0 To Stats.Count - 1
-            Buffer.WriteInteger(Item(itemNum).Stat_Req(i))
+            Buffer.WriteInt32(Item(itemNum).Stat_Req(i))
         Next
 
-        Buffer.WriteInteger(Item(itemNum).Type)
-        Buffer.WriteInteger(Item(itemNum).SubType)
+        Buffer.WriteInt32(Item(itemNum).Type)
+        Buffer.WriteInt32(Item(itemNum).SubType)
 
-        Buffer.WriteInteger(Item(itemNum).ItemLevel)
+        Buffer.WriteInt32(Item(itemNum).ItemLevel)
 
         'Housing
-        Buffer.WriteInteger(Item(itemNum).FurnitureWidth)
-        Buffer.WriteInteger(Item(itemNum).FurnitureHeight)
+        Buffer.WriteInt32(Item(itemNum).FurnitureWidth)
+        Buffer.WriteInt32(Item(itemNum).FurnitureHeight)
 
         For i = 1 To 3
             For x = 1 To 3
-                Buffer.WriteInteger(Item(itemNum).FurnitureBlocks(i, x))
-                Buffer.WriteInteger(Item(itemNum).FurnitureFringe(i, x))
+                Buffer.WriteInt32(Item(itemNum).FurnitureBlocks(i, x))
+                Buffer.WriteInt32(Item(itemNum).FurnitureFringe(i, x))
             Next
         Next
 
-        Buffer.WriteInteger(Item(itemNum).KnockBack)
-        Buffer.WriteInteger(Item(itemNum).KnockBackTiles)
+        Buffer.WriteInt32(Item(itemNum).KnockBack)
+        Buffer.WriteInt32(Item(itemNum).KnockBackTiles)
 
-        Buffer.WriteInteger(Item(itemNum).Projectile)
-        Buffer.WriteInteger(Item(itemNum).Ammo)
+        Buffer.WriteInt32(Item(itemNum).Projectile)
+        Buffer.WriteInt32(Item(itemNum).Ammo)
 
         Return Buffer.ToArray
-        Buffer = Nothing
+        Buffer.Dispose
     End Function
 
     Function AnimationsData() As Byte()
-        Dim buffer As ByteBuffer
+        Dim Buffer as ByteStream
         Dim i As Integer
-        buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
         For i = 1 To MAX_ANIMATIONS
 
             If Len(Trim$(Animation(i).Name)) > 0 Then
-                buffer.WriteBytes(AnimationData(i))
+                CombineBufferAndData(Buffer, AnimationData(i))
             End If
 
         Next
 
         Return buffer.ToArray
-        buffer = Nothing
+        Buffer.Dispose
     End Function
 
     Function AnimationData(ByVal AnimationNum As Integer) As Byte()
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(AnimationNum)
+        Buffer.WriteInt32(AnimationNum)
 
         For i = 0 To UBound(Animation(AnimationNum).Frames)
-            Buffer.WriteInteger(Animation(AnimationNum).Frames(i))
+            Buffer.WriteInt32(Animation(AnimationNum).Frames(i))
         Next
 
         For i = 0 To UBound(Animation(AnimationNum).LoopCount)
-            Buffer.WriteInteger(Animation(AnimationNum).LoopCount(i))
+            Buffer.WriteInt32(Animation(AnimationNum).LoopCount(i))
         Next
 
         For i = 0 To UBound(Animation(AnimationNum).LoopTime)
-            Buffer.WriteInteger(Animation(AnimationNum).LoopTime(i))
+            Buffer.WriteInt32(Animation(AnimationNum).LoopTime(i))
         Next
 
         Buffer.WriteString(Animation(AnimationNum).Name)
         Buffer.WriteString(Animation(AnimationNum).Sound)
 
         For i = 0 To UBound(Animation(AnimationNum).Sprite)
-            Buffer.WriteInteger(Animation(AnimationNum).Sprite(i))
+            Buffer.WriteInt32(Animation(AnimationNum).Sprite(i))
         Next
 
         Return Buffer.ToArray
-        Buffer = Nothing
+        Buffer.Dispose
     End Function
 
     Function NpcsData() As Byte()
-        Dim buffer As ByteBuffer
+        Dim Buffer as ByteStream
         Dim i As Integer
-        buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
         For i = 1 To MAX_NPCS
 
             If Len(Trim$(Npc(i).Name)) > 0 Then
-                buffer.WriteBytes(NpcData(i))
+                CombineBufferAndData(Buffer, NpcData(i))
             End If
 
         Next
 
         Return buffer.ToArray
-        buffer = Nothing
+        Buffer.Dispose
     End Function
 
     Function NpcData(ByVal NpcNum As Integer) As Byte()
-        Dim Buffer As ByteBuffer, i As Integer
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(NpcNum)
-        Buffer.WriteInteger(Npc(NpcNum).Animation)
+        Dim Buffer as ByteStream, i As Integer
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(NpcNum)
+        Buffer.WriteInt32(Npc(NpcNum).Animation)
         Buffer.WriteString(Npc(NpcNum).AttackSay)
-        Buffer.WriteInteger(Npc(NpcNum).Behaviour)
+        Buffer.WriteInt32(Npc(NpcNum).Behaviour)
 
         For i = 1 To 5
-            Buffer.WriteInteger(Npc(NpcNum).DropChance(i))
-            Buffer.WriteInteger(Npc(NpcNum).DropItem(i))
-            Buffer.WriteInteger(Npc(NpcNum).DropItemValue(i))
+            Buffer.WriteInt32(Npc(NpcNum).DropChance(i))
+            Buffer.WriteInt32(Npc(NpcNum).DropItem(i))
+            Buffer.WriteInt32(Npc(NpcNum).DropItemValue(i))
         Next
 
-        Buffer.WriteInteger(Npc(NpcNum).Exp)
-        Buffer.WriteInteger(Npc(NpcNum).Faction)
-        Buffer.WriteInteger(Npc(NpcNum).Hp)
+        Buffer.WriteInt32(Npc(NpcNum).Exp)
+        Buffer.WriteInt32(Npc(NpcNum).Faction)
+        Buffer.WriteInt32(Npc(NpcNum).Hp)
         Buffer.WriteString(Npc(NpcNum).Name)
-        Buffer.WriteInteger(Npc(NpcNum).Range)
-        Buffer.WriteInteger(Npc(NpcNum).SpawnTime)
-        Buffer.WriteInteger(Npc(NpcNum).SpawnSecs)
-        Buffer.WriteInteger(Npc(NpcNum).Sprite)
+        Buffer.WriteInt32(Npc(NpcNum).Range)
+        Buffer.WriteInt32(Npc(NpcNum).SpawnTime)
+        Buffer.WriteInt32(Npc(NpcNum).SpawnSecs)
+        Buffer.WriteInt32(Npc(NpcNum).Sprite)
 
         For i = 0 To Stats.Count - 1
-            Buffer.WriteInteger(Npc(NpcNum).Stat(i))
+            Buffer.WriteInt32(Npc(NpcNum).Stat(i))
         Next
 
-        Buffer.WriteInteger(Npc(NpcNum).QuestNum)
+        Buffer.WriteInt32(Npc(NpcNum).QuestNum)
 
         For i = 1 To MAX_NPC_SKILLS
-            Buffer.WriteInteger(Npc(NpcNum).Skill(i))
+            Buffer.WriteInt32(Npc(NpcNum).Skill(i))
         Next
 
-        Buffer.WriteInteger(Npc(NpcNum).Level)
-        Buffer.WriteInteger(Npc(NpcNum).Damage)
+        Buffer.WriteInt32(Npc(NpcNum).Level)
+        Buffer.WriteInt32(Npc(NpcNum).Damage)
 
         Return Buffer.ToArray
-        Buffer = Nothing
+        Buffer.Dispose
     End Function
 
     Function ShopsData() As Byte()
-        Dim buffer As ByteBuffer
+        Dim Buffer as ByteStream
         Dim i As Integer
 
-        buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
         For i = 1 To MAX_SHOPS
 
             If Len(Trim$(Shop(i).Name)) > 0 Then
-                buffer.WriteBytes(ShopData(i))
+                CombineBufferAndData(Buffer, ShopData(i))
             End If
 
         Next
 
         Return buffer.ToArray
-        buffer = Nothing
+        Buffer.Dispose
     End Function
 
     Function ShopData(ByVal shopNum As Integer) As Byte()
-        Dim Buffer As ByteBuffer
+        Dim Buffer as ByteStream
 
-        Buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
-        Buffer.WriteInteger(shopNum)
-        Buffer.WriteInteger(Shop(shopNum).BuyRate)
+        Buffer.WriteInt32(shopNum)
+        Buffer.WriteInt32(Shop(shopNum).BuyRate)
         Buffer.WriteString(Shop(shopNum).Name)
-        Buffer.WriteInteger(Shop(shopNum).Face)
+        Buffer.WriteInt32(Shop(shopNum).Face)
 
         For i = 0 To MAX_TRADES
-            Buffer.WriteInteger(Shop(shopNum).TradeItem(i).CostItem)
-            Buffer.WriteInteger(Shop(shopNum).TradeItem(i).CostValue)
-            Buffer.WriteInteger(Shop(shopNum).TradeItem(i).Item)
-            Buffer.WriteInteger(Shop(shopNum).TradeItem(i).ItemValue)
+            Buffer.WriteInt32(Shop(shopNum).TradeItem(i).CostItem)
+            Buffer.WriteInt32(Shop(shopNum).TradeItem(i).CostValue)
+            Buffer.WriteInt32(Shop(shopNum).TradeItem(i).Item)
+            Buffer.WriteInt32(Shop(shopNum).TradeItem(i).ItemValue)
         Next
 
         Return Buffer.ToArray
-        Buffer = Nothing
+        Buffer.Dispose
     End Function
 
     Function SkillsData() As Byte()
         Dim i As Integer
-        Dim buffer As ByteBuffer
+        Dim Buffer as ByteStream
 
-        buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
         For i = 1 To MAX_SKILLS
 
             If Len(Trim$(Skill(i).Name)) > 0 Then
-                buffer.WriteBytes(SkillData(i))
+                CombineBufferAndData(Buffer, SkillData(i))
             End If
 
         Next
 
         Return buffer.ToArray
-        buffer = Nothing
+        Buffer.Dispose
     End Function
 
     Function SkillData(ByVal skillnum As Integer) As Byte()
-        Dim Buffer As ByteBuffer
+        Dim Buffer as ByteStream
 
-        Buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
-        Buffer.WriteInteger(skillnum)
-        Buffer.WriteInteger(Skill(skillnum).AccessReq)
-        Buffer.WriteInteger(Skill(skillnum).AoE)
-        Buffer.WriteInteger(Skill(skillnum).CastAnim)
-        Buffer.WriteInteger(Skill(skillnum).CastTime)
-        Buffer.WriteInteger(Skill(skillnum).CdTime)
-        Buffer.WriteInteger(Skill(skillnum).ClassReq)
-        Buffer.WriteInteger(Skill(skillnum).Dir)
-        Buffer.WriteInteger(Skill(skillnum).Duration)
-        Buffer.WriteInteger(Skill(skillnum).Icon)
-        Buffer.WriteInteger(Skill(skillnum).Interval)
-        Buffer.WriteInteger(Skill(skillnum).IsAoE)
-        Buffer.WriteInteger(Skill(skillnum).LevelReq)
-        Buffer.WriteInteger(Skill(skillnum).Map)
-        Buffer.WriteInteger(Skill(skillnum).MpCost)
+        Buffer.WriteInt32(skillnum)
+        Buffer.WriteInt32(Skill(skillnum).AccessReq)
+        Buffer.WriteInt32(Skill(skillnum).AoE)
+        Buffer.WriteInt32(Skill(skillnum).CastAnim)
+        Buffer.WriteInt32(Skill(skillnum).CastTime)
+        Buffer.WriteInt32(Skill(skillnum).CdTime)
+        Buffer.WriteInt32(Skill(skillnum).ClassReq)
+        Buffer.WriteInt32(Skill(skillnum).Dir)
+        Buffer.WriteInt32(Skill(skillnum).Duration)
+        Buffer.WriteInt32(Skill(skillnum).Icon)
+        Buffer.WriteInt32(Skill(skillnum).Interval)
+        Buffer.WriteInt32(Skill(skillnum).IsAoE)
+        Buffer.WriteInt32(Skill(skillnum).LevelReq)
+        Buffer.WriteInt32(Skill(skillnum).Map)
+        Buffer.WriteInt32(Skill(skillnum).MpCost)
         Buffer.WriteString(Skill(skillnum).Name)
-        Buffer.WriteInteger(Skill(skillnum).range)
-        Buffer.WriteInteger(Skill(skillnum).SkillAnim)
-        Buffer.WriteInteger(Skill(skillnum).StunDuration)
-        Buffer.WriteInteger(Skill(skillnum).Type)
-        Buffer.WriteInteger(Skill(skillnum).Vital)
-        Buffer.WriteInteger(Skill(skillnum).X)
-        Buffer.WriteInteger(Skill(skillnum).Y)
+        Buffer.WriteInt32(Skill(skillnum).range)
+        Buffer.WriteInt32(Skill(skillnum).SkillAnim)
+        Buffer.WriteInt32(Skill(skillnum).StunDuration)
+        Buffer.WriteInt32(Skill(skillnum).Type)
+        Buffer.WriteInt32(Skill(skillnum).Vital)
+        Buffer.WriteInt32(Skill(skillnum).X)
+        Buffer.WriteInt32(Skill(skillnum).Y)
 
-        Buffer.WriteInteger(Skill(skillnum).IsProjectile)
-        Buffer.WriteInteger(Skill(skillnum).Projectile)
+        Buffer.WriteInt32(Skill(skillnum).IsProjectile)
+        Buffer.WriteInt32(Skill(skillnum).Projectile)
 
-        Buffer.WriteInteger(Skill(skillnum).KnockBack)
-        Buffer.WriteInteger(Skill(skillnum).KnockBackTiles)
+        Buffer.WriteInt32(Skill(skillnum).KnockBack)
+        Buffer.WriteInt32(Skill(skillnum).KnockBackTiles)
 
         Return Buffer.ToArray
-        Buffer = Nothing
+        Buffer.Dispose
     End Function
 
     Function ResourcesData() As Byte()
-        Dim buffer As ByteBuffer
+        Dim Buffer as ByteStream
         Dim i As Integer
 
-        buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
         For i = 1 To MAX_RESOURCES
 
             If Len(Trim$(Resource(i).Name)) > 0 Then
-                buffer.WriteBytes(ResourceData(i))
+                CombineBufferAndData(Buffer, ResourceData(i))
             End If
 
         Next
 
         Return buffer.ToArray
-        buffer = Nothing
+        Buffer.Dispose
     End Function
 
     Function ResourceData(ByVal ResourceNum As Integer) As Byte()
-        Dim Buffer As ByteBuffer
+        Dim Buffer as ByteStream
 
-        Buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
-        Buffer.WriteInteger(ResourceNum)
-        Buffer.WriteInteger(Resource(ResourceNum).Animation)
+        Buffer.WriteInt32(ResourceNum)
+        Buffer.WriteInt32(Resource(ResourceNum).Animation)
         Buffer.WriteString(Resource(ResourceNum).EmptyMessage)
-        Buffer.WriteInteger(Resource(ResourceNum).ExhaustedImage)
-        Buffer.WriteInteger(Resource(ResourceNum).Health)
-        Buffer.WriteInteger(Resource(ResourceNum).ExpReward)
-        Buffer.WriteInteger(Resource(ResourceNum).ItemReward)
+        Buffer.WriteInt32(Resource(ResourceNum).ExhaustedImage)
+        Buffer.WriteInt32(Resource(ResourceNum).Health)
+        Buffer.WriteInt32(Resource(ResourceNum).ExpReward)
+        Buffer.WriteInt32(Resource(ResourceNum).ItemReward)
         Buffer.WriteString(Resource(ResourceNum).Name)
-        Buffer.WriteInteger(Resource(ResourceNum).ResourceImage)
-        Buffer.WriteInteger(Resource(ResourceNum).ResourceType)
-        Buffer.WriteInteger(Resource(ResourceNum).RespawnTime)
+        Buffer.WriteInt32(Resource(ResourceNum).ResourceImage)
+        Buffer.WriteInt32(Resource(ResourceNum).ResourceType)
+        Buffer.WriteInt32(Resource(ResourceNum).RespawnTime)
         Buffer.WriteString(Resource(ResourceNum).SuccessMessage)
-        Buffer.WriteInteger(Resource(ResourceNum).LvlRequired)
-        Buffer.WriteInteger(Resource(ResourceNum).ToolRequired)
-        Buffer.WriteInteger(Resource(ResourceNum).Walkthrough)
+        Buffer.WriteInt32(Resource(ResourceNum).LvlRequired)
+        Buffer.WriteInt32(Resource(ResourceNum).ToolRequired)
+        Buffer.WriteInt32(Resource(ResourceNum).Walkthrough)
 
         Return Buffer.ToArray
-        Buffer = Nothing
+        Buffer.Dispose
     End Function
 
 #End Region

@@ -1,4 +1,6 @@
-﻿Module ServerParties
+﻿Imports ASFW
+
+Module ServerParties
 #Region "Types and Globals"
     Public Party(MAX_PARTIES) As PartyRec
 
@@ -21,8 +23,8 @@
     End Sub
 
     Sub SendPartyInvite(ByVal Index As Integer, ByVal Target As Integer)
-        Dim Buffer As New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SPartyInvite)
+        Dim Buffer As New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SPartyInvite)
 
         Addlog("Sent SMSG: SPartyInvite", PACKET_LOG)
         TextAdd("Sent SMSG: SPartyInvite")
@@ -30,31 +32,31 @@
         Buffer.WriteString(Trim$(Player(Target).Character(TempPlayer(Target).CurChar).Name))
 
         SendDataTo(Index, Buffer.ToArray)
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub SendPartyUpdate(ByVal PartyNum As Integer)
-        Dim Buffer As New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SPartyUpdate)
+        Dim Buffer As New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SPartyUpdate)
 
         Addlog("Sent SMSG: SPartyUpdate", PACKET_LOG)
         TextAdd("Sent SMSG: SPartyUpdate")
 
-        Buffer.WriteInteger(1)
-        Buffer.WriteInteger(Party(PartyNum).Leader)
+        Buffer.WriteInt32(1)
+        Buffer.WriteInt32(Party(PartyNum).Leader)
         For i = 1 To MAX_PARTY_MEMBERS
-            Buffer.WriteInteger(Party(PartyNum).Member(i))
+            Buffer.WriteInt32(Party(PartyNum).Member(i))
         Next
-        Buffer.WriteInteger(Party(PartyNum).MemberCount)
+        Buffer.WriteInt32(Party(PartyNum).MemberCount)
 
         SendDataToParty(PartyNum, Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub SendPartyUpdateTo(ByVal Index As Integer)
-        Dim Buffer As New ByteBuffer, i As Integer, partyNum As Integer
+        Dim Buffer As New ByteStream(4), i As Integer, partyNum As Integer
 
-        Buffer.WriteInteger(ServerPackets.SPartyUpdate)
+        Buffer.WriteInt32(ServerPackets.SPartyUpdate)
 
         Addlog("Sent SMSG: SPartyUpdate To Players", PACKET_LOG)
         TextAdd("Sent SMSG: SPartyUpdate To Players")
@@ -63,54 +65,51 @@
         partyNum = TempPlayer(Index).InParty
         If partyNum > 0 Then
             ' send party data
-            Buffer.WriteInteger(1)
-            Buffer.WriteInteger(Party(partyNum).Leader)
+            Buffer.WriteInt32(1)
+            Buffer.WriteInt32(Party(partyNum).Leader)
             For i = 1 To MAX_PARTY_MEMBERS
-                Buffer.WriteInteger(Party(partyNum).Member(i))
+                Buffer.WriteInt32(Party(partyNum).Member(i))
             Next
-            Buffer.WriteInteger(Party(partyNum).MemberCount)
+            Buffer.WriteInt32(Party(partyNum).MemberCount)
         Else
             ' send clear command
-            Buffer.WriteInteger(0)
+            Buffer.WriteInt32(0)
         End If
 
         SendDataTo(Index, Buffer.ToArray)
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub SendPartyVitals(ByVal PartyNum As Integer, ByVal Index As Integer)
-        Dim Buffer As ByteBuffer, i As Integer
+        Dim Buffer As ByteStream, i As Integer
 
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SPartyVitals)
-        Buffer.WriteInteger(Index)
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SPartyVitals)
+        Buffer.WriteInt32(Index)
 
         Addlog("Sent SMSG: SPartyVitals", PACKET_LOG)
         TextAdd("Sent SMSG: SPartyVitals")
 
         For i = 1 To Vitals.Count - 1
-            Buffer.WriteInteger(GetPlayerMaxVital(Index, i))
-            Buffer.WriteInteger(Player(Index).Character(TempPlayer(Index).CurChar).Vital(i))
+            Buffer.WriteInt32(GetPlayerMaxVital(Index, i))
+            Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).Vital(i))
         Next
 
         SendDataToParty(PartyNum, Buffer.ToArray)
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 #End Region
 
 #Region "Incoming Packets"
     Public Sub Packet_PartyRquest(ByVal Index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim n As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CRequestParty Then Exit Sub
+        Dim Buffer As New ByteStream(data)
 
         Addlog("Recieved CMSG: CRequestParty", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestParty")
 
-        n = FindPlayer(buffer.ReadString)
-        buffer = Nothing
+        n = FindPlayer(Buffer.ReadString)
+        Buffer.Dispose()
 
         ' Prevent partying with self
         If TempPlayer(Index).Target = Index Then Exit Sub
@@ -126,63 +125,34 @@
     End Sub
 
     Public Sub Packet_AcceptParty(ByVal Index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CAcceptParty Then Exit Sub
-
         Addlog("Recieved CMSG: CAcceptParty", PACKET_LOG)
         TextAdd("Recieved CMSG: CAcceptParty")
 
         Party_InviteAccept(TempPlayer(Index).PartyInvite, Index)
-
-        buffer = Nothing
     End Sub
 
     Public Sub Packet_DeclineParty(ByVal Index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CDeclineParty Then Exit Sub
-
         Addlog("Recieved CMSG: CDeclineParty", PACKET_LOG)
         TextAdd("Recieved CMSG: CDeclineParty")
 
         Party_InviteDecline(TempPlayer(Index).PartyInvite, Index)
-
-        buffer = Nothing
     End Sub
 
     Public Sub Packet_LeaveParty(ByVal Index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CLeaveParty Then Exit Sub
-
         Addlog("Recieved CMSG: CLeaveParty", PACKET_LOG)
         TextAdd("Recieved CMSG: CLeaveParty")
 
         Party_PlayerLeave(Index)
-
-        buffer = Nothing
     End Sub
 
     Public Sub Packet_PartyChatMsg(ByVal Index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CPartyChatMsg Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CPartyChatMsg", PACKET_LOG)
         TextAdd("Recieved CMSG: CPartyChatMsg")
 
-        PartyMsg(Index, buffer.ReadString)
+        PartyMsg(Index, Buffer.ReadString)
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 #End Region
 

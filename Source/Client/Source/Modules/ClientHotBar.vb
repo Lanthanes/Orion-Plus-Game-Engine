@@ -1,4 +1,5 @@
 ﻿Imports System.Drawing
+Imports ASFW
 
 Public Module ClientHotBar
     Public SelHotbarSlot As Integer
@@ -24,14 +25,14 @@ Public Module ClientHotBar
 
         For i = 1 To MAX_HOTBAR
             With tempRec
-                .top = HotbarY + HotbarTop
-                .bottom = .top + PIC_Y
-                .left = HotbarX + HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1) Mod MAX_HOTBAR)))
-                .right = .left + PIC_X
+                .Top = HotbarY + HotbarTop
+                .Bottom = .Top + PIC_Y
+                .Left = HotbarX + HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1) Mod MAX_HOTBAR)))
+                .Right = .Left + PIC_X
             End With
 
-            If X >= tempRec.left And X <= tempRec.right Then
-                If Y >= tempRec.top And Y <= tempRec.bottom Then
+            If X >= tempRec.Left And X <= tempRec.Right Then
+                If Y >= tempRec.Top And Y <= tempRec.Bottom Then
                     IsHotBarSlot = i
                     Exit Function
                 End If
@@ -41,37 +42,37 @@ Public Module ClientHotBar
     End Function
 
     Public Sub SendSetHotbarSlot(ByVal Slot As Integer, ByVal Num As Integer, ByVal Type As Integer)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(ClientPackets.CSetHotbarSlot)
+        Buffer.WriteInt32(ClientPackets.CSetHotbarSlot)
 
-        Buffer.WriteInteger(Slot)
-        Buffer.WriteInteger(Num)
-        Buffer.WriteInteger(Type)
+        Buffer.WriteInt32(Slot)
+        Buffer.WriteInt32(Num)
+        Buffer.WriteInt32(Type)
 
         SendData(Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Public Sub SendDeleteHotbar(ByVal Slot As Integer)
-        Dim Buffer As New ByteBuffer
-        Buffer.WriteInteger(ClientPackets.CDeleteHotbarSlot)
+        Dim Buffer As New ByteStream(4)
+        Buffer.WriteInt32(ClientPackets.CDeleteHotbarSlot)
 
-        Buffer.WriteInteger(Slot)
+        Buffer.WriteInt32(Slot)
 
         SendData(Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Public Sub SendUseHotbarSlot(ByVal Slot As Integer)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(ClientPackets.CUseHotbarSlot)
+        Buffer.WriteInt32(ClientPackets.CUseHotbarSlot)
 
-        Buffer.WriteInteger(Slot)
+        Buffer.WriteInt32(Slot)
 
         SendData(Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub DrawHotbar()

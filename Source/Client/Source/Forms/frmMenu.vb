@@ -1,5 +1,6 @@
 ﻿Imports System.Drawing
 Imports System.Windows.Forms
+Imports ASFW
 
 Public Class FrmMenu
     Inherits Form
@@ -661,7 +662,7 @@ Public Class FrmMenu
 
         For i = 1 To MaxChars
             If CharSelection(i).Name = "" Then
-                newselectedchar = i
+                NewSelectedChar = i
                 Exit For
             End If
         Next
@@ -682,30 +683,27 @@ Public Class FrmMenu
         pnlloadvisible = True
         frmmenuvisible = False
 
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteInteger(ClientPackets.CUseChar)
-        buffer.WriteInteger(SelectedChar)
-        SendData(buffer.ToArray)
+        Dim Buffer As ByteStream
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ClientPackets.CUseChar)
+        Buffer.WriteInt32(SelectedChar)
+        SendData(Buffer.ToArray)
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     ''' <summary>
     ''' Handles DelChar button press.
     ''' </summary>
     Private Sub BtnDelChar_Click(sender As Object, e As EventArgs) Handles btnDelChar.Click
-        Dim buffer As ByteBuffer
-
         Dim result1 As DialogResult = MessageBox.Show("Sure you want to delete character " & SelectedChar & "?", "You sure?", MessageBoxButtons.YesNo)
         If result1 = DialogResult.Yes Then
-            buffer = New ByteBuffer
-            buffer.WriteInteger(ClientPackets.CDelChar)
-            buffer.WriteInteger(SelectedChar)
-            SendData(buffer.ToArray)
+            Dim Buffer As New ByteStream(4)
+            Buffer.WriteInt32(ClientPackets.CDelChar)
+            Buffer.WriteInt32(SelectedChar)
+            SendData(Buffer.ToArray)
+            Buffer.Dispose()
         End If
-
-        buffer = Nothing
     End Sub
 
 #End Region

@@ -1,4 +1,5 @@
 ﻿Imports System.Linq
+Imports ASFW
 
 Module ServerPlayers
 #Region "PlayerCombat"
@@ -178,7 +179,7 @@ Module ServerPlayers
     Sub AttackPlayer(ByVal Attacker As Integer, ByVal Victim As Integer, ByVal Damage As Integer, Optional ByVal skillnum As Integer = 0, Optional ByVal npcnum As Byte = 0)
         Dim exp As Integer, mapnum As Integer
         Dim n As Integer
-        Dim Buffer As ByteBuffer
+        Dim Buffer As ByteStream
 
         If npcnum = 0 Then
             ' Check for subscript out of range
@@ -194,11 +195,11 @@ Module ServerPlayers
             End If
 
             ' Send this packet so they can see the person attacking
-            Buffer = New ByteBuffer
-            Buffer.WriteInteger(ServerPackets.SAttack)
-            Buffer.WriteInteger(Attacker)
+            Buffer = New ByteStream(4)
+            Buffer.WriteInt32(ServerPackets.SAttack)
+            Buffer.WriteInt32(Attacker)
             SendDataToMapBut(Attacker, GetPlayerMap(Attacker), Buffer.ToArray())
-            Buffer = Nothing
+            Buffer.Dispose
 
             If Damage >= GetPlayerVital(Victim, Vitals.HP) Then
 
@@ -270,11 +271,11 @@ Module ServerPlayers
             mapnum = GetPlayerMap(Victim)
 
             ' Send this packet so they can see the person attacking
-            Buffer = New ByteBuffer
-            Buffer.WriteInteger(ServerPackets.SNpcAttack)
-            Buffer.WriteInteger(Attacker)
+            Buffer = New ByteStream(4)
+            Buffer.WriteInt32(ServerPackets.SNpcAttack)
+            Buffer.WriteInt32(Attacker)
             SendDataToMap(mapnum, Buffer.ToArray())
-            Buffer = Nothing
+            Buffer.Dispose
 
             If Damage >= GetPlayerVital(Victim, Vitals.HP) Then
 
@@ -1109,13 +1110,13 @@ Module ServerPlayers
 
 #Region "Outgoing Packets"
     Sub SendLeaveMap(ByVal Index As Integer, ByVal MapNum As Integer)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(ServerPackets.SLeftMap)
-        Buffer.WriteInteger(Index)
+        Buffer.WriteInt32(ServerPackets.SLeftMap)
+        Buffer.WriteInt32(Index)
         SendDataToMapBut(Index, MapNum, Buffer.ToArray())
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
 
@@ -1125,7 +1126,7 @@ Module ServerPlayers
     Sub PlayerWarp(ByVal Index As Integer, ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, Optional HouseTeleport As Boolean = False)
         Dim OldMap As Integer
         Dim i As Integer
-        Dim Buffer As ByteBuffer
+        Dim Buffer As ByteStream
 
         'If (MapNum And INSTANCED_MAP_MASK) > 0 Then
         If Map(MapNum).Instanced = 1 Then
@@ -1235,18 +1236,18 @@ Module ServerPlayers
 
         CheckTasks(Index, QuestType.Reach, MapNum)
 
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SCheckForMap)
-        Buffer.WriteInteger(MapNum)
-        Buffer.WriteInteger(Map(MapNum).Revision)
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SCheckForMap)
+        Buffer.WriteInt32(MapNum)
+        Buffer.WriteInt32(Map(MapNum).Revision)
         SendDataTo(Index, Buffer.ToArray())
 
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub PlayerMove(ByVal Index As Integer, ByVal Dir As Integer, ByVal Movement As Integer, ExpectingWarp As Boolean)
-        Dim MapNum As Integer, Buffer As ByteBuffer
+        Dim MapNum As Integer, Buffer As ByteStream
         Dim x As Integer, y As Integer, begineventprocessing As Boolean
         Dim Moved As Boolean, DidWarp As Boolean
         Dim NewMapX As Byte, NewMapY As Byte
@@ -1601,11 +1602,11 @@ Module ServerPlayers
                     Exit Sub
                 Else
                     'Send the buy sequence and see what happens. (To be recreated in events.)
-                    Buffer = New ByteBuffer
-                    Buffer.WriteInteger(ServerPackets.SBuyHouse)
-                    Buffer.WriteInteger(.Data1)
+                    Buffer = New ByteStream(4)
+                    Buffer.WriteInt32(ServerPackets.SBuyHouse)
+                    Buffer.WriteInt32(.Data1)
                     SendDataTo(Index, Buffer.ToArray)
-                    Buffer = Nothing
+                    Buffer.Dispose
                     TempPlayer(Index).BuyHouseIndex = .Data1
                 End If
             End If

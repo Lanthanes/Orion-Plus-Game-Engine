@@ -1,4 +1,5 @@
-﻿Imports SFML.Graphics
+﻿Imports ASFW
+Imports SFML.Graphics
 Imports SFML.Window
 
 Public Module EditorEventSystem
@@ -2320,21 +2321,21 @@ newlist:
     End Sub
 
     Sub RequestSwitchesAndVariables()
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As ByteStream
+        Buffer = New ByteStream(4)
 
-        Buffer.WriteInteger(ClientPackets.CRequestSwitchesAndVariables)
+        Buffer.WriteInt32(ClientPackets.CRequestSwitchesAndVariables)
         SendData(Buffer.ToArray)
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub SendSwitchesAndVariables()
         Dim i As Integer
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
+        Dim Buffer As ByteStream
+        Buffer = New ByteStream(4)
 
-        Buffer.WriteInteger(ClientPackets.CSwitchesAndVariables)
+        Buffer.WriteInt32(ClientPackets.CSwitchesAndVariables)
         For i = 1 To MAX_SWITCHES
             Buffer.WriteString(Trim$(Switches(i)))
         Next
@@ -2343,7 +2344,7 @@ newlist:
         Next
         SendData(Buffer.ToArray)
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
 #End Region
@@ -2351,45 +2352,38 @@ newlist:
 #Region "Incoming Packets"
     Sub Packet_SpawnEvent(ByVal data() As Byte)
         Dim id As Integer
-        Dim buffer As ByteBuffer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SSpawnEvent Then Exit Sub
-
-        id = buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        id = Buffer.ReadInt32
         If id > Map.CurrentEvents Then
             Map.CurrentEvents = id
             ReDim Preserve Map.MapEvents(Map.CurrentEvents)
         End If
 
         With Map.MapEvents(id)
-            .Name = buffer.ReadString
-            .dir = buffer.ReadInteger
+            .Name = Buffer.ReadString
+            .dir = Buffer.ReadInt32
             .ShowDir = .dir
-            .GraphicNum = buffer.ReadInteger
-            .GraphicType = buffer.ReadInteger
-            .GraphicX = buffer.ReadInteger
-            .GraphicX2 = buffer.ReadInteger
-            .GraphicY = buffer.ReadInteger
-            .GraphicY2 = buffer.ReadInteger
-            .MovementSpeed = buffer.ReadInteger
+            .GraphicNum = Buffer.ReadInt32
+            .GraphicType = Buffer.ReadInt32
+            .GraphicX = Buffer.ReadInt32
+            .GraphicX2 = Buffer.ReadInt32
+            .GraphicY = Buffer.ReadInt32
+            .GraphicY2 = Buffer.ReadInt32
+            .MovementSpeed = Buffer.ReadInt32
             .Moving = 0
-            .X = buffer.ReadInteger
-            .Y = buffer.ReadInteger
+            .X = Buffer.ReadInt32
+            .Y = Buffer.ReadInt32
             .XOffset = 0
             .YOffset = 0
-            .Position = buffer.ReadInteger
-            .Visible = buffer.ReadInteger
-            .WalkAnim = buffer.ReadInteger
-            .DirFix = buffer.ReadInteger
-            .WalkThrough = buffer.ReadInteger
-            .ShowName = buffer.ReadInteger
-            .questnum = buffer.ReadInteger
+            .Position = Buffer.ReadInt32
+            .Visible = Buffer.ReadInt32
+            .WalkAnim = Buffer.ReadInt32
+            .DirFix = Buffer.ReadInt32
+            .WalkThrough = Buffer.ReadInt32
+            .ShowName = Buffer.ReadInt32
+            .questnum = Buffer.ReadInt32
         End With
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
@@ -2399,20 +2393,13 @@ newlist:
         Dim Y As Integer
         Dim dir As Integer, ShowDir As Integer
         Dim MovementSpeed As Integer
-        Dim buffer As ByteBuffer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SEventMove Then Exit Sub
-
-        id = buffer.ReadInteger
-        X = buffer.ReadInteger
-        Y = buffer.ReadInteger
-        dir = buffer.ReadInteger
-        ShowDir = buffer.ReadInteger
-        MovementSpeed = buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        id = Buffer.ReadInt32
+        X = Buffer.ReadInt32
+        Y = Buffer.ReadInt32
+        dir = Buffer.ReadInt32
+        ShowDir = Buffer.ReadInt32
+        MovementSpeed = Buffer.ReadInt32
         If id > Map.CurrentEvents Then Exit Sub
 
         With Map.MapEvents(id)
@@ -2443,16 +2430,9 @@ newlist:
     Sub Packet_EventDir(ByVal data() As Byte)
         Dim i As Integer
         Dim dir As Byte
-        Dim buffer As ByteBuffer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SEventDir Then Exit Sub
-
-        i = buffer.ReadInteger
-        dir = buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        i = Buffer.ReadInt32
+        dir = Buffer.ReadInt32
         If i > Map.CurrentEvents Then Exit Sub
 
         With Map.MapEvents(i)
@@ -2466,134 +2446,123 @@ newlist:
     End Sub
 
     Sub Packet_SwitchesAndVariables(ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim i As Integer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ServerPackets.SSwitchesAndVariables Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         For i = 1 To MAX_SWITCHES
-            Switches(i) = buffer.ReadString
+            Switches(i) = Buffer.ReadString
         Next
         For i = 1 To MAX_VARIABLES
-            Variables(i) = buffer.ReadString
+            Variables(i) = Buffer.ReadString
         Next
 
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
     Sub Packet_MapEventData(ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim i As Integer, X As Integer, Y As Integer, z As Integer, w As Integer
 
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ServerPackets.SMapEventData Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         'Event Data!
-        Map.EventCount = buffer.ReadInteger
+        Map.EventCount = Buffer.ReadInt32
         If Map.EventCount > 0 Then
             ReDim Map.Events(0 To Map.EventCount)
             For i = 1 To Map.EventCount
                 With Map.Events(i)
-                    .Name = buffer.ReadString
-                    .Globals = buffer.ReadInteger
-                    .X = buffer.ReadInteger
-                    .Y = buffer.ReadInteger
-                    .PageCount = buffer.ReadInteger
+                    .Name = Buffer.ReadString
+                    .Globals = Buffer.ReadInt32
+                    .X = Buffer.ReadInt32
+                    .Y = Buffer.ReadInt32
+                    .PageCount = Buffer.ReadInt32
                 End With
                 If Map.Events(i).PageCount > 0 Then
                     ReDim Map.Events(i).Pages(0 To Map.Events(i).PageCount)
                     For X = 1 To Map.Events(i).PageCount
                         With Map.Events(i).Pages(X)
-                            .chkVariable = buffer.ReadInteger
-                            .VariableIndex = buffer.ReadInteger
-                            .VariableCondition = buffer.ReadInteger
-                            .VariableCompare = buffer.ReadInteger
-                            .chkSwitch = buffer.ReadInteger
-                            .SwitchIndex = buffer.ReadInteger
-                            .SwitchCompare = buffer.ReadInteger
-                            .chkHasItem = buffer.ReadInteger
-                            .HasItemIndex = buffer.ReadInteger
-                            .HasItemAmount = buffer.ReadInteger
-                            .chkSelfSwitch = buffer.ReadInteger
-                            .SelfSwitchIndex = buffer.ReadInteger
-                            .SelfSwitchCompare = buffer.ReadInteger
-                            .GraphicType = buffer.ReadInteger
-                            .Graphic = buffer.ReadInteger
-                            .GraphicX = buffer.ReadInteger
-                            .GraphicY = buffer.ReadInteger
-                            .GraphicX2 = buffer.ReadInteger
-                            .GraphicY2 = buffer.ReadInteger
-                            .MoveType = buffer.ReadInteger
-                            .MoveSpeed = buffer.ReadInteger
-                            .MoveFreq = buffer.ReadInteger
-                            .MoveRouteCount = buffer.ReadInteger
-                            .IgnoreMoveRoute = buffer.ReadInteger
-                            .RepeatMoveRoute = buffer.ReadInteger
+                            .chkVariable = Buffer.ReadInt32
+                            .VariableIndex = Buffer.ReadInt32
+                            .VariableCondition = Buffer.ReadInt32
+                            .VariableCompare = Buffer.ReadInt32
+                            .chkSwitch = Buffer.ReadInt32
+                            .SwitchIndex = Buffer.ReadInt32
+                            .SwitchCompare = Buffer.ReadInt32
+                            .chkHasItem = Buffer.ReadInt32
+                            .HasItemIndex = Buffer.ReadInt32
+                            .HasItemAmount = Buffer.ReadInt32
+                            .chkSelfSwitch = Buffer.ReadInt32
+                            .SelfSwitchIndex = Buffer.ReadInt32
+                            .SelfSwitchCompare = Buffer.ReadInt32
+                            .GraphicType = Buffer.ReadInt32
+                            .Graphic = Buffer.ReadInt32
+                            .GraphicX = Buffer.ReadInt32
+                            .GraphicY = Buffer.ReadInt32
+                            .GraphicX2 = Buffer.ReadInt32
+                            .GraphicY2 = Buffer.ReadInt32
+                            .MoveType = Buffer.ReadInt32
+                            .MoveSpeed = Buffer.ReadInt32
+                            .MoveFreq = Buffer.ReadInt32
+                            .MoveRouteCount = Buffer.ReadInt32
+                            .IgnoreMoveRoute = Buffer.ReadInt32
+                            .RepeatMoveRoute = Buffer.ReadInt32
                             If .MoveRouteCount > 0 Then
                                 ReDim Map.Events(i).Pages(X).MoveRoute(0 To .MoveRouteCount)
                                 For Y = 1 To .MoveRouteCount
-                                    .MoveRoute(Y).Index = buffer.ReadInteger
-                                    .MoveRoute(Y).Data1 = buffer.ReadInteger
-                                    .MoveRoute(Y).Data2 = buffer.ReadInteger
-                                    .MoveRoute(Y).Data3 = buffer.ReadInteger
-                                    .MoveRoute(Y).Data4 = buffer.ReadInteger
-                                    .MoveRoute(Y).Data5 = buffer.ReadInteger
-                                    .MoveRoute(Y).Data6 = buffer.ReadInteger
+                                    .MoveRoute(Y).Index = Buffer.ReadInt32
+                                    .MoveRoute(Y).Data1 = Buffer.ReadInt32
+                                    .MoveRoute(Y).Data2 = Buffer.ReadInt32
+                                    .MoveRoute(Y).Data3 = Buffer.ReadInt32
+                                    .MoveRoute(Y).Data4 = Buffer.ReadInt32
+                                    .MoveRoute(Y).Data5 = Buffer.ReadInt32
+                                    .MoveRoute(Y).Data6 = Buffer.ReadInt32
                                 Next
                             End If
-                            .WalkAnim = buffer.ReadInteger
-                            .DirFix = buffer.ReadInteger
-                            .WalkThrough = buffer.ReadInteger
-                            .ShowName = buffer.ReadInteger
-                            .Trigger = buffer.ReadInteger
-                            .CommandListCount = buffer.ReadInteger
-                            .Position = buffer.ReadInteger
-                            .Questnum = buffer.ReadInteger
+                            .WalkAnim = Buffer.ReadInt32
+                            .DirFix = Buffer.ReadInt32
+                            .WalkThrough = Buffer.ReadInt32
+                            .ShowName = Buffer.ReadInt32
+                            .Trigger = Buffer.ReadInt32
+                            .CommandListCount = Buffer.ReadInt32
+                            .Position = Buffer.ReadInt32
+                            .Questnum = Buffer.ReadInt32
                         End With
                         If Map.Events(i).Pages(X).CommandListCount > 0 Then
                             ReDim Map.Events(i).Pages(X).CommandList(0 To Map.Events(i).Pages(X).CommandListCount)
                             For Y = 1 To Map.Events(i).Pages(X).CommandListCount
-                                Map.Events(i).Pages(X).CommandList(Y).CommandCount = buffer.ReadInteger
-                                Map.Events(i).Pages(X).CommandList(Y).ParentList = buffer.ReadInteger
+                                Map.Events(i).Pages(X).CommandList(Y).CommandCount = Buffer.ReadInt32
+                                Map.Events(i).Pages(X).CommandList(Y).ParentList = Buffer.ReadInt32
                                 If Map.Events(i).Pages(X).CommandList(Y).CommandCount > 0 Then
                                     ReDim Map.Events(i).Pages(X).CommandList(Y).Commands(0 To Map.Events(i).Pages(X).CommandList(Y).CommandCount)
                                     For z = 1 To Map.Events(i).Pages(X).CommandList(Y).CommandCount
                                         With Map.Events(i).Pages(X).CommandList(Y).Commands(z)
-                                            .Index = buffer.ReadInteger
-                                            .Text1 = buffer.ReadString
-                                            .Text2 = buffer.ReadString
-                                            .Text3 = buffer.ReadString
-                                            .Text4 = buffer.ReadString
-                                            .Text5 = buffer.ReadString
-                                            .Data1 = buffer.ReadInteger
-                                            .Data2 = buffer.ReadInteger
-                                            .Data3 = buffer.ReadInteger
-                                            .Data4 = buffer.ReadInteger
-                                            .Data5 = buffer.ReadInteger
-                                            .Data6 = buffer.ReadInteger
-                                            .ConditionalBranch.CommandList = buffer.ReadInteger
-                                            .ConditionalBranch.Condition = buffer.ReadInteger
-                                            .ConditionalBranch.Data1 = buffer.ReadInteger
-                                            .ConditionalBranch.Data2 = buffer.ReadInteger
-                                            .ConditionalBranch.Data3 = buffer.ReadInteger
-                                            .ConditionalBranch.ElseCommandList = buffer.ReadInteger
-                                            .MoveRouteCount = buffer.ReadInteger
+                                            .Index = Buffer.ReadInt32
+                                            .Text1 = Buffer.ReadString
+                                            .Text2 = Buffer.ReadString
+                                            .Text3 = Buffer.ReadString
+                                            .Text4 = Buffer.ReadString
+                                            .Text5 = Buffer.ReadString
+                                            .Data1 = Buffer.ReadInt32
+                                            .Data2 = Buffer.ReadInt32
+                                            .Data3 = Buffer.ReadInt32
+                                            .Data4 = Buffer.ReadInt32
+                                            .Data5 = Buffer.ReadInt32
+                                            .Data6 = Buffer.ReadInt32
+                                            .ConditionalBranch.CommandList = Buffer.ReadInt32
+                                            .ConditionalBranch.Condition = Buffer.ReadInt32
+                                            .ConditionalBranch.Data1 = Buffer.ReadInt32
+                                            .ConditionalBranch.Data2 = Buffer.ReadInt32
+                                            .ConditionalBranch.Data3 = Buffer.ReadInt32
+                                            .ConditionalBranch.ElseCommandList = Buffer.ReadInt32
+                                            .MoveRouteCount = Buffer.ReadInt32
                                             If .MoveRouteCount > 0 Then
                                                 ReDim Preserve .MoveRoute(.MoveRouteCount)
                                                 For w = 1 To .MoveRouteCount
-                                                    .MoveRoute(w).Index = buffer.ReadInteger
-                                                    .MoveRoute(w).Data1 = buffer.ReadInteger
-                                                    .MoveRoute(w).Data2 = buffer.ReadInteger
-                                                    .MoveRoute(w).Data3 = buffer.ReadInteger
-                                                    .MoveRoute(w).Data4 = buffer.ReadInteger
-                                                    .MoveRoute(w).Data5 = buffer.ReadInteger
-                                                    .MoveRoute(w).Data6 = buffer.ReadInteger
+                                                    .MoveRoute(w).Index = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data1 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data2 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data3 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data4 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data5 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data6 = Buffer.ReadInt32
                                                 Next
                                             End If
                                         End With
@@ -2606,28 +2575,22 @@ newlist:
             Next
         End If
         'End Event Data
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
     Sub Packet_EventChat(ByVal data() As Byte)
         Dim i As Integer
-        Dim buffer As ByteBuffer
         Dim choices As Integer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ServerPackets.SEventChat Then Exit Sub
-
-        EventReplyID = buffer.ReadInteger
-        EventReplyPage = buffer.ReadInteger
-        EventChatFace = buffer.ReadInteger
-        EventText = buffer.ReadString
+        Dim Buffer As New ByteStream(data)
+        EventReplyID = Buffer.ReadInt32
+        EventReplyPage = Buffer.ReadInt32
+        EventChatFace = Buffer.ReadInt32
+        EventText = Buffer.ReadString
         If EventText = "" Then EventText = " "
         EventChat = True
         ShowEventLbl = True
-        choices = buffer.ReadInteger
+        choices = Buffer.ReadInt32
         InEvent = True
         For i = 1 To 4
             EventChoices(i) = ""
@@ -2638,56 +2601,33 @@ newlist:
         Else
             EventChatType = 1
             For i = 1 To choices
-                EventChoices(i) = buffer.ReadString
+                EventChoices(i) = Buffer.ReadString
                 EventChoiceVisible(i) = True
             Next
         End If
-        AnotherChat = buffer.ReadInteger
+        AnotherChat = Buffer.ReadInt32
 
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
     Sub Packet_EventStart(ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ServerPackets.SEventStart Then Exit Sub
-
         InEvent = True
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_EventEnd(ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ServerPackets.SEventEnd Then Exit Sub
-
         InEvent = False
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_HoldPlayer(ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ServerPackets.SHoldPlayer Then Exit Sub
-
-        If buffer.ReadInteger = 0 Then
+        Dim Buffer As New ByteStream(data)
+        If Buffer.ReadInt32 = 0 Then
             HoldPlayer = True
         Else
             HoldPlayer = False
         End If
 
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
@@ -2695,8 +2635,8 @@ newlist:
 
 #Region "Drawing..."
     Public Sub EditorEvent_DrawGraphic()
-        Dim sRect As RECT
-        Dim dRect As RECT
+        Dim sRect As Rect
+        Dim dRect As Rect
         Dim targetBitmap As Bitmap 'Bitmap we draw to
         Dim sourceBitmap As Bitmap 'This is our sprite or tileset that we are drawing from
         Dim g As Graphics 'This is our graphics class that helps us draw to the targetBitmap
@@ -2739,29 +2679,29 @@ newlist:
                         targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
 
                         If tmpEvent.Pages(curPageNum).GraphicX2 = 0 And tmpEvent.Pages(curPageNum).GraphicY2 = 0 Then
-                            sRect.top = tmpEvent.Pages(curPageNum).GraphicY * 32
-                            sRect.left = tmpEvent.Pages(curPageNum).GraphicX * 32
-                            sRect.bottom = sRect.top + 32
-                            sRect.right = sRect.left + 32
+                            sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
+                            sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
+                            sRect.Bottom = sRect.Top + 32
+                            sRect.Right = sRect.Left + 32
 
                             With dRect
-                                dRect.top = (193 / 2) - ((sRect.bottom - sRect.top) / 2)
-                                dRect.bottom = dRect.top + (sRect.bottom - sRect.top)
-                                dRect.left = (120 / 2) - ((sRect.right - sRect.left) / 2)
-                                dRect.right = dRect.left + (sRect.right - sRect.left)
+                                dRect.Top = (193 / 2) - ((sRect.Bottom - sRect.Top) / 2)
+                                dRect.Bottom = dRect.Top + (sRect.Bottom - sRect.Top)
+                                dRect.Left = (120 / 2) - ((sRect.Right - sRect.Left) / 2)
+                                dRect.Right = dRect.Left + (sRect.Right - sRect.Left)
                             End With
 
                         Else
-                            sRect.top = tmpEvent.Pages(curPageNum).GraphicY * 32
-                            sRect.left = tmpEvent.Pages(curPageNum).GraphicX * 32
-                            sRect.bottom = sRect.top + ((tmpEvent.Pages(curPageNum).GraphicY2 - tmpEvent.Pages(curPageNum).GraphicY) * 32)
-                            sRect.right = sRect.left + ((tmpEvent.Pages(curPageNum).GraphicX2 - tmpEvent.Pages(curPageNum).GraphicX) * 32)
+                            sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
+                            sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
+                            sRect.Bottom = sRect.Top + ((tmpEvent.Pages(curPageNum).GraphicY2 - tmpEvent.Pages(curPageNum).GraphicY) * 32)
+                            sRect.Right = sRect.Left + ((tmpEvent.Pages(curPageNum).GraphicX2 - tmpEvent.Pages(curPageNum).GraphicX) * 32)
 
                             With dRect
-                                dRect.top = (193 / 2) - ((sRect.bottom - sRect.top) / 2)
-                                dRect.bottom = dRect.top + (sRect.bottom - sRect.top)
-                                dRect.left = (120 / 2) - ((sRect.right - sRect.left) / 2)
-                                dRect.right = dRect.left + (sRect.right - sRect.left)
+                                dRect.Top = (193 / 2) - ((sRect.Bottom - sRect.Top) / 2)
+                                dRect.Bottom = dRect.Top + (sRect.Bottom - sRect.Top)
+                                dRect.Left = (120 / 2) - ((sRect.Right - sRect.Left) / 2)
+                                dRect.Right = dRect.Left + (sRect.Right - sRect.Left)
                             End With
 
                         End If
@@ -2822,37 +2762,37 @@ newlist:
                             targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
 
                             If tmpEvent.Pages(curPageNum).GraphicX2 = 0 And tmpEvent.Pages(curPageNum).GraphicY2 = 0 Then
-                                sRect.top = tmpEvent.Pages(curPageNum).GraphicY * 32
-                                sRect.left = tmpEvent.Pages(curPageNum).GraphicX * 32
-                                sRect.bottom = sRect.top + 32
-                                sRect.right = sRect.left + 32
+                                sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
+                                sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
+                                sRect.Bottom = sRect.Top + 32
+                                sRect.Right = sRect.Left + 32
 
                                 With dRect
-                                    dRect.top = 0
-                                    dRect.bottom = PIC_Y
-                                    dRect.left = 0
-                                    dRect.right = PIC_X
+                                    dRect.Top = 0
+                                    dRect.Bottom = PIC_Y
+                                    dRect.Left = 0
+                                    dRect.Right = PIC_X
                                 End With
 
                             Else
-                                sRect.top = tmpEvent.Pages(curPageNum).GraphicY * 32
-                                sRect.left = tmpEvent.Pages(curPageNum).GraphicX * 32
-                                sRect.bottom = tmpEvent.Pages(curPageNum).GraphicY2 * 32
-                                sRect.right = tmpEvent.Pages(curPageNum).GraphicX2 * 32
+                                sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
+                                sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
+                                sRect.Bottom = tmpEvent.Pages(curPageNum).GraphicY2 * 32
+                                sRect.Right = tmpEvent.Pages(curPageNum).GraphicX2 * 32
 
                                 With dRect
-                                    dRect.top = 0
-                                    dRect.bottom = sRect.bottom
-                                    dRect.left = 0
-                                    dRect.right = sRect.right
+                                    dRect.Top = 0
+                                    dRect.Bottom = sRect.Bottom
+                                    dRect.Left = 0
+                                    dRect.Right = sRect.Right
                                 End With
 
                             End If
 
                             g = Graphics.FromImage(targetBitmap)
 
-                            Dim sourceRect As New Rectangle(sRect.left, sRect.top, sRect.right, sRect.bottom)  'This is the section we are pulling from the source graphic
-                            Dim destRect As New Rectangle(dRect.left, dRect.top, dRect.right, dRect.bottom)     'This is the rectangle in the target graphic we want to render to
+                            Dim sourceRect As New Rectangle(sRect.Left, sRect.Top, sRect.Right, sRect.Bottom)  'This is the section we are pulling from the source graphic
+                            Dim destRect As New Rectangle(dRect.Left, dRect.Top, dRect.Right, dRect.Bottom)     'This is the rectangle in the target graphic we want to render to
 
                             g.DrawImage(sourceBitmap, destRect, sourceRect, GraphicsUnit.Pixel)
 

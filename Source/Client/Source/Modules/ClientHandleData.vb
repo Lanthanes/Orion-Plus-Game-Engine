@@ -1,4 +1,5 @@
-﻿Imports ASFW.IO
+﻿Imports ASFW
+Imports ASFW.IO
 
 Module ClientHandleData
     Public PlayerBuffer As ByteBuffer
@@ -6,12 +7,12 @@ Module ClientHandleData
     Private Packets As Dictionary(Of Integer, Packet_)
 
     Public Sub HandleData(ByVal data() As Byte)
-        Dim Buffer() As Byte
-        Buffer = data.Clone
         Dim pLength As Integer
 
-        If PlayerBuffer Is Nothing Then PlayerBuffer = New ByteBuffer
-        PlayerBuffer.WriteBytes(Buffer)
+        If PlayerBuffer Is Nothing Then
+            PlayerBuffer = New ByteBuffer
+        End If
+        PlayerBuffer.WriteBytes(data.Clone)
 
         If PlayerBuffer.Count = 0 Then
             PlayerBuffer.Clear()
@@ -40,8 +41,7 @@ Module ClientHandleData
 
             If pLength <= PlayerBuffer.Length - 4 Then
                 PlayerBuffer.ReadInteger()
-                data = PlayerBuffer.ReadBytes(pLength)
-                HandleDataPackets(data)
+                HandleDataPackets(PlayerBuffer.ReadBytes(pLength))
             End If
 
             pLength = 0
@@ -208,26 +208,23 @@ Module ClientHandleData
     End Sub
 
     Sub HandleDataPackets(ByVal data() As Byte)
-        Dim packetnum As Integer, buffer As ByteBuffer, Packet As Packet_
-        Packet = Nothing
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        packetnum = buffer.ReadInteger
-        buffer = Nothing
+        Dim packetnum As Integer, Packet As Packet_ = Nothing
+        packetnum = BitConverter.ToInt32(data, 0)
 
-        If Packets.TryGetValue(packetnum, Packet) Then
-            Packet.Invoke(data)
-        End If
+        Try
+            If Packets.TryGetValue(packetnum, Packet) Then
+                Dim bytes As Byte() : ReDim bytes(data.Length - 5)
+                Buffer.BlockCopy(data, 4, bytes, 0, bytes.Length)
+                Packet.Invoke(bytes)
+            End If
+        Catch
+            MsgBox("PacketCrash: " & CType(packetnum, ServerPackets).ToString())
+        End Try
     End Sub
 
     Sub Packet_AlertMSG(ByVal data() As Byte)
         Dim Msg As String
-        Dim Buffer As New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ServerPackets.SAlertMsg Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         pnlloadvisible = False
 
         If FrmMenu.Visible = False Then
@@ -242,49 +239,34 @@ Module ClientHandleData
 
         Msg = Trim(Buffer.ReadString)
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
         MsgBox(Msg, vbOKOnly, GAME_NAME)
         DestroyGame()
     End Sub
 
     Sub Packet_KeyPair(ByVal Data() As Byte)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ServerPackets.SKeyPair Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         EKeyPair.ImportKeyString(Buffer.ReadString())
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_LoadCharOk(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
-        Buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ServerPackets.SLoadCharOk Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         ' Now we can receive game data
-        MyIndex = Buffer.ReadInteger
+        MyIndex = Buffer.ReadInt32
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
         pnlloadvisible = True
         SetStatus(Strings.Get("gamegui", "datarecieve"))
     End Sub
 
     Sub Packet_LoginOk(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer, CharName As String, Sprite As Integer
+        Dim CharName As String, Sprite As Integer
         Dim Level As Integer, ClassName As String, Gender As Byte
 
-        Buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ServerPackets.SLoginOk Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         ' save options
         Options.SavePass = chkSavePassChecked
         Options.Username = Trim$(tempUserName)
@@ -301,7 +283,7 @@ Module ClientHandleData
         SendRequestClasses()
 
         ' Now we can receive char data
-        MaxChars = Buffer.ReadInteger
+        MaxChars = Buffer.ReadInt32
         ReDim CharSelection(MaxChars)
 
         SelectedChar = 1
@@ -317,10 +299,10 @@ Module ClientHandleData
 
         For i = 1 To MaxChars
             CharName = Buffer.ReadString
-            Sprite = Buffer.ReadInteger
-            Level = Buffer.ReadInteger
+            Sprite = Buffer.ReadInt32
+            Level = Buffer.ReadInt32
             ClassName = Buffer.ReadString
-            Gender = Buffer.ReadInteger
+            Gender = Buffer.ReadInt32
 
             CharSelection(i).Name = CharName
             CharSelection(i).Sprite = Sprite
@@ -329,7 +311,7 @@ Module ClientHandleData
             CharSelection(i).Gender = Gender
         Next
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
         ' Used for if the player is creating a new character
         frmmenuvisible = True
@@ -349,14 +331,9 @@ Module ClientHandleData
 
     Sub Packet_NewCharClasses(ByVal data() As Byte)
         Dim i As Integer, z As Integer, X As Integer
-        Dim Buffer As New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ServerPackets.SNewCharClasses Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         ' Max classes
-        Max_Classes = Buffer.ReadInteger
+        Max_Classes = Buffer.ReadInt32
         ReDim Classes(0 To Max_Classes)
 
         SelectedChar = 1
@@ -369,54 +346,54 @@ Module ClientHandleData
 
                 ReDim .Vital(0 To Vitals.Count - 1)
 
-                .Vital(Vitals.HP) = Buffer.ReadInteger
-                .Vital(Vitals.MP) = Buffer.ReadInteger
-                .Vital(Vitals.SP) = Buffer.ReadInteger
+                .Vital(Vitals.HP) = Buffer.ReadInt32
+                .Vital(Vitals.MP) = Buffer.ReadInt32
+                .Vital(Vitals.SP) = Buffer.ReadInt32
 
                 ' get array size
-                z = Buffer.ReadInteger
+                z = Buffer.ReadInt32
                 ' redim array
                 ReDim .MaleSprite(0 To z + 1)
                 ' loop-receive data
                 For X = 1 To z + 1
-                    .MaleSprite(X) = Buffer.ReadInteger
+                    .MaleSprite(X) = Buffer.ReadInt32
                 Next
 
                 ' get array size
-                z = Buffer.ReadInteger
+                z = Buffer.ReadInt32
                 ' redim array
                 ReDim .FemaleSprite(0 To z + 1)
                 ' loop-receive data
                 For X = 1 To z + 1
-                    .FemaleSprite(X) = Buffer.ReadInteger
+                    .FemaleSprite(X) = Buffer.ReadInt32
                 Next
 
                 ReDim .Stat(0 To Stats.Count - 1)
 
-                .Stat(Stats.Strength) = Buffer.ReadInteger
-                .Stat(Stats.Endurance) = Buffer.ReadInteger
-                .Stat(Stats.Vitality) = Buffer.ReadInteger
-                .Stat(Stats.Intelligence) = Buffer.ReadInteger
-                .Stat(Stats.Luck) = Buffer.ReadInteger
-                .Stat(Stats.Spirit) = Buffer.ReadInteger
+                .Stat(Stats.Strength) = Buffer.ReadInt32
+                .Stat(Stats.Endurance) = Buffer.ReadInt32
+                .Stat(Stats.Vitality) = Buffer.ReadInt32
+                .Stat(Stats.Intelligence) = Buffer.ReadInt32
+                .Stat(Stats.Luck) = Buffer.ReadInt32
+                .Stat(Stats.Spirit) = Buffer.ReadInt32
 
                 ReDim .StartItem(5)
                 ReDim .StartValue(5)
                 For q = 1 To 5
-                    .StartItem(q) = Buffer.ReadInteger
-                    .StartValue(q) = Buffer.ReadInteger
+                    .StartItem(q) = Buffer.ReadInt32
+                    .StartValue(q) = Buffer.ReadInt32
                 Next
 
-                .StartMap = Buffer.ReadInteger
-                .StartX = Buffer.ReadInteger
-                .StartY = Buffer.ReadInteger
+                .StartMap = Buffer.ReadInt32
+                .StartX = Buffer.ReadInt32
+                .StartY = Buffer.ReadInt32
 
-                .BaseExp = Buffer.ReadInteger
+                .BaseExp = Buffer.ReadInt32
             End With
 
         Next
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
         ' Used for if the player is creating a new character
         frmmenuvisible = True
@@ -439,14 +416,9 @@ Module ClientHandleData
 
     Private Sub Packet_ClassesData(ByVal data() As Byte)
         Dim i As Integer, z As Integer, X As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SClassesData Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         ' Max classes
-        Max_Classes = Buffer.ReadInteger
+        Max_Classes = Buffer.ReadInt32
         ReDim Classes(0 To Max_Classes)
 
         SelectedChar = 1
@@ -459,49 +431,49 @@ Module ClientHandleData
 
                 ReDim .Vital(0 To Vitals.Count - 1)
 
-                .Vital(Vitals.HP) = Buffer.ReadInteger
-                .Vital(Vitals.MP) = Buffer.ReadInteger
-                .Vital(Vitals.SP) = Buffer.ReadInteger
+                .Vital(Vitals.HP) = Buffer.ReadInt32
+                .Vital(Vitals.MP) = Buffer.ReadInt32
+                .Vital(Vitals.SP) = Buffer.ReadInt32
 
                 ' get array size
-                z = Buffer.ReadInteger
+                z = Buffer.ReadInt32
                 ' redim array
                 ReDim .MaleSprite(0 To z + 1)
                 ' loop-receive data
                 For X = 1 To z + 1
-                    .MaleSprite(X) = Buffer.ReadInteger
+                    .MaleSprite(X) = Buffer.ReadInt32
                 Next
 
                 ' get array size
-                z = Buffer.ReadInteger
+                z = Buffer.ReadInt32
                 ' redim array
                 ReDim .FemaleSprite(0 To z + 1)
                 ' loop-receive data
                 For X = 1 To z + 1
-                    .FemaleSprite(X) = Buffer.ReadInteger
+                    .FemaleSprite(X) = Buffer.ReadInt32
                 Next
 
                 ReDim .Stat(0 To Stats.Count - 1)
 
-                .Stat(Stats.Strength) = Buffer.ReadInteger
-                .Stat(Stats.Endurance) = Buffer.ReadInteger
-                .Stat(Stats.Vitality) = Buffer.ReadInteger
-                .Stat(Stats.Intelligence) = Buffer.ReadInteger
-                .Stat(Stats.Luck) = Buffer.ReadInteger
-                .Stat(Stats.Spirit) = Buffer.ReadInteger
+                .Stat(Stats.Strength) = Buffer.ReadInt32
+                .Stat(Stats.Endurance) = Buffer.ReadInt32
+                .Stat(Stats.Vitality) = Buffer.ReadInt32
+                .Stat(Stats.Intelligence) = Buffer.ReadInt32
+                .Stat(Stats.Luck) = Buffer.ReadInt32
+                .Stat(Stats.Spirit) = Buffer.ReadInt32
 
                 ReDim .StartItem(5)
                 ReDim .StartValue(5)
                 For q = 1 To 5
-                    .StartItem(q) = Buffer.ReadInteger
-                    .StartValue(q) = Buffer.ReadInteger
+                    .StartItem(q) = Buffer.ReadInt32
+                    .StartValue(q) = Buffer.ReadInt32
                 Next
 
-                .StartMap = Buffer.ReadInteger
-                .StartX = Buffer.ReadInteger
-                .StartY = Buffer.ReadInteger
+                .StartMap = Buffer.ReadInt32
+                .StartX = Buffer.ReadInt32
+                .StartY = Buffer.ReadInt32
 
-                .BaseExp = Buffer.ReadInteger
+                .BaseExp = Buffer.ReadInt32
             End With
 
         Next
@@ -513,7 +485,7 @@ Module ClientHandleData
         FrmMenu.DrawCharacter()
         newCharSprite = 1
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_InGame(ByVal data() As Byte)
@@ -524,26 +496,21 @@ Module ClientHandleData
 
     Private Sub Packet_PlayerInv(ByVal data() As Byte)
         Dim i As Integer, InvNum As Integer, Amount As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPlayerInv Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         For i = 1 To MAX_INV
-            InvNum = Buffer.ReadInteger
-            Amount = Buffer.ReadInteger
+            InvNum = Buffer.ReadInt32
+            Amount = Buffer.ReadInt32
             SetPlayerInvItemNum(MyIndex, i, InvNum)
             SetPlayerInvItemValue(MyIndex, i, Amount)
 
             Player(MyIndex).RandInv(i).Prefix = Buffer.ReadString
             Player(MyIndex).RandInv(i).Suffix = Buffer.ReadString
-            Player(MyIndex).RandInv(i).Rarity = Buffer.ReadInteger
+            Player(MyIndex).RandInv(i).Rarity = Buffer.ReadInt32
             For n = 1 To Stats.Count - 1
-                Player(MyIndex).RandInv(i).Stat(n) = Buffer.ReadInteger
+                Player(MyIndex).RandInv(i).Stat(n) = Buffer.ReadInt32
             Next
-            Player(MyIndex).RandInv(i).Damage = Buffer.ReadInteger
-            Player(MyIndex).RandInv(i).Speed = Buffer.ReadInteger
+            Player(MyIndex).RandInv(i).Damage = Buffer.ReadInt32
+            Player(MyIndex).RandInv(i).Speed = Buffer.ReadInt32
         Next
 
         ' changes to inventory, need to clear any drop menu
@@ -552,29 +519,24 @@ Module ClientHandleData
         tmpCurrencyItem = 0
         CurrencyMenu = 0 ' clear
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_PlayerInvUpdate(ByVal data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPlayerInvUpdate Then Exit Sub
-
-        n = Buffer.ReadInteger
-        SetPlayerInvItemNum(MyIndex, n, Buffer.ReadInteger)
-        SetPlayerInvItemValue(MyIndex, n, Buffer.ReadInteger)
+        Dim Buffer As New ByteStream(data)
+        n = Buffer.ReadInt32
+        SetPlayerInvItemNum(MyIndex, n, Buffer.ReadInt32)
+        SetPlayerInvItemValue(MyIndex, n, Buffer.ReadInt32)
 
         Player(MyIndex).RandInv(n).Prefix = Buffer.ReadString
         Player(MyIndex).RandInv(n).Suffix = Buffer.ReadString
-        Player(MyIndex).RandInv(n).Rarity = Buffer.ReadInteger
+        Player(MyIndex).RandInv(n).Rarity = Buffer.ReadInt32
         For i = 1 To Stats.Count - 1
-            Player(MyIndex).RandInv(n).Stat(i) = Buffer.ReadInteger
+            Player(MyIndex).RandInv(n).Stat(i) = Buffer.ReadInt32
         Next
-        Player(MyIndex).RandInv(n).Damage = Buffer.ReadInteger
-        Player(MyIndex).RandInv(n).Speed = Buffer.ReadInteger
+        Player(MyIndex).RandInv(n).Damage = Buffer.ReadInt32
+        Player(MyIndex).RandInv(n).Speed = Buffer.ReadInt32
 
         ' changes, clear drop menu
         FrmMainGame.pnlCurrency.Visible = False
@@ -582,29 +544,25 @@ Module ClientHandleData
         tmpCurrencyItem = 0
         CurrencyMenu = 0 ' clear
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_PlayerWornEquipment(ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer, i As Integer, n As Integer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPlayerWornEq Then Exit Sub
-
+        Dim i As Integer, n As Integer
+        Dim Buffer As New ByteStream(data)
         For i = 1 To EquipmentType.Count - 1
-            SetPlayerEquipment(MyIndex, Buffer.ReadInteger, i)
+            SetPlayerEquipment(MyIndex, Buffer.ReadInt32, i)
         Next
 
         For i = 1 To EquipmentType.Count - 1
             Player(MyIndex).RandEquip(i).Prefix = Buffer.ReadString
             Player(MyIndex).RandEquip(i).Suffix = Buffer.ReadString
-            Player(MyIndex).RandEquip(i).Damage = Buffer.ReadInteger
-            Player(MyIndex).RandEquip(i).Speed = Buffer.ReadInteger
-            Player(MyIndex).RandEquip(i).Rarity = Buffer.ReadInteger
+            Player(MyIndex).RandEquip(i).Damage = Buffer.ReadInt32
+            Player(MyIndex).RandEquip(i).Speed = Buffer.ReadInt32
+            Player(MyIndex).RandEquip(i).Rarity = Buffer.ReadInt32
 
             For n = 1 To Stats.Count - 1
-                Player(MyIndex).RandEquip(i).Stat(n) = Buffer.ReadInteger
+                Player(MyIndex).RandEquip(i).Stat(n) = Buffer.ReadInt32
             Next
         Next
 
@@ -615,19 +573,14 @@ Module ClientHandleData
         tmpCurrencyItem = 0
         CurrencyMenu = 0 ' clear
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_PlayerHP(ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(data)
+        Player(MyIndex).MaxHP = Buffer.ReadInt32
 
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPlayerHp Then Exit Sub
-
-        Player(MyIndex).MaxHP = Buffer.ReadInteger
-
-        SetPlayerVital(MyIndex, Vitals.HP, Buffer.ReadInteger)
+        SetPlayerVital(MyIndex, Vitals.HP, Buffer.ReadInt32)
 
         If GetPlayerMaxVital(MyIndex, Vitals.HP) > 0 Then
             lblHPText = GetPlayerVital(MyIndex, Vitals.HP) & "/" & GetPlayerMaxVital(MyIndex, Vitals.HP)
@@ -635,18 +588,13 @@ Module ClientHandleData
             picHpWidth = Int(((GetPlayerVital(MyIndex, Vitals.HP) / 169) / (GetPlayerMaxVital(MyIndex, Vitals.HP) / 169)) * 169)
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_PlayerMP(ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPlayerMp Then Exit Sub
-
-        Player(MyIndex).MaxMP = Buffer.ReadInteger
-        SetPlayerVital(MyIndex, Vitals.MP, Buffer.ReadInteger)
+        Dim Buffer As New ByteStream(data)
+        Player(MyIndex).MaxMP = Buffer.ReadInt32
+        SetPlayerVital(MyIndex, Vitals.MP, Buffer.ReadInt32)
 
         If GetPlayerMaxVital(MyIndex, Vitals.MP) > 0 Then
             lblManaText = GetPlayerVital(MyIndex, Vitals.MP) & "/" & GetPlayerMaxVital(MyIndex, Vitals.MP)
@@ -654,73 +602,59 @@ Module ClientHandleData
             picManaWidth = Int(((GetPlayerVital(MyIndex, Vitals.MP) / 169) / (GetPlayerMaxVital(MyIndex, Vitals.MP) / 169)) * 169)
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_PlayerSP(ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer
-        Buffer.WriteBytes(data)
+        Dim Buffer As New ByteStream(data)
+        Player(MyIndex).MaxSP = Buffer.ReadInt32
+        SetPlayerVital(MyIndex, Vitals.SP, Buffer.ReadInt32)
 
-        If Buffer.ReadInteger <> ServerPackets.SPlayerSp Then Exit Sub
-
-        Player(MyIndex).MaxSP = Buffer.ReadInteger
-        SetPlayerVital(MyIndex, Vitals.SP, Buffer.ReadInteger)
-
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_PlayerStats(ByVal data() As Byte)
         Dim i As Integer, index As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPlayerStats Then Exit Sub
-
-        index = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        index = Buffer.ReadInt32
         For i = 1 To Stats.Count - 1
-            SetPlayerStat(index, i, Buffer.ReadInteger)
+            SetPlayerStat(index, i, Buffer.ReadInt32)
         Next
         UpdateCharacterPanel = True
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_PlayerData(ByVal Data() As Byte)
         Dim i As Integer, X As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPlayerData Then Exit Sub
-
-        i = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        i = Buffer.ReadInt32
         SetPlayerName(i, Buffer.ReadString)
-        SetPlayerClass(i, Buffer.ReadInteger)
-        SetPlayerLevel(i, Buffer.ReadInteger)
-        SetPlayerPOINTS(i, Buffer.ReadInteger)
-        SetPlayerSprite(i, Buffer.ReadInteger)
-        SetPlayerMap(i, Buffer.ReadInteger)
-        SetPlayerX(i, Buffer.ReadInteger)
-        SetPlayerY(i, Buffer.ReadInteger)
-        SetPlayerDir(i, Buffer.ReadInteger)
-        SetPlayerAccess(i, Buffer.ReadInteger)
-        SetPlayerPK(i, Buffer.ReadInteger)
+        SetPlayerClass(i, Buffer.ReadInt32)
+        SetPlayerLevel(i, Buffer.ReadInt32)
+        SetPlayerPOINTS(i, Buffer.ReadInt32)
+        SetPlayerSprite(i, Buffer.ReadInt32)
+        SetPlayerMap(i, Buffer.ReadInt32)
+        SetPlayerX(i, Buffer.ReadInt32)
+        SetPlayerY(i, Buffer.ReadInt32)
+        SetPlayerDir(i, Buffer.ReadInt32)
+        SetPlayerAccess(i, Buffer.ReadInt32)
+        SetPlayerPK(i, Buffer.ReadInt32)
 
         For X = 1 To Stats.Count - 1
-            SetPlayerStat(i, X, Buffer.ReadInteger)
+            SetPlayerStat(i, X, Buffer.ReadInt32)
         Next
 
-        Player(i).InHouse = Buffer.ReadInteger
+        Player(i).InHouse = Buffer.ReadInt32
 
         For X = 0 To ResourceSkills.Count - 1
-            Player(i).GatherSkills(X).SkillLevel = Buffer.ReadInteger
-            Player(i).GatherSkills(X).SkillCurExp = Buffer.ReadInteger
-            Player(i).GatherSkills(X).SkillNextLvlExp = Buffer.ReadInteger
+            Player(i).GatherSkills(X).SkillLevel = Buffer.ReadInt32
+            Player(i).GatherSkills(X).SkillCurExp = Buffer.ReadInt32
+            Player(i).GatherSkills(X).SkillNextLvlExp = Buffer.ReadInt32
         Next
 
         For X = 1 To MAX_RECIPE
-            Player(i).RecipeLearned(X) = Buffer.ReadInteger
+            Player(i).RecipeLearned(X) = Buffer.ReadInt32
         Next
 
         ' Check if the player is the client player
@@ -741,23 +675,18 @@ Module ClientHandleData
 
         If i = MyIndex Then PlayerData = True
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_PlayerMove(ByVal Data() As Byte)
         Dim i As Integer, X As Integer, Y As Integer
         Dim Dir As Integer, n As Byte
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPlayerMove Then Exit Sub
-
-        i = Buffer.ReadInteger
-        X = Buffer.ReadInteger
-        Y = Buffer.ReadInteger
-        Dir = Buffer.ReadInteger
-        n = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        i = Buffer.ReadInt32
+        X = Buffer.ReadInt32
+        Y = Buffer.ReadInt32
+        Dir = Buffer.ReadInt32
+        n = Buffer.ReadInt32
 
         SetPlayerX(i, X)
         SetPlayerY(i, Y)
@@ -777,23 +706,18 @@ Module ClientHandleData
                 Player(i).XOffset = PIC_X * -1
         End Select
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_NpcMove(ByVal Data() As Byte)
         Dim MapNpcNum As Integer, Movement As Integer
         Dim X As Integer, Y As Integer, Dir As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SNpcMove Then Exit Sub
-
-        MapNpcNum = Buffer.ReadInteger
-        X = Buffer.ReadInteger
-        Y = Buffer.ReadInteger
-        Dir = Buffer.ReadInteger
-        Movement = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        MapNpcNum = Buffer.ReadInt32
+        X = Buffer.ReadInt32
+        Y = Buffer.ReadInt32
+        Dir = Buffer.ReadInt32
+        Movement = Buffer.ReadInt32
 
         With MapNpc(MapNpcNum)
             .X = X
@@ -815,19 +739,14 @@ Module ClientHandleData
             End Select
         End With
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_PlayerDir(ByVal Data() As Byte)
         Dim Dir As Integer, i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPlayerDir Then Exit Sub
-
-        i = Buffer.ReadInteger
-        Dir = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        i = Buffer.ReadInt32
+        Dir = Buffer.ReadInt32
 
         SetPlayerDir(i, Dir)
 
@@ -837,19 +756,14 @@ Module ClientHandleData
             .Moving = 0
         End With
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_NpcDir(ByVal Data() As Byte)
         Dim Dir As Integer, i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SNpcDir Then Exit Sub
-
-        i = Buffer.ReadInteger
-        Dir = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        i = Buffer.ReadInt32
+        Dir = Buffer.ReadInt32
 
         With MapNpc(i)
             .Dir = Dir
@@ -858,20 +772,15 @@ Module ClientHandleData
             .Moving = 0
         End With
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_PlayerXY(ByVal Data() As Byte)
         Dim X As Integer, Y As Integer, Dir As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPlayerXY Then Exit Sub
-
-        X = Buffer.ReadInteger
-        Y = Buffer.ReadInteger
-        Dir = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        X = Buffer.ReadInt32
+        Y = Buffer.ReadInt32
+        Dir = Buffer.ReadInt32
 
         SetPlayerX(MyIndex, X)
         SetPlayerY(MyIndex, Y)
@@ -882,52 +791,37 @@ Module ClientHandleData
         Player(MyIndex).XOffset = 0
         Player(MyIndex).YOffset = 0
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_Attack(ByVal Data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SAttack Then Exit Sub
-
-        i = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        i = Buffer.ReadInt32
 
         ' Set player to attacking
         Player(i).Attacking = 1
         Player(i).AttackTimer = GetTickCount()
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_NpcAttack(ByVal Data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SNpcAttack Then Exit Sub
-
-        i = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        i = Buffer.ReadInt32
 
         ' Set npc to attacking
         MapNpc(i).Attacking = 1
         MapNpc(i).AttackTimer = GetTickCount()
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_CheckMap(ByVal Data() As Byte)
         Dim X As Integer, Y As Integer, i As Integer
         Dim NeedMap As Byte
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SCheckForMap Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         GettingMap = True
 
         ' Erase all players except self
@@ -945,211 +839,203 @@ Module ClientHandleData
         ClearMap()
 
         ' Get map num
-        X = Buffer.ReadInteger
+        X = Buffer.ReadInt32
         ' Get revision
-        Y = Buffer.ReadInteger
+        Y = Buffer.ReadInt32
 
         NeedMap = 1
 
         ' Either the revisions didn't match or we dont have the map, so we need it
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ClientPackets.CNeedMap)
-        Buffer.WriteInteger(NeedMap)
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ClientPackets.CNeedMap)
+        Buffer.WriteInt32(NeedMap)
         SendData(Buffer.ToArray())
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_MapData(ByVal Data() As Byte)
         Dim X As Integer, Y As Integer, i As Integer
         Dim MapNum As Integer, MusicFile As String
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SMapData Then Exit Sub
-
-        Data = Buffer.ReadBytes(Buffer.Count - 4)
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(Compression.DecompressBytes(Data))
+        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data, 4, Data.Length - 4))
 
         MapData = False
 
         ClearMap()
 
         SyncLock MapLock
-            If Buffer.ReadInteger = 1 Then
+            If Buffer.ReadInt32 = 1 Then
 
-                MapNum = Buffer.ReadInteger
+                MapNum = Buffer.ReadInt32
                 Map.Name = Trim(Buffer.ReadString)
                 Map.Music = Trim(Buffer.ReadString)
-                Map.Revision = Buffer.ReadInteger
-                Map.Moral = Buffer.ReadInteger
-                Map.Tileset = Buffer.ReadInteger
-                Map.Up = Buffer.ReadInteger
-                Map.Down = Buffer.ReadInteger
-                Map.Left = Buffer.ReadInteger
-                Map.Right = Buffer.ReadInteger
-                Map.BootMap = Buffer.ReadInteger
-                Map.BootX = Buffer.ReadInteger
-                Map.BootY = Buffer.ReadInteger
-                Map.MaxX = Buffer.ReadInteger
-                Map.MaxY = Buffer.ReadInteger
-                Map.WeatherType = Buffer.ReadInteger
-                Map.FogIndex = Buffer.ReadInteger
-                Map.WeatherIntensity = Buffer.ReadInteger
-                Map.FogAlpha = Buffer.ReadInteger
-                Map.FogSpeed = Buffer.ReadInteger
-                Map.HasMapTint = Buffer.ReadInteger
-                Map.MapTintR = Buffer.ReadInteger
-                Map.MapTintG = Buffer.ReadInteger
-                Map.MapTintB = Buffer.ReadInteger
-                Map.MapTintA = Buffer.ReadInteger
-                Map.Instanced = Buffer.ReadInteger
-                Map.Panorama = Buffer.ReadInteger
-                Map.Parallax = Buffer.ReadInteger
+                Map.Revision = Buffer.ReadInt32
+                Map.Moral = Buffer.ReadInt32
+                Map.Tileset = Buffer.ReadInt32
+                Map.Up = Buffer.ReadInt32
+                Map.Down = Buffer.ReadInt32
+                Map.Left = Buffer.ReadInt32
+                Map.Right = Buffer.ReadInt32
+                Map.BootMap = Buffer.ReadInt32
+                Map.BootX = Buffer.ReadInt32
+                Map.BootY = Buffer.ReadInt32
+                Map.MaxX = Buffer.ReadInt32
+                Map.MaxY = Buffer.ReadInt32
+                Map.WeatherType = Buffer.ReadInt32
+                Map.FogIndex = Buffer.ReadInt32
+                Map.WeatherIntensity = Buffer.ReadInt32
+                Map.FogAlpha = Buffer.ReadInt32
+                Map.FogSpeed = Buffer.ReadInt32
+                Map.HasMapTint = Buffer.ReadInt32
+                Map.MapTintR = Buffer.ReadInt32
+                Map.MapTintG = Buffer.ReadInt32
+                Map.MapTintB = Buffer.ReadInt32
+                Map.MapTintA = Buffer.ReadInt32
+                Map.Instanced = Buffer.ReadInt32
+                Map.Panorama = Buffer.ReadInt32
+                Map.Parallax = Buffer.ReadInt32
 
                 ReDim Map.Tile(0 To Map.MaxX, 0 To Map.MaxY)
 
                 For X = 1 To MAX_MAP_NPCS
-                    Map.Npc(X) = Buffer.ReadInteger
+                    Map.Npc(X) = Buffer.ReadInt32
                 Next
 
                 For X = 0 To Map.MaxX
                     For Y = 0 To Map.MaxY
-                        Map.Tile(X, Y).Data1 = Buffer.ReadInteger
-                        Map.Tile(X, Y).Data2 = Buffer.ReadInteger
-                        Map.Tile(X, Y).Data3 = Buffer.ReadInteger
-                        Map.Tile(X, Y).DirBlock = Buffer.ReadInteger
+                        Map.Tile(X, Y).Data1 = Buffer.ReadInt32
+                        Map.Tile(X, Y).Data2 = Buffer.ReadInt32
+                        Map.Tile(X, Y).Data3 = Buffer.ReadInt32
+                        Map.Tile(X, Y).DirBlock = Buffer.ReadInt32
 
                         ReDim Map.Tile(X, Y).Layer(0 To MapLayer.Count - 1)
 
                         For i = 0 To MapLayer.Count - 1
-                            Map.Tile(X, Y).Layer(i).Tileset = Buffer.ReadInteger
-                            Map.Tile(X, Y).Layer(i).X = Buffer.ReadInteger
-                            Map.Tile(X, Y).Layer(i).Y = Buffer.ReadInteger
-                            Map.Tile(X, Y).Layer(i).AutoTile = Buffer.ReadInteger
+                            Map.Tile(X, Y).Layer(i).Tileset = Buffer.ReadInt32
+                            Map.Tile(X, Y).Layer(i).X = Buffer.ReadInt32
+                            Map.Tile(X, Y).Layer(i).Y = Buffer.ReadInt32
+                            Map.Tile(X, Y).Layer(i).AutoTile = Buffer.ReadInt32
                         Next
-                        Map.Tile(X, Y).Type = Buffer.ReadInteger
+                        Map.Tile(X, Y).Type = Buffer.ReadInt32
                     Next
                 Next
 
                 'Event Data!
                 ResetEventdata()
 
-                Map.EventCount = Buffer.ReadInteger
+                Map.EventCount = Buffer.ReadInt32
 
                 If Map.EventCount > 0 Then
                     ReDim Map.Events(0 To Map.EventCount)
                     For i = 1 To Map.EventCount
                         With Map.Events(i)
                             .Name = Trim(Buffer.ReadString)
-                            .Globals = Buffer.ReadInteger
-                            .X = Buffer.ReadInteger
-                            .Y = Buffer.ReadInteger
-                            .PageCount = Buffer.ReadInteger
+                            .Globals = Buffer.ReadInt32
+                            .X = Buffer.ReadInt32
+                            .Y = Buffer.ReadInt32
+                            .PageCount = Buffer.ReadInt32
                         End With
                         If Map.Events(i).PageCount > 0 Then
                             ReDim Map.Events(i).Pages(0 To Map.Events(i).PageCount)
                             For X = 1 To Map.Events(i).PageCount
                                 With Map.Events(i).Pages(X)
-                                    .chkVariable = Buffer.ReadInteger
-                                    .VariableIndex = Buffer.ReadInteger
-                                    .VariableCondition = Buffer.ReadInteger
-                                    .VariableCompare = Buffer.ReadInteger
+                                    .chkVariable = Buffer.ReadInt32
+                                    .VariableIndex = Buffer.ReadInt32
+                                    .VariableCondition = Buffer.ReadInt32
+                                    .VariableCompare = Buffer.ReadInt32
 
-                                    .chkSwitch = Buffer.ReadInteger
-                                    .SwitchIndex = Buffer.ReadInteger
-                                    .SwitchCompare = Buffer.ReadInteger
+                                    .chkSwitch = Buffer.ReadInt32
+                                    .SwitchIndex = Buffer.ReadInt32
+                                    .SwitchCompare = Buffer.ReadInt32
 
-                                    .chkHasItem = Buffer.ReadInteger
-                                    .HasItemIndex = Buffer.ReadInteger
-                                    .HasItemAmount = Buffer.ReadInteger
+                                    .chkHasItem = Buffer.ReadInt32
+                                    .HasItemIndex = Buffer.ReadInt32
+                                    .HasItemAmount = Buffer.ReadInt32
 
-                                    .chkSelfSwitch = Buffer.ReadInteger
-                                    .SelfSwitchIndex = Buffer.ReadInteger
-                                    .SelfSwitchCompare = Buffer.ReadInteger
+                                    .chkSelfSwitch = Buffer.ReadInt32
+                                    .SelfSwitchIndex = Buffer.ReadInt32
+                                    .SelfSwitchCompare = Buffer.ReadInt32
 
-                                    .GraphicType = Buffer.ReadInteger
-                                    .Graphic = Buffer.ReadInteger
-                                    .GraphicX = Buffer.ReadInteger
-                                    .GraphicY = Buffer.ReadInteger
-                                    .GraphicX2 = Buffer.ReadInteger
-                                    .GraphicY2 = Buffer.ReadInteger
+                                    .GraphicType = Buffer.ReadInt32
+                                    .Graphic = Buffer.ReadInt32
+                                    .GraphicX = Buffer.ReadInt32
+                                    .GraphicY = Buffer.ReadInt32
+                                    .GraphicX2 = Buffer.ReadInt32
+                                    .GraphicY2 = Buffer.ReadInt32
 
-                                    .MoveType = Buffer.ReadInteger
-                                    .MoveSpeed = Buffer.ReadInteger
-                                    .MoveFreq = Buffer.ReadInteger
+                                    .MoveType = Buffer.ReadInt32
+                                    .MoveSpeed = Buffer.ReadInt32
+                                    .MoveFreq = Buffer.ReadInt32
 
-                                    .MoveRouteCount = Buffer.ReadInteger
+                                    .MoveRouteCount = Buffer.ReadInt32
 
-                                    .IgnoreMoveRoute = Buffer.ReadInteger
-                                    .RepeatMoveRoute = Buffer.ReadInteger
+                                    .IgnoreMoveRoute = Buffer.ReadInt32
+                                    .RepeatMoveRoute = Buffer.ReadInt32
 
                                     If .MoveRouteCount > 0 Then
                                         ReDim Map.Events(i).Pages(X).MoveRoute(0 To .MoveRouteCount)
                                         For Y = 1 To .MoveRouteCount
-                                            .MoveRoute(Y).Index = Buffer.ReadInteger
-                                            .MoveRoute(Y).Data1 = Buffer.ReadInteger
-                                            .MoveRoute(Y).Data2 = Buffer.ReadInteger
-                                            .MoveRoute(Y).Data3 = Buffer.ReadInteger
-                                            .MoveRoute(Y).Data4 = Buffer.ReadInteger
-                                            .MoveRoute(Y).Data5 = Buffer.ReadInteger
-                                            .MoveRoute(Y).Data6 = Buffer.ReadInteger
+                                            .MoveRoute(Y).Index = Buffer.ReadInt32
+                                            .MoveRoute(Y).Data1 = Buffer.ReadInt32
+                                            .MoveRoute(Y).Data2 = Buffer.ReadInt32
+                                            .MoveRoute(Y).Data3 = Buffer.ReadInt32
+                                            .MoveRoute(Y).Data4 = Buffer.ReadInt32
+                                            .MoveRoute(Y).Data5 = Buffer.ReadInt32
+                                            .MoveRoute(Y).Data6 = Buffer.ReadInt32
                                         Next
                                     End If
 
-                                    .WalkAnim = Buffer.ReadInteger
-                                    .DirFix = Buffer.ReadInteger
-                                    .WalkThrough = Buffer.ReadInteger
-                                    .ShowName = Buffer.ReadInteger
-                                    .Trigger = Buffer.ReadInteger
-                                    .CommandListCount = Buffer.ReadInteger
+                                    .WalkAnim = Buffer.ReadInt32
+                                    .DirFix = Buffer.ReadInt32
+                                    .WalkThrough = Buffer.ReadInt32
+                                    .ShowName = Buffer.ReadInt32
+                                    .Trigger = Buffer.ReadInt32
+                                    .CommandListCount = Buffer.ReadInt32
 
-                                    .Position = Buffer.ReadInteger
-                                    .Questnum = Buffer.ReadInteger
+                                    .Position = Buffer.ReadInt32
+                                    .Questnum = Buffer.ReadInt32
 
-                                    .chkPlayerGender = Buffer.ReadInteger
+                                    .chkPlayerGender = Buffer.ReadInt32
                                 End With
 
                                 If Map.Events(i).Pages(X).CommandListCount > 0 Then
                                     ReDim Map.Events(i).Pages(X).CommandList(0 To Map.Events(i).Pages(X).CommandListCount)
                                     For Y = 1 To Map.Events(i).Pages(X).CommandListCount
-                                        Map.Events(i).Pages(X).CommandList(Y).CommandCount = Buffer.ReadInteger
-                                        Map.Events(i).Pages(X).CommandList(Y).ParentList = Buffer.ReadInteger
+                                        Map.Events(i).Pages(X).CommandList(Y).CommandCount = Buffer.ReadInt32
+                                        Map.Events(i).Pages(X).CommandList(Y).ParentList = Buffer.ReadInt32
                                         If Map.Events(i).Pages(X).CommandList(Y).CommandCount > 0 Then
                                             ReDim Map.Events(i).Pages(X).CommandList(Y).Commands(0 To Map.Events(i).Pages(X).CommandList(Y).CommandCount)
                                             For z = 1 To Map.Events(i).Pages(X).CommandList(Y).CommandCount
                                                 With Map.Events(i).Pages(X).CommandList(Y).Commands(z)
-                                                    .Index = Buffer.ReadInteger
+                                                    .Index = Buffer.ReadInt32
                                                     .Text1 = Trim(Buffer.ReadString)
                                                     .Text2 = Trim(Buffer.ReadString)
                                                     .Text3 = Trim(Buffer.ReadString)
                                                     .Text4 = Trim(Buffer.ReadString)
                                                     .Text5 = Trim(Buffer.ReadString)
-                                                    .Data1 = Buffer.ReadInteger
-                                                    .Data2 = Buffer.ReadInteger
-                                                    .Data3 = Buffer.ReadInteger
-                                                    .Data4 = Buffer.ReadInteger
-                                                    .Data5 = Buffer.ReadInteger
-                                                    .Data6 = Buffer.ReadInteger
-                                                    .ConditionalBranch.CommandList = Buffer.ReadInteger
-                                                    .ConditionalBranch.Condition = Buffer.ReadInteger
-                                                    .ConditionalBranch.Data1 = Buffer.ReadInteger
-                                                    .ConditionalBranch.Data2 = Buffer.ReadInteger
-                                                    .ConditionalBranch.Data3 = Buffer.ReadInteger
-                                                    .ConditionalBranch.ElseCommandList = Buffer.ReadInteger
-                                                    .MoveRouteCount = Buffer.ReadInteger
+                                                    .Data1 = Buffer.ReadInt32
+                                                    .Data2 = Buffer.ReadInt32
+                                                    .Data3 = Buffer.ReadInt32
+                                                    .Data4 = Buffer.ReadInt32
+                                                    .Data5 = Buffer.ReadInt32
+                                                    .Data6 = Buffer.ReadInt32
+                                                    .ConditionalBranch.CommandList = Buffer.ReadInt32
+                                                    .ConditionalBranch.Condition = Buffer.ReadInt32
+                                                    .ConditionalBranch.Data1 = Buffer.ReadInt32
+                                                    .ConditionalBranch.Data2 = Buffer.ReadInt32
+                                                    .ConditionalBranch.Data3 = Buffer.ReadInt32
+                                                    .ConditionalBranch.ElseCommandList = Buffer.ReadInt32
+                                                    .MoveRouteCount = Buffer.ReadInt32
                                                     If .MoveRouteCount > 0 Then
                                                         ReDim Preserve .MoveRoute(.MoveRouteCount)
                                                         For w = 1 To .MoveRouteCount
-                                                            .MoveRoute(w).Index = Buffer.ReadInteger
-                                                            .MoveRoute(w).Data1 = Buffer.ReadInteger
-                                                            .MoveRoute(w).Data2 = Buffer.ReadInteger
-                                                            .MoveRoute(w).Data3 = Buffer.ReadInteger
-                                                            .MoveRoute(w).Data4 = Buffer.ReadInteger
-                                                            .MoveRoute(w).Data5 = Buffer.ReadInteger
-                                                            .MoveRoute(w).Data6 = Buffer.ReadInteger
+                                                            .MoveRoute(w).Index = Buffer.ReadInt32
+                                                            .MoveRoute(w).Data1 = Buffer.ReadInt32
+                                                            .MoveRoute(w).Data2 = Buffer.ReadInt32
+                                                            .MoveRoute(w).Data3 = Buffer.ReadInt32
+                                                            .MoveRoute(w).Data4 = Buffer.ReadInt32
+                                                            .MoveRoute(w).Data5 = Buffer.ReadInt32
+                                                            .MoveRoute(w).Data6 = Buffer.ReadInt32
                                                         Next
                                                     End If
                                                 End With
@@ -1165,32 +1051,32 @@ Module ClientHandleData
             End If
 
             For i = 1 To MAX_MAP_ITEMS
-                MapItem(i).Num = Buffer.ReadInteger
-                MapItem(i).Value = Buffer.ReadInteger()
-                MapItem(i).X = Buffer.ReadInteger()
-                MapItem(i).Y = Buffer.ReadInteger()
+                MapItem(i).Num = Buffer.ReadInt32
+                MapItem(i).Value = Buffer.ReadInt32()
+                MapItem(i).X = Buffer.ReadInt32()
+                MapItem(i).Y = Buffer.ReadInt32()
             Next
 
             For i = 1 To MAX_MAP_NPCS
-                MapNpc(i).Num = Buffer.ReadInteger()
-                MapNpc(i).X = Buffer.ReadInteger()
-                MapNpc(i).Y = Buffer.ReadInteger()
-                MapNpc(i).Dir = Buffer.ReadInteger()
-                MapNpc(i).Vital(Vitals.HP) = Buffer.ReadInteger()
-                MapNpc(i).Vital(Vitals.MP) = Buffer.ReadInteger()
+                MapNpc(i).Num = Buffer.ReadInt32()
+                MapNpc(i).X = Buffer.ReadInt32()
+                MapNpc(i).Y = Buffer.ReadInt32()
+                MapNpc(i).Dir = Buffer.ReadInt32()
+                MapNpc(i).Vital(Vitals.HP) = Buffer.ReadInt32()
+                MapNpc(i).Vital(Vitals.MP) = Buffer.ReadInt32()
             Next
 
-            If Buffer.ReadInteger = 1 Then
-                Resource_Index = Buffer.ReadInteger
+            If Buffer.ReadInt32 = 1 Then
+                Resource_Index = Buffer.ReadInt32
                 Resources_Init = False
 
                 If Resource_Index > 0 Then
                     ReDim MapResource(0 To Resource_Index)
 
                     For i = 0 To Resource_Index
-                        MapResource(i).ResourceState = Buffer.ReadInteger
-                        MapResource(i).X = Buffer.ReadInteger
-                        MapResource(i).Y = Buffer.ReadInteger
+                        MapResource(i).ResourceState = Buffer.ReadInt32
+                        MapResource(i).X = Buffer.ReadInt32
+                        MapResource(i).Y = Buffer.ReadInt32
                     Next
 
                     Resources_Init = True
@@ -1201,7 +1087,7 @@ Module ClientHandleData
 
             ClearTempTile()
 
-            Buffer = Nothing
+            Buffer.Dispose()
 
         End SyncLock
 
@@ -1235,48 +1121,38 @@ Module ClientHandleData
 
     Private Sub Packet_MapNPCData(ByVal Data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SMapNpcData Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         For i = 1 To MAX_MAP_NPCS
 
             With MapNpc(i)
-                .Num = Buffer.ReadInteger
-                .X = Buffer.ReadInteger
-                .Y = Buffer.ReadInteger
-                .Dir = Buffer.ReadInteger
-                .Vital(Vitals.HP) = Buffer.ReadInteger
-                .Vital(Vitals.MP) = Buffer.ReadInteger
+                .Num = Buffer.ReadInt32
+                .X = Buffer.ReadInt32
+                .Y = Buffer.ReadInt32
+                .Dir = Buffer.ReadInt32
+                .Vital(Vitals.HP) = Buffer.ReadInt32
+                .Vital(Vitals.MP) = Buffer.ReadInt32
             End With
 
         Next
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_MapNPCUpdate(ByVal Data() As Byte)
         Dim NpcNum As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SMapNpcUpdate Then Exit Sub
-
-        NpcNum = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        NpcNum = Buffer.ReadInt32
 
         With MapNpc(NpcNum)
-            .Num = Buffer.ReadInteger
-            .X = Buffer.ReadInteger
-            .Y = Buffer.ReadInteger
-            .Dir = Buffer.ReadInteger
-            .Vital(Vitals.HP) = Buffer.ReadInteger
-            .Vital(Vitals.MP) = Buffer.ReadInteger
+            .Num = Buffer.ReadInt32
+            .X = Buffer.ReadInt32
+            .Y = Buffer.ReadInt32
+            .Dir = Buffer.ReadInt32
+            .Vital(Vitals.HP) = Buffer.ReadInt32
+            .Vital(Vitals.MP) = Buffer.ReadInt32
         End With
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_MapDone(ByVal data() As Byte)
@@ -1309,32 +1185,23 @@ Module ClientHandleData
 
     Private Sub Packet_GlobalMessage(ByVal Data() As Byte)
         Dim Msg As String
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SGlobalMsg Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         'Msg = Trim(Buffer.ReadString)
-        Msg = Trim(Buffer.ReadUnicodeString)
+        Msg = Trim(ReadUnicodeString(Buffer))
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
         AddText(Msg, QColorType.GlobalColor)
     End Sub
 
     Private Sub Packet_MapMessage(ByVal Data() As Byte)
         Dim Msg As String
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SMapMsg Then Exit Sub
+        Dim Buffer As New ByteStream(Data)
 
         'Msg = Trim(Buffer.ReadString)
-        Msg = Trim(Buffer.ReadUnicodeString)
+        Msg = Trim(ReadUnicodeString(Buffer))
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
         AddText(Msg, QColorType.BroadcastColor)
 
@@ -1342,107 +1209,93 @@ Module ClientHandleData
 
     Private Sub Packet_SpawnItem(ByVal Data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(Data)
 
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SSpawnItem Then Exit Sub
-
-        i = Buffer.ReadInteger
+        i = Buffer.ReadInt32
 
         With MapItem(i)
-            .Num = Buffer.ReadInteger
-            .Value = Buffer.ReadInteger
-            .X = Buffer.ReadInteger
-            .Y = Buffer.ReadInteger
+            .Num = Buffer.ReadInt32
+            .Value = Buffer.ReadInt32
+            .X = Buffer.ReadInt32
+            .Y = Buffer.ReadInt32
         End With
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_PlayerMessage(ByVal Data() As Byte)
         Dim Msg As String, colour As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPlayerMsg Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         'Msg = Trim(Buffer.ReadString)
-        Msg = Trim(Buffer.ReadUnicodeString)
+        Msg = Trim(ReadUnicodeString(Buffer))
 
-        colour = Buffer.ReadInteger
+        colour = Buffer.ReadInt32
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
         AddText(Msg, colour)
     End Sub
 
     Sub Packet_UpdateItem(ByVal data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SUpdateItem Then Exit Sub
-
-        n = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        n = Buffer.ReadInt32
 
         ' Update the item
-        Item(n).AccessReq = Buffer.ReadInteger()
+        Item(n).AccessReq = Buffer.ReadInt32()
 
         For i = 0 To Stats.Count - 1
-            Item(n).Add_Stat(i) = Buffer.ReadInteger()
+            Item(n).Add_Stat(i) = Buffer.ReadInt32()
         Next
 
-        Item(n).Animation = Buffer.ReadInteger()
-        Item(n).BindType = Buffer.ReadInteger()
-        Item(n).ClassReq = Buffer.ReadInteger()
-        Item(n).Data1 = Buffer.ReadInteger()
-        Item(n).Data2 = Buffer.ReadInteger()
-        Item(n).Data3 = Buffer.ReadInteger()
-        Item(n).TwoHanded = Buffer.ReadInteger()
-        Item(n).LevelReq = Buffer.ReadInteger()
-        Item(n).Mastery = Buffer.ReadInteger()
+        Item(n).Animation = Buffer.ReadInt32()
+        Item(n).BindType = Buffer.ReadInt32()
+        Item(n).ClassReq = Buffer.ReadInt32()
+        Item(n).Data1 = Buffer.ReadInt32()
+        Item(n).Data2 = Buffer.ReadInt32()
+        Item(n).Data3 = Buffer.ReadInt32()
+        Item(n).TwoHanded = Buffer.ReadInt32()
+        Item(n).LevelReq = Buffer.ReadInt32()
+        Item(n).Mastery = Buffer.ReadInt32()
         Item(n).Name = Trim$(Buffer.ReadString())
-        Item(n).Paperdoll = Buffer.ReadInteger()
-        Item(n).Pic = Buffer.ReadInteger()
-        Item(n).Price = Buffer.ReadInteger()
-        Item(n).Rarity = Buffer.ReadInteger()
-        Item(n).Speed = Buffer.ReadInteger()
+        Item(n).Paperdoll = Buffer.ReadInt32()
+        Item(n).Pic = Buffer.ReadInt32()
+        Item(n).Price = Buffer.ReadInt32()
+        Item(n).Rarity = Buffer.ReadInt32()
+        Item(n).Speed = Buffer.ReadInt32()
 
-        Item(n).Randomize = Buffer.ReadInteger()
-        Item(n).RandomMin = Buffer.ReadInteger()
-        Item(n).RandomMax = Buffer.ReadInteger()
+        Item(n).Randomize = Buffer.ReadInt32()
+        Item(n).RandomMin = Buffer.ReadInt32()
+        Item(n).RandomMax = Buffer.ReadInt32()
 
-        Item(n).Stackable = Buffer.ReadInteger()
+        Item(n).Stackable = Buffer.ReadInt32()
         Item(n).Description = Trim$(Buffer.ReadString())
 
         For i = 0 To Stats.Count - 1
-            Item(n).Stat_Req(i) = Buffer.ReadInteger()
+            Item(n).Stat_Req(i) = Buffer.ReadInt32()
         Next
 
-        Item(n).Type = Buffer.ReadInteger()
-        Item(n).SubType = Buffer.ReadInteger
+        Item(n).Type = Buffer.ReadInt32()
+        Item(n).SubType = Buffer.ReadInt32
 
         'Housing
-        Item(n).FurnitureWidth = Buffer.ReadInteger()
-        Item(n).FurnitureHeight = Buffer.ReadInteger()
+        Item(n).FurnitureWidth = Buffer.ReadInt32()
+        Item(n).FurnitureHeight = Buffer.ReadInt32()
 
         For a = 1 To 3
             For b = 1 To 3
-                Item(n).FurnitureBlocks(a, b) = Buffer.ReadInteger()
-                Item(n).FurnitureFringe(a, b) = Buffer.ReadInteger()
+                Item(n).FurnitureBlocks(a, b) = Buffer.ReadInt32()
+                Item(n).FurnitureFringe(a, b) = Buffer.ReadInt32()
             Next
         Next
 
-        Item(n).KnockBack = Buffer.ReadInteger()
-        Item(n).KnockBackTiles = Buffer.ReadInteger()
+        Item(n).KnockBack = Buffer.ReadInt32()
+        Item(n).KnockBackTiles = Buffer.ReadInt32()
 
-        Item(n).Projectile = Buffer.ReadInteger()
-        Item(n).Ammo = Buffer.ReadInteger()
+        Item(n).Projectile = Buffer.ReadInt32()
+        Item(n).Ammo = Buffer.ReadInt32()
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
         ' changes to inventory, need to clear any drop menu
         FrmMainGame.pnlCurrency.Visible = False
@@ -1454,22 +1307,17 @@ Module ClientHandleData
 
     Sub Packet_SpawnNPC(ByVal data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SSpawnNpc Then Exit Sub
-
-        i = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        i = Buffer.ReadInt32
 
         With MapNpc(i)
-            .Num = Buffer.ReadInteger
-            .X = Buffer.ReadInteger
-            .Y = Buffer.ReadInteger
-            .Dir = Buffer.ReadInteger
+            .Num = Buffer.ReadInt32
+            .X = Buffer.ReadInt32
+            .Y = Buffer.ReadInt32
+            .Dir = Buffer.ReadInt32
 
             For i = 1 To Vitals.Count - 1
-                .Vital(i) = Buffer.ReadInteger
+                .Vital(i) = Buffer.ReadInt32
             Next
             ' Client use only
             .XOffset = 0
@@ -1477,220 +1325,173 @@ Module ClientHandleData
             .Moving = 0
         End With
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_NpcDead(ByVal data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SNpcDead Then Exit Sub
-
-        i = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        i = Buffer.ReadInt32
         ClearMapNpc(i)
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_UpdateNPC(ByVal data() As Byte)
         Dim i As Integer, x As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SUpdateNpc Then Exit Sub
-
-        i = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        i = Buffer.ReadInt32
 
         ' Update the Npc
-        Npc(i).Animation = Buffer.ReadInteger()
+        Npc(i).Animation = Buffer.ReadInt32()
         Npc(i).AttackSay = Trim(Buffer.ReadString())
-        Npc(i).Behaviour = Buffer.ReadInteger()
+        Npc(i).Behaviour = Buffer.ReadInt32()
         ReDim Npc(i).DropChance(5)
         ReDim Npc(i).DropItem(5)
         ReDim Npc(i).DropItemValue(5)
         For x = 1 To 5
-            Npc(i).DropChance(x) = Buffer.ReadInteger()
-            Npc(i).DropItem(x) = Buffer.ReadInteger()
-            Npc(i).DropItemValue(x) = Buffer.ReadInteger()
+            Npc(i).DropChance(x) = Buffer.ReadInt32()
+            Npc(i).DropItem(x) = Buffer.ReadInt32()
+            Npc(i).DropItemValue(x) = Buffer.ReadInt32()
         Next
 
-        Npc(i).Exp = Buffer.ReadInteger()
-        Npc(i).Faction = Buffer.ReadInteger()
-        Npc(i).Hp = Buffer.ReadInteger()
+        Npc(i).Exp = Buffer.ReadInt32()
+        Npc(i).Faction = Buffer.ReadInt32()
+        Npc(i).Hp = Buffer.ReadInt32()
         Npc(i).Name = Trim(Buffer.ReadString())
-        Npc(i).Range = Buffer.ReadInteger()
-        Npc(i).SpawnTime = Buffer.ReadInteger()
-        Npc(i).SpawnSecs = Buffer.ReadInteger()
-        Npc(i).Sprite = Buffer.ReadInteger()
+        Npc(i).Range = Buffer.ReadInt32()
+        Npc(i).SpawnTime = Buffer.ReadInt32()
+        Npc(i).SpawnSecs = Buffer.ReadInt32()
+        Npc(i).Sprite = Buffer.ReadInt32()
 
         For i = 0 To Stats.Count - 1
-            Npc(i).Stat(i) = Buffer.ReadInteger()
+            Npc(i).Stat(i) = Buffer.ReadInt32()
         Next
 
-        Npc(i).QuestNum = Buffer.ReadInteger()
+        Npc(i).QuestNum = Buffer.ReadInt32()
 
         For x = 1 To MAX_NPC_SKILLS
-            Npc(i).Skill(x) = Buffer.ReadInteger()
+            Npc(i).Skill(x) = Buffer.ReadInt32()
         Next
 
-        Npc(i).Level = Buffer.ReadInteger()
-        Npc(i).Damage = Buffer.ReadInteger()
+        Npc(i).Level = Buffer.ReadInt32()
+        Npc(i).Damage = Buffer.ReadInt32()
 
         If Npc(i).AttackSay Is Nothing Then Npc(i).AttackSay = ""
         If Npc(i).Name Is Nothing Then Npc(i).Name = ""
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_MapKey(ByVal data() As Byte)
         Dim n As Integer, X As Integer, Y As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SMapKey Then Exit Sub
-
-        X = Buffer.ReadInteger
-        Y = Buffer.ReadInteger
-        n = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        X = Buffer.ReadInt32
+        Y = Buffer.ReadInt32
+        n = Buffer.ReadInt32
         TempTile(X, Y).DoorOpen = n
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_EditMap(ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SEditMap Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         InitMapEditor = True
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_UpdateShop(ByVal data() As Byte)
         Dim shopnum As Integer
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(data)
+        shopnum = Buffer.ReadInt32
 
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SUpdateShop Then Exit Sub
-
-        shopnum = Buffer.ReadInteger
-
-        Shop(shopnum).BuyRate = Buffer.ReadInteger()
+        Shop(shopnum).BuyRate = Buffer.ReadInt32()
         Shop(shopnum).Name = Trim(Buffer.ReadString())
-        Shop(shopnum).Face = Buffer.ReadInteger()
+        Shop(shopnum).Face = Buffer.ReadInt32()
 
         For i = 0 To MAX_TRADES
-            Shop(shopnum).TradeItem(i).CostItem = Buffer.ReadInteger()
-            Shop(shopnum).TradeItem(i).CostValue = Buffer.ReadInteger()
-            Shop(shopnum).TradeItem(i).Item = Buffer.ReadInteger()
-            Shop(shopnum).TradeItem(i).ItemValue = Buffer.ReadInteger()
+            Shop(shopnum).TradeItem(i).CostItem = Buffer.ReadInt32()
+            Shop(shopnum).TradeItem(i).CostValue = Buffer.ReadInt32()
+            Shop(shopnum).TradeItem(i).Item = Buffer.ReadInt32()
+            Shop(shopnum).TradeItem(i).ItemValue = Buffer.ReadInt32()
         Next
 
         If Shop(shopnum).Name Is Nothing Then Shop(shopnum).Name = ""
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_UpdateSkill(ByVal data() As Byte)
         Dim skillnum As Integer
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(data)
+        skillnum = Buffer.ReadInt32
 
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ServerPackets.SUpdateSkill Then Exit Sub
-
-        skillnum = Buffer.ReadInteger
-
-        Skill(skillnum).AccessReq = Buffer.ReadInteger()
-        Skill(skillnum).AoE = Buffer.ReadInteger()
-        Skill(skillnum).CastAnim = Buffer.ReadInteger()
-        Skill(skillnum).CastTime = Buffer.ReadInteger()
-        Skill(skillnum).CdTime = Buffer.ReadInteger()
-        Skill(skillnum).ClassReq = Buffer.ReadInteger()
-        Skill(skillnum).Dir = Buffer.ReadInteger()
-        Skill(skillnum).Duration = Buffer.ReadInteger()
-        Skill(skillnum).Icon = Buffer.ReadInteger()
-        Skill(skillnum).Interval = Buffer.ReadInteger()
-        Skill(skillnum).IsAoE = Buffer.ReadInteger()
-        Skill(skillnum).LevelReq = Buffer.ReadInteger()
-        Skill(skillnum).Map = Buffer.ReadInteger()
-        Skill(skillnum).MpCost = Buffer.ReadInteger()
+        Skill(skillnum).AccessReq = Buffer.ReadInt32()
+        Skill(skillnum).AoE = Buffer.ReadInt32()
+        Skill(skillnum).CastAnim = Buffer.ReadInt32()
+        Skill(skillnum).CastTime = Buffer.ReadInt32()
+        Skill(skillnum).CdTime = Buffer.ReadInt32()
+        Skill(skillnum).ClassReq = Buffer.ReadInt32()
+        Skill(skillnum).Dir = Buffer.ReadInt32()
+        Skill(skillnum).Duration = Buffer.ReadInt32()
+        Skill(skillnum).Icon = Buffer.ReadInt32()
+        Skill(skillnum).Interval = Buffer.ReadInt32()
+        Skill(skillnum).IsAoE = Buffer.ReadInt32()
+        Skill(skillnum).LevelReq = Buffer.ReadInt32()
+        Skill(skillnum).Map = Buffer.ReadInt32()
+        Skill(skillnum).MpCost = Buffer.ReadInt32()
         Skill(skillnum).Name = Trim(Buffer.ReadString())
-        Skill(skillnum).Range = Buffer.ReadInteger()
-        Skill(skillnum).SkillAnim = Buffer.ReadInteger()
-        Skill(skillnum).StunDuration = Buffer.ReadInteger()
-        Skill(skillnum).Type = Buffer.ReadInteger()
-        Skill(skillnum).Vital = Buffer.ReadInteger()
-        Skill(skillnum).X = Buffer.ReadInteger()
-        Skill(skillnum).Y = Buffer.ReadInteger()
+        Skill(skillnum).Range = Buffer.ReadInt32()
+        Skill(skillnum).SkillAnim = Buffer.ReadInt32()
+        Skill(skillnum).StunDuration = Buffer.ReadInt32()
+        Skill(skillnum).Type = Buffer.ReadInt32()
+        Skill(skillnum).Vital = Buffer.ReadInt32()
+        Skill(skillnum).X = Buffer.ReadInt32()
+        Skill(skillnum).Y = Buffer.ReadInt32()
 
-        Skill(skillnum).IsProjectile = Buffer.ReadInteger()
-        Skill(skillnum).Projectile = Buffer.ReadInteger()
+        Skill(skillnum).IsProjectile = Buffer.ReadInt32()
+        Skill(skillnum).Projectile = Buffer.ReadInt32()
 
-        Skill(skillnum).KnockBack = Buffer.ReadInteger()
-        Skill(skillnum).KnockBackTiles = Buffer.ReadInteger()
+        Skill(skillnum).KnockBack = Buffer.ReadInt32()
+        Skill(skillnum).KnockBackTiles = Buffer.ReadInt32()
 
         If Skill(skillnum).Name Is Nothing Then Skill(skillnum).Name = ""
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
     Sub Packet_Skills(ByVal data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ServerPackets.SSkills Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         For i = 1 To MAX_PLAYER_SKILLS
-            PlayerSkills(i) = Buffer.ReadInteger
+            PlayerSkills(i) = Buffer.ReadInt32
         Next
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_LeftMap(ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(data)
+        ClearPlayer(Buffer.ReadInt32)
 
-        Buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If Buffer.ReadInteger <> ServerPackets.SLeftMap Then Exit Sub
-
-        ClearPlayer(Buffer.ReadInteger)
-
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_ResourceCache(ByVal Data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SResourceCache Then Exit Sub
-
-        Resource_Index = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        Resource_Index = Buffer.ReadInt32
         Resources_Init = False
 
         If Resource_Index > 0 Then
             ReDim Preserve MapResource(0 To Resource_Index)
 
             For i = 0 To Resource_Index
-                MapResource(i).ResourceState = Buffer.ReadInteger
-                MapResource(i).X = Buffer.ReadInteger
-                MapResource(i).Y = Buffer.ReadInteger
+                MapResource(i).ResourceState = Buffer.ReadInt32
+                MapResource(i).X = Buffer.ReadInt32
+                MapResource(i).Y = Buffer.ReadInt32
             Next
 
             Resources_Init = True
@@ -1698,7 +1499,7 @@ Module ClientHandleData
             ReDim MapResource(0 To 1)
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_Ping(ByVal data() As Byte)
@@ -1708,102 +1509,77 @@ Module ClientHandleData
 
     Private Sub Packet_DoorAnimation(ByVal data() As Byte)
         Dim X As Integer, Y As Integer
-        Dim buffer As New ByteBuffer
-
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ServerPackets.SDoorAnimation Then Exit Sub
-
-        X = buffer.ReadInteger
-        Y = buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        X = Buffer.ReadInt32
+        Y = Buffer.ReadInt32
         With TempTile(X, Y)
             .DoorFrame = 1
             .DoorAnimate = 1 ' 0 = nothing| 1 = opening | 2 = closing
             .DoorTimer = GetTickCount()
         End With
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_ActionMessage(ByVal data() As Byte)
         Dim X As Integer, Y As Integer, message As String, color As Integer, tmpType As Integer
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(data)
+        message = Trim(ReadUnicodeString(Buffer))
+        color = Buffer.ReadInt32
+        tmpType = Buffer.ReadInt32
+        X = Buffer.ReadInt32
+        Y = Buffer.ReadInt32
 
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ServerPackets.SActionMsg Then Exit Sub
-
-        message = Trim(buffer.ReadUnicodeString)
-        color = buffer.ReadInteger
-        tmpType = buffer.ReadInteger
-        X = buffer.ReadInteger
-        Y = buffer.ReadInteger
-
-        buffer = Nothing
+        Buffer.Dispose()
 
         CreateActionMsg(message, color, tmpType, X, Y)
     End Sub
 
     Private Sub Packet_UpdateResource(ByVal Data() As Byte)
         Dim ResourceNum As Integer
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(Data)
+        ResourceNum = Buffer.ReadInt32
 
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SUpdateResource Then Exit Sub
-
-        ResourceNum = Buffer.ReadInteger
-
-        Resource(ResourceNum).Animation = Buffer.ReadInteger()
+        Resource(ResourceNum).Animation = Buffer.ReadInt32()
         Resource(ResourceNum).EmptyMessage = Trim(Buffer.ReadString())
-        Resource(ResourceNum).ExhaustedImage = Buffer.ReadInteger()
-        Resource(ResourceNum).Health = Buffer.ReadInteger()
-        Resource(ResourceNum).ExpReward = Buffer.ReadInteger()
-        Resource(ResourceNum).ItemReward = Buffer.ReadInteger()
+        Resource(ResourceNum).ExhaustedImage = Buffer.ReadInt32()
+        Resource(ResourceNum).Health = Buffer.ReadInt32()
+        Resource(ResourceNum).ExpReward = Buffer.ReadInt32()
+        Resource(ResourceNum).ItemReward = Buffer.ReadInt32()
         Resource(ResourceNum).Name = Trim(Buffer.ReadString())
-        Resource(ResourceNum).ResourceImage = Buffer.ReadInteger()
-        Resource(ResourceNum).ResourceType = Buffer.ReadInteger()
-        Resource(ResourceNum).RespawnTime = Buffer.ReadInteger()
+        Resource(ResourceNum).ResourceImage = Buffer.ReadInt32()
+        Resource(ResourceNum).ResourceType = Buffer.ReadInt32()
+        Resource(ResourceNum).RespawnTime = Buffer.ReadInt32()
         Resource(ResourceNum).SuccessMessage = Trim(Buffer.ReadString())
-        Resource(ResourceNum).LvlRequired = Buffer.ReadInteger()
-        Resource(ResourceNum).ToolRequired = Buffer.ReadInteger()
-        Resource(ResourceNum).Walkthrough = Buffer.ReadInteger()
+        Resource(ResourceNum).LvlRequired = Buffer.ReadInt32()
+        Resource(ResourceNum).ToolRequired = Buffer.ReadInt32()
+        Resource(ResourceNum).Walkthrough = Buffer.ReadInt32()
 
         If Resource(ResourceNum).Name Is Nothing Then Resource(ResourceNum).Name = ""
         If Resource(ResourceNum).EmptyMessage Is Nothing Then Resource(ResourceNum).EmptyMessage = ""
         If Resource(ResourceNum).SuccessMessage Is Nothing Then Resource(ResourceNum).SuccessMessage = ""
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_PlayerExp(ByVal Data() As Byte)
         Dim index As Integer, TNL As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPlayerEXP Then Exit Sub
-
-        index = Buffer.ReadInteger
-        SetPlayerExp(index, Buffer.ReadInteger)
-        TNL = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        index = Buffer.ReadInt32
+        SetPlayerExp(index, Buffer.ReadInt32)
+        TNL = Buffer.ReadInt32
 
         If TNL = 0 Then TNL = 1
         NextlevelExp = TNL
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_Blood(ByVal Data() As Byte)
         Dim X As Integer, Y As Integer, Sprite As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SBlood Then Exit Sub
-
-        X = Buffer.ReadInteger
-        Y = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        X = Buffer.ReadInt32
+        Y = Buffer.ReadInt32
 
         ' randomise sprite
         Sprite = Rand(1, 3)
@@ -1818,29 +1594,24 @@ Module ClientHandleData
             .Timer = GetTickCount()
         End With
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_UpdateAnimation(ByVal Data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SUpdateAnimation Then Exit Sub
-
-        n = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        n = Buffer.ReadInt32
         ' Update the Animation
         For i = 0 To UBound(Animation(n).Frames)
-            Animation(n).Frames(i) = Buffer.ReadInteger()
+            Animation(n).Frames(i) = Buffer.ReadInt32()
         Next
 
         For i = 0 To UBound(Animation(n).LoopCount)
-            Animation(n).LoopCount(i) = Buffer.ReadInteger()
+            Animation(n).LoopCount(i) = Buffer.ReadInt32()
         Next
 
         For i = 0 To UBound(Animation(n).LoopTime)
-            Animation(n).LoopTime(i) = Buffer.ReadInteger()
+            Animation(n).LoopTime(i) = Buffer.ReadInt32()
         Next
 
         Animation(n).Name = Trim$(Buffer.ReadString)
@@ -1850,206 +1621,144 @@ Module ClientHandleData
         If Animation(n).Sound Is Nothing Then Animation(n).Sound = ""
 
         For i = 0 To UBound(Animation(n).Sprite)
-            Animation(n).Sprite(i) = Buffer.ReadInteger()
+            Animation(n).Sprite(i) = Buffer.ReadInt32()
         Next
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_Animation(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SAnimation Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         AnimationIndex = AnimationIndex + 1
         If AnimationIndex >= Byte.MaxValue Then AnimationIndex = 1
 
         With AnimInstance(AnimationIndex)
-            .Animation = Buffer.ReadInteger
-            .X = Buffer.ReadInteger
-            .Y = Buffer.ReadInteger
-            .LockType = Buffer.ReadInteger
-            .lockindex = Buffer.ReadInteger
+            .Animation = Buffer.ReadInt32
+            .X = Buffer.ReadInt32
+            .Y = Buffer.ReadInt32
+            .LockType = Buffer.ReadInt32
+            .lockindex = Buffer.ReadInt32
             .Used(0) = True
             .Used(1) = True
         End With
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_NPCVitals(ByVal Data() As Byte)
         Dim MapNpcNum As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SMapNpcVitals Then Exit Sub
-
-        MapNpcNum = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        MapNpcNum = Buffer.ReadInt32
         For i = 1 To Vitals.Count - 1
-            MapNpc(MapNpcNum).Vital(i) = Buffer.ReadInteger
+            MapNpc(MapNpcNum).Vital(i) = Buffer.ReadInt32
         Next
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_Cooldown(ByVal Data() As Byte)
         Dim slot As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SCooldown Then Exit Sub
-
-        slot = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        slot = Buffer.ReadInt32
         SkillCD(slot) = GetTickCount()
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_ClearSkillBuffer(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SClearSkillBuffer Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         SkillBuffer = 0
         SkillBufferTimer = 0
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_SayMessage(ByVal Data() As Byte)
         Dim Access As Integer, Name As String, message As String
         Dim Header As String, PK As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SSayMsg Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Name = Trim(Buffer.ReadString)
-        Access = Buffer.ReadInteger
-        PK = Buffer.ReadInteger
+        Access = Buffer.ReadInt32
+        PK = Buffer.ReadInt32
         'message = Trim(Buffer.ReadString)
-        message = Trim(Buffer.ReadUnicodeString)
+        message = Trim(ReadUnicodeString(Buffer))
         Header = Trim(Buffer.ReadString)
 
         AddText(Header & Name & ": " & message, QColorType.SayColor)
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_OpenShop(ByVal Data() As Byte)
         Dim shopnum As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SOpenShop Then Exit Sub
-
-        shopnum = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        shopnum = Buffer.ReadInt32
 
         NeedToOpenShop = True
         NeedToOpenShopNum = shopnum
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_ResetShopAction(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SResetShopAction Then Exit Sub
-
         ShopAction = 0
-
-        Buffer = Nothing
     End Sub
 
     Private Sub Packet_Stunned(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(Data)
+        StunDuration = Buffer.ReadInt32
 
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SStunned Then Exit Sub
-
-        StunDuration = Buffer.ReadInteger
-
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_MapWornEquipment(ByVal Data() As Byte)
         Dim playernum As Integer
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(Data)
+        playernum = Buffer.ReadInt32
+        SetPlayerEquipment(playernum, Buffer.ReadInt32, EquipmentType.Armor)
+        SetPlayerEquipment(playernum, Buffer.ReadInt32, EquipmentType.Weapon)
+        SetPlayerEquipment(playernum, Buffer.ReadInt32, EquipmentType.Helmet)
+        SetPlayerEquipment(playernum, Buffer.ReadInt32, EquipmentType.Shield)
+        SetPlayerEquipment(playernum, Buffer.ReadInt32, EquipmentType.Shoes)
+        SetPlayerEquipment(playernum, Buffer.ReadInt32, EquipmentType.Gloves)
 
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SMapWornEq Then Exit Sub
-
-        playernum = Buffer.ReadInteger
-        SetPlayerEquipment(playernum, Buffer.ReadInteger, EquipmentType.Armor)
-        SetPlayerEquipment(playernum, Buffer.ReadInteger, EquipmentType.Weapon)
-        SetPlayerEquipment(playernum, Buffer.ReadInteger, EquipmentType.Helmet)
-        SetPlayerEquipment(playernum, Buffer.ReadInteger, EquipmentType.Shield)
-        SetPlayerEquipment(playernum, Buffer.ReadInteger, EquipmentType.Shoes)
-        SetPlayerEquipment(playernum, Buffer.ReadInteger, EquipmentType.Gloves)
-
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_OpenBank(ByVal Data() As Byte)
         Dim i As Integer, x As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SBank Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         For i = 1 To MAX_BANK
-            Bank.Item(i).Num = Buffer.ReadInteger
-            Bank.Item(i).Value = Buffer.ReadInteger
+            Bank.Item(i).Num = Buffer.ReadInt32
+            Bank.Item(i).Value = Buffer.ReadInt32
 
             Bank.ItemRand(i).Prefix = Buffer.ReadString
             Bank.ItemRand(i).Suffix = Buffer.ReadString
-            Bank.ItemRand(i).Rarity = Buffer.ReadInteger
-            Bank.ItemRand(i).Damage = Buffer.ReadInteger
-            Bank.ItemRand(i).Speed = Buffer.ReadInteger
+            Bank.ItemRand(i).Rarity = Buffer.ReadInt32
+            Bank.ItemRand(i).Damage = Buffer.ReadInt32
+            Bank.ItemRand(i).Speed = Buffer.ReadInt32
 
             For x = 1 To Stats.Count - 1
-                Bank.ItemRand(i).Stat(x) = Buffer.ReadInteger
+                Bank.ItemRand(i).Stat(x) = Buffer.ReadInt32
             Next
         Next
 
         NeedToOpenBank = True
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_ClearTradeTimer(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SClearTradeTimer Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         TradeRequest = False
         TradeTimer = 0
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_TradeInvite(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer, requester As Integer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.STradeInvite Then Exit Sub
-
-        requester = Buffer.ReadInteger
+        Dim requester As Integer
+        Dim Buffer As New ByteStream(Data)
+        requester = Buffer.ReadInt32
 
         DialogType = DIALOGUE_TYPE_TRADE
 
@@ -2057,22 +1766,17 @@ Module ClientHandleData
 
         UpdateDialog = True
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_Trade(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.STrade Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         NeedToOpenTrade = True
-        Buffer.ReadInteger()
+        Buffer.ReadInt32()
         Tradername = Trim(Buffer.ReadString)
         pnlTradeVisible = True
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_CloseTrade(ByVal Data() As Byte)
@@ -2081,42 +1785,32 @@ Module ClientHandleData
 
     Private Sub Packet_TradeUpdate(ByVal Data() As Byte)
         Dim datatype As Integer
-        Dim buffer As New ByteBuffer
-
-        buffer.WriteBytes(Data)
-
-        If buffer.ReadInteger <> ServerPackets.STradeUpdate Then Exit Sub
-
-        datatype = buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        datatype = Buffer.ReadInt32
 
         If datatype = 0 Then ' ours!
             For i = 1 To MAX_INV
-                TradeYourOffer(i).Num = buffer.ReadInteger
-                TradeYourOffer(i).Value = buffer.ReadInteger
+                TradeYourOffer(i).Num = Buffer.ReadInt32
+                TradeYourOffer(i).Value = Buffer.ReadInt32
             Next
-            YourWorth = Strings.Get("trade", "tradeworth", buffer.ReadInteger)
+            YourWorth = Strings.Get("trade", "tradeworth", Buffer.ReadInt32)
         ElseIf datatype = 1 Then 'theirs
             For i = 1 To MAX_INV
-                TradeTheirOffer(i).Num = buffer.ReadInteger
-                TradeTheirOffer(i).Value = buffer.ReadInteger
+                TradeTheirOffer(i).Num = Buffer.ReadInt32
+                TradeTheirOffer(i).Value = Buffer.ReadInt32
             Next
-            TheirWorth = "Total Worth: " & buffer.ReadInteger & "g"
+            TheirWorth = "Total Worth: " & Buffer.ReadInt32 & "g"
         End If
 
         NeedtoUpdateTrade = True
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_TradeStatus(ByVal Data() As Byte)
         Dim tradestatus As Integer
-        Dim buffer As New ByteBuffer
-
-        buffer.WriteBytes(Data)
-
-        If buffer.ReadInteger <> ServerPackets.STradeStatus Then Exit Sub
-
-        tradestatus = buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        tradestatus = Buffer.ReadInt32
 
         Select Case tradestatus
             Case 0 ' clear
@@ -2127,27 +1821,17 @@ Module ClientHandleData
                 AddText(Strings.Get("trade", "tradestatuswait"), ColorType.White)
         End Select
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_GameData(ByVal Data() As Byte)
         Dim n As Integer, i As Integer, z As Integer, x As Integer, a As Integer, b As Integer
-        Dim buffer As New ByteBuffer
-
-        buffer.WriteBytes(Data)
-
-        If buffer.ReadInteger <> ServerPackets.SGameData Then Exit Sub
-
-        Data = buffer.ReadBytes(buffer.Count - 4)
-        Data = Compression.DecompressBytes(Data)
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(Data)
+        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data, 4, Data.Length - 4))
 
         '\\\Read Class Data\\\
 
         ' Max classes
-        Max_Classes = buffer.ReadInteger
+        Max_Classes = Buffer.ReadInt32
         ReDim Classes(0 To Max_Classes)
 
         For i = 0 To Max_Classes
@@ -2161,50 +1845,50 @@ Module ClientHandleData
         For i = 1 To Max_Classes
 
             With Classes(i)
-                .Name = Trim(buffer.ReadString)
-                .Desc = Trim$(buffer.ReadString)
+                .Name = Trim(Buffer.ReadString)
+                .Desc = Trim$(Buffer.ReadString)
 
-                .Vital(Vitals.HP) = buffer.ReadInteger
-                .Vital(Vitals.MP) = buffer.ReadInteger
-                .Vital(Vitals.SP) = buffer.ReadInteger
+                .Vital(Vitals.HP) = Buffer.ReadInt32
+                .Vital(Vitals.MP) = Buffer.ReadInt32
+                .Vital(Vitals.SP) = Buffer.ReadInt32
 
                 ' get array size
-                z = buffer.ReadInteger
+                z = Buffer.ReadInt32
                 ' redim array
                 ReDim .MaleSprite(0 To z)
                 ' loop-receive data
                 For x = 0 To z
-                    .MaleSprite(x) = buffer.ReadInteger
+                    .MaleSprite(x) = Buffer.ReadInt32
                 Next
 
                 ' get array size
-                z = buffer.ReadInteger
+                z = Buffer.ReadInt32
                 ' redim array
                 ReDim .FemaleSprite(0 To z)
                 ' loop-receive data
                 For x = 0 To z
-                    .FemaleSprite(x) = buffer.ReadInteger
+                    .FemaleSprite(x) = Buffer.ReadInt32
                 Next
 
-                .Stat(Stats.Strength) = buffer.ReadInteger
-                .Stat(Stats.Endurance) = buffer.ReadInteger
-                .Stat(Stats.Vitality) = buffer.ReadInteger
-                .Stat(Stats.Intelligence) = buffer.ReadInteger
-                .Stat(Stats.Luck) = buffer.ReadInteger
-                .Stat(Stats.Spirit) = buffer.ReadInteger
+                .Stat(Stats.Strength) = Buffer.ReadInt32
+                .Stat(Stats.Endurance) = Buffer.ReadInt32
+                .Stat(Stats.Vitality) = Buffer.ReadInt32
+                .Stat(Stats.Intelligence) = Buffer.ReadInt32
+                .Stat(Stats.Luck) = Buffer.ReadInt32
+                .Stat(Stats.Spirit) = Buffer.ReadInt32
 
                 ReDim .StartItem(5)
                 ReDim .StartValue(5)
                 For q = 1 To 5
-                    .StartItem(q) = buffer.ReadInteger
-                    .StartValue(q) = buffer.ReadInteger
+                    .StartItem(q) = Buffer.ReadInt32
+                    .StartValue(q) = Buffer.ReadInt32
                 Next
 
-                .StartMap = buffer.ReadInteger
-                .StartX = buffer.ReadInteger
-                .StartY = buffer.ReadInteger
+                .StartMap = Buffer.ReadInt32
+                .StartX = Buffer.ReadInt32
+                .StartY = Buffer.ReadInt32
 
-                .BaseExp = buffer.ReadInteger
+                .BaseExp = Buffer.ReadInt32
             End With
 
         Next
@@ -2217,66 +1901,66 @@ Module ClientHandleData
         '\\\End Read Class Data\\\
 
         '\\\Read Item Data\\\\\\\
-        x = buffer.ReadInteger
+        x = Buffer.ReadInt32
 
         For i = 1 To x
-            n = buffer.ReadInteger
+            n = Buffer.ReadInt32
 
             ' Update the item
-            Item(n).AccessReq = buffer.ReadInteger()
+            Item(n).AccessReq = Buffer.ReadInt32()
 
             For z = 0 To Stats.Count - 1
-                Item(n).Add_Stat(z) = buffer.ReadInteger()
+                Item(n).Add_Stat(z) = Buffer.ReadInt32()
             Next
 
-            Item(n).Animation = buffer.ReadInteger()
-            Item(n).BindType = buffer.ReadInteger()
-            Item(n).ClassReq = buffer.ReadInteger()
-            Item(n).Data1 = buffer.ReadInteger()
-            Item(n).Data2 = buffer.ReadInteger()
-            Item(n).Data3 = buffer.ReadInteger()
-            Item(n).TwoHanded = buffer.ReadInteger()
-            Item(n).LevelReq = buffer.ReadInteger()
-            Item(n).Mastery = buffer.ReadInteger()
-            Item(n).Name = Trim$(buffer.ReadString())
-            Item(n).Paperdoll = buffer.ReadInteger()
-            Item(n).Pic = buffer.ReadInteger()
-            Item(n).Price = buffer.ReadInteger()
-            Item(n).Rarity = buffer.ReadInteger()
-            Item(n).Speed = buffer.ReadInteger()
+            Item(n).Animation = Buffer.ReadInt32()
+            Item(n).BindType = Buffer.ReadInt32()
+            Item(n).ClassReq = Buffer.ReadInt32()
+            Item(n).Data1 = Buffer.ReadInt32()
+            Item(n).Data2 = Buffer.ReadInt32()
+            Item(n).Data3 = Buffer.ReadInt32()
+            Item(n).TwoHanded = Buffer.ReadInt32()
+            Item(n).LevelReq = Buffer.ReadInt32()
+            Item(n).Mastery = Buffer.ReadInt32()
+            Item(n).Name = Trim$(Buffer.ReadString())
+            Item(n).Paperdoll = Buffer.ReadInt32()
+            Item(n).Pic = Buffer.ReadInt32()
+            Item(n).Price = Buffer.ReadInt32()
+            Item(n).Rarity = Buffer.ReadInt32()
+            Item(n).Speed = Buffer.ReadInt32()
 
-            Item(n).Randomize = buffer.ReadInteger()
-            Item(n).RandomMin = buffer.ReadInteger()
-            Item(n).RandomMax = buffer.ReadInteger()
+            Item(n).Randomize = Buffer.ReadInt32()
+            Item(n).RandomMin = Buffer.ReadInt32()
+            Item(n).RandomMax = Buffer.ReadInt32()
 
-            Item(n).Stackable = buffer.ReadInteger()
-            Item(n).Description = Trim$(buffer.ReadString())
+            Item(n).Stackable = Buffer.ReadInt32()
+            Item(n).Description = Trim$(Buffer.ReadString())
 
             For z = 0 To Stats.Count - 1
-                Item(n).Stat_Req(z) = buffer.ReadInteger()
+                Item(n).Stat_Req(z) = Buffer.ReadInt32()
             Next
 
-            Item(n).Type = buffer.ReadInteger()
-            Item(n).SubType = buffer.ReadInteger
+            Item(n).Type = Buffer.ReadInt32()
+            Item(n).SubType = Buffer.ReadInt32
 
-            Item(n).ItemLevel = buffer.ReadInteger
+            Item(n).ItemLevel = Buffer.ReadInt32
 
             'Housing
-            Item(n).FurnitureWidth = buffer.ReadInteger()
-            Item(n).FurnitureHeight = buffer.ReadInteger()
+            Item(n).FurnitureWidth = Buffer.ReadInt32()
+            Item(n).FurnitureHeight = Buffer.ReadInt32()
 
             For a = 1 To 3
                 For b = 1 To 3
-                    Item(n).FurnitureBlocks(a, b) = buffer.ReadInteger()
-                    Item(n).FurnitureFringe(a, b) = buffer.ReadInteger()
+                    Item(n).FurnitureBlocks(a, b) = Buffer.ReadInt32()
+                    Item(n).FurnitureFringe(a, b) = Buffer.ReadInt32()
                 Next
             Next
 
-            Item(n).KnockBack = buffer.ReadInteger()
-            Item(n).KnockBackTiles = buffer.ReadInteger()
+            Item(n).KnockBack = Buffer.ReadInt32()
+            Item(n).KnockBackTiles = Buffer.ReadInt32()
 
-            Item(n).Projectile = buffer.ReadInteger()
-            Item(n).Ammo = buffer.ReadInteger()
+            Item(n).Projectile = Buffer.ReadInt32()
+            Item(n).Ammo = Buffer.ReadInt32()
         Next
 
         ' changes to inventory, need to clear any drop menu
@@ -2294,31 +1978,31 @@ Module ClientHandleData
         '\\\End Read Item Data\\\\\\\
 
         '\\\Read Animation Data\\\\\\\
-        x = buffer.ReadInteger
+        x = Buffer.ReadInt32
 
         For i = 1 To x
-            n = buffer.ReadInteger
+            n = Buffer.ReadInt32
             ' Update the Animation
             For z = 0 To UBound(Animation(n).Frames)
-                Animation(n).Frames(z) = buffer.ReadInteger()
+                Animation(n).Frames(z) = Buffer.ReadInt32()
             Next
 
             For z = 0 To UBound(Animation(n).LoopCount)
-                Animation(n).LoopCount(z) = buffer.ReadInteger()
+                Animation(n).LoopCount(z) = Buffer.ReadInt32()
             Next
 
             For z = 0 To UBound(Animation(n).LoopTime)
-                Animation(n).LoopTime(z) = buffer.ReadInteger()
+                Animation(n).LoopTime(z) = Buffer.ReadInt32()
             Next
 
-            Animation(n).Name = Trim$(buffer.ReadString)
-            Animation(n).Sound = Trim$(buffer.ReadString)
+            Animation(n).Name = Trim$(Buffer.ReadString)
+            Animation(n).Sound = Trim$(Buffer.ReadString)
 
             If Animation(n).Name Is Nothing Then Animation(n).Name = ""
             If Animation(n).Sound Is Nothing Then Animation(n).Sound = ""
 
             For z = 0 To UBound(Animation(n).Sprite)
-                Animation(n).Sprite(z) = buffer.ReadInteger()
+                Animation(n).Sprite(z) = Buffer.ReadInt32()
             Next
         Next
 
@@ -2330,41 +2014,41 @@ Module ClientHandleData
         '\\\End Read Animation Data\\\\\\\
 
         '\\\Read NPC Data\\\\\\\
-        x = buffer.ReadInteger
+        x = Buffer.ReadInt32
         For i = 1 To x
-            n = buffer.ReadInteger
+            n = Buffer.ReadInt32
             ' Update the Npc
-            Npc(n).Animation = buffer.ReadInteger()
-            Npc(n).AttackSay = Trim(buffer.ReadString())
-            Npc(n).Behaviour = buffer.ReadInteger()
+            Npc(n).Animation = Buffer.ReadInt32()
+            Npc(n).AttackSay = Trim(Buffer.ReadString())
+            Npc(n).Behaviour = Buffer.ReadInt32()
             For z = 1 To 5
-                Npc(n).DropChance(z) = buffer.ReadInteger()
-                Npc(n).DropItem(z) = buffer.ReadInteger()
-                Npc(n).DropItemValue(z) = buffer.ReadInteger()
+                Npc(n).DropChance(z) = Buffer.ReadInt32()
+                Npc(n).DropItem(z) = Buffer.ReadInt32()
+                Npc(n).DropItemValue(z) = Buffer.ReadInt32()
             Next
 
-            Npc(n).Exp = buffer.ReadInteger()
-            Npc(n).Faction = buffer.ReadInteger()
-            Npc(n).Hp = buffer.ReadInteger()
-            Npc(n).Name = Trim(buffer.ReadString())
-            Npc(n).Range = buffer.ReadInteger()
-            Npc(n).SpawnTime = buffer.ReadInteger()
-            Npc(n).SpawnSecs = buffer.ReadInteger()
-            Npc(n).Sprite = buffer.ReadInteger()
+            Npc(n).Exp = Buffer.ReadInt32()
+            Npc(n).Faction = Buffer.ReadInt32()
+            Npc(n).Hp = Buffer.ReadInt32()
+            Npc(n).Name = Trim(Buffer.ReadString())
+            Npc(n).Range = Buffer.ReadInt32()
+            Npc(n).SpawnTime = Buffer.ReadInt32()
+            Npc(n).SpawnSecs = Buffer.ReadInt32()
+            Npc(n).Sprite = Buffer.ReadInt32()
 
             For z = 0 To Stats.Count - 1
-                Npc(n).Stat(z) = buffer.ReadInteger()
+                Npc(n).Stat(z) = Buffer.ReadInt32()
             Next
 
-            Npc(n).QuestNum = buffer.ReadInteger()
+            Npc(n).QuestNum = Buffer.ReadInt32()
 
             ReDim Npc(n).Skill(MAX_NPC_SKILLS)
             For z = 1 To MAX_NPC_SKILLS
-                Npc(n).Skill(z) = buffer.ReadInteger()
+                Npc(n).Skill(z) = Buffer.ReadInt32()
             Next
 
-            Npc(i).Level = buffer.ReadInteger()
-            Npc(i).Damage = buffer.ReadInteger()
+            Npc(i).Level = Buffer.ReadInt32()
+            Npc(i).Damage = Buffer.ReadInt32()
 
             If Npc(n).AttackSay Is Nothing Then Npc(n).AttackSay = ""
             If Npc(n).Name Is Nothing Then Npc(n).Name = ""
@@ -2378,20 +2062,20 @@ Module ClientHandleData
         '\\\End Read NPC Data\\\\\\\
 
         '\\\Read Shop Data\\\\\\\
-        x = buffer.ReadInteger
+        x = Buffer.ReadInt32
 
         For i = 1 To x
-            n = buffer.ReadInteger
+            n = Buffer.ReadInt32
 
-            Shop(n).BuyRate = buffer.ReadInteger()
-            Shop(n).Name = Trim(buffer.ReadString())
-            Shop(n).Face = buffer.ReadInteger()
+            Shop(n).BuyRate = Buffer.ReadInt32()
+            Shop(n).Name = Trim(Buffer.ReadString())
+            Shop(n).Face = Buffer.ReadInt32()
 
             For z = 0 To MAX_TRADES
-                Shop(n).TradeItem(z).CostItem = buffer.ReadInteger()
-                Shop(n).TradeItem(z).CostValue = buffer.ReadInteger()
-                Shop(n).TradeItem(z).Item = buffer.ReadInteger()
-                Shop(n).TradeItem(z).ItemValue = buffer.ReadInteger()
+                Shop(n).TradeItem(z).CostItem = Buffer.ReadInt32()
+                Shop(n).TradeItem(z).CostValue = Buffer.ReadInt32()
+                Shop(n).TradeItem(z).Item = Buffer.ReadInt32()
+                Shop(n).TradeItem(z).ItemValue = Buffer.ReadInt32()
             Next
 
             If Shop(n).Name Is Nothing Then Shop(n).Name = ""
@@ -2405,39 +2089,39 @@ Module ClientHandleData
         '\\\End Read Shop Data\\\\\\\
 
         '\\\Read Skills Data\\\\\\\\\\
-        x = buffer.ReadInteger
+        x = Buffer.ReadInt32
 
         For i = 1 To x
-            n = buffer.ReadInteger
+            n = Buffer.ReadInt32
 
-            Skill(n).AccessReq = buffer.ReadInteger()
-            Skill(n).AoE = buffer.ReadInteger()
-            Skill(n).CastAnim = buffer.ReadInteger()
-            Skill(n).CastTime = buffer.ReadInteger()
-            Skill(n).CdTime = buffer.ReadInteger()
-            Skill(n).ClassReq = buffer.ReadInteger()
-            Skill(n).Dir = buffer.ReadInteger()
-            Skill(n).Duration = buffer.ReadInteger()
-            Skill(n).Icon = buffer.ReadInteger()
-            Skill(n).Interval = buffer.ReadInteger()
-            Skill(n).IsAoE = buffer.ReadInteger()
-            Skill(n).LevelReq = buffer.ReadInteger()
-            Skill(n).Map = buffer.ReadInteger()
-            Skill(n).MpCost = buffer.ReadInteger()
-            Skill(n).Name = Trim(buffer.ReadString())
-            Skill(n).Range = buffer.ReadInteger()
-            Skill(n).SkillAnim = buffer.ReadInteger()
-            Skill(n).StunDuration = buffer.ReadInteger()
-            Skill(n).Type = buffer.ReadInteger()
-            Skill(n).Vital = buffer.ReadInteger()
-            Skill(n).X = buffer.ReadInteger()
-            Skill(n).Y = buffer.ReadInteger()
+            Skill(n).AccessReq = Buffer.ReadInt32()
+            Skill(n).AoE = Buffer.ReadInt32()
+            Skill(n).CastAnim = Buffer.ReadInt32()
+            Skill(n).CastTime = Buffer.ReadInt32()
+            Skill(n).CdTime = Buffer.ReadInt32()
+            Skill(n).ClassReq = Buffer.ReadInt32()
+            Skill(n).Dir = Buffer.ReadInt32()
+            Skill(n).Duration = Buffer.ReadInt32()
+            Skill(n).Icon = Buffer.ReadInt32()
+            Skill(n).Interval = Buffer.ReadInt32()
+            Skill(n).IsAoE = Buffer.ReadInt32()
+            Skill(n).LevelReq = Buffer.ReadInt32()
+            Skill(n).Map = Buffer.ReadInt32()
+            Skill(n).MpCost = Buffer.ReadInt32()
+            Skill(n).Name = Trim(Buffer.ReadString())
+            Skill(n).Range = Buffer.ReadInt32()
+            Skill(n).SkillAnim = Buffer.ReadInt32()
+            Skill(n).StunDuration = Buffer.ReadInt32()
+            Skill(n).Type = Buffer.ReadInt32()
+            Skill(n).Vital = Buffer.ReadInt32()
+            Skill(n).X = Buffer.ReadInt32()
+            Skill(n).Y = Buffer.ReadInt32()
 
-            Skill(n).IsProjectile = buffer.ReadInteger()
-            Skill(n).Projectile = buffer.ReadInteger()
+            Skill(n).IsProjectile = Buffer.ReadInt32()
+            Skill(n).Projectile = Buffer.ReadInt32()
 
-            Skill(n).KnockBack = buffer.ReadInteger()
-            Skill(n).KnockBackTiles = buffer.ReadInteger()
+            Skill(n).KnockBack = Buffer.ReadInt32()
+            Skill(n).KnockBackTiles = Buffer.ReadInt32()
 
             If Skill(n).Name Is Nothing Then Skill(n).Name = ""
         Next
@@ -2450,25 +2134,25 @@ Module ClientHandleData
         '\\\End Read Skills Data\\\\\\\\\\
 
         '\\\Read Resource Data\\\\\\\\\\\\
-        x = buffer.ReadInteger
+        x = Buffer.ReadInt32
 
         For i = 1 To x
-            n = buffer.ReadInteger
+            n = Buffer.ReadInt32
 
-            Resource(n).Animation = buffer.ReadInteger()
-            Resource(n).EmptyMessage = Trim(buffer.ReadString())
-            Resource(n).ExhaustedImage = buffer.ReadInteger()
-            Resource(n).Health = buffer.ReadInteger()
-            Resource(n).ExpReward = buffer.ReadInteger()
-            Resource(n).ItemReward = buffer.ReadInteger()
-            Resource(n).Name = Trim(buffer.ReadString())
-            Resource(n).ResourceImage = buffer.ReadInteger()
-            Resource(n).ResourceType = buffer.ReadInteger()
-            Resource(n).RespawnTime = buffer.ReadInteger()
-            Resource(n).SuccessMessage = Trim(buffer.ReadString())
-            Resource(n).LvlRequired = buffer.ReadInteger()
-            Resource(n).ToolRequired = buffer.ReadInteger()
-            Resource(n).Walkthrough = buffer.ReadInteger()
+            Resource(n).Animation = Buffer.ReadInt32()
+            Resource(n).EmptyMessage = Trim(Buffer.ReadString())
+            Resource(n).ExhaustedImage = Buffer.ReadInt32()
+            Resource(n).Health = Buffer.ReadInt32()
+            Resource(n).ExpReward = Buffer.ReadInt32()
+            Resource(n).ItemReward = Buffer.ReadInt32()
+            Resource(n).Name = Trim(Buffer.ReadString())
+            Resource(n).ResourceImage = Buffer.ReadInt32()
+            Resource(n).ResourceType = Buffer.ReadInt32()
+            Resource(n).RespawnTime = Buffer.ReadInt32()
+            Resource(n).SuccessMessage = Trim(Buffer.ReadString())
+            Resource(n).LvlRequired = Buffer.ReadInt32()
+            Resource(n).ToolRequired = Buffer.ReadInt32()
+            Resource(n).Walkthrough = Buffer.ReadInt32()
 
             If Resource(n).Name Is Nothing Then Resource(n).Name = ""
             If Resource(n).EmptyMessage Is Nothing Then Resource(n).EmptyMessage = ""
@@ -2482,179 +2166,110 @@ Module ClientHandleData
 
         '\\\End Read Resource Data\\\\\\\\\\\\
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_Target(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(Data)
+        myTarget = Buffer.ReadInt32
+        myTargetType = Buffer.ReadInt32
 
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.STarget Then Exit Sub
-
-        myTarget = Buffer.ReadInteger
-        myTargetType = Buffer.ReadInteger
-
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_Mapreport(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer, I As Integer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SMapReport Then Exit Sub
-
+        Dim I As Integer
+        Dim Buffer As New ByteStream(Data)
         For I = 1 To MAX_MAPS
             MapNames(I) = Trim(Buffer.ReadString())
         Next
 
         UpdateMapnames = True
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_Admin(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SAdmin Then Exit Sub
-
         Adminvisible = True
-
-        Buffer = Nothing
     End Sub
 
     Private Sub Packet_MapNames(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer, I As Integer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SMapNames Then Exit Sub
-
+        Dim I As Integer
+        Dim Buffer As New ByteStream(Data)
         For I = 1 To MAX_MAPS
             MapNames(I) = Trim(Buffer.ReadString())
         Next
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_Hotbar(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer, i As Integer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SHotbar Then Exit Sub
-
+        Dim i As Integer
+        Dim Buffer As New ByteStream(Data)
         For i = 1 To MAX_HOTBAR
-            Player(MyIndex).Hotbar(i).Slot = Buffer.ReadInteger
-            Player(MyIndex).Hotbar(i).sType = Buffer.ReadInteger
+            Player(MyIndex).Hotbar(i).Slot = Buffer.ReadInt32
+            Player(MyIndex).Hotbar(i).sType = Buffer.ReadInt32
         Next
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_Critical(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SCritical Then Exit Sub
-
         ShakeTimerEnabled = True
         ShakeTimer = GetTickCount()
-
-        Buffer = Nothing
     End Sub
 
     Private Sub Packet_News(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SNews Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         GAME_NAME = Buffer.ReadString
         News = Buffer.ReadString
 
         UpdateNews = True
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_RClick(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SrClick Then Exit Sub
-
         ShowRClick = True
-
-        Buffer = Nothing
     End Sub
 
     Private Sub Packet_TotalOnline(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(Data)
+        TotalOnline = Buffer.ReadInt32
 
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.STotalOnline Then Exit Sub
-
-        TotalOnline = Buffer.ReadInteger
-
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_Emote(ByVal Data() As Byte)
-        Dim buffer As New ByteBuffer
         Dim index As Integer, emote As Integer
-
-        buffer.WriteBytes(Data)
-
-        If buffer.ReadInteger <> ServerPackets.SEmote Then Exit Sub
-
-        index = buffer.ReadInteger
-        emote = buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        index = Buffer.ReadInt32
+        emote = Buffer.ReadInt32
 
         With Player(index)
             .Emote = emote
             .EmoteTimer = GetTickCount() + 5000
         End With
 
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
     Private Sub Packet_ChatBubble(ByVal Data() As Byte)
-        Dim buffer As New ByteBuffer
         Dim targetType As Integer, target As Integer, Message As String, colour As Integer
-
-        buffer.WriteBytes(Data)
-
-        If buffer.ReadInteger <> ServerPackets.SChatBubble Then Exit Sub
-
-        target = buffer.ReadInteger
-        targetType = buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        target = Buffer.ReadInt32
+        targetType = Buffer.ReadInt32
         'Message = buffer.ReadString
-        Message = Trim(buffer.ReadUnicodeString)
-        colour = buffer.ReadInteger
+        Message = Trim(ReadUnicodeString(Buffer))
+        colour = Buffer.ReadInt32
         AddChatBubble(target, targetType, Message, colour)
 
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
     Private Sub Packet_LeftGame(ByVal Data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SLeftGame Then Exit Sub
-
         DestroyGame()
-
-        Buffer = Nothing
     End Sub
 End Module

@@ -1,4 +1,5 @@
 ﻿Imports System.Drawing
+Imports ASFW
 
 Module ClientPets
 #Region "Globals etc"
@@ -102,69 +103,69 @@ Module ClientPets
 
 #Region "Outgoing Packets"
     Public Sub SendPetBehaviour(ByVal Index As Integer)
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CSetBehaviour)
+        Buffer.WriteInt32(ClientPackets.CSetBehaviour)
 
-        buffer.WriteInteger(Index)
+        Buffer.WriteInt32(Index)
 
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
     End Sub
 
     Sub SendTrainPetStat(ByVal StatNum As Byte)
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CPetUseStatPoint)
+        Buffer.WriteInt32(ClientPackets.CPetUseStatPoint)
 
-        buffer.WriteInteger(StatNum)
+        Buffer.WriteInt32(StatNum)
 
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
     End Sub
 
     Sub SendRequestPets()
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CRequestPets)
+        Buffer.WriteInt32(ClientPackets.CRequestPets)
 
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
     End Sub
 
     Sub SendUsePetSkill(ByVal skill As Integer)
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CPetSkill)
-        buffer.WriteInteger(skill)
+        Buffer.WriteInt32(ClientPackets.CPetSkill)
+        Buffer.WriteInt32(skill)
 
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
         PetSkillBuffer = skill
         PetSkillBufferTimer = GetTickCount()
     End Sub
 
     Sub SendSummonPet()
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CSummonPet)
+        Buffer.WriteInt32(ClientPackets.CSummonPet)
 
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
     End Sub
 
     Sub SendReleasePet()
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CReleasePet)
+        Buffer.WriteInt32(ClientPackets.CReleasePet)
 
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
     End Sub
 #End Region
@@ -172,100 +173,82 @@ Module ClientPets
 #Region "Incoming Packets"
     Public Sub Packet_UpdatePlayerPet(ByVal Data() As Byte)
         Dim n As Integer, i As Long
-        Dim buffer As New ByteBuffer
-
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SUpdatePlayerPet Then Exit Sub
-
-        n = buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        n = Buffer.ReadInt32
 
         'pet
-        Player(n).Pet.Num = buffer.ReadInteger
-        Player(n).Pet.Health = buffer.ReadInteger
-        Player(n).Pet.Mana = buffer.ReadInteger
-        Player(n).Pet.Level = buffer.ReadInteger
+        Player(n).Pet.Num = Buffer.ReadInt32
+        Player(n).Pet.Health = Buffer.ReadInt32
+        Player(n).Pet.Mana = Buffer.ReadInt32
+        Player(n).Pet.Level = Buffer.ReadInt32
 
         For i = 1 To Stats.Count - 1
-            Player(n).Pet.Stat(i) = buffer.ReadInteger
+            Player(n).Pet.Stat(i) = Buffer.ReadInt32
         Next
 
         For i = 1 To 4
-            Player(n).Pet.Skill(i) = buffer.ReadInteger
+            Player(n).Pet.Skill(i) = Buffer.ReadInt32
         Next
 
-        Player(n).Pet.X = buffer.ReadInteger
-        Player(n).Pet.Y = buffer.ReadInteger
-        Player(n).Pet.Dir = buffer.ReadInteger
+        Player(n).Pet.X = Buffer.ReadInt32
+        Player(n).Pet.Y = Buffer.ReadInt32
+        Player(n).Pet.Dir = Buffer.ReadInt32
 
-        Player(n).Pet.MaxHp = buffer.ReadInteger
-        Player(n).Pet.MaxMP = buffer.ReadInteger
+        Player(n).Pet.MaxHp = Buffer.ReadInt32
+        Player(n).Pet.MaxMP = Buffer.ReadInt32
 
-        Player(n).Pet.Alive = buffer.ReadInteger
+        Player(n).Pet.Alive = Buffer.ReadInt32
 
-        Player(n).Pet.AttackBehaviour = buffer.ReadInteger
-        Player(n).Pet.Points = buffer.ReadInteger
-        Player(n).Pet.Exp = buffer.ReadInteger
-        Player(n).Pet.TNL = buffer.ReadInteger
+        Player(n).Pet.AttackBehaviour = Buffer.ReadInt32
+        Player(n).Pet.Points = Buffer.ReadInt32
+        Player(n).Pet.Exp = Buffer.ReadInt32
+        Player(n).Pet.TNL = Buffer.ReadInt32
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Public Sub Packet_UpdatePet(ByVal Data() As Byte)
         Dim n As Integer, i As Integer
-        Dim buffer As New ByteBuffer
-
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SUpdatePet Then Exit Sub
-
-        n = buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        n = Buffer.ReadInt32
 
         With Pet(n)
-            .Num = buffer.ReadInteger
-            .Name = buffer.ReadString
-            .Sprite = buffer.ReadInteger
-            .Range = buffer.ReadInteger
-            .Level = buffer.ReadInteger
-            .MaxLevel = buffer.ReadInteger
-            .ExpGain = buffer.ReadInteger
-            .LevelPnts = buffer.ReadInteger
-            .StatType = buffer.ReadInteger
-            .LevelingType = buffer.ReadInteger
+            .Num = Buffer.ReadInt32
+            .Name = Buffer.ReadString
+            .Sprite = Buffer.ReadInt32
+            .Range = Buffer.ReadInt32
+            .Level = Buffer.ReadInt32
+            .MaxLevel = Buffer.ReadInt32
+            .ExpGain = Buffer.ReadInt32
+            .LevelPnts = Buffer.ReadInt32
+            .StatType = Buffer.ReadInt32
+            .LevelingType = Buffer.ReadInt32
             For i = 1 To Stats.Count - 1
-                .Stat(i) = buffer.ReadInteger
+                .Stat(i) = Buffer.ReadInt32
             Next
 
             For i = 1 To 4
-                .Skill(i) = buffer.ReadInteger
+                .Skill(i) = Buffer.ReadInt32
             Next
 
-            .Evolvable = buffer.ReadInteger
-            .EvolveLevel = buffer.ReadInteger
-            .EvolveNum = buffer.ReadInteger
+            .Evolvable = Buffer.ReadInt32
+            .EvolveLevel = Buffer.ReadInt32
+            .EvolveNum = Buffer.ReadInt32
         End With
 
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
     Public Sub Packet_PetMove(ByVal data() As Byte)
         Dim i As Integer, X As Integer, Y As Integer
         Dim dir As Integer, Movement As Integer
-        Dim buffer As New ByteBuffer
-
-        buffer.WriteBytes(data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SPetMove Then Exit Sub
-
-        i = buffer.ReadInteger
-        X = buffer.ReadInteger
-        Y = buffer.ReadInteger
-        dir = buffer.ReadInteger
-        Movement = buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        i = Buffer.ReadInt32
+        X = Buffer.ReadInt32
+        Y = Buffer.ReadInt32
+        dir = Buffer.ReadInt32
+        Movement = Buffer.ReadInt32
 
         With Player(i).Pet
             .X = X
@@ -287,108 +270,70 @@ Module ClientPets
             End Select
         End With
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Public Sub Packet_PetDir(ByVal Data() As Byte)
         Dim i As Integer
         Dim dir As Integer
-        Dim buffer As New ByteBuffer
-
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SPetDir Then Exit Sub
-
-        i = buffer.ReadInteger
-        dir = buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        i = Buffer.ReadInt32
+        dir = Buffer.ReadInt32
 
         Player(i).Pet.Dir = dir
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Public Sub Packet_PetVital(ByVal Data() As Byte)
         Dim i As Integer
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(Data)
+        i = Buffer.ReadInt32
 
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SPetVital Then Exit Sub
-
-        i = buffer.ReadInteger
-
-        If buffer.ReadInteger = 1 Then
-            Player(i).Pet.MaxHp = buffer.ReadInteger
-            Player(i).Pet.Health = buffer.ReadInteger
+        If Buffer.ReadInt32 = 1 Then
+            Player(i).Pet.MaxHp = Buffer.ReadInt32
+            Player(i).Pet.Health = Buffer.ReadInt32
         Else
-            Player(i).Pet.MaxMP = buffer.ReadInteger
-            Player(i).Pet.Mana = buffer.ReadInteger
+            Player(i).Pet.MaxMP = Buffer.ReadInt32
+            Player(i).Pet.Mana = Buffer.ReadInt32
         End If
 
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
     Public Sub Packet_ClearPetSkillBuffer(ByVal Data() As Byte)
-        Dim buffer As New ByteBuffer
-
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SClearPetSkillBuffer Then Exit Sub
-
         PetSkillBuffer = 0
         PetSkillBufferTimer = 0
-
-        buffer = Nothing
     End Sub
 
     Public Sub Packet_PetAttack(ByVal Data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ServerPackets.SPetAttack Then Exit Sub
-
-        i = Buffer.ReadInteger
+        Dim Buffer As New ByteStream(Data)
+        i = Buffer.ReadInt32
 
         ' Set pet to attacking
         Player(i).Pet.Attacking = 1
         Player(i).Pet.AttackTimer = GetTickCount()
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Public Sub Packet_PetXY(ByVal Data() As Byte)
         Dim i As Integer
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(Data)
+        Player(i).Pet.X = Buffer.ReadInt32
+        Player(i).Pet.Y = Buffer.ReadInt32
 
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SPetXY Then Exit Sub
-
-        Player(i).Pet.X = buffer.ReadInteger
-        Player(i).Pet.Y = buffer.ReadInteger
-
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Public Sub Packet_PetExperience(ByVal Data() As Byte)
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(Data)
+        Player(MyIndex).Pet.Exp = Buffer.ReadInt32
+        Player(MyIndex).Pet.TNL = Buffer.ReadInt32
 
-        buffer.WriteBytes(Data)
-
-        ' Confirm it is the right packet
-        If buffer.ReadInteger <> ServerPackets.SPetExp Then Exit Sub
-
-        Player(MyIndex).Pet.Exp = buffer.ReadInteger
-        Player(MyIndex).Pet.TNL = buffer.ReadInteger
-
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 #End Region
 
@@ -445,15 +390,15 @@ Module ClientPets
     End Sub
 
     Public Sub PetMove(ByVal X As Integer, ByVal Y As Integer)
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CPetMove)
+        Buffer.WriteInt32(ClientPackets.CPetMove)
 
-        buffer.WriteInteger(X)
-        buffer.WriteInteger(Y)
+        Buffer.WriteInt32(X)
+        Buffer.WriteInt32(Y)
 
-        SendData(buffer.ToArray)
-        buffer = Nothing
+        SendData(Buffer.ToArray)
+        Buffer.Dispose()
 
     End Sub
 
@@ -704,14 +649,14 @@ Module ClientPets
         For i = 1 To MAX_PETBAR
 
             With tempRec
-                .top = PetbarY + PetbarTop
-                .bottom = .top + PIC_Y
-                .left = PetbarX + PetbarLeft + ((PetbarOffsetX + 32) * (((i - 1) Mod MAX_PETBAR)))
-                .right = .left + PIC_X
+                .Top = PetbarY + PetbarTop
+                .Bottom = .Top + PIC_Y
+                .Left = PetbarX + PetbarLeft + ((PetbarOffsetX + 32) * (((i - 1) Mod MAX_PETBAR)))
+                .Right = .Left + PIC_X
             End With
 
-            If X >= tempRec.left And X <= tempRec.right Then
-                If Y >= tempRec.top And Y <= tempRec.bottom Then
+            If X >= tempRec.Left And X <= tempRec.Right Then
+                If Y >= tempRec.Top And Y <= tempRec.Bottom Then
                     IsPetBarSlot = i
                     Exit Function
                 End If

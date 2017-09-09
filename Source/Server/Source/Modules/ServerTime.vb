@@ -1,4 +1,5 @@
-﻿Imports Orion
+﻿Imports ASFW
+Imports Orion
 
 Public Module ServerTime
     Sub InitTime()
@@ -27,10 +28,10 @@ Public Module ServerTime
     End Sub
 
     Sub SendGameClockTo(ByVal Index As Integer)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(ServerPackets.SClock)
-        Buffer.WriteInteger(Time.Instance.GameSpeed)
+        Buffer.WriteInt32(ServerPackets.SClock)
+        Buffer.WriteInt32(Time.Instance.GameSpeed)
         Buffer.WriteBytes(BitConverter.GetBytes(Time.Instance.Time.Ticks))
         SendDataTo(Index, Buffer.ToArray)
 
@@ -40,7 +41,7 @@ Public Module ServerTime
         Addlog(" Player: " & GetPlayerName(Index) & " : " & " GameSpeed: " & Time.Instance.GameSpeed & " Instance Time Ticks: " & Time.Instance.Time.Ticks, PLAYER_LOG)
         TextAdd(" Player: " & GetPlayerName(Index) & " : " & " GameSpeed: " & Time.Instance.GameSpeed & " Instance Time Ticks: " & Time.Instance.Time.Ticks)
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub SendGameClockToAll()
@@ -54,9 +55,9 @@ Public Module ServerTime
     End Sub
 
     Sub SendTimeTo(ByVal Index As Integer)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(ServerPackets.STime)
+        Buffer.WriteInt32(ServerPackets.STime)
         Buffer.WriteByte(Time.Instance.TimeOfDay)
         SendDataTo(Index, Buffer.ToArray)
 
@@ -66,7 +67,7 @@ Public Module ServerTime
         Addlog(" Player: " & GetPlayerName(Index) & " : " & " Time Of Day: " & Time.Instance.TimeOfDay, PLAYER_LOG)
         TextAdd(" Player: " & GetPlayerName(Index) & " : " & " Time Of Day: " & Time.Instance.TimeOfDay)
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub SendTimeToAll()

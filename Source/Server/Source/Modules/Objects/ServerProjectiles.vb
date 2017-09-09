@@ -140,29 +140,24 @@ Public Module ServerProjectiles
 
 #Region "Incoming"
     Sub HandleRequestEditProjectiles(ByVal Index As Integer, ByVal data() As Byte)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
 
-        Buffer.WriteInteger(ServerPackets.SProjectileEditor)
+        Buffer.WriteInt32(ServerPackets.SProjectileEditor)
 
         SendDataTo(Index, Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub HandleSaveProjectile(ByVal Index As Integer, ByVal data() As Byte)
         Dim ProjectileNum As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> EditorPackets.SaveProjectile Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
 
-        ProjectileNum = Buffer.ReadInteger
+        ProjectileNum = Buffer.ReadInt32
 
         ' Prevent hacking
         If ProjectileNum < 0 Or ProjectileNum > MAX_PROJECTILES Then
@@ -170,16 +165,16 @@ Public Module ServerProjectiles
         End If
 
         Projectiles(ProjectileNum).Name = Buffer.ReadString
-        Projectiles(ProjectileNum).Sprite = Buffer.ReadInteger
-        Projectiles(ProjectileNum).Range = Buffer.ReadInteger
-        Projectiles(ProjectileNum).Speed = Buffer.ReadInteger
-        Projectiles(ProjectileNum).Damage = Buffer.ReadInteger
+        Projectiles(ProjectileNum).Sprite = Buffer.ReadInt32
+        Projectiles(ProjectileNum).Range = Buffer.ReadInt32
+        Projectiles(ProjectileNum).Speed = Buffer.ReadInt32
+        Projectiles(ProjectileNum).Damage = Buffer.ReadInt32
 
         ' Save it
         SendUpdateProjectileToAll(ProjectileNum)
         SaveProjectile(ProjectileNum)
         Addlog(GetPlayerLogin(Index) & " saved Projectile #" & ProjectileNum & ".", ADMIN_LOG)
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
@@ -190,7 +185,6 @@ Public Module ServerProjectiles
     End Sub
 
     Sub HandleClearProjectile(ByVal Index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
         Dim ProjectileNum As Integer
         Dim TargetIndex As Integer
         Dim TargetType As TargetType
@@ -199,17 +193,12 @@ Public Module ServerProjectiles
         Dim Damage As Integer
         Dim armor As Integer
         Dim npcnum As Integer
-
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CClearProjectile Then Exit Sub
-
-        ProjectileNum = Buffer.ReadInteger
-        TargetIndex = Buffer.ReadInteger
-        TargetType = Buffer.ReadInteger
-        TargetZone = Buffer.ReadInteger
-        Buffer = Nothing
+        Dim Buffer As New ByteStream(data)
+        ProjectileNum = Buffer.ReadInt32
+        TargetIndex = Buffer.ReadInt32
+        TargetType = Buffer.ReadInt32
+        TargetZone = Buffer.ReadInt32
+        Buffer.Dispose()
 
         MapNum = GetPlayerMap(Index)
 
@@ -270,38 +259,38 @@ Public Module ServerProjectiles
 
 #Region "Outgoing"
     Sub SendUpdateProjectileToAll(ByVal ProjectileNum As Integer)
-        Dim Buffer As ByteBuffer
+        Dim Buffer as ByteStream
 
-        Buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
-        Buffer.WriteInteger(ServerPackets.SUpdateProjectile)
-        Buffer.WriteInteger(ProjectileNum)
+        Buffer.WriteInt32(ServerPackets.SUpdateProjectile)
+        Buffer.WriteInt32(ProjectileNum)
         Buffer.WriteString(Trim(Projectiles(ProjectileNum).Name))
-        Buffer.WriteInteger(Projectiles(ProjectileNum).Sprite)
-        Buffer.WriteInteger(Projectiles(ProjectileNum).Range)
-        Buffer.WriteInteger(Projectiles(ProjectileNum).Speed)
-        Buffer.WriteInteger(Projectiles(ProjectileNum).Damage)
+        Buffer.WriteInt32(Projectiles(ProjectileNum).Sprite)
+        Buffer.WriteInt32(Projectiles(ProjectileNum).Range)
+        Buffer.WriteInt32(Projectiles(ProjectileNum).Speed)
+        Buffer.WriteInt32(Projectiles(ProjectileNum).Damage)
 
         SendDataToAll(Buffer.ToArray)
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub SendUpdateProjectileTo(ByVal Index As Integer, ByVal ProjectileNum As Integer)
-        Dim Buffer As ByteBuffer
+        Dim Buffer as ByteStream
 
-        Buffer = New ByteBuffer
+        Buffer = New ByteStream(4)
 
-        Buffer.WriteInteger(ServerPackets.SUpdateProjectile)
-        Buffer.WriteInteger(ProjectileNum)
+        Buffer.WriteInt32(ServerPackets.SUpdateProjectile)
+        Buffer.WriteInt32(ProjectileNum)
         Buffer.WriteString(Trim(Projectiles(ProjectileNum).Name))
-        Buffer.WriteInteger(Projectiles(ProjectileNum).Sprite)
-        Buffer.WriteInteger(Projectiles(ProjectileNum).Range)
-        Buffer.WriteInteger(Projectiles(ProjectileNum).Speed)
-        Buffer.WriteInteger(Projectiles(ProjectileNum).Damage)
+        Buffer.WriteInt32(Projectiles(ProjectileNum).Sprite)
+        Buffer.WriteInt32(Projectiles(ProjectileNum).Range)
+        Buffer.WriteInt32(Projectiles(ProjectileNum).Speed)
+        Buffer.WriteInt32(Projectiles(ProjectileNum).Damage)
 
         SendDataTo(Index, Buffer.ToArray)
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
@@ -317,23 +306,23 @@ Public Module ServerProjectiles
     End Sub
 
     Sub SendProjectileToMap(ByVal MapNum As Integer, ByVal ProjectileNum As Integer)
-        Dim Buffer As ByteBuffer
+        Dim Buffer as ByteStream
 
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SMapProjectile)
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SMapProjectile)
 
         With MapProjectiles(MapNum, ProjectileNum)
-            Buffer.WriteInteger(ProjectileNum)
-            Buffer.WriteInteger(.ProjectileNum)
-            Buffer.WriteInteger(.Owner)
-            Buffer.WriteInteger(.OwnerType)
-            Buffer.WriteInteger(.Dir)
-            Buffer.WriteInteger(.X)
-            Buffer.WriteInteger(.Y)
+            Buffer.WriteInt32(ProjectileNum)
+            Buffer.WriteInt32(.ProjectileNum)
+            Buffer.WriteInt32(.Owner)
+            Buffer.WriteInt32(.OwnerType)
+            Buffer.WriteInt32(.Dir)
+            Buffer.WriteInt32(.X)
+            Buffer.WriteInt32(.Y)
         End With
 
         SendDataToMap(MapNum, Buffer.ToArray)
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 

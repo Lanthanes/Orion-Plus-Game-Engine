@@ -1,4 +1,5 @@
 ﻿Imports System.Windows.Forms
+Imports ASFW
 Imports SFML.Graphics
 Imports SFML.Window
 
@@ -38,26 +39,26 @@ Public Module ClientProjectiles
 #Region "Sending"
 
     Sub SendRequestProjectiles()
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CRequestProjectiles)
+        Buffer.WriteInt32(ClientPackets.CRequestProjectiles)
 
-        SendData(buffer.ToArray())
-        buffer = Nothing
+        SendData(Buffer.ToArray())
+        Buffer.Dispose()
 
     End Sub
 
     Sub SendClearProjectile(ByVal ProjectileNum As Integer, ByVal CollisionIndex As Integer, ByVal CollisionType As Byte, ByVal CollisionZone As Integer)
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        buffer.WriteInteger(ClientPackets.CClearProjectile)
-        buffer.WriteInteger(ProjectileNum)
-        buffer.WriteInteger(CollisionIndex)
-        buffer.WriteInteger(CollisionType)
-        buffer.WriteInteger(CollisionZone)
+        Buffer.WriteInt32(ClientPackets.CClearProjectile)
+        Buffer.WriteInt32(ProjectileNum)
+        Buffer.WriteInt32(CollisionIndex)
+        Buffer.WriteInt32(CollisionType)
+        Buffer.WriteInt32(CollisionZone)
 
-        SendData(buffer.ToArray())
-        buffer = Nothing
+        SendData(Buffer.ToArray())
+        Buffer.Dispose()
 
     End Sub
 
@@ -67,46 +68,36 @@ Public Module ClientProjectiles
 
     Public Sub HandleUpdateProjectile(ByVal data() As Byte)
         Dim ProjectileNum As Integer
-        Dim buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(data)
+        ProjectileNum = Buffer.ReadInt32
 
-        buffer.WriteBytes(data)
+        Projectiles(ProjectileNum).Name = Buffer.ReadString
+        Projectiles(ProjectileNum).Sprite = Buffer.ReadInt32
+        Projectiles(ProjectileNum).Range = Buffer.ReadInt32
+        Projectiles(ProjectileNum).Speed = Buffer.ReadInt32
+        Projectiles(ProjectileNum).Damage = Buffer.ReadInt32
 
-        If buffer.ReadInteger <> ServerPackets.SUpdateProjectile Then Exit Sub
-
-        ProjectileNum = buffer.ReadInteger
-
-        Projectiles(ProjectileNum).Name = buffer.ReadString
-        Projectiles(ProjectileNum).Sprite = buffer.ReadInteger
-        Projectiles(ProjectileNum).Range = buffer.ReadInteger
-        Projectiles(ProjectileNum).Speed = buffer.ReadInteger
-        Projectiles(ProjectileNum).Damage = buffer.ReadInteger
-
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
     Public Sub HandleMapProjectile(ByVal data() As Byte)
-        Dim buffer As New ByteBuffer
         Dim i As Integer
-
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ServerPackets.SMapProjectile Then Exit Sub
-
-        i = buffer.ReadInteger
+        Dim Buffer As New ByteStream(data)
+        i = Buffer.ReadInt32
 
         With MapProjectiles(i)
-            .ProjectileNum = buffer.ReadInteger
-            .Owner = buffer.ReadInteger
-            .OwnerType = buffer.ReadInteger
-            .dir = buffer.ReadInteger
-            .X = buffer.ReadInteger
-            .Y = buffer.ReadInteger
+            .ProjectileNum = Buffer.ReadInt32
+            .Owner = Buffer.ReadInt32
+            .OwnerType = Buffer.ReadInt32
+            .dir = Buffer.ReadInt32
+            .X = Buffer.ReadInt32
+            .Y = Buffer.ReadInt32
             .Range = 0
             .Timer = GetTickCount() + 60000
         End With
 
-        buffer = Nothing
+        Buffer.Dispose()
 
     End Sub
 
@@ -260,10 +251,10 @@ Public Module ClientProjectiles
 
         ' src rect
         With rec
-            .top = 0
-            .bottom = ProjectileGFXInfo(Sprite).Height
-            .left = MapProjectiles(ProjectileNum).dir * PIC_X
-            .right = .left + PIC_X
+            .Top = 0
+            .Bottom = ProjectileGFXInfo(Sprite).Height
+            .Left = MapProjectiles(ProjectileNum).dir * PIC_X
+            .Right = .Left + PIC_X
         End With
 
         'Find the offset
@@ -282,7 +273,7 @@ Public Module ClientProjectiles
         Y = ConvertMapY(Y * PIC_Y)
 
         Dim tmpSprite As Sprite = New Sprite(ProjectileGFX(Sprite))
-        tmpSprite.TextureRect = New IntRect(rec.left, rec.top, 32, 32)
+        tmpSprite.TextureRect = New IntRect(rec.Left, rec.Top, 32, 32)
         tmpSprite.Position = New Vector2f(X, Y)
         GameWindow.Draw(tmpSprite)
 

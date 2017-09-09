@@ -179,12 +179,10 @@ Module ServerHandleData
     End Sub
 
     Public Sub HandleDataPackets(index As Integer, data() As Byte)
-        Dim packetnum As Integer, buffer As New ByteBuffer, Packet As Packet_
+        Dim packetnum As Integer, Packet As Packet_
         Packet = Nothing
 
-        buffer.WriteBytes(data)
-        packetnum = buffer.ReadInteger
-        buffer = Nothing
+        packetnum = BitConverter.ToInt32(data, 0)
 
         If packetnum = 0 Then Exit Sub
         If packetnum <> ClientPackets.CCheckPing Then TempPlayer(index).DataPackets = TempPlayer(index).DataPackets + 1
@@ -192,29 +190,28 @@ Module ServerHandleData
         Addlog("Recieved CMSG: CCheckPing", PACKET_LOG)
         TextAdd("Recieved CMSG: CCheckPing")
 
-        If Packets.TryGetValue(packetnum, Packet) Then
-            Packet.Invoke(index, data)
-        End If
-
+        Try
+            If Packets.TryGetValue(packetnum, Packet) Then
+                Dim bytes As Byte() : ReDim bytes(data.Length - 5)
+                Buffer.BlockCopy(data, 4, bytes, 0, bytes.Length)
+                Packet.Invoke(index, bytes)
+            End If
+        Catch
+            MsgBox("PacketCrash: " & CType(packetnum, ClientPackets).ToString())
+        End Try
     End Sub
 
     Private Sub Packet_NewAccount(index As Integer, data() As Byte)
-        Dim buffer As New ByteBuffer
         Dim username As String, password As String
         Dim i As Integer, n As Integer
-
-        buffer.WriteBytes(data)
-
-        'Make Sure that it is correct
-        If buffer.ReadInteger <> ClientPackets.CNewAccount Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CNewAccount", PACKET_LOG)
         TextAdd("Recieved CMSG: CNewAccount")
 
         If Not IsPlaying(index) AndAlso Not IsLoggedIn(index) Then
             'Get the Data
-            username = EKeyPair.DecryptString(buffer.ReadString)
-            password = EKeyPair.DecryptString(buffer.ReadString)
+            username = EKeyPair.DecryptString(Buffer.ReadString)
+            password = EKeyPair.DecryptString(Buffer.ReadString)
             ' Prevent hacking
             If Len(username.Trim) < 3 Or Len(password.Trim) < 3 Then
                 AlertMsg(index, "Your username and password must be at least three characters in length")
@@ -259,19 +256,13 @@ Module ServerHandleData
                 AlertMsg(index, "Sorry, that account username is already taken!")
             End If
 
-            buffer = Nothing
+            Buffer.Dispose()
         End If
     End Sub
 
     Private Sub Packet_DeleteAccount(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim Name As String
-        'Dim Password As String
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CDelChar Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CDelChar", PACKET_LOG)
         TextAdd("Recieved CMSG: CDelChar")
 
@@ -294,14 +285,9 @@ Module ServerHandleData
     End Sub
 
     Private Sub Packet_Login(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim Name As String
         Dim Password As String
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CLogin Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CLogin", PACKET_LOG)
         TextAdd("Recieved CMSG: CLogin")
 
@@ -348,10 +334,10 @@ Module ServerHandleData
                 ClearBank(index)
                 LoadBank(index, Name)
 
-                Buffer = Nothing
-                Buffer = New ByteBuffer
-                Buffer.WriteInteger(ServerPackets.SLoginOk)
-                Buffer.WriteInteger(MAX_CHARS)
+                Buffer.Dispose()
+                Buffer = New ByteStream(4)
+                Buffer.WriteInt32(ServerPackets.SLoginOk)
+                Buffer.WriteInt32(MAX_CHARS)
 
                 Addlog("Sent SMSG: SLoginOk", PACKET_LOG)
                 TextAdd("Sent SMSG: SLoginOk")
@@ -359,16 +345,16 @@ Module ServerHandleData
                 For i = 1 To MAX_CHARS
                     If Player(index).Character(i).Classes <= 0 Then
                         Buffer.WriteString(Trim$(Player(index).Character(i).Name))
-                        Buffer.WriteInteger(Player(index).Character(i).Sprite)
-                        Buffer.WriteInteger(Player(index).Character(i).Level)
+                        Buffer.WriteInt32(Player(index).Character(i).Sprite)
+                        Buffer.WriteInt32(Player(index).Character(i).Level)
                         Buffer.WriteString("")
-                        Buffer.WriteInteger(0)
+                        Buffer.WriteInt32(0)
                     Else
                         Buffer.WriteString(Trim$(Player(index).Character(i).Name))
-                        Buffer.WriteInteger(Player(index).Character(i).Sprite)
-                        Buffer.WriteInteger(Player(index).Character(i).Level)
+                        Buffer.WriteInt32(Player(index).Character(i).Sprite)
+                        Buffer.WriteInt32(Player(index).Character(i).Level)
                         Buffer.WriteString(Trim$(Classes(Player(index).Character(i).Classes).Name))
-                        Buffer.WriteInteger(Player(index).Character(i).Sex)
+                        Buffer.WriteInt32(Player(index).Character(i).Sex)
                     End If
 
                 Next
@@ -390,26 +376,21 @@ Module ServerHandleData
                 '    End If
                 'End If
 
-                Buffer = Nothing
+                Buffer.Dispose()
             End If
         End If
     End Sub
 
     Private Sub Packet_UseChar(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim slot As Byte
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CUseChar Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CUseChar", PACKET_LOG)
         TextAdd("Recieved CMSG: CUseChar")
 
         If Not IsPlaying(index) Then
             If IsLoggedIn(index) Then
 
-                slot = Buffer.ReadInteger
+                slot = Buffer.ReadInt32
 
                 ' Check if character data has been created
                 If Len(Trim$(Player(index).Character(slot).Name)) > 0 Then
@@ -431,7 +412,6 @@ Module ServerHandleData
     End Sub
 
     Private Sub Packet_AddChar(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim Name As String, slot As Byte
         Dim Sex As Integer
         Dim Classes As Integer
@@ -439,19 +419,16 @@ Module ServerHandleData
         Dim i As Integer
         Dim n As Integer
 
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CAddChar Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CAddChar", PACKET_LOG)
         TextAdd("Recieved CMSG: CAddChar")
 
         If Not IsPlaying(index) Then
-            slot = Buffer.ReadInteger
+            slot = Buffer.ReadInt32
             Name = Buffer.ReadString
-            Sex = Buffer.ReadInteger
-            Classes = Buffer.ReadInteger
-            Sprite = Buffer.ReadInteger
+            Sex = Buffer.ReadInt32
+            Classes = Buffer.ReadInt32
+            Sprite = Buffer.ReadInt32
 
             ' Prevent hacking
             If Len(Name.Trim) < 3 Then
@@ -493,26 +470,21 @@ Module ServerHandleData
             ' log them in!!
             HandleUseChar(index)
 
-            Buffer = Nothing
+            Buffer.Dispose()
         End If
 
     End Sub
 
     Private Sub Packet_DeleteChar(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim slot As Byte
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CDelChar Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CDelChar", PACKET_LOG)
         TextAdd("Recieved CMSG: CDelChar")
 
         If Not IsPlaying(index) Then
             If IsLoggedIn(index) Then
 
-                slot = Buffer.ReadInteger
+                slot = Buffer.ReadInt32
 
                 ' Check if character data has been created
                 If Len(Trim$(Player(index).Character(slot).Name)) > 0 Then
@@ -521,10 +493,10 @@ Module ServerHandleData
                     ClearCharacter(index, slot)
                     SaveCharacter(index, slot)
 
-                    Buffer = Nothing
-                    Buffer = New ByteBuffer
-                    Buffer.WriteInteger(ServerPackets.SLoginOk)
-                    Buffer.WriteInteger(MAX_CHARS)
+                    Buffer.Dispose()
+                    Buffer = New ByteStream(4)
+                    Buffer.WriteInt32(ServerPackets.SLoginOk)
+                    Buffer.WriteInt32(MAX_CHARS)
 
                     Addlog("Sent SMSG: SLoginOk", PACKET_LOG)
                     TextAdd("Sent SMSG: SLoginOk")
@@ -532,16 +504,16 @@ Module ServerHandleData
                     For i = 1 To MAX_CHARS
                         If Player(index).Character(i).Classes <= 0 Then
                             Buffer.WriteString(Trim$(Player(index).Character(i).Name))
-                            Buffer.WriteInteger(Player(index).Character(i).Sprite)
-                            Buffer.WriteInteger(Player(index).Character(i).Level)
+                            Buffer.WriteInt32(Player(index).Character(i).Sprite)
+                            Buffer.WriteInt32(Player(index).Character(i).Level)
                             Buffer.WriteString("")
-                            Buffer.WriteInteger(0)
+                            Buffer.WriteInt32(0)
                         Else
                             Buffer.WriteString(Trim$(Player(index).Character(i).Name))
-                            Buffer.WriteInteger(Player(index).Character(i).Sprite)
-                            Buffer.WriteInteger(Player(index).Character(i).Level)
+                            Buffer.WriteInt32(Player(index).Character(i).Sprite)
+                            Buffer.WriteInt32(Player(index).Character(i).Level)
                             Buffer.WriteString(Trim$(Classes(Player(index).Character(i).Classes).Name))
-                            Buffer.WriteInteger(Player(index).Character(i).Sex)
+                            Buffer.WriteInt32(Player(index).Character(i).Sex)
                         End If
 
                     Next
@@ -554,64 +526,50 @@ Module ServerHandleData
     End Sub
 
     Private Sub Packet_SayMessage(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim msg As String
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CSayMsg Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CSayMsg", PACKET_LOG)
         TextAdd("Recieved CMSG: CSayMsg")
 
         'msg = Buffer.ReadString
-        msg = Buffer.ReadUnicodeString()
+        msg = ReadUnicodeString(Buffer)
 
         Addlog("Map #" & GetPlayerMap(index) & ": " & GetPlayerName(index) & " says, '" & msg & "'", PLAYER_LOG)
 
         SayMsg_Map(GetPlayerMap(index), index, msg, ColorType.White)
         SendChatBubble(GetPlayerMap(index), index, TargetType.Player, msg, ColorType.White)
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_BroadCastMsg(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim msg As String
         Dim s As String
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CBroadcastMsg Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CBroadcastMsg", PACKET_LOG)
         TextAdd("Recieved CMSG: CBroadcastMsg")
 
         'msg = Buffer.ReadString
-        msg = Buffer.ReadUnicodeString()
+        msg = ReadUnicodeString(Buffer)
 
         s = "[Global]" & GetPlayerName(index) & ": " & msg
         SayMsg_Global(index, msg, ColorType.White)
         Addlog(s, PLAYER_LOG)
         TextAdd(s)
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Public Sub Packet_PlayerMsg(index As Integer, Data() As Byte)
-        Dim buffer As New ByteBuffer, OtherPlayer As String, Msg As String, OtherPlayerIndex As Integer
-
-        buffer.WriteBytes(Data)
-
-        If buffer.ReadInteger <> ClientPackets.CPlayerMsg Then Exit Sub
-
+        Dim OtherPlayer As String, Msg As String, OtherPlayerIndex As Integer
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CPlayerMsg", PACKET_LOG)
         TextAdd("Recieved CMSG: CPlayerMsg")
 
         OtherPlayer = buffer.ReadString
         'Msg = buffer.ReadString
-        Msg = buffer.ReadUnicodeString()
-        buffer = Nothing
+        Msg = ReadUnicodeString(Buffer)
+        Buffer.Dispose
 
         OtherPlayerIndex = FindPlayer(OtherPlayer)
         If OtherPlayerIndex <> index Then
@@ -628,24 +586,20 @@ Module ServerHandleData
     End Sub
 
     Private Sub Packet_PlayerMove(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim Dir As Integer
         Dim movement As Integer
         Dim tmpX As Integer, tmpY As Integer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CPlayerMove Then Exit Sub
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CPlayerMove", PACKET_LOG)
         TextAdd("Recieved CMSG: CPlayerMove")
 
         If TempPlayer(index).GettingMap = True Then Exit Sub
 
-        Dir = Buffer.ReadInteger
-        movement = Buffer.ReadInteger
-        tmpX = Buffer.ReadInteger
-        tmpY = Buffer.ReadInteger
-        Buffer = Nothing
+        Dir = Buffer.ReadInt32
+        movement = Buffer.ReadInt32
+        tmpX = Buffer.ReadInt32
+        tmpY = Buffer.ReadInt32
+        Buffer.Dispose()
 
         ' Prevent hacking
         If Dir < Direction.Up Or Dir > Direction.Right Then Exit Sub
@@ -692,70 +646,55 @@ Module ServerHandleData
         Addlog(" Player: " & GetPlayerName(index) & " : " & " X: " & tmpX & " Y: " & tmpY & " Dir: " & Dir & " Movement: " & movement, PLAYER_LOG)
         TextAdd(" Player: " & GetPlayerName(index) & " : " & " X: " & tmpX & " Y: " & tmpY & " Dir: " & Dir & " Movement: " & movement)
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_PlayerDirection(Index As Integer, Data() As Byte)
         Dim dir As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CPlayerDir Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CPlayerDir", PACKET_LOG)
         TextAdd("Recieved CMSG: CPlayerDir")
 
         If TempPlayer(Index).GettingMap = True Then Exit Sub
 
-        dir = Buffer.ReadInteger
-        Buffer = Nothing
+        dir = Buffer.ReadInt32
+        Buffer.Dispose
 
         ' Prevent hacking
         If dir < Direction.Up Or dir > Direction.Right Then Exit Sub
 
         SetPlayerDir(Index, dir)
 
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SPlayerDir)
-        Buffer.WriteInteger(Index)
-        Buffer.WriteInteger(GetPlayerDir(Index))
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SPlayerDir)
+        Buffer.WriteInt32(Index)
+        Buffer.WriteInt32(GetPlayerDir(Index))
         SendDataToMapBut(Index, GetPlayerMap(Index), Buffer.ToArray())
 
         Addlog("Sent SMSG: SPlayerDir", PACKET_LOG)
         TextAdd("Sent SMSG: SPlayerDir")
 
-        Buffer = Nothing
+        Buffer.Dispose
 
     End Sub
 
     Sub Packet_UseItem(Index As Integer, Data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim invnum As Integer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CUseItem Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CUseItem", PACKET_LOG)
         TextAdd("Recieved CMSG: CUseItem")
 
-        invnum = Buffer.ReadInteger
-        Buffer = Nothing
+        invnum = Buffer.ReadInt32
+        Buffer.Dispose()
 
         UseItem(Index, invnum)
     End Sub
 
     Sub Packet_Attack(Index As Integer, Data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim i As Integer
         Dim TempIndex As Integer
         Dim x As Integer, y As Integer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CAttack Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CAttack", PACKET_LOG)
         TextAdd("Recieved CMSG: CAttack")
 
@@ -766,11 +705,11 @@ Module ServerHandleData
         If TempPlayer(Index).StunDuration > 0 Then Exit Sub
 
         ' Send this packet so they can see the person attacking
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SAttack)
-        Buffer.WriteInteger(Index)
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SAttack)
+        Buffer.WriteInt32(Index)
         SendDataToMap(GetPlayerMap(Index), Buffer.ToArray)
-        Buffer = Nothing
+        Buffer.Dispose()
 
         ' Projectile check
         If GetPlayerEquipment(Index, EquipmentType.Weapon) > 0 Then
@@ -834,18 +773,13 @@ Module ServerHandleData
 
         CheckResource(Index, x, y)
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_PlayerInfo(Index As Integer, Data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim i As Integer, n As Integer
         Dim name As String
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CPlayerInfoRequest Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CPlayerInfoRequest", PACKET_LOG)
         TextAdd("Recieved CMSG: CPlayerInfoRequest")
 
@@ -872,17 +806,12 @@ Module ServerHandleData
             PlayerMsg(Index, "Player is not online.", ColorType.BrightRed)
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_WarpMeTo(Index As Integer, Data() As Byte)
         Dim n As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CWarpMeTo Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CWarpMeTo", PACKET_LOG)
         TextAdd("Recieved CMSG: CWarpMeTo")
 
@@ -891,7 +820,7 @@ Module ServerHandleData
 
         ' The player
         n = FindPlayer(Buffer.ReadString)
-        Buffer = Nothing
+        Buffer.Dispose
 
         If n <> Index Then
             If n > 0 Then
@@ -911,12 +840,7 @@ Module ServerHandleData
 
     Sub Packet_WarpToMe(Index As Integer, Data() As Byte)
         Dim n As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CWarpToMe Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CWarpToMe", PACKET_LOG)
         TextAdd("Recieved CMSG: CWarpToMe")
 
@@ -925,7 +849,7 @@ Module ServerHandleData
 
         ' The player
         n = FindPlayer(Buffer.ReadString)
-        Buffer = Nothing
+        Buffer.Dispose
 
         If n <> Index Then
             If n > 0 Then
@@ -945,12 +869,7 @@ Module ServerHandleData
 
     Sub Packet_WarpTo(Index As Integer, Data() As Byte)
         Dim n As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CWarpTo Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CWarpTo", PACKET_LOG)
         TextAdd("Recieved CMSG: CWarpTo")
 
@@ -958,8 +877,8 @@ Module ServerHandleData
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
 
         ' The map
-        n = Buffer.ReadInteger
-        Buffer = Nothing
+        n = Buffer.ReadInt32
+        Buffer.Dispose
 
         ' Prevent hacking
         If n < 0 Or n > MAX_CACHED_MAPS Then Exit Sub
@@ -972,12 +891,7 @@ Module ServerHandleData
 
     Sub Packet_SetSprite(Index As Integer, Data() As Byte)
         Dim n As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CSetSprite Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CSetSprite", PACKET_LOG)
         TextAdd("Recieved CMSG: CSetSprite")
 
@@ -985,8 +899,8 @@ Module ServerHandleData
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
 
         ' The sprite
-        n = Buffer.ReadInteger
-        Buffer = Nothing
+        n = Buffer.ReadInt32
+        Buffer.Dispose
 
         SetPlayerSprite(Index, n)
         SendPlayerData(Index)
@@ -994,14 +908,9 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_GetStats(Index As Integer, Data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim i As Integer
         Dim n As Integer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CGetStats Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CGetStats", PACKET_LOG)
         TextAdd("Recieved CMSG: CGetStats")
 
@@ -1015,22 +924,17 @@ Module ServerHandleData
         If n > 100 Then n = 100
         If i > 100 Then i = 100
         PlayerMsg(Index, "Critical Hit Chance: " & n & "%, Block Chance: " & i & "%", ColorType.Yellow)
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_RequestNewMap(Index As Integer, Data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim dir As Integer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CRequestNewMap Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CRequestNewMap", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestNewMap")
 
-        dir = Buffer.ReadInteger
-        Buffer = Nothing
+        dir = Buffer.ReadInt32
+        Buffer.Dispose()
 
         ' Prevent hacking
         If dir < Direction.Up Or dir > Direction.Right Then Exit Sub
@@ -1043,18 +947,11 @@ Module ServerHandleData
         Dim MapNum As Integer
         Dim x As Integer
         Dim y As Integer
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CSaveMap Then Exit Sub
 
         Addlog("Recieved CMSG: CSaveMap", PACKET_LOG)
         TextAdd("Recieved CMSG: CSaveMap")
 
-        Data = Buffer.ReadBytes(Data.Length - 4)
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(Compression.DecompressBytes(Data))
+        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data, 4, Data.Length))
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
@@ -1069,175 +966,175 @@ Module ServerHandleData
         Map(MapNum).Name = Buffer.ReadString
         Map(MapNum).Music = Buffer.ReadString
         Map(MapNum).Revision = i
-        Map(MapNum).Moral = Buffer.ReadInteger
-        Map(MapNum).Tileset = Buffer.ReadInteger
-        Map(MapNum).Up = Buffer.ReadInteger
-        Map(MapNum).Down = Buffer.ReadInteger
-        Map(MapNum).Left = Buffer.ReadInteger
-        Map(MapNum).Right = Buffer.ReadInteger
-        Map(MapNum).BootMap = Buffer.ReadInteger
-        Map(MapNum).BootX = Buffer.ReadInteger
-        Map(MapNum).BootY = Buffer.ReadInteger
-        Map(MapNum).MaxX = Buffer.ReadInteger
-        Map(MapNum).MaxY = Buffer.ReadInteger
-        Map(MapNum).WeatherType = Buffer.ReadInteger
-        Map(MapNum).FogIndex = Buffer.ReadInteger
-        Map(MapNum).WeatherIntensity = Buffer.ReadInteger
-        Map(MapNum).FogAlpha = Buffer.ReadInteger
-        Map(MapNum).FogSpeed = Buffer.ReadInteger
-        Map(MapNum).HasMapTint = Buffer.ReadInteger
-        Map(MapNum).MapTintR = Buffer.ReadInteger
-        Map(MapNum).MapTintG = Buffer.ReadInteger
-        Map(MapNum).MapTintB = Buffer.ReadInteger
-        Map(MapNum).MapTintA = Buffer.ReadInteger
+        Map(MapNum).Moral = Buffer.ReadInt32
+        Map(MapNum).Tileset = Buffer.ReadInt32
+        Map(MapNum).Up = Buffer.ReadInt32
+        Map(MapNum).Down = Buffer.ReadInt32
+        Map(MapNum).Left = Buffer.ReadInt32
+        Map(MapNum).Right = Buffer.ReadInt32
+        Map(MapNum).BootMap = Buffer.ReadInt32
+        Map(MapNum).BootX = Buffer.ReadInt32
+        Map(MapNum).BootY = Buffer.ReadInt32
+        Map(MapNum).MaxX = Buffer.ReadInt32
+        Map(MapNum).MaxY = Buffer.ReadInt32
+        Map(MapNum).WeatherType = Buffer.ReadInt32
+        Map(MapNum).FogIndex = Buffer.ReadInt32
+        Map(MapNum).WeatherIntensity = Buffer.ReadInt32
+        Map(MapNum).FogAlpha = Buffer.ReadInt32
+        Map(MapNum).FogSpeed = Buffer.ReadInt32
+        Map(MapNum).HasMapTint = Buffer.ReadInt32
+        Map(MapNum).MapTintR = Buffer.ReadInt32
+        Map(MapNum).MapTintG = Buffer.ReadInt32
+        Map(MapNum).MapTintB = Buffer.ReadInt32
+        Map(MapNum).MapTintA = Buffer.ReadInt32
 
-        Map(MapNum).Instanced = Buffer.ReadInteger
-        Map(MapNum).Panorama = Buffer.ReadInteger
-        Map(MapNum).Parallax = Buffer.ReadInteger
+        Map(MapNum).Instanced = Buffer.ReadInt32
+        Map(MapNum).Panorama = Buffer.ReadInt32
+        Map(MapNum).Parallax = Buffer.ReadInt32
 
         ReDim Map(MapNum).Tile(0 To Map(MapNum).MaxX, 0 To Map(MapNum).MaxY)
 
         For x = 1 To MAX_MAP_NPCS
             ClearMapNpc(x, MapNum)
-            Map(MapNum).Npc(x) = Buffer.ReadInteger
+            Map(MapNum).Npc(x) = Buffer.ReadInt32
         Next
 
         With Map(MapNum)
             For x = 0 To .MaxX
                 For y = 0 To .MaxY
-                    .Tile(x, y).Data1 = Buffer.ReadInteger
-                    .Tile(x, y).Data2 = Buffer.ReadInteger
-                    .Tile(x, y).Data3 = Buffer.ReadInteger
-                    .Tile(x, y).DirBlock = Buffer.ReadInteger
+                    .Tile(x, y).Data1 = Buffer.ReadInt32
+                    .Tile(x, y).Data2 = Buffer.ReadInt32
+                    .Tile(x, y).Data3 = Buffer.ReadInt32
+                    .Tile(x, y).DirBlock = Buffer.ReadInt32
                     ReDim .Tile(x, y).Layer(0 To MapLayer.Count - 1)
                     For i = 0 To MapLayer.Count - 1
-                        .Tile(x, y).Layer(i).Tileset = Buffer.ReadInteger
-                        .Tile(x, y).Layer(i).X = Buffer.ReadInteger
-                        .Tile(x, y).Layer(i).Y = Buffer.ReadInteger
-                        .Tile(x, y).Layer(i).AutoTile = Buffer.ReadInteger
+                        .Tile(x, y).Layer(i).Tileset = Buffer.ReadInt32
+                        .Tile(x, y).Layer(i).X = Buffer.ReadInt32
+                        .Tile(x, y).Layer(i).Y = Buffer.ReadInt32
+                        .Tile(x, y).Layer(i).AutoTile = Buffer.ReadInt32
                     Next
-                    .Tile(x, y).Type = Buffer.ReadInteger
+                    .Tile(x, y).Type = Buffer.ReadInt32
                 Next
             Next
 
         End With
 
         'Event Data!
-        Map(MapNum).EventCount = Buffer.ReadInteger
+        Map(MapNum).EventCount = Buffer.ReadInt32
 
         If Map(MapNum).EventCount > 0 Then
             ReDim Map(MapNum).Events(0 To Map(MapNum).EventCount)
             For i = 1 To Map(MapNum).EventCount
                 With Map(MapNum).Events(i)
                     .Name = Buffer.ReadString
-                    .Globals = Buffer.ReadInteger
-                    .X = Buffer.ReadInteger
-                    .Y = Buffer.ReadInteger
-                    .PageCount = Buffer.ReadInteger
+                    .Globals = Buffer.ReadInt32
+                    .X = Buffer.ReadInt32
+                    .Y = Buffer.ReadInt32
+                    .PageCount = Buffer.ReadInt32
                 End With
                 If Map(MapNum).Events(i).PageCount > 0 Then
                     ReDim Map(MapNum).Events(i).Pages(0 To Map(MapNum).Events(i).PageCount)
                     ReDim TempPlayer(i).EventMap.EventPages(0 To Map(MapNum).Events(i).PageCount)
                     For x = 1 To Map(MapNum).Events(i).PageCount
                         With Map(MapNum).Events(i).Pages(x)
-                            .chkVariable = Buffer.ReadInteger
-                            .VariableIndex = Buffer.ReadInteger
-                            .VariableCondition = Buffer.ReadInteger
-                            .VariableCompare = Buffer.ReadInteger
+                            .chkVariable = Buffer.ReadInt32
+                            .VariableIndex = Buffer.ReadInt32
+                            .VariableCondition = Buffer.ReadInt32
+                            .VariableCompare = Buffer.ReadInt32
 
-                            Map(MapNum).Events(i).Pages(x).chkSwitch = Buffer.ReadInteger
-                            Map(MapNum).Events(i).Pages(x).SwitchIndex = Buffer.ReadInteger
-                            .SwitchCompare = Buffer.ReadInteger
+                            Map(MapNum).Events(i).Pages(x).chkSwitch = Buffer.ReadInt32
+                            Map(MapNum).Events(i).Pages(x).SwitchIndex = Buffer.ReadInt32
+                            .SwitchCompare = Buffer.ReadInt32
 
-                            .chkHasItem = Buffer.ReadInteger
-                            .HasItemIndex = Buffer.ReadInteger
-                            .HasItemAmount = Buffer.ReadInteger
+                            .chkHasItem = Buffer.ReadInt32
+                            .HasItemIndex = Buffer.ReadInt32
+                            .HasItemAmount = Buffer.ReadInt32
 
-                            .chkSelfSwitch = Buffer.ReadInteger
-                            .SelfSwitchIndex = Buffer.ReadInteger
-                            .SelfSwitchCompare = Buffer.ReadInteger
+                            .chkSelfSwitch = Buffer.ReadInt32
+                            .SelfSwitchIndex = Buffer.ReadInt32
+                            .SelfSwitchCompare = Buffer.ReadInt32
 
-                            .GraphicType = Buffer.ReadInteger
-                            .Graphic = Buffer.ReadInteger
-                            .GraphicX = Buffer.ReadInteger
-                            .GraphicY = Buffer.ReadInteger
-                            .GraphicX2 = Buffer.ReadInteger
-                            .GraphicY2 = Buffer.ReadInteger
+                            .GraphicType = Buffer.ReadInt32
+                            .Graphic = Buffer.ReadInt32
+                            .GraphicX = Buffer.ReadInt32
+                            .GraphicY = Buffer.ReadInt32
+                            .GraphicX2 = Buffer.ReadInt32
+                            .GraphicY2 = Buffer.ReadInt32
 
-                            .MoveType = Buffer.ReadInteger
-                            .MoveSpeed = Buffer.ReadInteger
-                            .MoveFreq = Buffer.ReadInteger
+                            .MoveType = Buffer.ReadInt32
+                            .MoveSpeed = Buffer.ReadInt32
+                            .MoveFreq = Buffer.ReadInt32
 
-                            .MoveRouteCount = Buffer.ReadInteger
+                            .MoveRouteCount = Buffer.ReadInt32
 
-                            .IgnoreMoveRoute = Buffer.ReadInteger
-                            .RepeatMoveRoute = Buffer.ReadInteger
+                            .IgnoreMoveRoute = Buffer.ReadInt32
+                            .RepeatMoveRoute = Buffer.ReadInt32
 
                             If .MoveRouteCount > 0 Then
                                 ReDim Map(MapNum).Events(i).Pages(x).MoveRoute(.MoveRouteCount)
                                 For y = 1 To .MoveRouteCount
-                                    .MoveRoute(y).Index = Buffer.ReadInteger
-                                    .MoveRoute(y).Data1 = Buffer.ReadInteger
-                                    .MoveRoute(y).Data2 = Buffer.ReadInteger
-                                    .MoveRoute(y).Data3 = Buffer.ReadInteger
-                                    .MoveRoute(y).Data4 = Buffer.ReadInteger
-                                    .MoveRoute(y).Data5 = Buffer.ReadInteger
-                                    .MoveRoute(y).Data6 = Buffer.ReadInteger
+                                    .MoveRoute(y).Index = Buffer.ReadInt32
+                                    .MoveRoute(y).Data1 = Buffer.ReadInt32
+                                    .MoveRoute(y).Data2 = Buffer.ReadInt32
+                                    .MoveRoute(y).Data3 = Buffer.ReadInt32
+                                    .MoveRoute(y).Data4 = Buffer.ReadInt32
+                                    .MoveRoute(y).Data5 = Buffer.ReadInt32
+                                    .MoveRoute(y).Data6 = Buffer.ReadInt32
                                 Next
                             End If
 
-                            .WalkAnim = Buffer.ReadInteger
-                            .DirFix = Buffer.ReadInteger
-                            .WalkThrough = Buffer.ReadInteger
-                            .ShowName = Buffer.ReadInteger
-                            .Trigger = Buffer.ReadInteger
-                            .CommandListCount = Buffer.ReadInteger
+                            .WalkAnim = Buffer.ReadInt32
+                            .DirFix = Buffer.ReadInt32
+                            .WalkThrough = Buffer.ReadInt32
+                            .ShowName = Buffer.ReadInt32
+                            .Trigger = Buffer.ReadInt32
+                            .CommandListCount = Buffer.ReadInt32
 
-                            .Position = Buffer.ReadInteger
-                            .QuestNum = Buffer.ReadInteger
+                            .Position = Buffer.ReadInt32
+                            .QuestNum = Buffer.ReadInt32
 
-                            .chkPlayerGender = Buffer.ReadInteger
+                            .chkPlayerGender = Buffer.ReadInt32
                         End With
 
                         If Map(MapNum).Events(i).Pages(x).CommandListCount > 0 Then
                             ReDim Map(MapNum).Events(i).Pages(x).CommandList(0 To Map(MapNum).Events(i).Pages(x).CommandListCount)
                             For y = 1 To Map(MapNum).Events(i).Pages(x).CommandListCount
-                                Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount = Buffer.ReadInteger
-                                Map(MapNum).Events(i).Pages(x).CommandList(y).ParentList = Buffer.ReadInteger
+                                Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount = Buffer.ReadInt32
+                                Map(MapNum).Events(i).Pages(x).CommandList(y).ParentList = Buffer.ReadInt32
                                 If Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount > 0 Then
                                     ReDim Map(MapNum).Events(i).Pages(x).CommandList(y).Commands(0 To Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount)
                                     For z = 1 To Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount
                                         With Map(MapNum).Events(i).Pages(x).CommandList(y).Commands(z)
-                                            .Index = Buffer.ReadInteger
+                                            .Index = Buffer.ReadInt32
                                             .Text1 = Buffer.ReadString
                                             .Text2 = Buffer.ReadString
                                             .Text3 = Buffer.ReadString
                                             .Text4 = Buffer.ReadString
                                             .Text5 = Buffer.ReadString
-                                            .Data1 = Buffer.ReadInteger
-                                            .Data2 = Buffer.ReadInteger
-                                            .Data3 = Buffer.ReadInteger
-                                            .Data4 = Buffer.ReadInteger
-                                            .Data5 = Buffer.ReadInteger
-                                            .Data6 = Buffer.ReadInteger
-                                            .ConditionalBranch.CommandList = Buffer.ReadInteger
-                                            .ConditionalBranch.Condition = Buffer.ReadInteger
-                                            .ConditionalBranch.Data1 = Buffer.ReadInteger
-                                            .ConditionalBranch.Data2 = Buffer.ReadInteger
-                                            .ConditionalBranch.Data3 = Buffer.ReadInteger
-                                            .ConditionalBranch.ElseCommandList = Buffer.ReadInteger
-                                            .MoveRouteCount = Buffer.ReadInteger
+                                            .Data1 = Buffer.ReadInt32
+                                            .Data2 = Buffer.ReadInt32
+                                            .Data3 = Buffer.ReadInt32
+                                            .Data4 = Buffer.ReadInt32
+                                            .Data5 = Buffer.ReadInt32
+                                            .Data6 = Buffer.ReadInt32
+                                            .ConditionalBranch.CommandList = Buffer.ReadInt32
+                                            .ConditionalBranch.Condition = Buffer.ReadInt32
+                                            .ConditionalBranch.Data1 = Buffer.ReadInt32
+                                            .ConditionalBranch.Data2 = Buffer.ReadInt32
+                                            .ConditionalBranch.Data3 = Buffer.ReadInt32
+                                            .ConditionalBranch.ElseCommandList = Buffer.ReadInt32
+                                            .MoveRouteCount = Buffer.ReadInt32
                                             Dim tmpcount As Integer = .MoveRouteCount
                                             If tmpcount > 0 Then
                                                 ReDim Preserve .MoveRoute(tmpcount)
                                                 For w = 1 To tmpcount
-                                                    .MoveRoute(w).Index = Buffer.ReadInteger
-                                                    .MoveRoute(w).Data1 = Buffer.ReadInteger
-                                                    .MoveRoute(w).Data2 = Buffer.ReadInteger
-                                                    .MoveRoute(w).Data3 = Buffer.ReadInteger
-                                                    .MoveRoute(w).Data4 = Buffer.ReadInteger
-                                                    .MoveRoute(w).Data5 = Buffer.ReadInteger
-                                                    .MoveRoute(w).Data6 = Buffer.ReadInteger
+                                                    .MoveRoute(w).Index = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data1 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data2 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data3 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data4 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data5 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data6 = Buffer.ReadInt32
                                                 Next
                                             End If
                                         End With
@@ -1290,23 +1187,18 @@ Module ServerHandleData
             End If
         Next
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Private Sub Packet_NeedMap(index As Integer, data() As Byte)
         Dim s As String
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CNeedMap Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CNeedMap", PACKET_LOG)
         TextAdd("Recieved CMSG: CNeedMap")
 
         ' Get yes/no value
-        s = Buffer.ReadInteger
-        Buffer = Nothing
+        s = Buffer.ReadInt32
+        Buffer.Dispose
 
         ' Check if map data is needed to be sent
         If s = 1 Then
@@ -1321,33 +1213,21 @@ Module ServerHandleData
     End Sub
 
     Private Sub Packet_GetItem(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer
-
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CMapGetItem Then Exit Sub
-
         Addlog("Recieved CMSG: CMapGetItem", PACKET_LOG)
         TextAdd("Recieved CMSG: CMapGetItem")
 
         PlayerMapGetItem(index)
-
-        Buffer = Nothing
     End Sub
 
     Private Sub Packet_DropItem(index As Integer, data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim InvNum As Integer, Amount As Integer
-
-        Buffer.WriteBytes(data)
-        If Buffer.ReadInteger <> ClientPackets.CMapDropItem Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CMapDropItem", PACKET_LOG)
         TextAdd("Recieved CMSG: CMapDropItem")
 
-        InvNum = Buffer.ReadInteger
-        Amount = Buffer.ReadInteger
-        Buffer = Nothing
+        InvNum = Buffer.ReadInt32
+        Amount = Buffer.ReadInt32
+        Buffer.Dispose()
 
         If TempPlayer(index).InBank Or TempPlayer(index).InShop Then Exit Sub
 
@@ -1363,13 +1243,8 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_RespawnMap(Index As Integer, Data() As Byte)
-        Dim Buffer As New ByteBuffer
         Dim i As Integer
-
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CMapRespawn Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CMapRespawn", PACKET_LOG)
         TextAdd("Recieved CMSG: CMapRespawn")
 
@@ -1394,7 +1269,7 @@ Module ServerHandleData
         PlayerMsg(Index, "Map respawned.", ColorType.BrightGreen)
         Addlog(GetPlayerName(Index) & " has respawned map #" & GetPlayerMap(Index), ADMIN_LOG)
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     ' ::::::::::::::::::::::::
@@ -1402,12 +1277,7 @@ Module ServerHandleData
     ' ::::::::::::::::::::::::
     Sub Packet_KickPlayer(ByVal Index As Integer, ByVal Data() As Byte)
         Dim n As Integer
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CKickPlayer Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CKickPlayer", PACKET_LOG)
         TextAdd("Recieved CMSG: CKickPlayer")
 
@@ -1418,7 +1288,7 @@ Module ServerHandleData
 
         ' The player index
         n = FindPlayer(Buffer.ReadString) 'Parse(1))
-        Buffer = Nothing
+        Buffer.Dispose
 
         If n <> Index Then
             If n > 0 Then
@@ -1440,12 +1310,6 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_Banlist(ByVal Index As Integer, ByVal Data() As Byte)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CBanList Then Exit Sub
-
         Addlog("Recieved CMSG: CBanList", PACKET_LOG)
         TextAdd("Recieved CMSG: CBanList")
 
@@ -1455,17 +1319,10 @@ Module ServerHandleData
         End If
 
         PlayerMsg(Index, "Command /banlist is not available in Orion+... yet ;)", ColorType.Yellow)
-
-        Buffer = Nothing
     End Sub
 
     Sub Packet_DestroyBans(ByVal Index As Integer, ByVal Data() As Byte)
-        Dim Buffer As ByteBuffer
         Dim filename As String
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CBanDestroy Then Exit Sub
 
         Addlog("Recieved CMSG: CBanDestory", PACKET_LOG)
         TextAdd("Recieved CMSG: CBanDestory")
@@ -1477,11 +1334,9 @@ Module ServerHandleData
 
         filename = Path.Combine(Application.StartupPath, "data", "banlist.txt")
 
-        If System.IO.File.Exists(filename) Then Kill(filename)
+        If File.Exists(filename) Then Kill(filename)
 
         PlayerMsg(Index, "Ban list destroyed.", ColorType.BrightGreen)
-
-        Buffer = Nothing
     End Sub
 
     ' :::::::::::::::::::::::
@@ -1489,12 +1344,7 @@ Module ServerHandleData
     ' :::::::::::::::::::::::
     Sub Packet_BanPlayer(ByVal Index As Integer, ByVal Data() As Byte)
         Dim n As Integer
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> ClientPackets.CBanPlayer Then Exit Sub
-
+        Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CBanPlayer", PACKET_LOG)
         TextAdd("Recieved CMSG: CBanPlayer")
 
@@ -1505,7 +1355,7 @@ Module ServerHandleData
 
         ' The player index
         n = FindPlayer(Buffer.ReadString)
-        Buffer = Nothing
+        Buffer.Dispose
 
         If n <> Index Then
             If n > 0 Then
@@ -1526,12 +1376,6 @@ Module ServerHandleData
     End Sub
 
     Private Sub Packet_EditMapRequest(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CRequestEditMap Then Exit Sub
-
         Addlog("Recieved CMSG: CRequestEditMap", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestEditMap")
 
@@ -1544,129 +1388,111 @@ Module ServerHandleData
         End If
         SendMapEventData(index)
 
-        Buffer = New ByteBuffer
-        Buffer.WriteInteger(ServerPackets.SEditMap)
+        Dim Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SEditMap)
         SendDataTo(index, Buffer.ToArray())
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Private Sub Packet_EditItem(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> EditorPackets.RequestEditItem Then Exit Sub
-
         Addlog("Recieved EMSG: RequestEditItem", PACKET_LOG)
         TextAdd("Recieved EMSG: RequestEditItem")
-
-        Buffer = Nothing
 
         ' Prevent hacking
         If GetPlayerAccess(index) < AdminType.Mapper Then
             Exit Sub
         End If
 
-        Buffer = New ByteBuffer
+        Dim Buffer = New ByteStream(4)
 
-        Buffer.WriteInteger(ServerPackets.SItemEditor)
+        Buffer.WriteInt32(ServerPackets.SItemEditor)
         SendDataTo(index, Buffer.ToArray())
 
         Addlog("Sent SMSG: SItemEditor", PACKET_LOG)
         TextAdd("Sent SMSG: SItemEditor")
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Private Sub Packet_SaveItem(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
         Dim n As Integer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> EditorPackets.SaveItem Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved EMSG: SaveItem", PACKET_LOG)
         TextAdd("Recieved EMSG: SaveItem")
 
         ' Prevent hacking
         If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
 
-        n = Buffer.ReadInteger
+        n = Buffer.ReadInt32
 
         If n < 0 Or n > MAX_ITEMS Then
             Exit Sub
         End If
 
         ' Update the item
-        Item(n).AccessReq = Buffer.ReadInteger()
+        Item(n).AccessReq = Buffer.ReadInt32()
 
         For i = 0 To Stats.Count - 1
-            Item(n).Add_Stat(i) = Buffer.ReadInteger()
+            Item(n).Add_Stat(i) = Buffer.ReadInt32()
         Next
 
-        Item(n).Animation = Buffer.ReadInteger()
-        Item(n).BindType = Buffer.ReadInteger()
-        Item(n).ClassReq = Buffer.ReadInteger()
-        Item(n).Data1 = Buffer.ReadInteger()
-        Item(n).Data2 = Buffer.ReadInteger()
-        Item(n).Data3 = Buffer.ReadInteger()
-        Item(n).TwoHanded = Buffer.ReadInteger()
-        Item(n).LevelReq = Buffer.ReadInteger()
-        Item(n).Mastery = Buffer.ReadInteger()
+        Item(n).Animation = Buffer.ReadInt32()
+        Item(n).BindType = Buffer.ReadInt32()
+        Item(n).ClassReq = Buffer.ReadInt32()
+        Item(n).Data1 = Buffer.ReadInt32()
+        Item(n).Data2 = Buffer.ReadInt32()
+        Item(n).Data3 = Buffer.ReadInt32()
+        Item(n).TwoHanded = Buffer.ReadInt32()
+        Item(n).LevelReq = Buffer.ReadInt32()
+        Item(n).Mastery = Buffer.ReadInt32()
         Item(n).Name = Trim$(Buffer.ReadString)
-        Item(n).Paperdoll = Buffer.ReadInteger()
-        Item(n).Pic = Buffer.ReadInteger()
-        Item(n).Price = Buffer.ReadInteger()
-        Item(n).Rarity = Buffer.ReadInteger()
-        Item(n).Speed = Buffer.ReadInteger()
+        Item(n).Paperdoll = Buffer.ReadInt32()
+        Item(n).Pic = Buffer.ReadInt32()
+        Item(n).Price = Buffer.ReadInt32()
+        Item(n).Rarity = Buffer.ReadInt32()
+        Item(n).Speed = Buffer.ReadInt32()
 
-        Item(n).Randomize = Buffer.ReadInteger()
-        Item(n).RandomMin = Buffer.ReadInteger()
-        Item(n).RandomMax = Buffer.ReadInteger()
+        Item(n).Randomize = Buffer.ReadInt32()
+        Item(n).RandomMin = Buffer.ReadInt32()
+        Item(n).RandomMax = Buffer.ReadInt32()
 
-        Item(n).Stackable = Buffer.ReadInteger()
+        Item(n).Stackable = Buffer.ReadInt32()
         Item(n).Description = Trim$(Buffer.ReadString)
 
         For i = 0 To Stats.Count - 1
-            Item(n).Stat_Req(i) = Buffer.ReadInteger()
+            Item(n).Stat_Req(i) = Buffer.ReadInt32()
         Next
 
-        Item(n).Type = Buffer.ReadInteger()
-        Item(n).SubType = Buffer.ReadInteger
+        Item(n).Type = Buffer.ReadInt32()
+        Item(n).SubType = Buffer.ReadInt32
 
-        Item(n).ItemLevel = Buffer.ReadInteger
+        Item(n).ItemLevel = Buffer.ReadInt32
 
         'Housing
-        Item(n).FurnitureWidth = Buffer.ReadInteger()
-        Item(n).FurnitureHeight = Buffer.ReadInteger()
+        Item(n).FurnitureWidth = Buffer.ReadInt32()
+        Item(n).FurnitureHeight = Buffer.ReadInt32()
 
         For a = 1 To 3
             For b = 1 To 3
-                Item(n).FurnitureBlocks(a, b) = Buffer.ReadInteger()
-                Item(n).FurnitureFringe(a, b) = Buffer.ReadInteger()
+                Item(n).FurnitureBlocks(a, b) = Buffer.ReadInt32()
+                Item(n).FurnitureFringe(a, b) = Buffer.ReadInt32()
             Next
         Next
 
-        Item(n).KnockBack = Buffer.ReadInteger()
-        Item(n).KnockBackTiles = Buffer.ReadInteger()
+        Item(n).KnockBack = Buffer.ReadInt32()
+        Item(n).KnockBackTiles = Buffer.ReadInt32()
 
-        Item(n).Projectile = Buffer.ReadInteger()
-        Item(n).Ammo = Buffer.ReadInteger()
+        Item(n).Projectile = Buffer.ReadInt32()
+        Item(n).Ammo = Buffer.ReadInt32()
 
         ' Save it
         SendUpdateItemToAll(n)
         SaveItem(n)
         Addlog(GetPlayerLogin(index) & " saved item #" & n & ".", ADMIN_LOG)
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_EditNpc(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> EditorPackets.RequestEditNpc Then Exit Sub
-
         Addlog("Recieved EMSG: RequestEditNpc", PACKET_LOG)
         TextAdd("Recieved EMSG: RequestEditNpc")
 
@@ -1675,23 +1501,19 @@ Module ServerHandleData
             Exit Sub
         End If
 
-        buffer = New ByteBuffer
-        buffer.WriteInteger(ServerPackets.SNpcEditor)
-        SendDataTo(index, buffer.ToArray())
+        Dim Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SNpcEditor)
+        SendDataTo(index, Buffer.ToArray())
 
         Addlog("Sent SMSG: SNpcEditor", PACKET_LOG)
         TextAdd("Sent SMSG: SNpcEditor")
 
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_SaveNPC(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim NpcNum As Integer, i As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> EditorPackets.SaveNpc Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved EMSG: SaveNpc", PACKET_LOG)
         TextAdd("Recieved EMSG: SaveNpc")
 
@@ -1700,54 +1522,49 @@ Module ServerHandleData
             Exit Sub
         End If
 
-        NpcNum = buffer.ReadInteger
+        NpcNum = Buffer.ReadInt32
 
         ' Update the Npc
-        Npc(NpcNum).Animation = buffer.ReadInteger()
-        Npc(NpcNum).AttackSay = buffer.ReadString()
-        Npc(NpcNum).Behaviour = buffer.ReadInteger()
+        Npc(NpcNum).Animation = Buffer.ReadInt32()
+        Npc(NpcNum).AttackSay = Buffer.ReadString()
+        Npc(NpcNum).Behaviour = Buffer.ReadInt32()
         For i = 1 To 5
-            Npc(NpcNum).DropChance(i) = buffer.ReadInteger()
-            Npc(NpcNum).DropItem(i) = buffer.ReadInteger()
-            Npc(NpcNum).DropItemValue(i) = buffer.ReadInteger()
+            Npc(NpcNum).DropChance(i) = Buffer.ReadInt32()
+            Npc(NpcNum).DropItem(i) = Buffer.ReadInt32()
+            Npc(NpcNum).DropItemValue(i) = Buffer.ReadInt32()
         Next
 
-        Npc(NpcNum).Exp = buffer.ReadInteger()
-        Npc(NpcNum).Faction = buffer.ReadInteger()
-        Npc(NpcNum).Hp = buffer.ReadInteger()
-        Npc(NpcNum).Name = buffer.ReadString()
-        Npc(NpcNum).Range = buffer.ReadInteger()
-        Npc(NpcNum).SpawnTime = buffer.ReadInteger()
-        Npc(NpcNum).SpawnSecs = buffer.ReadInteger()
-        Npc(NpcNum).Sprite = buffer.ReadInteger()
+        Npc(NpcNum).Exp = Buffer.ReadInt32()
+        Npc(NpcNum).Faction = Buffer.ReadInt32()
+        Npc(NpcNum).Hp = Buffer.ReadInt32()
+        Npc(NpcNum).Name = Buffer.ReadString()
+        Npc(NpcNum).Range = Buffer.ReadInt32()
+        Npc(NpcNum).SpawnTime = Buffer.ReadInt32()
+        Npc(NpcNum).SpawnSecs = Buffer.ReadInt32()
+        Npc(NpcNum).Sprite = Buffer.ReadInt32()
 
         For i = 0 To Stats.Count - 1
-            Npc(NpcNum).Stat(i) = buffer.ReadInteger()
+            Npc(NpcNum).Stat(i) = Buffer.ReadInt32()
         Next
 
-        Npc(NpcNum).QuestNum = buffer.ReadInteger()
+        Npc(NpcNum).QuestNum = Buffer.ReadInt32()
 
         For i = 1 To MAX_NPC_SKILLS
-            Npc(NpcNum).Skill(i) = buffer.ReadInteger()
+            Npc(NpcNum).Skill(i) = Buffer.ReadInt32()
         Next
 
-        Npc(NpcNum).Level = buffer.ReadInteger()
-        Npc(NpcNum).Damage = buffer.ReadInteger()
+        Npc(NpcNum).Level = Buffer.ReadInt32()
+        Npc(NpcNum).Damage = Buffer.ReadInt32()
 
         ' Save it
         SendUpdateNpcToAll(NpcNum)
         SaveNpc(NpcNum)
         Addlog(GetPlayerLogin(index) & " saved Npc #" & NpcNum & ".", ADMIN_LOG)
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_EditShop(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> EditorPackets.RequestEditShop Then Exit Sub
-
         Addlog("Recieved EMSG: RequestEditShop", PACKET_LOG)
         TextAdd("Recieved EMSG: RequestEditShop")
 
@@ -1756,23 +1573,19 @@ Module ServerHandleData
             Exit Sub
         End If
 
-        buffer = New ByteBuffer
-        buffer.WriteInteger(ServerPackets.SShopEditor)
-        SendDataTo(index, buffer.ToArray())
+        Dim Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SShopEditor)
+        SendDataTo(index, Buffer.ToArray())
 
         Addlog("Sent SMSG: SShopEditor", PACKET_LOG)
         TextAdd("Sent SMSG: SShopEditor")
 
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_SaveShop(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim ShopNum As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> EditorPackets.SaveShop Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved EMSG: SaveShop", PACKET_LOG)
         TextAdd("Recieved EMSG: SaveShop")
 
@@ -1781,27 +1594,27 @@ Module ServerHandleData
             Exit Sub
         End If
 
-        ShopNum = buffer.ReadInteger
+        ShopNum = Buffer.ReadInt32
 
         ' Prevent hacking
         If ShopNum < 0 Or ShopNum > MAX_SHOPS Then
             Exit Sub
         End If
 
-        Shop(ShopNum).BuyRate = buffer.ReadInteger()
-        Shop(ShopNum).Name = buffer.ReadString()
-        Shop(ShopNum).Face = buffer.ReadInteger()
+        Shop(ShopNum).BuyRate = Buffer.ReadInt32()
+        Shop(ShopNum).Name = Buffer.ReadString()
+        Shop(ShopNum).Face = Buffer.ReadInt32()
 
         For i = 0 To MAX_TRADES
-            Shop(ShopNum).TradeItem(i).CostItem = buffer.ReadInteger()
-            Shop(ShopNum).TradeItem(i).CostValue = buffer.ReadInteger()
-            Shop(ShopNum).TradeItem(i).Item = buffer.ReadInteger()
-            Shop(ShopNum).TradeItem(i).ItemValue = buffer.ReadInteger()
+            Shop(ShopNum).TradeItem(i).CostItem = Buffer.ReadInt32()
+            Shop(ShopNum).TradeItem(i).CostValue = Buffer.ReadInt32()
+            Shop(ShopNum).TradeItem(i).Item = Buffer.ReadInt32()
+            Shop(ShopNum).TradeItem(i).ItemValue = Buffer.ReadInt32()
         Next
 
         If Shop(ShopNum).Name Is Nothing Then Shop(ShopNum).Name = ""
 
-        buffer = Nothing
+        Buffer.Dispose()
         ' Save it
         Call SendUpdateShopToAll(ShopNum)
         Call SaveShop(ShopNum)
@@ -1809,11 +1622,6 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_EditSkill(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> EditorPackets.RequestEditSkill Then Exit Sub
-
         Addlog("Recieved EMSG: RequestEditSkill", PACKET_LOG)
         TextAdd("Recieved EMSG: RequestEditSkill")
 
@@ -1822,77 +1630,69 @@ Module ServerHandleData
             Exit Sub
         End If
 
-        buffer = New ByteBuffer
-        buffer.WriteInteger(ServerPackets.SSkillEditor)
-        SendDataTo(index, buffer.ToArray())
+        Dim Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SSkillEditor)
+        SendDataTo(index, Buffer.ToArray())
 
         Addlog("Sent SMSG: SSkillEditor", PACKET_LOG)
         TextAdd("Sent SMSG: SSkillEditor")
 
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_SaveSkill(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim skillnum As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> EditorPackets.SaveSkill Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved EMSG: SaveSkill", PACKET_LOG)
         TextAdd("Recieved EMSG: SaveSkill")
 
-        skillnum = buffer.ReadInteger
+        skillnum = Buffer.ReadInt32
 
         ' Prevent hacking
         If skillnum < 0 Or skillnum > MAX_SKILLS Then
             Exit Sub
         End If
 
-        Skill(skillnum).AccessReq = buffer.ReadInteger()
-        Skill(skillnum).AoE = buffer.ReadInteger()
-        Skill(skillnum).CastAnim = buffer.ReadInteger()
-        Skill(skillnum).CastTime = buffer.ReadInteger()
-        Skill(skillnum).CdTime = buffer.ReadInteger()
-        Skill(skillnum).ClassReq = buffer.ReadInteger()
-        Skill(skillnum).Dir = buffer.ReadInteger()
-        Skill(skillnum).Duration = buffer.ReadInteger()
-        Skill(skillnum).Icon = buffer.ReadInteger()
-        Skill(skillnum).Interval = buffer.ReadInteger()
-        Skill(skillnum).IsAoE = buffer.ReadInteger()
-        Skill(skillnum).LevelReq = buffer.ReadInteger()
-        Skill(skillnum).Map = buffer.ReadInteger()
-        Skill(skillnum).MpCost = buffer.ReadInteger()
-        Skill(skillnum).Name = buffer.ReadString()
-        Skill(skillnum).Range = buffer.ReadInteger()
-        Skill(skillnum).SkillAnim = buffer.ReadInteger()
-        Skill(skillnum).StunDuration = buffer.ReadInteger()
-        Skill(skillnum).Type = buffer.ReadInteger()
-        Skill(skillnum).Vital = buffer.ReadInteger()
-        Skill(skillnum).X = buffer.ReadInteger()
-        Skill(skillnum).Y = buffer.ReadInteger()
+        Skill(skillnum).AccessReq = Buffer.ReadInt32()
+        Skill(skillnum).AoE = Buffer.ReadInt32()
+        Skill(skillnum).CastAnim = Buffer.ReadInt32()
+        Skill(skillnum).CastTime = Buffer.ReadInt32()
+        Skill(skillnum).CdTime = Buffer.ReadInt32()
+        Skill(skillnum).ClassReq = Buffer.ReadInt32()
+        Skill(skillnum).Dir = Buffer.ReadInt32()
+        Skill(skillnum).Duration = Buffer.ReadInt32()
+        Skill(skillnum).Icon = Buffer.ReadInt32()
+        Skill(skillnum).Interval = Buffer.ReadInt32()
+        Skill(skillnum).IsAoE = Buffer.ReadInt32()
+        Skill(skillnum).LevelReq = Buffer.ReadInt32()
+        Skill(skillnum).Map = Buffer.ReadInt32()
+        Skill(skillnum).MpCost = Buffer.ReadInt32()
+        Skill(skillnum).Name = Buffer.ReadString()
+        Skill(skillnum).Range = Buffer.ReadInt32()
+        Skill(skillnum).SkillAnim = Buffer.ReadInt32()
+        Skill(skillnum).StunDuration = Buffer.ReadInt32()
+        Skill(skillnum).Type = Buffer.ReadInt32()
+        Skill(skillnum).Vital = Buffer.ReadInt32()
+        Skill(skillnum).X = Buffer.ReadInt32()
+        Skill(skillnum).Y = Buffer.ReadInt32()
 
         'projectiles
-        Skill(skillnum).IsProjectile = buffer.ReadInteger()
-        Skill(skillnum).Projectile = buffer.ReadInteger()
+        Skill(skillnum).IsProjectile = Buffer.ReadInt32()
+        Skill(skillnum).Projectile = Buffer.ReadInt32()
 
-        Skill(skillnum).KnockBack = buffer.ReadInteger()
-        Skill(skillnum).KnockBackTiles = buffer.ReadInteger()
+        Skill(skillnum).KnockBack = Buffer.ReadInt32()
+        Skill(skillnum).KnockBackTiles = Buffer.ReadInt32()
 
         ' Save it
         SendUpdateSkillToAll(skillnum)
         SaveSkill(skillnum)
         Addlog(GetPlayerLogin(index) & " saved Skill #" & skillnum & ".", ADMIN_LOG)
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_SetAccess(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CSetAccess Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CSetAccess", PACKET_LOG)
         TextAdd("Recieved CMSG: CSetAccess")
 
@@ -1905,7 +1705,7 @@ Module ServerHandleData
         ' The index
         n = FindPlayer(buffer.ReadString)
         ' The access
-        i = buffer.ReadInteger
+        i = Buffer.ReadInt32
 
         ' Check for invalid access level
         If i >= 0 Or i <= 3 Then
@@ -1934,31 +1734,18 @@ Module ServerHandleData
             PlayerMsg(index, "Invalid access level.", ColorType.BrightRed)
         End If
 
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_WhosOnline(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ClientPackets.CWhosOnline Then Exit Sub
-
         Addlog("Recieved CMSG: CWhosOnline", PACKET_LOG)
         TextAdd("Recieved CMSG: CWhosOnline")
 
         SendWhosOnline(index)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_SetMotd(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ClientPackets.CSetMotd Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CSetMotd", PACKET_LOG)
         TextAdd("Recieved CMSG: CSetMotd")
 
@@ -1973,23 +1760,19 @@ Module ServerHandleData
         GlobalMsg("MOTD changed to: " & Options.Motd)
         Addlog(GetPlayerName(index) & " changed MOTD to: " & Options.Motd, ADMIN_LOG)
 
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_PlayerSearch(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer, TargetFound As Byte, rclick As Byte
+        Dim TargetFound As Byte, rclick As Byte
         Dim x As Integer, y As Integer, i As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ClientPackets.CSearch Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CSearch", PACKET_LOG)
         TextAdd("Recieved CMSG: CSearch")
 
-        x = buffer.ReadInteger
-        y = buffer.ReadInteger
-        rclick = buffer.ReadInteger
+        x = Buffer.ReadInt32
+        y = Buffer.ReadInt32
+        rclick = Buffer.ReadInt32
 
         ' Prevent subscript out of range
         If x < 0 Or x > Map(GetPlayerMap(index)).MaxX Or y < 0 Or y > Map(GetPlayerMap(index)).MaxY Then Exit Sub
@@ -2112,138 +1895,103 @@ Module ServerHandleData
             SendTarget(index, 0, 0)
         End If
 
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_Skills(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ClientPackets.CSkills Then Exit Sub
-
         Addlog("Recieved CMSG: CSkills", PACKET_LOG)
         TextAdd("Recieved CMSG: CSkills")
 
         SendPlayerSkills(index)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_Cast(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim n As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CCast Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CCast", PACKET_LOG)
         TextAdd("Recieved CMSG: CCast")
 
         ' Skill slot
-        n = buffer.ReadInteger
-        buffer = Nothing
+        n = Buffer.ReadInt32
+        Buffer.Dispose()
 
         ' set the skill buffer before castin
         BufferSkill(index, n)
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_QuitGame(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As New ByteBuffer
-
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CQuit Then Exit Sub
-
         Addlog("Recieved CMSG: CQuit", PACKET_LOG)
         TextAdd("Recieved CMSG: CQuit")
 
         SendLeftGame(index)
         CloseSocket(index)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_SwapInvSlots(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As New ByteBuffer
         Dim oldSlot As Integer, newSlot As Integer
-
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CSwapInvSlots Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CSwapInvSlots", PACKET_LOG)
         TextAdd("Recieved CMSG: CSwapInvSlots")
 
         If TempPlayer(index).InTrade > 0 Or TempPlayer(index).InBank Or TempPlayer(index).InShop Then Exit Sub
 
         ' Old Slot
-        oldSlot = buffer.ReadInteger
-        newSlot = buffer.ReadInteger
-        buffer = Nothing
+        oldSlot = Buffer.ReadInt32
+        newSlot = Buffer.ReadInt32
+        Buffer.Dispose()
 
         PlayerSwitchInvSlots(index, oldSlot, newSlot)
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_EditResource(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As New ByteBuffer
-
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> EditorPackets.RequestEditResource Then Exit Sub
-
         Addlog("Recieved EMSG: RequestEditResource", PACKET_LOG)
         TextAdd("Recieved EMSG: RequestEditResource")
 
         ' Prevent hacking
         If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
-        buffer = Nothing
 
-        buffer = New ByteBuffer
-        buffer.WriteInteger(ServerPackets.SResourceEditor)
-        SendDataTo(index, buffer.ToArray())
+        Dim Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SResourceEditor)
+        SendDataTo(index, Buffer.ToArray())
 
         Addlog("Sent SMSG: SResourceEditor", PACKET_LOG)
         TextAdd("Sent SMSG: SResourceEditor")
 
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_SaveResource(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As New ByteBuffer
         Dim resourcenum As Integer
-
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> EditorPackets.SaveResource Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved EMSG: SaveResource", PACKET_LOG)
         TextAdd("Recieved EMSG: SaveResource")
 
         ' Prevent hacking
         If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
 
-        resourcenum = buffer.ReadInteger
+        resourcenum = Buffer.ReadInt32
 
         ' Prevent hacking
         If resourcenum < 0 Or resourcenum > MAX_RESOURCES Then Exit Sub
 
-        Resource(resourcenum).Animation = buffer.ReadInteger()
-        Resource(resourcenum).EmptyMessage = buffer.ReadString()
-        Resource(resourcenum).ExhaustedImage = buffer.ReadInteger()
-        Resource(resourcenum).Health = buffer.ReadInteger()
-        Resource(resourcenum).ExpReward = buffer.ReadInteger()
-        Resource(resourcenum).ItemReward = buffer.ReadInteger()
-        Resource(resourcenum).Name = buffer.ReadString()
-        Resource(resourcenum).ResourceImage = buffer.ReadInteger()
-        Resource(resourcenum).ResourceType = buffer.ReadInteger()
-        Resource(resourcenum).RespawnTime = buffer.ReadInteger()
-        Resource(resourcenum).SuccessMessage = buffer.ReadString()
-        Resource(resourcenum).LvlRequired = buffer.ReadInteger()
-        Resource(resourcenum).ToolRequired = buffer.ReadInteger()
-        Resource(resourcenum).Walkthrough = buffer.ReadInteger()
+        Resource(resourcenum).Animation = Buffer.ReadInt32()
+        Resource(resourcenum).EmptyMessage = Buffer.ReadString()
+        Resource(resourcenum).ExhaustedImage = Buffer.ReadInt32()
+        Resource(resourcenum).Health = Buffer.ReadInt32()
+        Resource(resourcenum).ExpReward = Buffer.ReadInt32()
+        Resource(resourcenum).ItemReward = Buffer.ReadInt32()
+        Resource(resourcenum).Name = Buffer.ReadString()
+        Resource(resourcenum).ResourceImage = Buffer.ReadInt32()
+        Resource(resourcenum).ResourceType = Buffer.ReadInt32()
+        Resource(resourcenum).RespawnTime = Buffer.ReadInt32()
+        Resource(resourcenum).SuccessMessage = Buffer.ReadString()
+        Resource(resourcenum).LvlRequired = Buffer.ReadInt32()
+        Resource(resourcenum).ToolRequired = Buffer.ReadInt32()
+        Resource(resourcenum).Walkthrough = Buffer.ReadInt32()
 
         ' Save it
         SendUpdateResourceToAll(resourcenum)
@@ -2251,117 +1999,80 @@ Module ServerHandleData
 
         Addlog(GetPlayerLogin(index) & " saved Resource #" & resourcenum & ".", ADMIN_LOG)
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_CheckPing(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteInteger(ServerPackets.SSendPing)
+        Dim Buffer as ByteStream
+        Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SSendPing)
         SendDataTo(index, buffer.ToArray)
 
         Addlog("Sent SMSG: SSendPing", PACKET_LOG)
         TextAdd("Sent SMSG: SSendPing")
 
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_Unequip(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CUnequip Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CUnequip", PACKET_LOG)
         TextAdd("Recieved CMSG: CUnequip")
 
-        PlayerUnequipItem(index, buffer.ReadInteger)
+        PlayerUnequipItem(index, Buffer.ReadInt32)
 
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_RequestPlayerData(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CRequestPlayerData Then Exit Sub
-
         Addlog("Recieved CMSG: CRequestPlayerData", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestPlayerData")
 
         SendPlayerData(index)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_RequestItems(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CRequestItems Then Exit Sub
-
         Addlog("Recieved CMSG: CRequestItems", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestItems")
 
         SendItems(index)
-        buffer = Nothing
     End Sub
 
     Sub Packet_RequestNpcs(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CRequestNPCS Then Exit Sub
-
         Addlog("Recieved CMSG: CRequestNPCS", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestNPCS")
 
         SendNpcs(index)
-        buffer = Nothing
     End Sub
 
     Sub Packet_RequestResources(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CRequestResources Then Exit Sub
-
         Addlog("Recieved CMSG: CRequestResources", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestResources")
 
         SendResources(index)
-        buffer = Nothing
     End Sub
 
     Sub Packet_SpawnItem(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CSpawnItem Then Exit Sub
-
         Addlog("Recieved CMSG: CSpawnItem", PACKET_LOG)
         TextAdd("Recieved CMSG: CSpawnItem")
 
         Dim tmpItem As Integer
         Dim tmpAmount As Integer
+        Dim Buffer As New ByteStream(data)
 
         ' item
-        tmpItem = buffer.ReadInteger
-        tmpAmount = buffer.ReadInteger
+        tmpItem = Buffer.ReadInt32
+        tmpAmount = Buffer.ReadInt32
 
         If GetPlayerAccess(index) < AdminType.Creator Then Exit Sub
 
         SpawnItem(tmpItem, tmpAmount, GetPlayerMap(index), GetPlayerX(index), GetPlayerY(index))
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_TrainStat(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim tmpstat As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CTrainStat Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CTrainStat", PACKET_LOG)
         TextAdd("Recieved CMSG: CTrainStat")
 
@@ -2369,7 +2080,7 @@ Module ServerHandleData
         If GetPlayerPOINTS(index) = 0 Then Exit Sub
 
         ' stat
-        tmpstat = buffer.ReadInteger
+        tmpstat = Buffer.ReadInt32
 
         ' increment stat
         SetPlayerStat(index, tmpstat, GetPlayerRawStat(index, tmpstat) + 1)
@@ -2379,15 +2090,10 @@ Module ServerHandleData
 
         ' send player new data
         SendPlayerData(index)
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_EditAnimation(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> EditorPackets.RequestEditAnimation Then Exit Sub
-
         Addlog("Recieved EMSG: RequestEditAnimation", PACKET_LOG)
         TextAdd("Recieved EMSG: RequestEditAnimation")
 
@@ -2396,48 +2102,44 @@ Module ServerHandleData
             Exit Sub
         End If
 
-        buffer = New ByteBuffer
-        buffer.WriteInteger(ServerPackets.SAnimationEditor)
-        SendDataTo(index, buffer.ToArray())
-        buffer = Nothing
+        Dim Buffer = New ByteStream(4)
+        Buffer.WriteInt32(ServerPackets.SAnimationEditor)
+        SendDataTo(index, Buffer.ToArray())
+        Buffer.Dispose
     End Sub
 
     Sub Packet_SaveAnimation(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim AnimNum As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> EditorPackets.SaveAnimation Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved EMSG: SaveAnimation", PACKET_LOG)
         TextAdd("Recieved EMSG: SaveAnimation")
 
-        AnimNum = buffer.ReadInteger
+        AnimNum = Buffer.ReadInt32
 
         ' Update the Animation
         For i = 0 To UBound(Animation(AnimNum).Frames)
-            Animation(AnimNum).Frames(i) = buffer.ReadInteger()
+            Animation(AnimNum).Frames(i) = Buffer.ReadInt32()
         Next
 
         For i = 0 To UBound(Animation(AnimNum).LoopCount)
-            Animation(AnimNum).LoopCount(i) = buffer.ReadInteger()
+            Animation(AnimNum).LoopCount(i) = Buffer.ReadInt32()
         Next
 
         For i = 0 To UBound(Animation(AnimNum).LoopTime)
-            Animation(AnimNum).LoopTime(i) = buffer.ReadInteger()
+            Animation(AnimNum).LoopTime(i) = Buffer.ReadInt32()
         Next
 
-        Animation(AnimNum).Name = buffer.ReadString()
-        Animation(AnimNum).Sound = buffer.ReadString()
+        Animation(AnimNum).Name = Buffer.ReadString()
+        Animation(AnimNum).Sound = Buffer.ReadString()
 
         If Animation(AnimNum).Name Is Nothing Then Animation(AnimNum).Name = ""
         If Animation(AnimNum).Sound Is Nothing Then Animation(AnimNum).Sound = ""
 
         For i = 0 To UBound(Animation(AnimNum).Sprite)
-            Animation(AnimNum).Sprite(i) = buffer.ReadInteger()
+            Animation(AnimNum).Sprite(i) = Buffer.ReadInt32()
         Next
 
-        buffer = Nothing
+        Buffer.Dispose()
 
         ' Save it
         SaveAnimation(AnimNum)
@@ -2447,53 +2149,27 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_RequestAnimations(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CRequestAnimations Then Exit Sub
-
         Addlog("Recieved CMSG: CRequestAnimations", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestAnimations")
 
         SendAnimations(index)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_RequestSkills(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CRequestSkills Then Exit Sub
-
         Addlog("Recieved CMSG: CRequestSkills", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestSkills")
 
         SendSkills(index)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_RequestShops(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CRequestShops Then Exit Sub
-
         Addlog("Recieved CMSG: CRequestShops", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestShops")
 
         SendShops(index)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_RequestLevelUp(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CRequestLevelUp Then Exit Sub
-
         Addlog("Recieved CMSG: CRequestLevelUp", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestLevelUp")
 
@@ -2504,20 +2180,15 @@ Module ServerHandleData
 
         SetPlayerExp(index, GetPlayerNextLevel(index))
         CheckPlayerLevelUp(index)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_ForgetSkill(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer, skillslot As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CForgetSkill Then Exit Sub
-
+        Dim skillslot As Integer
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CForgetSkill", PACKET_LOG)
         TextAdd("Recieved CMSG: CForgetSkill")
 
-        skillslot = buffer.ReadInteger
+        skillslot = Buffer.ReadInt32
 
         ' Check for subscript out of range
         If skillslot < 1 Or skillslot > MAX_PLAYER_SKILLS Then
@@ -2539,34 +2210,23 @@ Module ServerHandleData
         Player(index).Character(TempPlayer(index).CurChar).Skill(skillslot) = 0
         SendPlayerSkills(index)
 
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_CloseShop(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CCloseShop Then Exit Sub
-
         Addlog("Recieved CMSG: CCloseShop", PACKET_LOG)
         TextAdd("Recieved CMSG: CCloseShop")
 
         TempPlayer(index).InShop = 0
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_BuyItem(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim shopslot As Integer, shopnum As Integer, itemamount As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CBuyItem Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CBuyItem", PACKET_LOG)
         TextAdd("Recieved CMSG: CBuyItem")
 
-        shopslot = buffer.ReadInteger
+        shopslot = Buffer.ReadInt32
 
         ' not in shop, exit out
         shopnum = TempPlayer(index).InShop
@@ -2593,23 +2253,20 @@ Module ServerHandleData
         PlayerMsg(index, "Trade successful.", ColorType.BrightGreen)
         ResetShopAction(index)
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_SellItem(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim invSlot As Integer
         Dim itemNum As Integer
         Dim price As Integer
         Dim multiplier As Double
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CSellItem Then Exit Sub
+        Dim Buffer As New ByteStream(data)
 
         Addlog("Recieved CMSG: CSellItem", PACKET_LOG)
         TextAdd("Recieved CMSG: CSellItem")
 
-        invSlot = buffer.ReadInteger
+        invSlot = Buffer.ReadInt32
 
         ' if invalid, exit out
         If invSlot < 1 Or invSlot > MAX_INV Then Exit Sub
@@ -2639,69 +2296,52 @@ Module ServerHandleData
         PlayerMsg(index, "Sold the " & Trim(Item(GetPlayerInvItemNum(index, invSlot)).Name) & " !", ColorType.BrightGreen)
         ResetShopAction(index)
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_ChangeBankSlots(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim oldslot As Integer, newslot As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CChangeBankSlots Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CChangeBankSlots", PACKET_LOG)
         TextAdd("Recieved CMSG: CChangeBankSlots")
 
-        oldslot = buffer.ReadInteger
-        newslot = buffer.ReadInteger
+        oldslot = Buffer.ReadInt32
+        newslot = Buffer.ReadInt32
 
         PlayerSwitchBankSlots(index, oldslot, newslot)
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_DepositItem(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim invslot As Integer, amount As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CDepositItem Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CDepositItem", PACKET_LOG)
         TextAdd("Recieved CMSG: CDepositItem")
 
-        invslot = buffer.ReadInteger
-        amount = buffer.ReadInteger
+        invslot = Buffer.ReadInt32
+        amount = Buffer.ReadInt32
 
         GiveBankItem(index, invslot, amount)
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_WithdrawItem(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim bankslot As Integer, amount As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CWithdrawItem Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CWithdrawItem", PACKET_LOG)
         TextAdd("Recieved CMSG: CWithdrawItem")
 
-        bankslot = buffer.ReadInteger
-        amount = buffer.ReadInteger
+        bankslot = Buffer.ReadInt32
+        amount = Buffer.ReadInt32
 
         TakeBankItem(index, bankslot, amount)
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_CloseBank(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CCloseBank Then Exit Sub
-
         Addlog("Recieved CMSG: CCloseBank", PACKET_LOG)
         TextAdd("Recieved CMSG: CCloseBank")
 
@@ -2709,22 +2349,16 @@ Module ServerHandleData
         SavePlayer(index)
 
         TempPlayer(index).InBank = False
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_AdminWarp(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim x As Integer, y As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CAdminWarp Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CAdminWarp", PACKET_LOG)
         TextAdd("Recieved CMSG: CAdminWarp")
 
-        x = buffer.ReadInteger
-        y = buffer.ReadInteger
+        x = Buffer.ReadInt32
+        y = Buffer.ReadInt32
 
         If GetPlayerAccess(index) >= AdminType.Mapper Then
             'Set the  Information
@@ -2735,22 +2369,18 @@ Module ServerHandleData
             SendPlayerXY(index)
         End If
 
-        buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_TradeInvite(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim Name As String, tradetarget As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CTradeInvite Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CTradeInvite", PACKET_LOG)
         TextAdd("Recieved CMSG: CTradeInvite")
 
-        Name = buffer.ReadString
+        Name = Buffer.ReadString
 
-        buffer = Nothing
+        Buffer.Dispose()
 
         ' Check for a player
 
@@ -2777,17 +2407,14 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_TradeInviteAccept(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer, tradetarget As Integer, status As Byte
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CTradeInviteAccept Then Exit Sub
-
+        Dim tradetarget As Integer, status As Byte
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CTradeInviteAccept", PACKET_LOG)
         TextAdd("Recieved CMSG: CTradeInviteAccept")
 
-        status = buffer.ReadInteger
+        status = Buffer.ReadInt32
 
-        buffer = Nothing
+        Buffer.Dispose
 
         If status = 0 Then Exit Sub
 
@@ -2832,16 +2459,10 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_AcceptTrade(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer, itemNum As Integer
+        Dim itemNum As Integer
         Dim tradeTarget As Integer, i As Integer
         Dim tmpTradeItem(0 To MAX_INV) As PlayerInvRec
         Dim tmpTradeItem2(0 To MAX_INV) As PlayerInvRec
-
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ClientPackets.CAcceptTrade Then Exit Sub
-
         Addlog("Recieved CMSG: CAcceptTrade", PACKET_LOG)
         TextAdd("Recieved CMSG: CAcceptTrade")
 
@@ -2915,17 +2536,10 @@ Module ServerHandleData
 
         SendCloseTrade(index)
         SendCloseTrade(tradeTarget)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_DeclineTrade(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim tradeTarget As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CDeclineTrade Then Exit Sub
-
         Addlog("Recieved CMSG: CDeclineTrade", PACKET_LOG)
         TextAdd("Recieved CMSG: CDeclineTrade")
 
@@ -2946,25 +2560,19 @@ Module ServerHandleData
 
         SendCloseTrade(index)
         SendCloseTrade(tradeTarget)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_TradeItem(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As New ByteBuffer, itemnum As Integer
+        Dim itemnum As Integer
         Dim invslot As Integer, amount As Integer, emptyslot As Integer, i As Integer
-
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ClientPackets.CTradeItem Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CTradeItem", PACKET_LOG)
         TextAdd("Recieved CMSG: CTradeItem")
 
-        invslot = buffer.ReadInteger
-        amount = buffer.ReadInteger
+        invslot = Buffer.ReadInt32
+        amount = Buffer.ReadInt32
 
-        buffer = Nothing
+        Buffer.Dispose
 
         If invslot <= 0 Or invslot > MAX_INV Then Exit Sub
 
@@ -3034,18 +2642,14 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_UntradeItem(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
         Dim tradeslot As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-        If buffer.ReadInteger <> ClientPackets.CUntradeItem Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CUntradeItem", PACKET_LOG)
         TextAdd("Recieved CMSG: CUntradeItem")
 
-        tradeslot = buffer.ReadInteger
+        tradeslot = Buffer.ReadInt32
 
-        buffer = Nothing
+        Buffer.Dispose()
 
         If tradeslot <= 0 Or tradeslot > MAX_INV Then Exit Sub
         If TempPlayer(index).TradeOffer(tradeslot).Num <= 0 Then Exit Sub
@@ -3064,12 +2668,10 @@ Module ServerHandleData
     End Sub
 
     Public Sub HandleData(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer() As Byte
-        Buffer = data.Clone
         Dim pLength As Integer
 
-        If TempPlayer(index).Buffer Is Nothing Then TempPlayer(index).Buffer = New ByteBuffer
-        TempPlayer(index).Buffer.WriteBytes(Buffer)
+        If TempPlayer(index).Buffer Is Nothing Then TempPlayer(index).Buffer = New ByteBuffer()
+        TempPlayer(index).Buffer.WriteBytes(data.Clone)
 
         If TempPlayer(index).Buffer.Count = 0 Then
             TempPlayer(index).Buffer.Clear()
@@ -3089,8 +2691,7 @@ Module ServerHandleData
 
             If pLength <= TempPlayer(index).Buffer.Length - 4 Then
                 TempPlayer(index).Buffer.ReadInteger()
-                data = TempPlayer(index).Buffer.ReadBytes(pLength)
-                HandleDataPackets(index, data)
+                HandleDataPackets(index, TempPlayer(index).Buffer.ReadBytes(pLength))
             End If
 
             pLength = 0
@@ -3147,12 +2748,6 @@ Module ServerHandleData
 
     'Mapreport
     Sub Packet_MapReport(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As New ByteBuffer
-
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ClientPackets.CMapReport Then Exit Sub
-
         Addlog("Recieved CMSG: CMapReport", PACKET_LOG)
         TextAdd("Recieved CMSG: CMapReport")
 
@@ -3160,17 +2755,9 @@ Module ServerHandleData
         If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
 
         SendMapReport(index)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_Admin(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ClientPackets.CAdmin Then Exit Sub
-
         Addlog("Recieved CMSG: CAdmin", PACKET_LOG)
         TextAdd("Recieved CMSG: CAdmin")
 
@@ -3178,62 +2765,50 @@ Module ServerHandleData
         If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
 
         SendAdminPanel(index)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_SetHotBarSlot(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer, slot As Integer, skill As Integer, type As Byte
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ClientPackets.CSetHotbarSlot Then Exit Sub
-
+        Dim slot As Integer, skill As Integer, type As Byte
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CSetHotbarSlot", PACKET_LOG)
         TextAdd("Recieved CMSG: CSetHotbarSlot")
 
-        slot = buffer.ReadInteger
-        skill = buffer.ReadInteger
-        type = buffer.ReadInteger
+        slot = Buffer.ReadInt32
+        skill = Buffer.ReadInt32
+        type = Buffer.ReadInt32
 
         Player(index).Character(TempPlayer(index).CurChar).Hotbar(slot).Slot = skill
         Player(index).Character(TempPlayer(index).CurChar).Hotbar(slot).SlotType = type
 
         SendHotbar(index)
 
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_DeleteHotBarSlot(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As New ByteBuffer, slot As Integer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ClientPackets.CDeleteHotbarSlot Then Exit Sub
-
+        Dim slot As Integer
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CDeleteHotbarSlot", PACKET_LOG)
         TextAdd("Recieved CMSG: CDeleteHotbarSlot")
 
-        slot = buffer.ReadInteger
+        slot = Buffer.ReadInt32
 
         Player(index).Character(TempPlayer(index).CurChar).Hotbar(slot).Slot = 0
         Player(index).Character(TempPlayer(index).CurChar).Hotbar(slot).SlotType = 0
 
         SendHotbar(index)
 
-        buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub Packet_UseHotBarSlot(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As New ByteBuffer, slot As Integer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ClientPackets.CUseHotbarSlot Then Exit Sub
-
+        Dim slot As Integer
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CUseHotbarSlot", PACKET_LOG)
         TextAdd("Recieved CMSG: CUseHotbarSlot")
 
-        slot = buffer.ReadInteger
-        buffer = Nothing
+        slot = Buffer.ReadInt32
+        Buffer.Dispose
 
         If Player(index).Character(TempPlayer(index).CurChar).Hotbar(slot).Slot > 0 Then
             If Player(index).Character(TempPlayer(index).CurChar).Hotbar(slot).SlotType = 1 Then 'skill
@@ -3248,27 +2823,13 @@ Module ServerHandleData
     End Sub
 
     Sub Packet_RequestClasses(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> ClientPackets.CRequestClasses Then Exit Sub
-
         Addlog("Recieved CMSG: CRequestClasses", PACKET_LOG)
         TextAdd("Recieved CMSG: CRequestClasses")
 
         SendClasses(index)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_RequestEditClasses(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> EditorPackets.RequestEditClasses Then Exit Sub
-
         Addlog("Recieved EMSG: RequestEditClasses", PACKET_LOG)
         TextAdd("Recieved EMSG: RequestEditClasses")
 
@@ -3278,17 +2839,11 @@ Module ServerHandleData
         SendClasses(index)
 
         SendClassEditor(index)
-
-        buffer = Nothing
     End Sub
 
     Sub Packet_SaveClasses(ByVal index As Integer, ByVal data() As Byte)
-        Dim buffer As ByteBuffer, i As Integer, z As Integer, x As Integer
-        buffer = New ByteBuffer
-        buffer.WriteBytes(data)
-
-        If buffer.ReadInteger <> EditorPackets.SaveClasses Then Exit Sub
-
+        Dim i As Integer, z As Integer, x As Integer
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved EMSG: SaveClasses", PACKET_LOG)
         TextAdd("Recieved EMSG: SaveClasses")
 
@@ -3296,7 +2851,7 @@ Module ServerHandleData
         If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
 
         ' Max classes
-        Max_Classes = buffer.ReadInteger
+        Max_Classes = Buffer.ReadInt32
         ReDim Classes(0 To Max_Classes)
 
         For i = 0 To Max_Classes
@@ -3310,48 +2865,48 @@ Module ServerHandleData
                 .Desc = buffer.ReadString
 
                 ' get array size
-                z = buffer.ReadInteger
+                z = Buffer.ReadInt32
 
                 ' redim array
                 ReDim .MaleSprite(0 To z)
                 ' loop-receive data
                 For x = 0 To z
-                    .MaleSprite(x) = buffer.ReadInteger
+                    .MaleSprite(x) = Buffer.ReadInt32
                 Next
 
                 ' get array size
-                z = buffer.ReadInteger
+                z = Buffer.ReadInt32
                 ' redim array
                 ReDim .FemaleSprite(0 To z)
                 ' loop-receive data
                 For x = 0 To z
-                    .FemaleSprite(x) = buffer.ReadInteger
+                    .FemaleSprite(x) = Buffer.ReadInt32
                 Next
 
-                .Stat(Stats.Strength) = buffer.ReadInteger
-                .Stat(Stats.Endurance) = buffer.ReadInteger
-                .Stat(Stats.Vitality) = buffer.ReadInteger
-                .Stat(Stats.Intelligence) = buffer.ReadInteger
-                .Stat(Stats.Luck) = buffer.ReadInteger
-                .Stat(Stats.Spirit) = buffer.ReadInteger
+                .Stat(Stats.Strength) = Buffer.ReadInt32
+                .Stat(Stats.Endurance) = Buffer.ReadInt32
+                .Stat(Stats.Vitality) = Buffer.ReadInt32
+                .Stat(Stats.Intelligence) = Buffer.ReadInt32
+                .Stat(Stats.Luck) = Buffer.ReadInt32
+                .Stat(Stats.Spirit) = Buffer.ReadInt32
 
                 ReDim .StartItem(5)
                 ReDim .StartValue(5)
                 For q = 1 To 5
-                    .StartItem(q) = buffer.ReadInteger
-                    .StartValue(q) = buffer.ReadInteger
+                    .StartItem(q) = Buffer.ReadInt32
+                    .StartValue(q) = Buffer.ReadInt32
                 Next
 
-                .StartMap = buffer.ReadInteger
-                .StartX = buffer.ReadInteger
-                .StartY = buffer.ReadInteger
+                .StartMap = Buffer.ReadInt32
+                .StartX = Buffer.ReadInt32
+                .StartY = Buffer.ReadInt32
 
-                .BaseExp = buffer.ReadInteger
+                .BaseExp = Buffer.ReadInt32
             End With
 
         Next
 
-        buffer = Nothing
+        Buffer.Dispose
 
         SaveClasses()
 
@@ -3361,13 +2916,8 @@ Module ServerHandleData
     End Sub
 
     Private Sub Packet_EditorLogin(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
         Dim Name As String, Password As String, Version As String
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> EditorPackets.EditorLogin Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved EMSG: EditorLogin", PACKET_LOG)
         TextAdd("Recieved EMSG: EditorLogin")
 
@@ -3434,36 +2984,31 @@ Module ServerHandleData
 
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 
     Private Sub Packet_EditorRequestMap(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
         Dim MapNum As Integer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> EditorPackets.EditorRequestMap Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved EMSG: EditorRequestMap", PACKET_LOG)
         TextAdd("Recieved EMSG: EditorRequestMap")
 
-        MapNum = Buffer.ReadInteger
+        MapNum = Buffer.ReadInt32
 
-        Buffer = Nothing
+        Buffer.Dispose()
 
         If GetPlayerAccess(index) > AdminType.Player Then
             SendMapData(index, MapNum, True)
             SendMapNames(index)
 
-            Buffer = New ByteBuffer
-            Buffer.WriteInteger(ServerPackets.SEditMap)
+            Buffer = New ByteStream(4)
+            Buffer.WriteInt32(ServerPackets.SEditMap)
             SendDataTo(index, Buffer.ToArray())
 
             Addlog("Sent SMSG: SEditMap", PACKET_LOG)
             TextAdd("Sent SMSG: SEditMap")
 
-            Buffer = Nothing
+            Buffer.Dispose()
         Else
             AlertMsg(index, "Not Allowed!")
         End If
@@ -3475,25 +3020,19 @@ Module ServerHandleData
         Dim MapNum As Integer
         Dim x As Integer
         Dim y As Integer
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(Data)
-
-        If Buffer.ReadInteger <> EditorPackets.EditorSaveMap Then Exit Sub
 
         Addlog("Recieved EMSG: EditorSaveMap", PACKET_LOG)
         TextAdd("Recieved EMSG: EditorSaveMap")
 
-        Data = Buffer.ReadBytes(Data.Length - 4)
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(Compression.DecompressBytes(Data))
-
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
 
+        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data, 4, Data.Length))
+
+
         Gettingmap = True
 
-        MapNum = Buffer.ReadInteger
+        MapNum = Buffer.ReadInt32
 
         i = Map(MapNum).Revision + 1
         ClearMap(MapNum)
@@ -3501,175 +3040,175 @@ Module ServerHandleData
         Map(MapNum).Name = Buffer.ReadString
         Map(MapNum).Music = Buffer.ReadString
         Map(MapNum).Revision = i
-        Map(MapNum).Moral = Buffer.ReadInteger
-        Map(MapNum).Tileset = Buffer.ReadInteger
-        Map(MapNum).Up = Buffer.ReadInteger
-        Map(MapNum).Down = Buffer.ReadInteger
-        Map(MapNum).Left = Buffer.ReadInteger
-        Map(MapNum).Right = Buffer.ReadInteger
-        Map(MapNum).BootMap = Buffer.ReadInteger
-        Map(MapNum).BootX = Buffer.ReadInteger
-        Map(MapNum).BootY = Buffer.ReadInteger
-        Map(MapNum).MaxX = Buffer.ReadInteger
-        Map(MapNum).MaxY = Buffer.ReadInteger
-        Map(MapNum).WeatherType = Buffer.ReadInteger
-        Map(MapNum).FogIndex = Buffer.ReadInteger
-        Map(MapNum).WeatherIntensity = Buffer.ReadInteger
-        Map(MapNum).FogAlpha = Buffer.ReadInteger
-        Map(MapNum).FogSpeed = Buffer.ReadInteger
-        Map(MapNum).HasMapTint = Buffer.ReadInteger
-        Map(MapNum).MapTintR = Buffer.ReadInteger
-        Map(MapNum).MapTintG = Buffer.ReadInteger
-        Map(MapNum).MapTintB = Buffer.ReadInteger
-        Map(MapNum).MapTintA = Buffer.ReadInteger
+        Map(MapNum).Moral = Buffer.ReadInt32
+        Map(MapNum).Tileset = Buffer.ReadInt32
+        Map(MapNum).Up = Buffer.ReadInt32
+        Map(MapNum).Down = Buffer.ReadInt32
+        Map(MapNum).Left = Buffer.ReadInt32
+        Map(MapNum).Right = Buffer.ReadInt32
+        Map(MapNum).BootMap = Buffer.ReadInt32
+        Map(MapNum).BootX = Buffer.ReadInt32
+        Map(MapNum).BootY = Buffer.ReadInt32
+        Map(MapNum).MaxX = Buffer.ReadInt32
+        Map(MapNum).MaxY = Buffer.ReadInt32
+        Map(MapNum).WeatherType = Buffer.ReadInt32
+        Map(MapNum).FogIndex = Buffer.ReadInt32
+        Map(MapNum).WeatherIntensity = Buffer.ReadInt32
+        Map(MapNum).FogAlpha = Buffer.ReadInt32
+        Map(MapNum).FogSpeed = Buffer.ReadInt32
+        Map(MapNum).HasMapTint = Buffer.ReadInt32
+        Map(MapNum).MapTintR = Buffer.ReadInt32
+        Map(MapNum).MapTintG = Buffer.ReadInt32
+        Map(MapNum).MapTintB = Buffer.ReadInt32
+        Map(MapNum).MapTintA = Buffer.ReadInt32
 
-        Map(MapNum).Instanced = Buffer.ReadInteger
-        Map(MapNum).Panorama = Buffer.ReadInteger
-        Map(MapNum).Parallax = Buffer.ReadInteger
+        Map(MapNum).Instanced = Buffer.ReadInt32
+        Map(MapNum).Panorama = Buffer.ReadInt32
+        Map(MapNum).Parallax = Buffer.ReadInt32
 
         ReDim Map(MapNum).Tile(0 To Map(MapNum).MaxX, 0 To Map(MapNum).MaxY)
 
         For x = 1 To MAX_MAP_NPCS
             ClearMapNpc(x, MapNum)
-            Map(MapNum).Npc(x) = Buffer.ReadInteger
+            Map(MapNum).Npc(x) = Buffer.ReadInt32
         Next
 
         With Map(MapNum)
             For x = 0 To .MaxX
                 For y = 0 To .MaxY
-                    .Tile(x, y).Data1 = Buffer.ReadInteger
-                    .Tile(x, y).Data2 = Buffer.ReadInteger
-                    .Tile(x, y).Data3 = Buffer.ReadInteger
-                    .Tile(x, y).DirBlock = Buffer.ReadInteger
+                    .Tile(x, y).Data1 = Buffer.ReadInt32
+                    .Tile(x, y).Data2 = Buffer.ReadInt32
+                    .Tile(x, y).Data3 = Buffer.ReadInt32
+                    .Tile(x, y).DirBlock = Buffer.ReadInt32
                     ReDim .Tile(x, y).Layer(0 To MapLayer.Count - 1)
                     For i = 0 To MapLayer.Count - 1
-                        .Tile(x, y).Layer(i).Tileset = Buffer.ReadInteger
-                        .Tile(x, y).Layer(i).X = Buffer.ReadInteger
-                        .Tile(x, y).Layer(i).Y = Buffer.ReadInteger
-                        .Tile(x, y).Layer(i).AutoTile = Buffer.ReadInteger
+                        .Tile(x, y).Layer(i).Tileset = Buffer.ReadInt32
+                        .Tile(x, y).Layer(i).X = Buffer.ReadInt32
+                        .Tile(x, y).Layer(i).Y = Buffer.ReadInt32
+                        .Tile(x, y).Layer(i).AutoTile = Buffer.ReadInt32
                     Next
-                    .Tile(x, y).Type = Buffer.ReadInteger
+                    .Tile(x, y).Type = Buffer.ReadInt32
                 Next
             Next
 
         End With
 
         'Event Data!
-        Map(MapNum).EventCount = Buffer.ReadInteger
+        Map(MapNum).EventCount = Buffer.ReadInt32
 
         If Map(MapNum).EventCount > 0 Then
             ReDim Map(MapNum).Events(0 To Map(MapNum).EventCount)
             For i = 1 To Map(MapNum).EventCount
                 With Map(MapNum).Events(i)
                     .Name = Buffer.ReadString
-                    .Globals = Buffer.ReadInteger
-                    .X = Buffer.ReadInteger
-                    .Y = Buffer.ReadInteger
-                    .PageCount = Buffer.ReadInteger
+                    .Globals = Buffer.ReadInt32
+                    .X = Buffer.ReadInt32
+                    .Y = Buffer.ReadInt32
+                    .PageCount = Buffer.ReadInt32
                 End With
                 If Map(MapNum).Events(i).PageCount > 0 Then
                     ReDim Map(MapNum).Events(i).Pages(0 To Map(MapNum).Events(i).PageCount)
                     ReDim TempPlayer(i).EventMap.EventPages(0 To Map(MapNum).Events(i).PageCount)
                     For x = 1 To Map(MapNum).Events(i).PageCount
                         With Map(MapNum).Events(i).Pages(x)
-                            .chkVariable = Buffer.ReadInteger
-                            .VariableIndex = Buffer.ReadInteger
-                            .VariableCondition = Buffer.ReadInteger
-                            .VariableCompare = Buffer.ReadInteger
+                            .chkVariable = Buffer.ReadInt32
+                            .VariableIndex = Buffer.ReadInt32
+                            .VariableCondition = Buffer.ReadInt32
+                            .VariableCompare = Buffer.ReadInt32
 
-                            Map(MapNum).Events(i).Pages(x).chkSwitch = Buffer.ReadInteger
-                            Map(MapNum).Events(i).Pages(x).SwitchIndex = Buffer.ReadInteger
-                            .SwitchCompare = Buffer.ReadInteger
+                            Map(MapNum).Events(i).Pages(x).chkSwitch = Buffer.ReadInt32
+                            Map(MapNum).Events(i).Pages(x).SwitchIndex = Buffer.ReadInt32
+                            .SwitchCompare = Buffer.ReadInt32
 
-                            .chkHasItem = Buffer.ReadInteger
-                            .HasItemIndex = Buffer.ReadInteger
-                            .HasItemAmount = Buffer.ReadInteger
+                            .chkHasItem = Buffer.ReadInt32
+                            .HasItemIndex = Buffer.ReadInt32
+                            .HasItemAmount = Buffer.ReadInt32
 
-                            .chkSelfSwitch = Buffer.ReadInteger
-                            .SelfSwitchIndex = Buffer.ReadInteger
-                            .SelfSwitchCompare = Buffer.ReadInteger
+                            .chkSelfSwitch = Buffer.ReadInt32
+                            .SelfSwitchIndex = Buffer.ReadInt32
+                            .SelfSwitchCompare = Buffer.ReadInt32
 
-                            .GraphicType = Buffer.ReadInteger
-                            .Graphic = Buffer.ReadInteger
-                            .GraphicX = Buffer.ReadInteger
-                            .GraphicY = Buffer.ReadInteger
-                            .GraphicX2 = Buffer.ReadInteger
-                            .GraphicY2 = Buffer.ReadInteger
+                            .GraphicType = Buffer.ReadInt32
+                            .Graphic = Buffer.ReadInt32
+                            .GraphicX = Buffer.ReadInt32
+                            .GraphicY = Buffer.ReadInt32
+                            .GraphicX2 = Buffer.ReadInt32
+                            .GraphicY2 = Buffer.ReadInt32
 
-                            .MoveType = Buffer.ReadInteger
-                            .MoveSpeed = Buffer.ReadInteger
-                            .MoveFreq = Buffer.ReadInteger
+                            .MoveType = Buffer.ReadInt32
+                            .MoveSpeed = Buffer.ReadInt32
+                            .MoveFreq = Buffer.ReadInt32
 
-                            .MoveRouteCount = Buffer.ReadInteger
+                            .MoveRouteCount = Buffer.ReadInt32
 
-                            .IgnoreMoveRoute = Buffer.ReadInteger
-                            .RepeatMoveRoute = Buffer.ReadInteger
+                            .IgnoreMoveRoute = Buffer.ReadInt32
+                            .RepeatMoveRoute = Buffer.ReadInt32
 
                             If .MoveRouteCount > 0 Then
                                 ReDim Map(MapNum).Events(i).Pages(x).MoveRoute(.MoveRouteCount)
                                 For y = 1 To .MoveRouteCount
-                                    .MoveRoute(y).Index = Buffer.ReadInteger
-                                    .MoveRoute(y).Data1 = Buffer.ReadInteger
-                                    .MoveRoute(y).Data2 = Buffer.ReadInteger
-                                    .MoveRoute(y).Data3 = Buffer.ReadInteger
-                                    .MoveRoute(y).Data4 = Buffer.ReadInteger
-                                    .MoveRoute(y).Data5 = Buffer.ReadInteger
-                                    .MoveRoute(y).Data6 = Buffer.ReadInteger
+                                    .MoveRoute(y).Index = Buffer.ReadInt32
+                                    .MoveRoute(y).Data1 = Buffer.ReadInt32
+                                    .MoveRoute(y).Data2 = Buffer.ReadInt32
+                                    .MoveRoute(y).Data3 = Buffer.ReadInt32
+                                    .MoveRoute(y).Data4 = Buffer.ReadInt32
+                                    .MoveRoute(y).Data5 = Buffer.ReadInt32
+                                    .MoveRoute(y).Data6 = Buffer.ReadInt32
                                 Next
                             End If
 
-                            .WalkAnim = Buffer.ReadInteger
-                            .DirFix = Buffer.ReadInteger
-                            .WalkThrough = Buffer.ReadInteger
-                            .ShowName = Buffer.ReadInteger
-                            .Trigger = Buffer.ReadInteger
-                            .CommandListCount = Buffer.ReadInteger
+                            .WalkAnim = Buffer.ReadInt32
+                            .DirFix = Buffer.ReadInt32
+                            .WalkThrough = Buffer.ReadInt32
+                            .ShowName = Buffer.ReadInt32
+                            .Trigger = Buffer.ReadInt32
+                            .CommandListCount = Buffer.ReadInt32
 
-                            .Position = Buffer.ReadInteger
-                            .QuestNum = Buffer.ReadInteger
+                            .Position = Buffer.ReadInt32
+                            .QuestNum = Buffer.ReadInt32
 
-                            .chkPlayerGender = Buffer.ReadInteger
+                            .chkPlayerGender = Buffer.ReadInt32
                         End With
 
                         If Map(MapNum).Events(i).Pages(x).CommandListCount > 0 Then
                             ReDim Map(MapNum).Events(i).Pages(x).CommandList(0 To Map(MapNum).Events(i).Pages(x).CommandListCount)
                             For y = 1 To Map(MapNum).Events(i).Pages(x).CommandListCount
-                                Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount = Buffer.ReadInteger
-                                Map(MapNum).Events(i).Pages(x).CommandList(y).ParentList = Buffer.ReadInteger
+                                Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount = Buffer.ReadInt32
+                                Map(MapNum).Events(i).Pages(x).CommandList(y).ParentList = Buffer.ReadInt32
                                 If Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount > 0 Then
                                     ReDim Map(MapNum).Events(i).Pages(x).CommandList(y).Commands(0 To Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount)
                                     For z = 1 To Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount
                                         With Map(MapNum).Events(i).Pages(x).CommandList(y).Commands(z)
-                                            .Index = Buffer.ReadInteger
+                                            .Index = Buffer.ReadInt32
                                             .Text1 = Buffer.ReadString
                                             .Text2 = Buffer.ReadString
                                             .Text3 = Buffer.ReadString
                                             .Text4 = Buffer.ReadString
                                             .Text5 = Buffer.ReadString
-                                            .Data1 = Buffer.ReadInteger
-                                            .Data2 = Buffer.ReadInteger
-                                            .Data3 = Buffer.ReadInteger
-                                            .Data4 = Buffer.ReadInteger
-                                            .Data5 = Buffer.ReadInteger
-                                            .Data6 = Buffer.ReadInteger
-                                            .ConditionalBranch.CommandList = Buffer.ReadInteger
-                                            .ConditionalBranch.Condition = Buffer.ReadInteger
-                                            .ConditionalBranch.Data1 = Buffer.ReadInteger
-                                            .ConditionalBranch.Data2 = Buffer.ReadInteger
-                                            .ConditionalBranch.Data3 = Buffer.ReadInteger
-                                            .ConditionalBranch.ElseCommandList = Buffer.ReadInteger
-                                            .MoveRouteCount = Buffer.ReadInteger
+                                            .Data1 = Buffer.ReadInt32
+                                            .Data2 = Buffer.ReadInt32
+                                            .Data3 = Buffer.ReadInt32
+                                            .Data4 = Buffer.ReadInt32
+                                            .Data5 = Buffer.ReadInt32
+                                            .Data6 = Buffer.ReadInt32
+                                            .ConditionalBranch.CommandList = Buffer.ReadInt32
+                                            .ConditionalBranch.Condition = Buffer.ReadInt32
+                                            .ConditionalBranch.Data1 = Buffer.ReadInt32
+                                            .ConditionalBranch.Data2 = Buffer.ReadInt32
+                                            .ConditionalBranch.Data3 = Buffer.ReadInt32
+                                            .ConditionalBranch.ElseCommandList = Buffer.ReadInt32
+                                            .MoveRouteCount = Buffer.ReadInt32
                                             Dim tmpcount As Integer = .MoveRouteCount
                                             If tmpcount > 0 Then
                                                 ReDim Preserve .MoveRoute(tmpcount)
                                                 For w = 1 To tmpcount
-                                                    .MoveRoute(w).Index = Buffer.ReadInteger
-                                                    .MoveRoute(w).Data1 = Buffer.ReadInteger
-                                                    .MoveRoute(w).Data2 = Buffer.ReadInteger
-                                                    .MoveRoute(w).Data3 = Buffer.ReadInteger
-                                                    .MoveRoute(w).Data4 = Buffer.ReadInteger
-                                                    .MoveRoute(w).Data5 = Buffer.ReadInteger
-                                                    .MoveRoute(w).Data6 = Buffer.ReadInteger
+                                                    .MoveRoute(w).Index = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data1 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data2 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data3 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data4 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data5 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Data6 = Buffer.ReadInt32
                                                 Next
                                             End If
                                         End With
@@ -3721,20 +3260,12 @@ Module ServerHandleData
             End If
         Next
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Private Sub Packet_RequestAutoMap(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> EditorPackets.RequestAutoMap Then Exit Sub
-
         Addlog("Recieved EMSG: RequestAutoMap", PACKET_LOG)
         TextAdd("Recieved EMSG: RequestAutoMap")
-
-        Buffer = Nothing
 
         If GetPlayerAccess(index) = AdminType.Player Then Exit Sub
 
@@ -3742,24 +3273,20 @@ Module ServerHandleData
     End Sub
 
     Private Sub Packet_SaveAutoMap(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer, Layer As Integer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> EditorPackets.SaveAutoMap Then Exit Sub
-
+        Dim Layer As Integer
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved EMSG: SaveAutoMap", PACKET_LOG)
         TextAdd("Recieved EMSG: SaveAutoMap")
 
         If GetPlayerAccess(index) = AdminType.Player Then Exit Sub
 
-        MapStart = Buffer.ReadInteger
-        MapSize = Buffer.ReadInteger
-        MapX = Buffer.ReadInteger
-        MapY = Buffer.ReadInteger
-        SandBorder = Buffer.ReadInteger
-        DetailFreq = Buffer.ReadInteger
-        ResourceFreq = Buffer.ReadInteger
+        MapStart = Buffer.ReadInt32
+        MapSize = Buffer.ReadInt32
+        MapX = Buffer.ReadInt32
+        MapY = Buffer.ReadInt32
+        SandBorder = Buffer.ReadInt32
+        DetailFreq = Buffer.ReadInt32
+        ResourceFreq = Buffer.ReadInt32
 
         Dim myXml As New XmlClass With {
             .Filename = Application.StartupPath & "\Data\AutoMapper.xml",
@@ -3771,36 +3298,31 @@ Module ServerHandleData
         For Prefab = 1 To TilePrefab.Count - 1
             ReDim Tile(Prefab).Layer(0 To MapLayer.Count - 1)
 
-            Layer = Buffer.ReadInteger()
-            myXml.WriteString("Prefab" & Prefab, "Layer" & Layer & "Tileset", Buffer.ReadInteger)
-            myXml.WriteString("Prefab" & Prefab, "Layer" & Layer & "X", Buffer.ReadInteger)
-            myXml.WriteString("Prefab" & Prefab, "Layer" & Layer & "Y", Buffer.ReadInteger)
-            myXml.WriteString("Prefab" & Prefab, "Layer" & Layer & "Autotile", Buffer.ReadInteger)
+            Layer = Buffer.ReadInt32()
+            myXml.WriteString("Prefab" & Prefab, "Layer" & Layer & "Tileset", Buffer.ReadInt32)
+            myXml.WriteString("Prefab" & Prefab, "Layer" & Layer & "X", Buffer.ReadInt32)
+            myXml.WriteString("Prefab" & Prefab, "Layer" & Layer & "Y", Buffer.ReadInt32)
+            myXml.WriteString("Prefab" & Prefab, "Layer" & Layer & "Autotile", Buffer.ReadInt32)
 
-            myXml.WriteString("Prefab" & Prefab, "Type", Buffer.ReadInteger)
+            myXml.WriteString("Prefab" & Prefab, "Type", Buffer.ReadInt32)
         Next
 
-        Buffer = Nothing
+        Buffer.Dispose
 
         StartAutomapper(MapStart, MapSize, MapX, MapY)
 
     End Sub
 
     Private Sub Packet_Emote(ByVal index As Integer, ByVal data() As Byte)
-        Dim Buffer As ByteBuffer
         Dim Emote As Integer
-        Buffer = New ByteBuffer
-        Buffer.WriteBytes(data)
-
-        If Buffer.ReadInteger <> ClientPackets.CEmote Then Exit Sub
-
+        Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CEmote", PACKET_LOG)
         TextAdd("Recieved CMSG: CEmote")
 
-        Emote = Buffer.ReadInteger
+        Emote = Buffer.ReadInt32
 
         SendEmote(index, Emote)
 
-        Buffer = Nothing
+        Buffer.Dispose()
     End Sub
 End Module

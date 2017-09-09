@@ -1,4 +1,5 @@
 ﻿Imports Orion
+Imports ASFW
 
 Module ServerGameLogic
     Function GetTotalMapPlayers(ByVal MapNum As Integer) As Integer
@@ -76,7 +77,7 @@ Module ServerGameLogic
 
     Sub SpawnItemSlot(ByVal MapItemSlot As Integer, ByVal itemNum As Integer, ByVal ItemVal As Integer, ByVal MapNum As Integer, ByVal x As Integer, ByVal y As Integer)
         Dim i As Integer
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
         If MapItemSlot <= 0 Or MapItemSlot > MAX_MAP_ITEMS Or itemNum < 0 Or itemNum > MAX_ITEMS Or MapNum <= 0 Or MapNum > MAX_CACHED_MAPS Then Exit Sub
@@ -90,12 +91,12 @@ Module ServerGameLogic
                 MapItem(MapNum, i).X = x
                 MapItem(MapNum, i).Y = y
 
-                Buffer.WriteInteger(ServerPackets.SSpawnItem)
-                Buffer.WriteInteger(i)
-                Buffer.WriteInteger(itemNum)
-                Buffer.WriteInteger(ItemVal)
-                Buffer.WriteInteger(x)
-                Buffer.WriteInteger(y)
+                Buffer.WriteInt32(ServerPackets.SSpawnItem)
+                Buffer.WriteInt32(i)
+                Buffer.WriteInt32(itemNum)
+                Buffer.WriteInt32(ItemVal)
+                Buffer.WriteInt32(x)
+                Buffer.WriteInt32(y)
 
                 Addlog("Sent SMSG: SSpawnItem MapItemSlot", PACKET_LOG)
                 TextAdd("Sent SMSG: SSpawnItem MapItemSlot")
@@ -105,7 +106,7 @@ Module ServerGameLogic
 
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Function FindOpenMapItemSlot(ByVal MapNum As Integer) As Integer
@@ -163,7 +164,7 @@ Module ServerGameLogic
     End Sub
 
     Public Sub SpawnNpc(ByVal MapNpcNum As Integer, ByVal MapNum As Integer)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
         Dim NpcNum As Integer
         Dim i As Integer
         Dim x As Integer
@@ -237,18 +238,18 @@ Module ServerGameLogic
 
             ' If we suceeded in spawning then send it to everyone
             If Spawned Then
-                Buffer.WriteInteger(ServerPackets.SSpawnNpc)
-                Buffer.WriteInteger(MapNpcNum)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Num)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).X)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
+                Buffer.WriteInt32(ServerPackets.SSpawnNpc)
+                Buffer.WriteInt32(MapNpcNum)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Num)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).X)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Y)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Dir)
 
                 Addlog("Recieved SMSG: SSpawnNpc", PACKET_LOG)
                 TextAdd("Recieved SMSG: SSpawnNpc")
 
                 For i = 1 To Vitals.Count - 1
-                    Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Vital(i))
+                    Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Vital(i))
                 Next
 
                 SendDataToMap(MapNum, Buffer.ToArray())
@@ -257,7 +258,7 @@ Module ServerGameLogic
             SendMapNpcVitals(MapNum, MapNpcNum)
         End If
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Public Function Random(ByVal low As Int32, ByVal high As Int32) As Integer
@@ -463,7 +464,7 @@ Module ServerGameLogic
     End Function
 
     Sub NpcMove(ByVal MapNum As Integer, ByVal MapNpcNum As Integer, ByVal Dir As Integer, ByVal Movement As Integer)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
         If MapNum <= 0 Or MapNum > MAX_CACHED_MAPS Or MapNpcNum <= 0 Or MapNpcNum > MAX_MAP_NPCS Or Dir < Direction.Up Or Dir > Direction.Right Or Movement < 1 Or Movement > 2 Then
@@ -476,12 +477,12 @@ Module ServerGameLogic
             Case Direction.Up
                 MapNpc(MapNum).Npc(MapNpcNum).Y = MapNpc(MapNum).Npc(MapNpcNum).Y - 1
 
-                Buffer.WriteInteger(ServerPackets.SNpcMove)
-                Buffer.WriteInteger(MapNpcNum)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).X)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
-                Buffer.WriteInteger(Movement)
+                Buffer.WriteInt32(ServerPackets.SNpcMove)
+                Buffer.WriteInt32(MapNpcNum)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).X)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Y)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Dir)
+                Buffer.WriteInt32(Movement)
 
                 Addlog("Sent SMSG: SNpcMove Up", PACKET_LOG)
                 TextAdd("Sent SMSG: SNpcMove Up")
@@ -490,12 +491,12 @@ Module ServerGameLogic
             Case Direction.Down
                 MapNpc(MapNum).Npc(MapNpcNum).Y = MapNpc(MapNum).Npc(MapNpcNum).Y + 1
 
-                Buffer.WriteInteger(ServerPackets.SNpcMove)
-                Buffer.WriteInteger(MapNpcNum)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).X)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
-                Buffer.WriteInteger(Movement)
+                Buffer.WriteInt32(ServerPackets.SNpcMove)
+                Buffer.WriteInt32(MapNpcNum)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).X)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Y)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Dir)
+                Buffer.WriteInt32(Movement)
 
                 Addlog("Sent SMSG: SNpcMove Down", PACKET_LOG)
                 TextAdd("Sent SMSG: SNpcMove Down")
@@ -504,12 +505,12 @@ Module ServerGameLogic
             Case Direction.Left
                 MapNpc(MapNum).Npc(MapNpcNum).X = MapNpc(MapNum).Npc(MapNpcNum).X - 1
 
-                Buffer.WriteInteger(ServerPackets.SNpcMove)
-                Buffer.WriteInteger(MapNpcNum)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).X)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
-                Buffer.WriteInteger(Movement)
+                Buffer.WriteInt32(ServerPackets.SNpcMove)
+                Buffer.WriteInt32(MapNpcNum)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).X)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Y)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Dir)
+                Buffer.WriteInt32(Movement)
 
                 Addlog("Sent SMSG: SNpcMove Left", PACKET_LOG)
                 TextAdd("Sent SMSG: SNpcMove Left")
@@ -518,12 +519,12 @@ Module ServerGameLogic
             Case Direction.Right
                 MapNpc(MapNum).Npc(MapNpcNum).X = MapNpc(MapNum).Npc(MapNpcNum).X + 1
 
-                Buffer.WriteInteger(ServerPackets.SNpcMove)
-                Buffer.WriteInteger(MapNpcNum)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).X)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Y)
-                Buffer.WriteInteger(MapNpc(MapNum).Npc(MapNpcNum).Dir)
-                Buffer.WriteInteger(Movement)
+                Buffer.WriteInt32(ServerPackets.SNpcMove)
+                Buffer.WriteInt32(MapNpcNum)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).X)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Y)
+                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Dir)
+                Buffer.WriteInt32(Movement)
 
                 Addlog("Sent SMSG: SNpcMove Right", PACKET_LOG)
                 TextAdd("Sent SMSG: SNpcMove Right")
@@ -531,11 +532,11 @@ Module ServerGameLogic
                 SendDataToMap(MapNum, Buffer.ToArray())
         End Select
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub NpcDir(ByVal MapNum As Integer, ByVal MapNpcNum As Integer, ByVal Dir As Integer)
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
         If MapNum <= 0 Or MapNum > MAX_CACHED_MAPS Or MapNpcNum <= 0 Or MapNpcNum > MAX_MAP_NPCS Or Dir < Direction.Up Or Dir > Direction.Right Then
@@ -544,16 +545,16 @@ Module ServerGameLogic
 
         MapNpc(MapNum).Npc(MapNpcNum).Dir = Dir
 
-        Buffer.WriteInteger(ServerPackets.SNpcDir)
-        Buffer.WriteInteger(MapNpcNum)
-        Buffer.WriteInteger(Dir)
+        Buffer.WriteInt32(ServerPackets.SNpcDir)
+        Buffer.WriteInt32(MapNpcNum)
+        Buffer.WriteInt32(Dir)
 
         Addlog("Sent SMSG: SNpcDir", PACKET_LOG)
         TextAdd("Sent SMSG: SNpcDir")
 
         SendDataToMap(MapNum, Buffer.ToArray())
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 
     Sub SpawnAllMapNpcs()
@@ -576,24 +577,24 @@ Module ServerGameLogic
 
     Sub SendMapNpcsToMap(ByVal MapNum As Integer)
         Dim i As Integer
-        Dim Buffer As New ByteBuffer
+        Dim Buffer As New ByteStream(4)
 
-        Buffer.WriteInteger(ServerPackets.SMapNpcData)
+        Buffer.WriteInt32(ServerPackets.SMapNpcData)
 
         Addlog("Sent SMSG: SMapNpcData", PACKET_LOG)
         TextAdd("Sent SMSG: SMapNpcData")
 
         For i = 1 To MAX_MAP_NPCS
-            Buffer.WriteInteger(MapNpc(MapNum).Npc(i).Num)
-            Buffer.WriteInteger(MapNpc(MapNum).Npc(i).X)
-            Buffer.WriteInteger(MapNpc(MapNum).Npc(i).Y)
-            Buffer.WriteInteger(MapNpc(MapNum).Npc(i).Dir)
-            Buffer.WriteInteger(MapNpc(MapNum).Npc(i).Vital(Vitals.HP))
-            Buffer.WriteInteger(MapNpc(MapNum).Npc(i).Vital(Vitals.MP))
+            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Num)
+            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).X)
+            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Y)
+            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Dir)
+            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(Vitals.HP))
+            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(Vitals.MP))
         Next
 
         SendDataToMap(MapNum, Buffer.ToArray())
 
-        Buffer = Nothing
+        Buffer.Dispose
     End Sub
 End Module
