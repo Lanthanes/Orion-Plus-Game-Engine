@@ -1,5 +1,6 @@
 ﻿Imports ASFW
 Imports ASFW.IO
+Imports ASFW.IO.FileIO
 
 Module ServerPets
 #Region "Declarations"
@@ -101,7 +102,7 @@ Module ServerPets
         writer.WriteInt32(Pet(PetNum).EvolveLevel)
         writer.WriteInt32(Pet(PetNum).EvolveNum)
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
 
     End Sub
 
@@ -124,7 +125,7 @@ Module ServerPets
         filename = Application.StartupPath & "\data\pets\pet" & PetNum & ".dat"
 
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(filename, reader)
+        BinaryFile.Load(filename, reader)
 
         Pet(PetNum).Num = reader.ReadInt32()
         Pet(PetNum).Name = reader.ReadString()
@@ -232,7 +233,7 @@ Module ServerPets
 
         SendDataToAll(Buffer.ToArray)
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -269,7 +270,7 @@ Module ServerPets
 
         SendDataTo(Index, Buffer.ToArray)
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -313,7 +314,7 @@ Module ServerPets
             SendDataToMap(GetPlayerMap(Index), Buffer.ToArray)
         End If
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendPetAttack(ByVal Index As Integer, ByVal MapNum As Integer)
@@ -321,8 +322,8 @@ Module ServerPets
 
         Buffer.WriteInt32(ServerPackets.SPetAttack)
         Buffer.WriteInt32(Index)
-        SendDataToMap(MapNum, buffer.ToArray)
-        Buffer.Dispose
+        SendDataToMap(MapNum, Buffer.ToArray)
+        Buffer.Dispose()
     End Sub
 
     Sub SendPetXY(ByVal Index As Integer, ByVal X As Integer, ByVal Y As Integer)
@@ -332,8 +333,8 @@ Module ServerPets
         Buffer.WriteInt32(Index)
         Buffer.WriteInt32(X)
         Buffer.WriteInt32(Y)
-        SendDataToMap(GetPlayerMap(Index), buffer.ToArray)
-        Buffer.Dispose
+        SendDataToMap(GetPlayerMap(Index), Buffer.ToArray)
+        Buffer.Dispose()
     End Sub
 
     Sub SendPetExp(ByVal Index As Integer)
@@ -342,8 +343,8 @@ Module ServerPets
         Buffer.WriteInt32(ServerPackets.SPetExp)
         Buffer.WriteInt32(GetPetExp(Index))
         Buffer.WriteInt32(GetPetNextLevel(Index))
-        SendDataTo(Index, buffer.ToArray)
-        Buffer.Dispose
+        SendDataTo(Index, Buffer.ToArray)
+        Buffer.Dispose()
     End Sub
 
 #End Region
@@ -357,7 +358,7 @@ Module ServerPets
         Buffer.WriteInt32(ServerPackets.SPetEditor)
         SendDataTo(Index, Buffer.ToArray)
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -516,7 +517,7 @@ Module ServerPets
         TempPlayer(Index).GoToX = x
         TempPlayer(Index).GoToY = y
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -536,7 +537,7 @@ Module ServerPets
             End Select
         End If
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -550,7 +551,7 @@ Module ServerPets
         ' Skill slot
         n = Buffer.ReadInt32
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
         ' set the skill buffer before castin
         BufferPetSkill(Index, n)
@@ -562,7 +563,7 @@ Module ServerPets
         Dim sMes As String = ""
         Dim Buffer As New ByteStream(data)
         PointType = Buffer.ReadInt32
-        Buffer.Dispose
+        Buffer.Dispose()
 
         ' Prevent hacking
         If (PointType < 0) Or (PointType > Stats.Count) Then Exit Sub
@@ -1021,7 +1022,7 @@ Module ServerPets
     End Sub
 
     Sub PetMove(ByVal Index As Integer, ByVal MapNum As Integer, ByVal Dir As Integer, ByVal movement As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         If MapNum < 1 Or MapNum > MAX_MAPS Or Index <= 0 Or Index > MAX_PLAYERS Or Dir < Direction.Up Or Dir > Direction.Right Or movement < 1 Or movement > 2 Then
             Exit Sub
@@ -1051,7 +1052,7 @@ Module ServerPets
         Buffer.WriteInt32(GetPetDir(Index))
         Buffer.WriteInt32(movement)
         SendDataToMap(MapNum, Buffer.ToArray)
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -1249,7 +1250,7 @@ Module ServerPets
     End Function
 
     Sub PetDir(ByVal Index As Integer, ByVal Dir As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         If Index <= 0 Or Index > MAX_PLAYERS Or Dir < Direction.Up Or Dir > Direction.Right Then Exit Sub
 
@@ -1263,7 +1264,7 @@ Module ServerPets
         Buffer.WriteInt32(Dir)
         SendDataToMap(GetPlayerMap(Index), Buffer.ToArray)
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -2254,7 +2255,7 @@ Module ServerPets
 
     'Pet Vital Stuffs
     Sub SendPetVital(ByVal Index As Integer, ByVal Vital As Vitals)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPetVital)
@@ -2279,7 +2280,7 @@ Module ServerPets
 
         SendDataToMap(GetPlayerMap(Index), Buffer.ToArray)
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -2437,7 +2438,7 @@ Module ServerPets
 
     Sub SendClearPetSpellBuffer(ByVal Index As Integer)
 
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SClearPetSkillBuffer)

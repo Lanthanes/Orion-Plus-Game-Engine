@@ -532,7 +532,7 @@ Module ServerHandleData
         TextAdd("Recieved CMSG: CSayMsg")
 
         'msg = Buffer.ReadString
-        msg = ReadUnicodeString(Buffer)
+        msg = ReadUnicodeString(Buffer.ReadBytes)
 
         Addlog("Map #" & GetPlayerMap(index) & ": " & GetPlayerName(index) & " says, '" & msg & "'", PLAYER_LOG)
 
@@ -550,7 +550,7 @@ Module ServerHandleData
         TextAdd("Recieved CMSG: CBroadcastMsg")
 
         'msg = Buffer.ReadString
-        msg = ReadUnicodeString(Buffer)
+        msg = ReadUnicodeString(Buffer.ReadBytes)
 
         s = "[Global]" & GetPlayerName(index) & ": " & msg
         SayMsg_Global(index, msg, ColorType.White)
@@ -568,7 +568,7 @@ Module ServerHandleData
 
         OtherPlayer = buffer.ReadString
         'Msg = buffer.ReadString
-        Msg = ReadUnicodeString(Buffer)
+        Msg = ReadUnicodeString(Buffer.ReadBytes)
         Buffer.Dispose
 
         OtherPlayerIndex = FindPlayer(OtherPlayer)
@@ -951,7 +951,7 @@ Module ServerHandleData
         Addlog("Recieved CMSG: CSaveMap", PACKET_LOG)
         TextAdd("Recieved CMSG: CSaveMap")
 
-        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data, 4, Data.Length))
+        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
@@ -3027,7 +3027,7 @@ Module ServerHandleData
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
 
-        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data, 4, Data.Length))
+        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
 
 
         Gettingmap = True

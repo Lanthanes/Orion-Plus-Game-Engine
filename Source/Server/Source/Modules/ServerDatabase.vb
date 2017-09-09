@@ -2,6 +2,7 @@
 Imports System.Linq
 Imports ASFW
 Imports ASFW.IO
+Imports ASFW.IO.FileIO
 
 Module ServerDatabase
 
@@ -18,21 +19,21 @@ Module ServerDatabase
 
         myXml.LoadXml()
 
-            myXml.WriteString("INIT", "MaxClasses", Max_Classes)
-            myXml.WriteString("CLASS1", "Name", "Warrior")
-            myXml.WriteString("CLASS1", "Desc", "Warrior Description")
-            myXml.WriteString("CLASS1", "MaleSprite", "1")
-            myXml.WriteString("CLASS1", "FemaleSprite", "2")
-            myXml.WriteString("CLASS1", "Str", "5")
-            myXml.WriteString("CLASS1", "End", "5")
-            myXml.WriteString("CLASS1", "Vit", "5")
-            myXml.WriteString("CLASS1", "Luck", "5")
-            myXml.WriteString("CLASS1", "Int", "5")
-            myXml.WriteString("CLASS1", "Spir", "5")
-            myXml.WriteString("CLASS1", "BaseExp", "25")
+        myXml.WriteString("INIT", "MaxClasses", Max_Classes)
+        myXml.WriteString("CLASS1", "Name", "Warrior")
+        myXml.WriteString("CLASS1", "Desc", "Warrior Description")
+        myXml.WriteString("CLASS1", "MaleSprite", "1")
+        myXml.WriteString("CLASS1", "FemaleSprite", "2")
+        myXml.WriteString("CLASS1", "Str", "5")
+        myXml.WriteString("CLASS1", "End", "5")
+        myXml.WriteString("CLASS1", "Vit", "5")
+        myXml.WriteString("CLASS1", "Luck", "5")
+        myXml.WriteString("CLASS1", "Int", "5")
+        myXml.WriteString("CLASS1", "Spir", "5")
+        myXml.WriteString("CLASS1", "BaseExp", "25")
 
-            myXml.WriteString("CLASS1", "StartMap", Options.StartMap)
-            myXml.WriteString("CLASS1", "StartX", Options.StartX)
+        myXml.WriteString("CLASS1", "StartMap", Options.StartMap)
+        myXml.WriteString("CLASS1", "StartX", Options.StartX)
         myXml.WriteString("CLASS1", "StartY", Options.StartY)
 
         myXml.CloseXml(True)
@@ -323,7 +324,7 @@ Module ServerDatabase
             writer.WriteInt32(Map(MapNum).Npc(x))
         Next
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
 
     End Sub
 
@@ -626,7 +627,7 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}.dat", MapNum))
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(filename, reader)
+        BinaryFile.Load(filename, reader)
 
         Map(MapNum).Name = reader.ReadString()
         Map(MapNum).Music = reader.ReadString()
@@ -810,7 +811,7 @@ Module ServerDatabase
         writer.WriteInt32(Item(itemNum).Projectile)
         writer.WriteInt32(Item(itemNum).Ammo)
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadItems()
@@ -832,7 +833,7 @@ Module ServerDatabase
         filename = Path.Combine(Application.StartupPath, "data", "items", String.Format("item{0}.dat", ItemNum))
 
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(filename, reader)
+        BinaryFile.Load(filename, reader)
 
         Item(ItemNum).Name = reader.ReadString()
         Item(ItemNum).Pic = reader.ReadInt32()
@@ -979,7 +980,7 @@ Module ServerDatabase
         writer.WriteInt32(Npc(NpcNum).Level)
         writer.WriteInt32(Npc(NpcNum).Damage)
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadNpcs()
@@ -1000,7 +1001,7 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "npcs", String.Format("npc{0}.dat", NpcNum))
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(filename, reader)
+        BinaryFile.Load(filename, reader)
 
         Npc(NpcNum).Name = reader.ReadString()
         Npc(NpcNum).AttackSay = reader.ReadString()
@@ -1137,7 +1138,7 @@ Module ServerDatabase
         writer.WriteBoolean(Resource(ResourceNum).Walkthrough)
         writer.WriteInt32(Resource(ResourceNum).Animation)
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadResources()
@@ -1157,7 +1158,7 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "resources", String.Format("resource{0}.dat", ResourceNum))
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(filename, reader)
+        BinaryFile.Load(filename, reader)
 
         Resource(ResourceNum).Name = reader.ReadString()
         Resource(ResourceNum).SuccessMessage = reader.ReadString()
@@ -1263,7 +1264,7 @@ Module ServerDatabase
             writer.WriteInt32(Shop(shopNum).TradeItem(i).CostValue)
         Next
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadShops()
@@ -1285,7 +1286,7 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "shops", String.Format("shop{0}.dat", ShopNum))
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(filename, reader)
+        BinaryFile.Load(filename, reader)
 
         Shop(ShopNum).Name = reader.ReadString()
         Shop(ShopNum).Face = reader.ReadByte()
@@ -1385,7 +1386,7 @@ Module ServerDatabase
         writer.WriteByte(Skill(skillnum).KnockBack)
         writer.WriteByte(Skill(skillnum).KnockBackTiles)
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadSkills()
@@ -1405,7 +1406,7 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "skills", String.Format("skills{0}.dat", SkillNum))
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(filename, reader)
+        BinaryFile.Load(filename, reader)
 
         Skill(SkillNum).Name = reader.ReadString()
         Skill(SkillNum).Type = reader.ReadByte()
@@ -1508,7 +1509,7 @@ Module ServerDatabase
             writer.WriteInt32(Animation(AnimationNum).LoopTime(x))
         Next
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadAnimations()
@@ -1528,7 +1529,7 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "animations", String.Format("animation{0}.dat", AnimationNum))
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(filename, reader)
+        BinaryFile.Load(filename, reader)
 
         Animation(AnimationNum).Name = reader.ReadString()
         Animation(AnimationNum).Sound = reader.ReadString()
@@ -1610,7 +1611,7 @@ Module ServerDatabase
         If AccountExist(Name) Then
             filename = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Name), String.Format("{0}.bin", Trim$(Name)))
             Dim reader As New ByteStream()
-            FileHandler.BinaryFile.Load(filename, reader)
+            BinaryFile.Load(filename, reader)
             namecheck = reader.ReadString()
             RightPassword = reader.ReadString()
 
@@ -1684,7 +1685,7 @@ Module ServerDatabase
         writer.WriteString(Player(Index).Password)
         writer.WriteByte(Player(Index).Access)
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
 
         For i = 1 To MAX_CHARS
             SaveCharacter(Index, i)
@@ -1699,7 +1700,7 @@ Module ServerDatabase
 
         filename = Path.Combine(Application.StartupPath, "data", "accounts", Name.Trim(), String.Format("{0}.bin", Name.Trim()))
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(filename, reader)
+        BinaryFile.Load(filename, reader)
 
         Player(Index).Login = reader.ReadString()
         Player(Index).Password = reader.ReadString()
@@ -1744,7 +1745,7 @@ Module ServerDatabase
         End If
 
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(filename, reader)
+        BinaryFile.Load(filename, reader)
 
         For i = 1 To MAX_BANK
             Bank(Index).Item(i).Num = reader.ReadByte()
@@ -1792,7 +1793,7 @@ Module ServerDatabase
             'writer.WriteInt32(Bank(Index).ItemRand(i).Stat(Stats.Spirit))
         Next
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
     End Sub
 
     Sub ClearBank(ByVal Index As Integer)
@@ -1971,7 +1972,7 @@ Module ServerDatabase
         filename = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Player(Index).Login), String.Format("{0}.bin", CharNum))
 
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(filename, reader)
+        BinaryFile.Load(filename, reader)
 
         Player(Index).Character(CharNum).Classes = reader.ReadByte()
         Player(Index).Character(CharNum).Dir = reader.ReadByte()
@@ -2248,7 +2249,7 @@ Module ServerDatabase
         writer.WriteInt32(Player(Index).Character(CharNum).Pet.Points)
         writer.WriteInt32(Player(Index).Character(CharNum).Pet.Exp)
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
     End Sub
 
     Function CharExist(ByVal Index As Integer, ByVal CharNum As Integer) As Boolean
@@ -2524,7 +2525,7 @@ Module ServerDatabase
 #Region "Data Functions"
     Function ClassData() As Byte()
         Dim i As Integer, n As Integer, q As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(Max_Classes)
 
@@ -2577,27 +2578,27 @@ Module ServerDatabase
         Next
 
         Return Buffer.ToArray()
-        Buffer.Dispose
+        Buffer.Dispose()
     End Function
 
     Function ItemsData() As Byte()
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Dim i As Integer
         Buffer = New ByteStream(4)
 
         For i = 1 To MAX_ITEMS
             If Len(Trim$(Item(i).Name)) > 0 Then
-                CombineBufferAndData(Buffer, ItemData(i))
+                Buffer.WriteBlock(ItemData(i))
             End If
         Next
 
-        Return buffer.ToArray
-        Buffer.Dispose
+        Return Buffer.ToArray
+        Buffer.Dispose()
 
     End Function
 
     Function ItemData(ByVal itemNum As Integer) As Byte()
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(itemNum)
         Buffer.WriteInt32(Item(itemNum).AccessReq)
@@ -2656,24 +2657,24 @@ Module ServerDatabase
         Buffer.WriteInt32(Item(itemNum).Ammo)
 
         Return Buffer.ToArray
-        Buffer.Dispose
+        Buffer.Dispose()
     End Function
 
     Function AnimationsData() As Byte()
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Dim i As Integer
         Buffer = New ByteStream(4)
 
         For i = 1 To MAX_ANIMATIONS
 
             If Len(Trim$(Animation(i).Name)) > 0 Then
-                CombineBufferAndData(Buffer, AnimationData(i))
+                Buffer.WriteBlock(AnimationData(i))
             End If
 
         Next
 
-        Return buffer.ToArray
-        Buffer.Dispose
+        Return Buffer.ToArray
+        Buffer.Dispose()
     End Function
 
     Function AnimationData(ByVal AnimationNum As Integer) As Byte()
@@ -2701,28 +2702,28 @@ Module ServerDatabase
         Next
 
         Return Buffer.ToArray
-        Buffer.Dispose
+        Buffer.Dispose()
     End Function
 
     Function NpcsData() As Byte()
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Dim i As Integer
         Buffer = New ByteStream(4)
 
         For i = 1 To MAX_NPCS
 
             If Len(Trim$(Npc(i).Name)) > 0 Then
-                CombineBufferAndData(Buffer, NpcData(i))
+                Buffer.WriteBlock(NpcData(i))
             End If
 
         Next
 
-        Return buffer.ToArray
-        Buffer.Dispose
+        Return Buffer.ToArray
+        Buffer.Dispose()
     End Function
 
     Function NpcData(ByVal NpcNum As Integer) As Byte()
-        Dim Buffer as ByteStream, i As Integer
+        Dim Buffer As ByteStream, i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(NpcNum)
         Buffer.WriteInt32(Npc(NpcNum).Animation)
@@ -2758,11 +2759,11 @@ Module ServerDatabase
         Buffer.WriteInt32(Npc(NpcNum).Damage)
 
         Return Buffer.ToArray
-        Buffer.Dispose
+        Buffer.Dispose()
     End Function
 
     Function ShopsData() As Byte()
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Dim i As Integer
 
         Buffer = New ByteStream(4)
@@ -2770,17 +2771,17 @@ Module ServerDatabase
         For i = 1 To MAX_SHOPS
 
             If Len(Trim$(Shop(i).Name)) > 0 Then
-                CombineBufferAndData(Buffer, ShopData(i))
+                Buffer.WriteBlock(ShopData(i))
             End If
 
         Next
 
-        Return buffer.ToArray
-        Buffer.Dispose
+        Return Buffer.ToArray
+        Buffer.Dispose()
     End Function
 
     Function ShopData(ByVal shopNum As Integer) As Byte()
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -2797,29 +2798,29 @@ Module ServerDatabase
         Next
 
         Return Buffer.ToArray
-        Buffer.Dispose
+        Buffer.Dispose()
     End Function
 
     Function SkillsData() As Byte()
         Dim i As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
 
         For i = 1 To MAX_SKILLS
 
             If Len(Trim$(Skill(i).Name)) > 0 Then
-                CombineBufferAndData(Buffer, SkillData(i))
+                Buffer.WriteBlock(SkillData(i))
             End If
 
         Next
 
-        Return buffer.ToArray
-        Buffer.Dispose
+        Return Buffer.ToArray
+        Buffer.Dispose()
     End Function
 
     Function SkillData(ByVal skillnum As Integer) As Byte()
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -2839,7 +2840,7 @@ Module ServerDatabase
         Buffer.WriteInt32(Skill(skillnum).Map)
         Buffer.WriteInt32(Skill(skillnum).MpCost)
         Buffer.WriteString(Skill(skillnum).Name)
-        Buffer.WriteInt32(Skill(skillnum).range)
+        Buffer.WriteInt32(Skill(skillnum).Range)
         Buffer.WriteInt32(Skill(skillnum).SkillAnim)
         Buffer.WriteInt32(Skill(skillnum).StunDuration)
         Buffer.WriteInt32(Skill(skillnum).Type)
@@ -2854,11 +2855,11 @@ Module ServerDatabase
         Buffer.WriteInt32(Skill(skillnum).KnockBackTiles)
 
         Return Buffer.ToArray
-        Buffer.Dispose
+        Buffer.Dispose()
     End Function
 
     Function ResourcesData() As Byte()
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Dim i As Integer
 
         Buffer = New ByteStream(4)
@@ -2866,17 +2867,17 @@ Module ServerDatabase
         For i = 1 To MAX_RESOURCES
 
             If Len(Trim$(Resource(i).Name)) > 0 Then
-                CombineBufferAndData(Buffer, ResourceData(i))
+                Buffer.WriteBlock(ResourceData(i))
             End If
 
         Next
 
-        Return buffer.ToArray
-        Buffer.Dispose
+        Return Buffer.ToArray
+        Buffer.Dispose()
     End Function
 
     Function ResourceData(ByVal ResourceNum As Integer) As Byte()
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
 

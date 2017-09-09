@@ -284,7 +284,7 @@ Module EditorTCP
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(EditorPackets.EditorSaveMap)
-        Buffer.WriteBytes(Compression.CompressBytes(data))
+        Buffer.WriteBlock(Compression.CompressBytes(data))
 
         SendData(Buffer.ToArray())
         Buffer.Dispose

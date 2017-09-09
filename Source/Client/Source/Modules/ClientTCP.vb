@@ -333,7 +333,7 @@ Module ClientTCP
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CSaveMap)
-        Buffer.WriteBytes(Compression.CompressBytes(data))
+        Buffer.WriteBlock(Compression.CompressBytes(data))
 
         SendData(Buffer.ToArray())
         Buffer.Dispose()
@@ -357,7 +357,7 @@ Module ClientTCP
 
         Buffer.WriteInt32(ClientPackets.CSayMsg)
         'Buffer.WriteString(text)
-        WriteUnicodeString(Buffer, text)
+        Buffer.WriteBytes(WriteUnicodeString(text))
 
         SendData(Buffer.ToArray())
         Buffer.Dispose()
@@ -573,7 +573,7 @@ Module ClientTCP
 
         Buffer.WriteInt32(ClientPackets.CBroadcastMsg)
         'Buffer.WriteString(text)
-        WriteUnicodeString(Buffer, text)
+        Buffer.WriteBytes(WriteUnicodeString(text))
 
         SendData(Buffer.ToArray())
         Buffer.Dispose()
@@ -585,7 +585,7 @@ Module ClientTCP
         Buffer.WriteInt32(ClientPackets.CPlayerMsg)
         Buffer.WriteString(MsgTo)
         'Buffer.WriteString(text)
-        WriteUnicodeString(Buffer, text)
+        Buffer.WriteBytes(WriteUnicodeString(text))
 
         SendData(Buffer.ToArray())
         Buffer.Dispose()

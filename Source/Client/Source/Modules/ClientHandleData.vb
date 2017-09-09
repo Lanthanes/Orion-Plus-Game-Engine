@@ -857,7 +857,7 @@ Module ClientHandleData
     Private Sub Packet_MapData(ByVal Data() As Byte)
         Dim X As Integer, Y As Integer, i As Integer
         Dim MapNum As Integer, MusicFile As String
-        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data, 4, Data.Length - 4))
+        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
 
         MapData = False
 
@@ -1187,7 +1187,7 @@ Module ClientHandleData
         Dim Msg As String
         Dim Buffer As New ByteStream(Data)
         'Msg = Trim(Buffer.ReadString)
-        Msg = Trim(ReadUnicodeString(Buffer))
+        Msg = Trim(ReadUnicodeString(Buffer.ReadBytes()))
 
         Buffer.Dispose()
 
@@ -1199,7 +1199,7 @@ Module ClientHandleData
         Dim Buffer As New ByteStream(Data)
 
         'Msg = Trim(Buffer.ReadString)
-        Msg = Trim(ReadUnicodeString(Buffer))
+        Msg = Trim(ReadUnicodeString(Buffer.ReadBytes))
 
         Buffer.Dispose()
 
@@ -1227,7 +1227,7 @@ Module ClientHandleData
         Dim Msg As String, colour As Integer
         Dim Buffer As New ByteStream(Data)
         'Msg = Trim(Buffer.ReadString)
-        Msg = Trim(ReadUnicodeString(Buffer))
+        Msg = Trim(ReadUnicodeString(Buffer.ReadBytes))
 
         colour = Buffer.ReadInt32
 
@@ -1524,7 +1524,7 @@ Module ClientHandleData
     Private Sub Packet_ActionMessage(ByVal data() As Byte)
         Dim X As Integer, Y As Integer, message As String, color As Integer, tmpType As Integer
         Dim Buffer As New ByteStream(data)
-        message = Trim(ReadUnicodeString(Buffer))
+        message = Trim(ReadUnicodeString(Buffer.ReadBytes))
         color = Buffer.ReadInt32
         tmpType = Buffer.ReadInt32
         X = Buffer.ReadInt32
@@ -1680,7 +1680,7 @@ Module ClientHandleData
         Access = Buffer.ReadInt32
         PK = Buffer.ReadInt32
         'message = Trim(Buffer.ReadString)
-        message = Trim(ReadUnicodeString(Buffer))
+        message = Trim(ReadUnicodeString(Buffer.ReadBytes))
         Header = Trim(Buffer.ReadString)
 
         AddText(Header & Name & ": " & message, QColorType.SayColor)
@@ -1826,7 +1826,7 @@ Module ClientHandleData
 
     Private Sub Packet_GameData(ByVal Data() As Byte)
         Dim n As Integer, i As Integer, z As Integer, x As Integer, a As Integer, b As Integer
-        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data, 4, Data.Length - 4))
+        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
 
         '\\\Read Class Data\\\
 
@@ -2261,7 +2261,7 @@ Module ClientHandleData
         target = Buffer.ReadInt32
         targetType = Buffer.ReadInt32
         'Message = buffer.ReadString
-        Message = Trim(ReadUnicodeString(Buffer))
+        Message = Trim(ReadUnicodeString(Buffer.ReadBytes))
         colour = Buffer.ReadInt32
         AddChatBubble(target, targetType, Message, colour)
 

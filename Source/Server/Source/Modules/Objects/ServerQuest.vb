@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports ASFW
 Imports ASFW.IO
+Imports ASFW.IO.FileIO
 
 Public Module ServerQuest
 #Region "Constants"
@@ -134,7 +135,7 @@ Public Module ServerQuest
             writer.WriteInt32(Quest(QuestNum).Task(I).TaskType)
         Next
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadQuests()
@@ -155,7 +156,7 @@ Public Module ServerQuest
         FileName = Path.Combine(Application.StartupPath, "data", "quests", String.Format("quest{0}.dat", QuestNum))
 
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(FileName, reader)
+        BinaryFile.Load(FileName, reader)
 
         Quest(QuestNum).Name = reader.ReadString()
         Quest(QuestNum).QuestLog = reader.ReadString()
@@ -285,7 +286,7 @@ Public Module ServerQuest
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SQuestEditor)
         SendDataTo(Index, Buffer.ToArray)
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub Packet_SaveQuest(ByVal Index As Integer, ByVal Data() As Byte)
@@ -345,7 +346,7 @@ Public Module ServerQuest
             Quest(QuestNum).Task(I).TaskType = Buffer.ReadInt32
         Next
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
         ' Save it
         SendQuests(Index) ' editor
@@ -421,7 +422,7 @@ Public Module ServerQuest
     End Sub
 
     Sub SendUpdateQuestToAll(ByVal QuestNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SUpdateQuest)
@@ -470,11 +471,11 @@ Public Module ServerQuest
         Next
 
         SendDataToAll(Buffer.ToArray)
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendUpdateQuestTo(ByVal Index As Integer, ByVal QuestNum As Integer)
-        Dim Buffer as ByteStream, I As Integer
+        Dim Buffer As ByteStream, I As Integer
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SUpdateQuest)
@@ -523,12 +524,12 @@ Public Module ServerQuest
         Next
 
         SendDataTo(Index, Buffer.ToArray)
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Public Sub SendPlayerQuests(ByVal Index As Integer)
         Dim I As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPlayerQuests)
@@ -540,12 +541,12 @@ Public Module ServerQuest
         Next
 
         SendDataTo(Index, Buffer.ToArray)
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
     Public Sub SendPlayerQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPlayerQuest)
@@ -556,12 +557,12 @@ Public Module ServerQuest
         Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).CurrentCount)
 
         SendDataTo(Index, Buffer.ToArray)
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     'sends a message to the client that is shown on the screen
     Public Sub QuestMessage(ByVal Index As Integer, ByVal QuestNum As Integer, ByVal message As String, ByVal QuestNumForStart As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SQuestMessage)
