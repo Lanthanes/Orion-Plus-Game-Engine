@@ -63,6 +63,7 @@ Module ServerTCP
                 Clients(i).IP = DirectCast(client.Client.RemoteEndPoint, IPEndPoint).Address.ToString
                 Clients(i).Start()
                 TextAdd("Connection received from " & Clients(i).IP)
+                SendKeyPair(i)
                 SendNews(i)
                 Exit For
             End If
@@ -2400,6 +2401,17 @@ Module ServerTCP
         TextAdd("Sent SMSG: SCritical")
 
         SendDataTo(Index, Buffer.ToArray())
+
+        Buffer = Nothing
+    End Sub
+
+    Sub SendKeyPair(ByVal index As Integer)
+        Dim Buffer As ByteBuffer
+
+        Buffer = New ByteBuffer
+        Buffer.WriteInteger(ServerPackets.SKeyPair)
+        Buffer.WriteString(EKeyPair.ExportKeyString(False))
+        SendDataTo(index, Buffer.ToArray())
 
         Buffer = Nothing
     End Sub

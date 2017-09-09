@@ -213,8 +213,8 @@ Module ServerHandleData
 
         If Not IsPlaying(index) AndAlso Not IsLoggedIn(index) Then
             'Get the Data
-            username = buffer.ReadString
-            password = buffer.ReadString
+            username = EKeyPair.DecryptString(buffer.ReadString)
+            password = EKeyPair.DecryptString(buffer.ReadString)
             ' Prevent hacking
             If Len(username.Trim) < 3 Or Len(password.Trim) < 3 Then
                 AlertMsg(index, "Your username and password must be at least three characters in length")
@@ -309,11 +309,11 @@ Module ServerHandleData
             If Not IsLoggedIn(index) Then
 
                 ' Get the data
-                Name = Buffer.ReadString
-                Password = Buffer.ReadString
+                Name = EKeyPair.DecryptString(Buffer.ReadString)
+                Password = EKeyPair.DecryptString(Buffer.ReadString)
 
                 ' Check versions
-                If Buffer.ReadString <> Application.ProductVersion Then
+                If EKeyPair.DecryptString(Buffer.ReadString) <> Application.ProductVersion Then
                     AlertMsg(index, "Version outdated, please visit " & Options.Website)
                     Exit Sub
                 End If

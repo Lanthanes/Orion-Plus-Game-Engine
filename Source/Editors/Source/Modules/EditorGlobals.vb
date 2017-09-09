@@ -178,4 +178,7 @@
     Public DrawMapNameColor As SFML.Graphics.Color
 
     Public LoadClassInfo As Boolean
+
+
+    Public EKeyPair As New ASFW.IO.Encryption.KeyPair()
 End Module

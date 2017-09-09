@@ -2,6 +2,7 @@
     ' Packets sent by server to client
     Public Enum ServerPackets
         SAlertMsg = 1
+        SKeyPair
         SLoadCharOk
         SLoginOk
         SNewCharClasses

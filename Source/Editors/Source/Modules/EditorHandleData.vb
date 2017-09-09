@@ -63,6 +63,7 @@ Module EditorHandleData
         Packets = New Dictionary(Of Integer, Packet_)
 
         Packets.Add(ServerPackets.SAlertMsg, AddressOf Packet_AlertMSG)
+        Packets.Add(ServerPackets.SKeyPair, AddressOf Packet_KeyPair)
 
         Packets.Add(ServerPackets.SLoginOk, AddressOf Packet_LoginOk)
         Packets.Add(ServerPackets.SClassesData, AddressOf Packet_ClassesData)
@@ -168,6 +169,18 @@ Module EditorHandleData
         MsgBox(Msg, vbOKOnly, "OrionClient+ Editors")
 
         CloseEditor()
+    End Sub
+
+    Sub Packet_KeyPair(ByVal Data() As Byte)
+        Dim Buffer As ByteBuffer
+        Buffer = New ByteBuffer
+        Buffer.WriteBytes(Data)
+
+        ' Confirm it is the right packet
+        If Buffer.ReadInteger <> ServerPackets.SKeyPair Then Exit Sub
+
+        EKeyPair.ImportKeyString(Buffer.ReadString())
+        Buffer = Nothing
     End Sub
 
     Sub Packet_LoginOk(ByVal Data() As Byte)

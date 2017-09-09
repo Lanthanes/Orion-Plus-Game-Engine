@@ -26,5 +26,5 @@
     Public TempMapData As Byte
 
     Public Gettingmap As Boolean
-
+    Public EKeyPair As New ASFW.IO.Encryption.KeyPair()
 End Module

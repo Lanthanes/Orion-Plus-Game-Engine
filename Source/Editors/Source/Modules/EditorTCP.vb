@@ -111,9 +111,9 @@ Module EditorTCP
         Dim Buffer As New ByteBuffer
 
         Buffer.WriteInteger(EditorPackets.EditorLogin)
-        Buffer.WriteString(Name)
-        Buffer.WriteString(Password)
-        Buffer.WriteString(Application.ProductVersion)
+        Buffer.WriteString(EKeyPair.EncryptString(Name))
+        Buffer.WriteString(EKeyPair.EncryptString(Password))
+        Buffer.WriteString(EKeyPair.EncryptString(Application.ProductVersion))
         SendData(Buffer.ToArray())
         Buffer = Nothing
     End Sub

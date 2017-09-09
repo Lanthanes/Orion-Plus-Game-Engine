@@ -114,8 +114,8 @@ Module ClientTCP
         Dim Buffer As New ByteBuffer
 
         Buffer.WriteInteger(ClientPackets.CNewAccount)
-        Buffer.WriteString(Name)
-        Buffer.WriteString(Password)
+        Buffer.WriteString(EKeyPair.EncryptString(Name))
+        Buffer.WriteString(EKeyPair.EncryptString(Password))
         SendData(Buffer.ToArray)
 
         Buffer = Nothing
@@ -139,9 +139,9 @@ Module ClientTCP
         Dim Buffer As New ByteBuffer
 
         Buffer.WriteInteger(ClientPackets.CLogin)
-        Buffer.WriteString(Name)
-        Buffer.WriteString(Password)
-        Buffer.WriteString(Application.ProductVersion)
+        Buffer.WriteString(EKeyPair.EncryptString(Name))
+        Buffer.WriteString(EKeyPair.EncryptString(Password))
+        Buffer.WriteString(EKeyPair.EncryptString(Application.ProductVersion))
         SendData(Buffer.ToArray())
 
         Buffer = Nothing

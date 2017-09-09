@@ -62,6 +62,7 @@ Module ClientHandleData
         Packets = New Dictionary(Of Integer, Packet_)
 
         Packets.Add(ServerPackets.SAlertMsg, AddressOf Packet_AlertMSG)
+        Packets.Add(ServerPackets.SKeyPair, AddressOf Packet_KeyPair)
         Packets.Add(ServerPackets.SLoadCharOk, AddressOf Packet_LoadCharOk)
         Packets.Add(ServerPackets.SLoginOk, AddressOf Packet_LoginOk)
         Packets.Add(ServerPackets.SNewCharClasses, AddressOf Packet_NewCharClasses)
@@ -245,6 +246,18 @@ Module ClientHandleData
 
         MsgBox(Msg, vbOKOnly, GAME_NAME)
         DestroyGame()
+    End Sub
+
+    Sub Packet_KeyPair(ByVal Data() As Byte)
+        Dim Buffer As ByteBuffer
+        Buffer = New ByteBuffer
+        Buffer.WriteBytes(Data)
+
+        ' Confirm it is the right packet
+        If Buffer.ReadInteger <> ServerPackets.SKeyPair Then Exit Sub
+
+        EKeyPair.ImportKeyString(Buffer.ReadString())
+        Buffer = Nothing
     End Sub
 
     Sub Packet_LoadCharOk(ByVal Data() As Byte)

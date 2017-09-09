@@ -40,6 +40,18 @@ Module ServerGeneral
         ' Initialize the random-number generator
         Randomize()
 
+        ' LOAD ENCRYPTION
+        Dim fi = Application.StartupPath & "\AsyncKeys.xml"
+        If Not File.Exists(fi) Then
+            EKeyPair.GenerateKeys()
+            EKeyPair.ExportKey(fi, True) ' True exports private key too.
+            ' Remember never pass private to client!
+            ' Exporting the Key above saves it as a file for later reuse.
+        Else
+            EKeyPair.ImportKey(fi)
+        End If
+        ' END LOAD ENCRYPTION
+
         ReDim Map(MAX_CACHED_MAPS)
 
         ReDim MapNpc(MAX_CACHED_MAPS)

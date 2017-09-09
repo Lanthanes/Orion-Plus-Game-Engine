@@ -227,4 +227,7 @@ Module ClientGlobals
 
     Public ShowAnimLayers As Boolean
     Public ShowAnimTimer As Integer
+
+
+    Public EKeyPair As New ASFW.IO.Encryption.KeyPair()
 End Module
