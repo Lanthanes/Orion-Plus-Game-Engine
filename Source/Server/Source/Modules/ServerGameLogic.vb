@@ -18,7 +18,7 @@ Module ServerGameLogic
     Public Function GetPlayersOnline() As Integer
         Dim x As Integer
         x = 0
-        For i = 1 To Socket.HighIndex
+        For i As Integer = 1 To Socket.HighIndex
             If TempPlayer(i).InGame = True Then
                 x = x + 1
             End If

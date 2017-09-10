@@ -255,7 +255,7 @@ Module ServerGeneral
         AddCommandHandler("/timespeed", AddressOf HandleCommandTimeSpeed)
 
         ' Start listener now that everything is loaded
-        Socket.StartListening(Options.Port, 5, True)
+        Socket.StartListening(Options.Port, 5, 1)
 
         ' Starts the server loop
         ServerLoop.ServerLoop()

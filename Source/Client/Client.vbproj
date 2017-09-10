@@ -71,8 +71,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ASFW, Version=1.0.6462.692, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CS-ASFW.0.9.9.4\lib\ASFW.dll</HintPath>
+    <Reference Include="ASFW, Version=1.0.6462.2313, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-ASFW.0.9.9.5\lib\ASFW.dll</HintPath>
     </Reference>
     <Reference Include="DarkUI">
       <HintPath>..\Editors\DarkUI.dll</HintPath>
@@ -2283,7 +2283,8 @@
   <Import Project="..\Bindings\Bindings.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)Data" "$(SolutionDir)Build\Editors\Data" /Y /I /S /E</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
