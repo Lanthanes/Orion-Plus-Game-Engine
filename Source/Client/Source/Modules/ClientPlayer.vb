@@ -62,7 +62,7 @@ Module ClientPlayer
             If GetTickCount() > Player(MyIndex).EventTimer Then
                 For i = 1 To Map.CurrentEvents
                     If Map.MapEvents(i).Visible = 1 Then
-                        If Map.MapEvents(i).X = X And Map.MapEvents(i).Y = Y Then
+                        If Map.MapEvents(i).X = X AndAlso Map.MapEvents(i).Y = Y Then
                             Buffer = New ByteStream(4)
                             Buffer.WriteInt32(ClientPackets.CEvent)
                             Buffer.WriteInt32(i)
@@ -125,7 +125,7 @@ Module ClientPlayer
 
     Function IsTryingToMove() As Boolean
 
-        If DirUp Or DirDown Or DirLeft Or DirRight Then
+        If DirUp OrElse DirDown OrElse DirLeft OrElse DirRight Then
             IsTryingToMove = True
         End If
 
@@ -368,8 +368,8 @@ Module ClientPlayer
             If FurnitureCount > 0 Then
                 For i = 1 To FurnitureCount
                     If Item(Furniture(i).ItemNum).Data3 = 0 Then
-                        If X >= Furniture(i).X And X <= Furniture(i).X + Item(Furniture(i).ItemNum).FurnitureWidth - 1 Then
-                            If Y <= Furniture(i).Y And Y >= Furniture(i).Y - Item(Furniture(i).ItemNum).FurnitureHeight Then
+                        If X >= Furniture(i).X AndAlso X <= Furniture(i).X + Item(Furniture(i).ItemNum).FurnitureWidth - 1 Then
+                            If Y <= Furniture(i).Y AndAlso Y >= Furniture(i).Y - Item(Furniture(i).ItemNum).FurnitureHeight Then
                                 z = Item(Furniture(i).ItemNum).FurnitureBlocks(X - Furniture(i).X, ((Furniture(i).Y - Y) * -1) + Item(Furniture(i).ItemNum).FurnitureHeight)
                                 If z = 1 Then CheckDirection = True : Exit Function
                             End If
@@ -381,13 +381,13 @@ Module ClientPlayer
 
         ' Check to see if a player is already on that tile
         For i = 1 To MAX_PLAYERS
-            If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
+            If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
                 If Player(i).InHouse = Player(MyIndex).InHouse Then
                     If GetPlayerX(i) = X Then
                         If GetPlayerY(i) = Y Then
                             CheckDirection = True
                             Exit Function
-                        ElseIf Player(i).Pet.X = X And Player(i).Pet.Alive = True Then
+                        ElseIf Player(i).Pet.X = X AndAlso Player(i).Pet.Alive = True Then
                             If Player(i).Pet.Y = Y Then
                                 CheckDirection = True
                                 Exit Function
@@ -449,8 +449,8 @@ Module ClientPlayer
 
         ' Check if completed walking over to the next tile
         If Player(Index).Moving > 0 Then
-            If GetPlayerDir(Index) = Direction.Right Or GetPlayerDir(Index) = Direction.Down Then
-                If (Player(Index).XOffset >= 0) And (Player(Index).YOffset >= 0) Then
+            If GetPlayerDir(Index) = Direction.Right OrElse GetPlayerDir(Index) = Direction.Down Then
+                If (Player(Index).XOffset >= 0) AndAlso (Player(Index).YOffset >= 0) Then
                     Player(Index).Moving = 0
                     If Player(Index).Steps = 1 Then
                         Player(Index).Steps = 3
@@ -459,7 +459,7 @@ Module ClientPlayer
                     End If
                 End If
             Else
-                If (Player(Index).XOffset <= 0) And (Player(Index).YOffset <= 0) Then
+                If (Player(Index).XOffset <= 0) AndAlso (Player(Index).YOffset <= 0) Then
                     Player(Index).Moving = 0
                     If Player(Index).Steps = 1 Then
                         Player(Index).Steps = 3
@@ -509,7 +509,7 @@ Module ClientPlayer
         Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
-        If skillslot < 1 Or skillslot > MAX_PLAYER_SKILLS Then Exit Sub
+        If skillslot < 1 OrElse skillslot > MAX_PLAYER_SKILLS Then Exit Sub
 
         If SkillCD(skillslot) > 0 Then
             AddText("Skill has not cooled down yet!", QColorType.AlertColor)
@@ -735,7 +735,7 @@ Module ClientPlayer
     End Function
 
     Sub SetPlayerEquipment(ByVal Index As Integer, ByVal InvNum As Integer, ByVal EquipmentSlot As EquipmentType)
-        If Index < 1 Or Index > MAX_PLAYERS Then Exit Sub
+        If Index < 1 OrElse Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Equipment(EquipmentSlot) = InvNum
     End Sub
 

@@ -144,7 +144,7 @@
     End Sub
 
     Private Sub ChkKnockBack_CheckedChanged(sender As Object, e As EventArgs) Handles chkKnockBack.CheckedChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_SKILLS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_SKILLS Then Exit Sub
 
         If chkKnockBack.Checked = True Then
             Skill(EditorIndex).KnockBack = 1
@@ -154,7 +154,7 @@
     End Sub
 
     Private Sub CmbKnockBackTiles_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbKnockBackTiles.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_SKILLS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_SKILLS Then Exit Sub
 
         Skill(EditorIndex).KnockBackTiles = cmbKnockBackTiles.SelectedIndex
     End Sub

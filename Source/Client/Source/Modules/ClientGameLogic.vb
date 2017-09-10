@@ -363,8 +363,8 @@ Module ClientGameLogic
 
             ' Check if completed walking over to the next tile
             If MapNpc(MapNpcNum).Moving > 0 Then
-                If MapNpc(MapNpcNum).Dir = Direction.Right Or MapNpc(MapNpcNum).Dir = Direction.Down Then
-                    If (MapNpc(MapNpcNum).XOffset >= 0) And (MapNpc(MapNpcNum).YOffset >= 0) Then
+                If MapNpc(MapNpcNum).Dir = Direction.Right OrElse MapNpc(MapNpcNum).Dir = Direction.Down Then
+                    If (MapNpc(MapNpcNum).XOffset >= 0) AndAlso (MapNpc(MapNpcNum).YOffset >= 0) Then
                         MapNpc(MapNpcNum).Moving = 0
                         If MapNpc(MapNpcNum).Steps = 1 Then
                             MapNpc(MapNpcNum).Steps = 3
@@ -373,7 +373,7 @@ Module ClientGameLogic
                         End If
                     End If
                 Else
-                    If (MapNpc(MapNpcNum).XOffset <= 0) And (MapNpc(MapNpcNum).YOffset <= 0) Then
+                    If (MapNpc(MapNpcNum).XOffset <= 0) AndAlso (MapNpc(MapNpcNum).YOffset <= 0) Then
                         MapNpc(MapNpcNum).Moving = 0
                         If MapNpc(MapNpcNum).Steps = 1 Then
                             MapNpc(MapNpcNum).Steps = 3
@@ -461,11 +461,7 @@ Module ClientGameLogic
     End Sub
 
     Public Function IsDirBlocked(ByRef blockvar As Byte, ByRef Dir As Byte) As Boolean
-        If Not blockvar And (2 ^ Dir) Then
-            IsDirBlocked = False
-        Else
-            IsDirBlocked = True
-        End If
+        Return Not (Not blockvar And (2 ^ Dir))
     End Function
 
     Public Function ConvertCurrency(ByVal Amount As Integer) As String
@@ -687,7 +683,7 @@ Module ClientGameLogic
                     n = Command(1)
 
                     ' Check to make sure its a valid map #
-                    If n > 0 And n <= MAX_QUESTS Then
+                    If n > 0 AndAlso n <= MAX_QUESTS Then
                         QuestReset(n)
                     Else
                         AddText(Strings.Get("adminchatcommand", "wrongquestnr"), QColorType.AlertColor)
@@ -802,7 +798,7 @@ Module ClientGameLogic
                     n = Command(1)
 
                     ' Check to make sure its a valid map #
-                    If n > 0 And n <= MAX_MAPS Then
+                    If n > 0 AndAlso n <= MAX_MAPS Then
                         WarpTo(n)
                     Else
                         AddText(Strings.Get("adminchatcommand", "wrongmapnr"), QColorType.AlertColor)
@@ -898,7 +894,7 @@ Module ClientGameLogic
                         GoTo Continue1
                     End If
 
-                    If IsNumeric(Command(1)) Or Not IsNumeric(Command(2)) Then
+                    If IsNumeric(Command(1)) OrElse Not IsNumeric(Command(2)) Then
                         AddText(Strings.Get("adminchatcommand", "setaccess"), ColorType.Yellow)
                         GoTo Continue1
                     End If
@@ -940,7 +936,7 @@ Continue1:
     Public Sub UpdateDescWindow(ByVal itemnum As Integer, ByVal Amount As Integer, ByVal InvNum As Integer, ByVal WindowType As Byte)
         Dim theName As String = "", tmpRarity As Integer
 
-        If Item(itemnum).Randomize <> 0 And InvNum <> 0 Then
+        If Item(itemnum).Randomize <> 0 AndAlso InvNum <> 0 Then
             If WindowType = 0 Then ' inventory
                 theName = Trim(Player(MyIndex).RandInv(InvNum).Prefix) & " " & Trim(Item(itemnum).Name) & " " & Trim(Player(MyIndex).RandInv(InvNum).Suffix)
                 tmpRarity = Player(MyIndex).RandInv(InvNum).Rarity
@@ -1062,7 +1058,7 @@ Continue1:
         ItemDescCost = Item(itemnum).Price & "g"
 
         ' If currency, exit out before all the other shit
-        If Item(itemnum).Type = ItemType.Currency Or Item(itemnum).Type = ItemType.None Then
+        If Item(itemnum).Type = ItemType.Currency OrElse Item(itemnum).Type = ItemType.None Then
             ' Clear other labels
             ItemDescLevel = Strings.Get("itemdescription", "notavail")
             ItemDescSpeed = Strings.Get("itemdescription", "notavail")
@@ -1389,7 +1385,7 @@ Continue1:
         Next
 
         ' if neither layer is used, clear
-        If AnimInstance(Index).Used(0) = False And AnimInstance(Index).Used(1) = False Then
+        If AnimInstance(Index).Used(0) = False AndAlso AnimInstance(Index).Used(1) = False Then
             ClearAnimInstance(Index)
         Else
             If Sound <> "" Then PlaySound(Sound)
@@ -1420,7 +1416,7 @@ Continue1:
         ' set the global index
 
         chatBubbleIndex = chatBubbleIndex + 1
-        If chatBubbleIndex < 1 Or chatBubbleIndex > Byte.MaxValue Then chatBubbleIndex = 1
+        If chatBubbleIndex < 1 OrElse chatBubbleIndex > Byte.MaxValue Then chatBubbleIndex = 1
         ' default to new bubble
         Index = chatBubbleIndex
         ' loop through and see if that player/npc already has a chat bubble

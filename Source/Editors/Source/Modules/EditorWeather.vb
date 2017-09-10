@@ -21,7 +21,7 @@ Public Module EditorWeather
         Dim i As Integer, x As Integer
 
         If CurrentWeather > 0 Then
-            If CurrentWeather = Weather.Rain Or CurrentWeather = Weather.Storm Then
+            If CurrentWeather = Weather.Rain OrElse CurrentWeather = Weather.Storm Then
                 PlayWeatherSound("Rain.ogg", True)
             End If
             x = Rand(1, 101 - CurrentWeatherIntensity)
@@ -33,14 +33,14 @@ Public Module EditorWeather
                             WeatherParticle(i).InUse = 1
                             WeatherParticle(i).type = CurrentWeather
                             WeatherParticle(i).Velocity = Rand(8, 14)
-                            WeatherParticle(i).X = (TileView.left * 32) - 32
-                            WeatherParticle(i).Y = ((TileView.top * 32) + Rand(-32, GameWindow.Size.Y))
+                            WeatherParticle(i).X = (TileView.Left * 32) - 32
+                            WeatherParticle(i).Y = ((TileView.Top * 32) + Rand(-32, GameWindow.Size.Y))
                         Else
                             WeatherParticle(i).InUse = 1
                             WeatherParticle(i).type = CurrentWeather
                             WeatherParticle(i).Velocity = Rand(10, 15)
-                            WeatherParticle(i).X = ((TileView.left * 32) + Rand(-32, GameWindow.Size.X))
-                            WeatherParticle(i).Y = (TileView.top * 32) - 32
+                            WeatherParticle(i).X = ((TileView.Left * 32) + Rand(-32, GameWindow.Size.X))
+                            WeatherParticle(i).Y = (TileView.Top * 32) - 32
                         End If
                         'Exit For
                     End If
@@ -59,7 +59,7 @@ Public Module EditorWeather
         End If
         For i = 1 To MAX_WEATHER_PARTICLES
             If WeatherParticle(i).InUse = 1 Then
-                If WeatherParticle(i).X > TileView.right * 32 Or WeatherParticle(i).Y > TileView.bottom * 32 Then
+                If WeatherParticle(i).X > TileView.Right * 32 OrElse WeatherParticle(i).Y > TileView.Bottom * 32 Then
                     WeatherParticle(i).InUse = 0
                 Else
                     WeatherParticle(i).X = WeatherParticle(i).X + WeatherParticle(i).Velocity
@@ -113,13 +113,13 @@ Public Module EditorWeather
         'If InMapEditor Then Exit Sub
 
         fogNum = CurrentFog
-        If fogNum <= 0 Or fogNum > NumFogs Then Exit Sub
+        If fogNum <= 0 OrElse fogNum > NumFogs Then Exit Sub
 
         Dim horz As Integer = 0
         Dim vert As Integer = 0
 
-        For x = TileView.left To TileView.right + 1
-            For y = TileView.top To TileView.bottom + 1
+        For x = TileView.Left To TileView.Right + 1
+            For y = TileView.Top To TileView.Bottom + 1
                 If IsValidMapPoint(x, y) Then
                     horz = -x
                     vert = -y
@@ -149,7 +149,7 @@ Public Module EditorWeather
     End Sub
 
     Sub PlayWeatherSound(ByVal FileName As String, Optional Looped As Boolean = False)
-        If Not Options.Sound = 1 Or Not FileExist(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
+        If Not Options.Sound = 1 OrElse Not FileExist(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
         If CurWeatherMusic = FileName Then Exit Sub
 
         Dim buffer As SoundBuffer

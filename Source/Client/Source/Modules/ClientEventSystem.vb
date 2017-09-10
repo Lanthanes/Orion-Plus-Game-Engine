@@ -423,7 +423,7 @@ Public Module ClientEventSystem
     End Sub
 
     Sub ClearEvent(ByVal EventNum As Integer)
-        If EventNum > Map.EventCount Or EventNum > UBound(Map.MapEvents) Then Exit Sub
+        If EventNum > Map.EventCount OrElse EventNum > UBound(Map.MapEvents) Then Exit Sub
         With Map.Events(EventNum)
             .Name = ""
             .PageCount = 0
@@ -504,7 +504,7 @@ Public Module ClientEventSystem
             FrmEditor_Events.nudPlayerVariable.Value = .VariableCondition
             FrmEditor_Events.nudGraphic.Value = .Graphic
             If FrmEditor_Events.cmbEventQuest.Items.Count > 0 Then
-                If .Questnum >= 0 And .Questnum <= FrmEditor_Events.cmbEventQuest.Items.Count Then
+                If .Questnum >= 0 AndAlso .Questnum <= FrmEditor_Events.cmbEventQuest.Items.Count Then
                     FrmEditor_Events.cmbEventQuest.SelectedIndex = .Questnum
                 End If
             End If
@@ -574,7 +574,7 @@ Public Module ClientEventSystem
 newlist:
             For i = 1 To tmpEvent.Pages(curPageNum).CommandList(curlist).CommandCount
                 If listleftoff(curlist) > 0 Then
-                    If (tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(listleftoff(curlist)).Index = EventType.evCondition Or tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(listleftoff(curlist)).Index = EventType.evShowChoices) And conditionalstage(curlist) <> 0 Then
+                    If (tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(listleftoff(curlist)).Index = EventType.evCondition OrElse tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(listleftoff(curlist)).Index = EventType.evShowChoices) AndAlso conditionalstage(curlist) <> 0 Then
                         i = listleftoff(curlist)
                     ElseIf listleftoff(curlist) >= i Then
                         i = listleftoff(curlist) + 1
@@ -2698,7 +2698,7 @@ newlist:
                     'None
                     FrmEditor_Events.picGraphicSel.BackgroundImage = Nothing
                 Case 1
-                    If FrmEditor_Events.nudGraphic.Value > 0 And FrmEditor_Events.nudGraphic.Value <= NumCharacters Then
+                    If FrmEditor_Events.nudGraphic.Value > 0 AndAlso FrmEditor_Events.nudGraphic.Value <= NumCharacters Then
                         'Load character from Contents into our sourceBitmap
                         sourceBitmap = New Bitmap(Application.StartupPath & "/Data/graphics/characters/" & FrmEditor_Events.nudGraphic.Value & ".png")
                         targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
@@ -2725,12 +2725,12 @@ newlist:
                         Exit Sub
                     End If
                 Case 2
-                    If FrmEditor_Events.nudGraphic.Value > 0 And FrmEditor_Events.nudGraphic.Value <= NumTileSets Then
+                    If FrmEditor_Events.nudGraphic.Value > 0 AndAlso FrmEditor_Events.nudGraphic.Value <= NumTileSets Then
                         'Load tilesheet from Contents into our sourceBitmap
                         sourceBitmap = New Bitmap(Application.StartupPath & "/Data/graphics/tilesets/" & FrmEditor_Events.nudGraphic.Value & ".png")
                         targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
 
-                        If tmpEvent.Pages(curPageNum).GraphicX2 = 0 And tmpEvent.Pages(curPageNum).GraphicY2 = 0 Then
+                        If tmpEvent.Pages(curPageNum).GraphicX2 = 0 AndAlso tmpEvent.Pages(curPageNum).GraphicY2 = 0 Then
                             sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
                             sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
                             sRect.Bottom = sRect.Top + 32
@@ -2786,7 +2786,7 @@ newlist:
                     Case 0
                         FrmEditor_Events.picGraphicSel.BackgroundImage = Nothing
                     Case 1
-                        If tmpEvent.Pages(curPageNum).Graphic > 0 And tmpEvent.Pages(curPageNum).Graphic <= NumCharacters Then
+                        If tmpEvent.Pages(curPageNum).Graphic > 0 AndAlso tmpEvent.Pages(curPageNum).Graphic <= NumCharacters Then
                             'Load character from Contents into our sourceBitmap
                             sourceBitmap = New Bitmap(Application.StartupPath & GFX_PATH & "\characters\" & tmpEvent.Pages(curPageNum).Graphic & ".png")
                             targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
@@ -2808,12 +2808,12 @@ newlist:
                             Exit Sub
                         End If
                     Case 2
-                        If tmpEvent.Pages(curPageNum).Graphic > 0 And tmpEvent.Pages(curPageNum).Graphic <= NumTileSets Then
+                        If tmpEvent.Pages(curPageNum).Graphic > 0 AndAlso tmpEvent.Pages(curPageNum).Graphic <= NumTileSets Then
                             'Load tilesheet from Contents into our sourceBitmap
                             sourceBitmap = New Bitmap(Application.StartupPath & GFX_PATH & "tilesets\" & tmpEvent.Pages(curPageNum).Graphic & ".png")
                             targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
 
-                            If tmpEvent.Pages(curPageNum).GraphicX2 = 0 And tmpEvent.Pages(curPageNum).GraphicY2 = 0 Then
+                            If tmpEvent.Pages(curPageNum).GraphicX2 = 0 AndAlso tmpEvent.Pages(curPageNum).GraphicY2 = 0 Then
                                 sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
                                 sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
                                 sRect.Bottom = sRect.Top + 32
@@ -2898,7 +2898,7 @@ newlist:
                     tY = ((Y) - 7) + (PIC_Y * 0.5)
                     DrawText(tX, tY, "EV", (SFML.Graphics.Color.Green), (SFML.Graphics.Color.Black), GameWindow)
                 Case 1
-                    If Map.Events(i).Pages(1).Graphic > 0 And Map.Events(i).Pages(1).Graphic <= NumCharacters Then
+                    If Map.Events(i).Pages(1).Graphic > 0 AndAlso Map.Events(i).Pages(1).Graphic <= NumCharacters Then
                         If CharacterGFXInfo(Map.Events(i).Pages(1).Graphic).IsLoaded = False Then
                             LoadTexture(Map.Events(i).Pages(1).Graphic, 2)
                         End If
@@ -2933,7 +2933,7 @@ newlist:
                         GameWindow.Draw(rec2)
                     End If
                 Case 2
-                    If Map.Events(i).Pages(1).Graphic > 0 And Map.Events(i).Pages(1).Graphic <= NumTileSets Then
+                    If Map.Events(i).Pages(1).Graphic > 0 AndAlso Map.Events(i).Pages(1).Graphic <= NumTileSets Then
                         With rec
                             .X = Map.Events(i).Pages(1).GraphicX * 32
                             .Width = Map.Events(i).Pages(1).GraphicX2 * 32
@@ -2985,7 +2985,7 @@ nextevent:
             Case 0
                 Exit Sub
             Case 1
-                If Map.MapEvents(Id).GraphicNum <= 0 Or Map.MapEvents(Id).GraphicNum > NumCharacters Then Exit Sub
+                If Map.MapEvents(Id).GraphicNum <= 0 OrElse Map.MapEvents(Id).GraphicNum > NumCharacters Then Exit Sub
 
                 ' Reset frame
                 If Map.MapEvents(Id).Steps = 3 Then
@@ -3038,8 +3038,8 @@ nextevent:
                 ' render the actual sprite
                 DrawCharacter(Map.MapEvents(Id).GraphicNum, X, Y, sRect)
             Case 2
-                If Map.MapEvents(Id).GraphicNum < 1 Or Map.MapEvents(Id).GraphicNum > NumTileSets Then Exit Sub
-                If Map.MapEvents(Id).GraphicY2 > 0 Or Map.MapEvents(Id).GraphicX2 > 0 Then
+                If Map.MapEvents(Id).GraphicNum < 1 OrElse Map.MapEvents(Id).GraphicNum > NumTileSets Then Exit Sub
+                If Map.MapEvents(Id).GraphicY2 > 0 OrElse Map.MapEvents(Id).GraphicX2 > 0 Then
                     With sRect
                         .X = Map.MapEvents(Id).GraphicX * 32
                         .Y = Map.MapEvents(Id).GraphicY * 32
@@ -3087,7 +3087,7 @@ nextevent:
 
         With FrmMainGame
             'face
-            If EventChatFace > 0 And EventChatFace < NumFaces Then
+            If EventChatFace > 0 AndAlso EventChatFace < NumFaces Then
                 'render face
                 If FacesGFXInfo(EventChatFace).IsLoaded = False Then
                     LoadTexture(EventChatFace, 7)
@@ -3172,8 +3172,8 @@ nextevent:
             End Select
             ' Check if completed walking over to the next tile
             If Map.MapEvents(Id).Moving > 0 Then
-                If Map.MapEvents(Id).dir = Direction.Right Or Map.MapEvents(Id).dir = Direction.Down Then
-                    If (Map.MapEvents(Id).XOffset >= 0) And (Map.MapEvents(Id).YOffset >= 0) Then
+                If Map.MapEvents(Id).dir = Direction.Right OrElse Map.MapEvents(Id).dir = Direction.Down Then
+                    If (Map.MapEvents(Id).XOffset >= 0) AndAlso (Map.MapEvents(Id).YOffset >= 0) Then
                         Map.MapEvents(Id).Moving = 0
                         If Map.MapEvents(Id).Steps = 1 Then
                             Map.MapEvents(Id).Steps = 3
@@ -3182,7 +3182,7 @@ nextevent:
                         End If
                     End If
                 Else
-                    If (Map.MapEvents(Id).XOffset <= 0) And (Map.MapEvents(Id).YOffset <= 0) Then
+                    If (Map.MapEvents(Id).XOffset <= 0) AndAlso (Map.MapEvents(Id).YOffset <= 0) Then
                         Map.MapEvents(Id).Moving = 0
                         If Map.MapEvents(Id).Steps = 1 Then
                             Map.MapEvents(Id).Steps = 3

@@ -198,7 +198,7 @@ Public Class FrmEditor_MapEditor
 
 #Region "PicScreen"
     Private Sub Picscreen_MouseDown(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picScreen.MouseDown
-        If e.X > pnlBack2.Width - 32 Or e.Y > pnlBack2.Height - 32 Then Exit Sub
+        If e.X > pnlBack2.Width - 32 OrElse e.Y > pnlBack2.Height - 32 Then Exit Sub
         MapEditorMouseDown(e.Button, e.X, e.Y, False)
 
     End Sub
@@ -210,13 +210,13 @@ Public Class FrmEditor_MapEditor
 
     Private Sub Picscreen_MouseMove(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picScreen.MouseMove
 
-        CurX = TileView.left + ((e.Location.X + Camera.Left) \ PIC_X)
-        CurY = TileView.top + ((e.Location.Y + Camera.Top) \ PIC_Y)
+        CurX = TileView.Left + ((e.Location.X + Camera.Left) \ PIC_X)
+        CurY = TileView.Top + ((e.Location.Y + Camera.Top) \ PIC_Y)
 
         CurMouseX = e.Location.X
         CurMouseY = e.Location.Y
 
-        If e.Button = MouseButtons.Left Or e.Button = MouseButtons.Right Then
+        If e.Button = MouseButtons.Left OrElse e.Button = MouseButtons.Right Then
             MapEditorMouseDown(e.Button, e.X, e.Y)
         End If
 
@@ -225,8 +225,8 @@ Public Class FrmEditor_MapEditor
 
     Private Sub Picscreen_MouseUp(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picScreen.MouseUp
 
-        CurX = TileView.left + ((e.Location.X + Camera.Left) \ PIC_X)
-        CurY = TileView.top + ((e.Location.Y + Camera.Top) \ PIC_Y)
+        CurX = TileView.Left + ((e.Location.X + Camera.Left) \ PIC_X)
+        CurY = TileView.Top + ((e.Location.Y + Camera.Top) \ PIC_Y)
 
     End Sub
 
@@ -270,7 +270,7 @@ Public Class FrmEditor_MapEditor
     End Sub
 
     Private Sub ScrlMapItem_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) Handles scrlMapItem.Scroll
-        If Item(scrlMapItem.Value).Type = ItemType.Currency Or Item(scrlMapItem.Value).Stackable = 1 Then
+        If Item(scrlMapItem.Value).Type = ItemType.Currency OrElse Item(scrlMapItem.Value).Stackable = 1 Then
             scrlMapItemValue.Enabled = True
         Else
             scrlMapItemValue.Value = 1

@@ -81,7 +81,7 @@
 
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
         Dim tmpIndex As Integer
-        If EditorIndex = 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         tmpIndex = lstIndex.SelectedIndex
         Classes(EditorIndex).Name = Trim$(txtName.Text)
@@ -94,7 +94,7 @@
 #Region "Sprites"
     Private Sub BtnAddMaleSprite_Click(sender As Object, e As EventArgs) Handles btnAddMaleSprite.Click
         Dim tmpamount As Byte
-        If EditorIndex = 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         tmpamount = UBound(Classes(EditorIndex).MaleSprite)
 
@@ -107,7 +107,7 @@
 
     Private Sub BtnDeleteMaleSprite_Click(sender As Object, e As EventArgs) Handles btnDeleteMaleSprite.Click
         Dim tmpamount As Byte
-        If EditorIndex = 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         tmpamount = UBound(Classes(EditorIndex).MaleSprite)
 
@@ -118,7 +118,7 @@
 
     Private Sub BtnAddFemaleSprite_Click(sender As Object, e As EventArgs) Handles btnAddFemaleSprite.Click
         Dim tmpamount As Byte
-        If EditorIndex = 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         tmpamount = UBound(Classes(EditorIndex).FemaleSprite)
 
@@ -131,7 +131,7 @@
 
     Private Sub BtnDeleteFemaleSprite_Click(sender As Object, e As EventArgs) Handles btnDeleteFemaleSprite.Click
         Dim tmpamount As Byte
-        If EditorIndex = 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         tmpamount = UBound(Classes(EditorIndex).FemaleSprite)
 
@@ -193,43 +193,43 @@
 
 #Region "Stats"
     Private Sub NumStrength_ValueChanged(sender As Object, e As EventArgs) Handles nudStrength.Click
-        If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).Stat(Stats.Strength) = nudStrength.Value
     End Sub
 
     Private Sub NumLuck_ValueChanged(sender As Object, e As EventArgs) Handles nudLuck.Click
-        If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).Stat(Stats.Luck) = nudLuck.Value
     End Sub
 
     Private Sub NumEndurance_ValueChanged(sender As Object, e As EventArgs) Handles nudEndurance.Click
-        If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).Stat(Stats.Endurance) = nudEndurance.Value
     End Sub
 
     Private Sub NumIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nudIntelligence.Click
-        If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).Stat(Stats.Intelligence) = nudIntelligence.Value
     End Sub
 
     Private Sub NumVitality_ValueChanged(sender As Object, e As EventArgs) Handles nudVitality.Click
-        If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).Stat(Stats.Vitality) = nudVitality.Value
     End Sub
 
     Private Sub NumSpirit_ValueChanged(sender As Object, e As EventArgs) Handles nudSpirit.Click
-        If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).Stat(Stats.Spirit) = nudSpirit.Value
     End Sub
 
     Private Sub NumBaseExp_ValueChanged(sender As Object, e As EventArgs) Handles nudBaseExp.Click
-        If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).BaseExp = nudBaseExp.Value
     End Sub
@@ -238,7 +238,7 @@
 
 #Region "Start Items"
     Private Sub BtnItemAdd_Click(sender As Object, e As EventArgs) Handles btnItemAdd.Click
-        If lstStartItems.SelectedIndex < 0 Or cmbItems.SelectedIndex < 0 Then Exit Sub
+        If lstStartItems.SelectedIndex < 0 OrElse cmbItems.SelectedIndex < 0 Then Exit Sub
 
         Classes(EditorIndex).StartItem(lstStartItems.SelectedIndex + 1) = cmbItems.SelectedIndex
         Classes(EditorIndex).StartValue(lstStartItems.SelectedIndex + 1) = nudItemAmount.Value
@@ -250,19 +250,19 @@
 
 #Region "Starting Point"
     Private Sub NumStartMap_ValueChanged(sender As Object, e As EventArgs) Handles nudStartMap.Click
-        If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).StartMap = nudStartMap.Value
     End Sub
 
     Private Sub NumStartX_ValueChanged(sender As Object, e As EventArgs) Handles nudStartX.Click
-        If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).StartX = nudStartX.Value
     End Sub
 
     Private Sub NumStartY_ValueChanged(sender As Object, e As EventArgs) Handles nudStartY.Click
-        If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         Classes(EditorIndex).StartY = nudStartY.Value
     End Sub

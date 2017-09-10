@@ -38,7 +38,7 @@
     Public Function CreateInstance(ByVal MapNum As Integer) As Integer
         Dim i As Integer, slot As Integer
 
-        If MapNum <= 0 Or MapNum > MAX_MAPS Then
+        If MapNum <= 0 OrElse MapNum > MAX_MAPS Then
             CreateInstance = -1
             Exit Function
         End If
@@ -88,7 +88,7 @@
     End Sub
 
     Public Function IsInstancedMap(ByVal MapNum As Integer) As Boolean
-        IsInstancedMap = MapNum > MAX_MAPS And MapNum <= MAX_CACHED_MAPS
+        IsInstancedMap = MapNum > MAX_MAPS AndAlso MapNum <= MAX_CACHED_MAPS
     End Function
 
     Public Function GetInstanceBaseMap(ByVal MapNum As Integer) As Integer

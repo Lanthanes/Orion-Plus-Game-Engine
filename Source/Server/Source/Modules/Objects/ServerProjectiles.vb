@@ -161,7 +161,7 @@ Public Module ServerProjectiles
         ProjectileNum = Buffer.ReadInt32
 
         ' Prevent hacking
-        If ProjectileNum < 0 Or ProjectileNum > MAX_PROJECTILES Then
+        If ProjectileNum < 0 OrElse ProjectileNum > MAX_PROJECTILES Then
             Exit Sub
         End If
 

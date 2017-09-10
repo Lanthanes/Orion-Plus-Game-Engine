@@ -18,7 +18,7 @@
         End If
 
         ' Check to make sure its a valid map #
-        If nudAdminMap.Value > 0 And nudAdminMap.Value <= MAX_MAPS Then
+        If nudAdminMap.Value > 0 AndAlso nudAdminMap.Value <= MAX_MAPS Then
             WarpTo(nudAdminMap.Value)
         Else
             AddText("Invalid map number.", ColorType.BrightRed)
@@ -87,7 +87,7 @@
             Exit Sub
         End If
 
-        If IsNumeric(Trim$(txtAdminName.Text)) Or cmbAccess.SelectedIndex < 0 Then
+        If IsNumeric(Trim$(txtAdminName.Text)) OrElse cmbAccess.SelectedIndex < 0 Then
             Exit Sub
         End If
 
@@ -134,7 +134,7 @@
         End If
 
         ' Check to make sure its a valid map #
-        If lstMaps.FocusedItem.Index + 1 > 0 And lstMaps.FocusedItem.Index + 1 <= MAX_MAPS Then
+        If lstMaps.FocusedItem.Index + 1 > 0 AndAlso lstMaps.FocusedItem.Index + 1 <= MAX_MAPS Then
             WarpTo(lstMaps.FocusedItem.Index + 1)
         Else
             AddText("Invalid map number: " & lstMaps.FocusedItem.Index + 1, QColorType.AlertColor)
@@ -144,7 +144,7 @@
 
 #Region "Misc"
     Private Sub CmbSpawnItem_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSpawnItem.SelectedIndexChanged
-        If Item(cmbSpawnItem.SelectedIndex + 1).Type = ItemType.Currency Or Item(cmbSpawnItem.SelectedIndex + 1).Stackable = 1 Then
+        If Item(cmbSpawnItem.SelectedIndex + 1).Type = ItemType.Currency OrElse Item(cmbSpawnItem.SelectedIndex + 1).Stackable = 1 Then
             nudSpawnItemAmount.Enabled = True
             Exit Sub
         End If

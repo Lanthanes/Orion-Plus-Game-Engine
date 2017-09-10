@@ -206,7 +206,7 @@ Module EditorLoop
                 End If
 
                 FrameTime = Tick
-                If InMapEditor And Not GettingMap Then
+                If InMapEditor AndAlso Not GettingMap Then
 
                     'Calculate FPS
                     If starttime < Tick Then

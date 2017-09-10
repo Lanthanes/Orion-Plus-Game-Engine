@@ -7,7 +7,7 @@ Public Class FrmMainGame
     Protected Overrides ReadOnly Property CreateParams() As CreateParams
         Get
             Dim myCp As CreateParams = MyBase.CreateParams
-            myCp.ClassStyle = myCp.ClassStyle Or CP_NOCLOSE_BUTTON
+            myCp.ClassStyle = myCp.ClassStyle OrElse CP_NOCLOSE_BUTTON
             Return myCp
         End Get
     End Property
@@ -200,7 +200,7 @@ Public Class FrmMainGame
 
                 ' right click
             ElseIf e.Button = MouseButtons.Right Then
-                If ShiftDown Or VbKeyShift = True Then
+                If ShiftDown OrElse VbKeyShift = True Then
                     ' admin warp if we're pressing shift and right clicking
                     If GetPlayerAccess(MyIndex) >= 2 Then AdminWarp(CurX, CurY)
                 Else
@@ -219,7 +219,7 @@ Public Class FrmMainGame
 
         CheckGuiMouseDown(e.X, e.Y, e)
 
-        If Not frmAdmin.Visible Or Not frmOptions.Visible Then Focus()
+        If Not frmAdmin.Visible OrElse Not frmOptions.Visible Then Focus()
 
     End Sub
 
@@ -233,14 +233,14 @@ Public Class FrmMainGame
     End Sub
 
     Private Sub Picscreen_MouseMove(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picscreen.MouseMove
-        CurX = TileView.left + ((e.Location.X + Camera.Left) \ PIC_X)
-        CurY = TileView.top + ((e.Location.Y + Camera.Top) \ PIC_Y)
+        CurX = TileView.Left + ((e.Location.X + Camera.Left) \ PIC_X)
+        CurY = TileView.Top + ((e.Location.Y + Camera.Top) \ PIC_Y)
         CurMouseX = e.Location.X
         CurMouseY = e.Location.Y
         CheckGuiMove(e.X, e.Y)
 
         If InMapEditor Then
-            If e.Button = MouseButtons.Left Or e.Button = MouseButtons.Right Then
+            If e.Button = MouseButtons.Left OrElse e.Button = MouseButtons.Right Then
                 frmEditor_MapEditor.MapEditorMouseDown(e.Button, e.X, e.Y)
             End If
         End If

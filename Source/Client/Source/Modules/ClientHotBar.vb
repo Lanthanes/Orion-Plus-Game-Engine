@@ -31,8 +31,8 @@ Public Module ClientHotBar
                 .Right = .Left + PIC_X
             End With
 
-            If X >= tempRec.Left And X <= tempRec.Right Then
-                If Y >= tempRec.Top And Y <= tempRec.Bottom Then
+            If X >= tempRec.Left AndAlso X <= tempRec.Right Then
+                If Y >= tempRec.Top AndAlso Y <= tempRec.Bottom Then
                     IsHotBarSlot = i
                     Exit Function
                 End If

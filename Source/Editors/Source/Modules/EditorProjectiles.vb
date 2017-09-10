@@ -190,7 +190,7 @@ Public Module EditorProjectiles
 
         iconnum = frmEditor_Projectile.nudPic.Value
 
-        If iconnum < 1 Or iconnum > NumProjectiles Then
+        If iconnum < 1 OrElse iconnum > NumProjectiles Then
             frmEditor_Projectile.picProjectile.BackgroundImage = Nothing
             Exit Sub
         End If

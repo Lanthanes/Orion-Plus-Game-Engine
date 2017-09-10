@@ -322,7 +322,7 @@ Public Module ClientQuest
     'Tells if the quest is in progress or not
     Public Function QuestInProgress(ByVal QuestNum As Integer) As Boolean
         QuestInProgress = False
-        If QuestNum < 1 Or QuestNum > MAX_QUESTS Then Exit Function
+        If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
         If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Started Then 'Status=1 means started
             QuestInProgress = True
@@ -331,9 +331,9 @@ Public Module ClientQuest
 
     Public Function QuestCompleted(ByVal QuestNum As Integer) As Boolean
         QuestCompleted = False
-        If QuestNum < 1 Or QuestNum > MAX_QUESTS Then Exit Function
+        If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
-        If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Completed Or Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Repeatable Then
+        If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Completed OrElse Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Repeatable Then
             QuestCompleted = True
         End If
     End Function
@@ -357,16 +357,16 @@ Public Module ClientQuest
 
         CanStartQuest = False
 
-        If QuestNum < 1 Or QuestNum > MAX_QUESTS Then Exit Function
+        If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
         If QuestInProgress(QuestNum) Then Exit Function
 
         'Check if player has the quest 0 (not started) or 3 (completed but it can be started again)
-        If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.NotStarted Or Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Repeatable Then
+        If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.NotStarted OrElse Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Repeatable Then
 
             For i = 1 To Quest(QuestNum).ReqCount
                 'Check if item is needed
                 If Quest(QuestNum).Requirement(i) = 1 Then
-                    If Quest(QuestNum).RequirementIndex(i) > 0 And Quest(QuestNum).RequirementIndex(i) <= MAX_ITEMS Then
+                    If Quest(QuestNum).RequirementIndex(i) > 0 AndAlso Quest(QuestNum).RequirementIndex(i) <= MAX_ITEMS Then
                         If HasItem(MyIndex, Quest(QuestNum).RequirementIndex(i)) = 0 Then
                             Exit Function
                         End If
@@ -375,8 +375,8 @@ Public Module ClientQuest
 
                 'Check if previous quest is needed
                 If Quest(QuestNum).Requirement(i) = 2 Then
-                    If Quest(QuestNum).RequirementIndex(i) > 0 And Quest(QuestNum).RequirementIndex(i) <= MAX_QUESTS Then
-                        If Player(MyIndex).PlayerQuest(Quest(QuestNum).RequirementIndex(i)).Status = QuestStatus.NotStarted Or Player(MyIndex).PlayerQuest(Quest(QuestNum).RequirementIndex(i)).Status = QuestStatus.Started Then
+                    If Quest(QuestNum).RequirementIndex(i) > 0 AndAlso Quest(QuestNum).RequirementIndex(i) <= MAX_QUESTS Then
+                        If Player(MyIndex).PlayerQuest(Quest(QuestNum).RequirementIndex(i)).Status = QuestStatus.NotStarted OrElse Player(MyIndex).PlayerQuest(Quest(QuestNum).RequirementIndex(i)).Status = QuestStatus.Started Then
                             Exit Function
                         End If
                     End If
@@ -406,7 +406,7 @@ Public Module ClientQuest
         Dim i As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False Or itemNum <= 0 Or itemNum > MAX_ITEMS Then
+        If IsPlaying(Index) = False OrElse itemNum <= 0 OrElse itemNum > MAX_ITEMS Then
             Exit Function
         End If
 
@@ -414,7 +414,7 @@ Public Module ClientQuest
 
             ' Check to see if the player has the item
             If GetPlayerInvItemNum(Index, i) = itemNum Then
-                If Item(itemNum).Type = ItemType.Currency Or Item(itemNum).Stackable = 1 Then
+                If Item(itemNum).Type = ItemType.Currency OrElse Item(itemNum).Stackable = 1 Then
                     HasItem = GetPlayerInvItemValue(Index, i)
                 Else
                     HasItem = 1
@@ -437,7 +437,7 @@ Public Module ClientQuest
         x = 1
 
         For I = 1 To MAX_QUESTS
-            If QuestInProgress(I) And x < MAX_ACTIVEQUESTS Then
+            If QuestInProgress(I) AndAlso x < MAX_ACTIVEQUESTS Then
                 QuestNames(x) = Trim$(Quest(I).Name)
                 x = x + 1
             End If

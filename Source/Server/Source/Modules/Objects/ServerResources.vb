@@ -40,7 +40,7 @@ Public Module ServerResources
             Next
 
             If Resource_num > 0 Then
-                If GetPlayerEquipment(Index, EquipmentType.Weapon) > 0 Or Resource(Resource_index).ToolRequired = 0 Then
+                If GetPlayerEquipment(Index, EquipmentType.Weapon) > 0 OrElse Resource(Resource_index).ToolRequired = 0 Then
                     If Item(GetPlayerEquipment(Index, EquipmentType.Weapon)).Data3 = Resource(Resource_index).ToolRequired Then
 
                         ' inv space?
@@ -60,8 +60,8 @@ Public Module ServerResources
                         ' check if already cut down
                         If ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).ResourceState = 0 Then
 
-                            rX = ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).x
-                            rY = ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).y
+                            rX = ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).X
+                            rY = ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).Y
 
                             If Resource(Resource_index).ToolRequired = 0 Then
                                 Damage = 1 * GetPlayerGatherSkillLvl(Index, ResourceType)
@@ -72,7 +72,7 @@ Public Module ServerResources
                             ' check if damage is more than health
                             If Damage > 0 Then
                                 ' cut it down!
-                                If ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).cur_health - Damage <= 0 Then
+                                If ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).Cur_Health - Damage <= 0 Then
                                     ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).ResourceState = 1 ' Cut
                                     ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).ResourceTimer = GetTimeMs()
                                     SendResourceCacheToMap(GetPlayerMap(Index), Resource_num)
@@ -87,7 +87,7 @@ Public Module ServerResources
                                     CheckResourceLevelUp(Index, ResourceType)
                                 Else
                                     ' just do the damage
-                                    ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).cur_health = ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).cur_health - Damage
+                                    ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).Cur_Health = ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).Cur_Health - Damage
                                     SendActionMsg(GetPlayerMap(Index), "-" & Damage, ColorType.BrightRed, 1, (rX * 32), (rY * 32))
                                     SendAnimation(GetPlayerMap(Index), Resource(Resource_index).Animation, rX, rY)
                                 End If
@@ -201,7 +201,7 @@ Public Module ServerResources
 
     Function GetSkillNextLevel(ByVal Index As Integer, ByVal SkillSlot As Integer) As Integer
         GetSkillNextLevel = 0
-        If Index < 0 Or Index > MAX_PLAYERS Then Exit Function
+        If Index < 0 OrElse Index > MAX_PLAYERS Then Exit Function
 
         GetSkillNextLevel = SkillExpTable(GetPlayerGatherSkillLvl(Index, SkillSlot) + 1)
     End Function

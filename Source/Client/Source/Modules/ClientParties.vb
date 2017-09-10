@@ -68,7 +68,7 @@ Module ClientParties
         Next
 
         ' exit out if wrong data
-        If partyIndex <= 0 Or partyIndex > MAX_PARTY_MEMBERS Then Exit Sub
+        If partyIndex <= 0 OrElse partyIndex > MAX_PARTY_MEMBERS Then Exit Sub
 
         ' set vitals
         Player(playerNum).MaxHP = Buffer.ReadInt32
@@ -128,7 +128,7 @@ Module ClientParties
         Buffer.WriteString(Text)
 
         Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 #End Region
 
@@ -196,7 +196,7 @@ Module ClientParties
                         Y = 115 + ((I - 1) * 30)
 
                         ' make sure we actually have the data before rendering
-                        If GetPlayerVital(playerNum, Vitals.HP) > 0 And GetPlayerMaxVital(playerNum, Vitals.HP) > 0 Then
+                        If GetPlayerVital(playerNum, Vitals.HP) > 0 AndAlso GetPlayerMaxVital(playerNum, Vitals.HP) > 0 Then
                             barwidth = ((Player(playerNum).Vital(Vitals.HP) / (GetPlayerMaxVital(playerNum, Vitals.HP)) * 64))
                         End If
                         rec(1) = New Rectangle(X, Y, barwidth, 6)
@@ -207,7 +207,7 @@ Module ClientParties
                         ' draw mp
                         Y = 115 + ((I - 1) * 30)
                         ' make sure we actually have the data before rendering
-                        If GetPlayerVital(playerNum, Vitals.MP) > 0 And GetPlayerMaxVital(playerNum, Vitals.MP) > 0 Then
+                        If GetPlayerVital(playerNum, Vitals.MP) > 0 AndAlso GetPlayerMaxVital(playerNum, Vitals.MP) > 0 Then
                             barwidth = ((Player(playerNum).Vital(Vitals.MP) / (GetPlayerMaxVital(playerNum, Vitals.MP)) * 64))
                         End If
                         rec(1) = New Rectangle(X, Y, barwidth, 6)

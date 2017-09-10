@@ -90,7 +90,7 @@ Public Module ServerEventLogic
                                 End If
                             End If
 
-                            If Map(MapNum).Events(id).Globals = 1 And TempPlayer(i).EventMap.EventPages(x).Visible = 0 Then TempEventMap(MapNum).Events(id).Active = 0
+                            If Map(MapNum).Events(id).Globals = 1 AndAlso TempPlayer(i).EventMap.EventPages(x).Visible = 0 Then TempEventMap(MapNum).Events(id).Active = 0
 
                             If TempPlayer(i).EventMap.EventPages(x).Visible = 0 Then
                                 Buffer = New ByteStream(4)
@@ -399,10 +399,10 @@ Public Module ServerEventLogic
                                             eventID = x
                                             WalkThrough = TempEventMap(i).Events(x).WalkThrough
                                             If .MoveRouteCount > 0 Then
-                                                If .MoveRouteStep >= .MoveRouteCount And .RepeatMoveRoute = 1 Then
+                                                If .MoveRouteStep >= .MoveRouteCount AndAlso .RepeatMoveRoute = 1 Then
                                                     .MoveRouteStep = 0
                                                     .MoveRouteComplete = 1
-                                                ElseIf .MoveRouteStep >= .MoveRouteCount And .RepeatMoveRoute = 0 Then
+                                                ElseIf .MoveRouteStep >= .MoveRouteCount AndAlso .RepeatMoveRoute = 0 Then
                                                     donotprocessmoveroute = True
                                                     .MoveRouteComplete = 1
                                                 Else
@@ -786,10 +786,10 @@ Public Module ServerEventLogic
                                                 eventID = x
                                                 WalkThrough = .WalkThrough
                                                 If TempPlayer(i).EventMap.EventPages(x).MoveRouteCount > 0 Then
-                                                    If TempPlayer(i).EventMap.EventPages(x).MoveRouteStep >= TempPlayer(i).EventMap.EventPages(x).MoveRouteCount And TempPlayer(i).EventMap.EventPages(x).RepeatMoveRoute = 1 Then
+                                                    If TempPlayer(i).EventMap.EventPages(x).MoveRouteStep >= TempPlayer(i).EventMap.EventPages(x).MoveRouteCount AndAlso TempPlayer(i).EventMap.EventPages(x).RepeatMoveRoute = 1 Then
                                                         .MoveRouteStep = 0
                                                         .MoveRouteComplete = 1
-                                                    ElseIf .MoveRouteStep >= .MoveRouteCount And .RepeatMoveRoute = 0 Then
+                                                    ElseIf .MoveRouteStep >= .MoveRouteCount AndAlso .RepeatMoveRoute = 0 Then
                                                         donotprocessmoveroute = True
                                                         .MoveRouteComplete = 1
                                                     Else
@@ -1221,7 +1221,7 @@ Public Module ServerEventLogic
                                         If .ActionTimer <= GetTimeMs() Then
                                             restartlist = True
                                             endprocess = False
-                                            Do While restartlist = True And endprocess = False And .WaitingForResponse = 0
+                                            Do While restartlist = True AndAlso endprocess = False AndAlso .WaitingForResponse = 0
                                                 restartlist = False
                                                 If .ListLeftOff(.CurList) > 0 Then
                                                     .CurSlot = .ListLeftOff(.CurList) + 1
@@ -1243,7 +1243,7 @@ Public Module ServerEventLogic
                                                         restartlist = True
                                                     End If
                                                 End If
-                                                If restartlist = False And endprocess = False Then
+                                                If restartlist = False AndAlso endprocess = False Then
                                                     'If we are still here, then we are good to process shit :D
                                                     'Debug.WriteLine(.CurSlot)
                                                     Select Case Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Index
@@ -1269,7 +1269,7 @@ Public Module ServerEventLogic
                                                             TextAdd("Sent SMSG: SEventChat evShowText")
 
                                                             If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).CommandCount > .CurSlot Then
-                                                                If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evShowText Or Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evShowChoices Then
+                                                                If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evShowText OrElse Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evShowChoices Then
                                                                     Buffer.WriteInt32(1)
                                                                 ElseIf Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evCondition Then
                                                                     Buffer.WriteInt32(2)
@@ -1319,7 +1319,7 @@ Public Module ServerEventLogic
                                                                 End Select
                                                             Next
                                                             If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).CommandCount > .CurSlot Then
-                                                                If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evShowText Or Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evShowChoices Then
+                                                                If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evShowText OrElse Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evShowChoices Then
                                                                     Buffer.WriteInt32(1)
                                                                 ElseIf Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evCondition Then
                                                                     Buffer.WriteInt32(2)
@@ -1593,7 +1593,7 @@ Public Module ServerEventLogic
                                                                         End Select
                                                                     End If
                                                                 Case 7
-                                                                    If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.Data1 > 0 And Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.Data1 <= MAX_QUESTS Then
+                                                                    If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.Data1 > 0 AndAlso Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.Data1 <= MAX_QUESTS Then
                                                                         If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.Data2 = 0 Then
                                                                             Select Case Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.Data3
                                                                                 Case 0
@@ -1617,7 +1617,7 @@ Public Module ServerEventLogic
                                                                                         .CurSlot = 1
                                                                                     End If
                                                                                 Case 2
-                                                                                    If Player(i).Character(TempPlayer(i).CurChar).PlayerQuest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.Data1).Status = 2 Or Player(i).Character(TempPlayer(i).CurChar).PlayerQuest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.Data1).Status = 3 Then
+                                                                                    If Player(i).Character(TempPlayer(i).CurChar).PlayerQuest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.Data1).Status = 2 OrElse Player(i).Character(TempPlayer(i).CurChar).PlayerQuest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.Data1).Status = 3 Then
                                                                                         .ListLeftOff(.CurList) = .CurSlot
                                                                                         .CurList = Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).ConditionalBranch.CommandList
                                                                                         .CurSlot = 1
@@ -1906,7 +1906,7 @@ Public Module ServerEventLogic
                                                         Case EventType.evQuestTask
                                                             If QuestInProgress(i, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1) Then
                                                                 If Player(i).Character(TempPlayer(i).CurChar).PlayerQuest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1).ActualTask = Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data2 Then
-                                                                    If Quest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1).Task(Player(i).Character(TempPlayer(i).CurChar).PlayerQuest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1).ActualTask).TaskType = QuestType.TalkEvent Or Quest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1).Task(Player(i).Character(TempPlayer(i).CurChar).PlayerQuest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1).ActualTask).TaskType = QuestType.Fetch Then
+                                                                    If Quest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1).Task(Player(i).Character(TempPlayer(i).CurChar).PlayerQuest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1).ActualTask).TaskType = QuestType.TalkEvent OrElse Quest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1).Task(Player(i).Character(TempPlayer(i).CurChar).PlayerQuest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1).ActualTask).TaskType = QuestType.Fetch Then
                                                                         CheckTask(i, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1, Quest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1).Task(Player(i).Character(TempPlayer(i).CurChar).PlayerQuest(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1).ActualTask).TaskType, -1)
                                                                     End If
                                                                 End If
@@ -2183,7 +2183,7 @@ Public Module ServerEventLogic
             'we loop through all squares
             For j = 0 To Map(MapNum).MaxY
                 For i = 0 To Map(MapNum).MaxX
-                    'If j = 10 And i = 0 Then MsgBox "hi!"
+                    'If j = 10 AndAlso i = 0 Then MsgBox "hi!"
                     'If they are to be extended, the pointer TIM is on them
                     If pos(i, j) = 100 + tim Then
                         'The part is to be extended, so do it
@@ -2268,7 +2268,7 @@ Public Module ServerEventLogic
         'We are working backwards to find ONE of the shortest ways back to Start.
         'So we repeat the loop until the LastX and LastY arent in start. Look in the code to see
         'how LastX and LasY change
-        Do While LastX <> sX Or LastY <> sY
+        Do While LastX <> sX OrElse LastY <> sY
             'We decrease tim by one, and then we are finding any adjacent square to the final one, that
             'has that value. So lets say the tim would be 5, because it takes 5 steps to get to the target.
             'Now everytime we decrease that, so we make it 4, and we look for any adjacent square that has
@@ -2494,7 +2494,7 @@ Public Module ServerEventLogic
                             End If
                         End If
 
-                        If spawncurrentevent = True Or (spawncurrentevent = False And z = 1) Then
+                        If spawncurrentevent = True OrElse (spawncurrentevent = False AndAlso z = 1) Then
                             'spawn the event... send data to player
                             TempPlayer(Index).EventMap.CurrentEvents = TempPlayer(Index).EventMap.CurrentEvents + 1
                             ReDim Preserve TempPlayer(Index).EventMap.EventPages(TempPlayer(Index).EventMap.CurrentEvents)

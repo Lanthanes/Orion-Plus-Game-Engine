@@ -61,7 +61,7 @@ Public Module ServerHousing
             .Root = "Config"
         }
 
-        If Index > 0 And Index <= MAX_HOUSES Then
+        If Index > 0 AndAlso Index <= MAX_HOUSES Then
             myXml.WriteString("House" & Index, "BaseMap", HouseConfig(Index).BaseMap)
             myXml.WriteString("House" & Index, "Name", HouseConfig(Index).ConfigName)
             myXml.WriteString("House" & Index, "MaxFurniture", HouseConfig(Index).MaxFurniture)
@@ -217,7 +217,7 @@ Public Module ServerHousing
         ItemNum = Player(Index).Character(TempPlayer(Index).CurChar).Inv(invslot).Num
 
         ' Prevent hacking
-        If ItemNum < 1 Or ItemNum > MAX_ITEMS Then Exit Sub
+        If ItemNum < 1 OrElse ItemNum > MAX_ITEMS Then Exit Sub
 
         If Player(Index).Character(TempPlayer(Index).CurChar).InHouse = Index Then
             If Item(ItemNum).Type = ItemType.Furniture Then
@@ -262,8 +262,8 @@ Public Module ServerHousing
                     End If
                 End If
 
-                If x < 0 Or x > Map(GetPlayerMap(Index)).MaxX Then Exit Sub
-                If y < 0 Or y > Map(GetPlayerMap(Index)).MaxY Then Exit Sub
+                If x < 0 OrElse x > Map(GetPlayerMap(Index)).MaxX Then Exit Sub
+                If y < 0 OrElse y > Map(GetPlayerMap(Index)).MaxY Then Exit Sub
 
                 If Item(ItemNum).FurnitureWidth > 2 Then
                     x1 = x + (Item(ItemNum).FurnitureWidth / 2)
@@ -287,7 +287,7 @@ Public Module ServerHousing
                             For i = 1 To GetPlayersOnline()
                                 If IsPlaying(i) AndAlso i <> Index AndAlso GetPlayerMap(i) = GetPlayerMap(Index) Then
                                     If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(Index).Character(TempPlayer(Index).CurChar).InHouse Then
-                                        If Player(i).Character(TempPlayer(i).CurChar).X = x And Player(i).Character(TempPlayer(i).CurChar).Y = y Then
+                                        If Player(i).Character(TempPlayer(i).CurChar).X = x AndAlso Player(i).Character(TempPlayer(i).CurChar).Y = y Then
                                             Exit Sub
                                         End If
                                     End If
@@ -296,8 +296,8 @@ Public Module ServerHousing
 
                             If Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount > 0 Then
                                 For i = 1 To Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount
-                                    If x >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X And x <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X + Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
-                                        If y <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y And y >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y - Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
+                                    If x >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X AndAlso x <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X + Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
+                                        If y <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y AndAlso y >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y - Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
                                             'Blocked!
                                             Exit Sub
                                         End If
@@ -314,7 +314,7 @@ Public Module ServerHousing
                             For i = 1 To GetPlayersOnline()
                                 If IsPlaying(i) AndAlso i <> Index AndAlso GetPlayerMap(i) = GetPlayerMap(Index) Then
                                     If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(Index).Character(TempPlayer(Index).CurChar).InHouse Then
-                                        If Player(i).Character(TempPlayer(i).CurChar).X = x And Player(i).Character(TempPlayer(i).CurChar).Y = y Then
+                                        If Player(i).Character(TempPlayer(i).CurChar).X = x AndAlso Player(i).Character(TempPlayer(i).CurChar).Y = y Then
                                             Exit Sub
                                         End If
                                     End If
@@ -323,8 +323,8 @@ Public Module ServerHousing
 
                             If Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount > 0 Then
                                 For i = 1 To Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount
-                                    If x >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X And x <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X + Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
-                                        If y <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y And y >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y - Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
+                                    If x >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X AndAlso x <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X + Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
+                                        If y <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y AndAlso y >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y - Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
                                             'Blocked!
                                             Exit Sub
                                         End If
@@ -341,7 +341,7 @@ Public Module ServerHousing
                             For i = 1 To GetPlayersOnline()
                                 If IsPlaying(i) AndAlso i <> Index AndAlso GetPlayerMap(i) = GetPlayerMap(Index) Then
                                     If Player(i).Character(TempPlayer(i).CurChar).InHouse = Player(Index).Character(TempPlayer(Index).CurChar).InHouse Then
-                                        If Player(i).Character(TempPlayer(i).CurChar).X = x And Player(i).Character(TempPlayer(i).CurChar).Y = y Then
+                                        If Player(i).Character(TempPlayer(i).CurChar).X = x AndAlso Player(i).Character(TempPlayer(i).CurChar).Y = y Then
                                             Exit Sub
                                         End If
                                     End If
@@ -350,8 +350,8 @@ Public Module ServerHousing
 
                             If Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount > 0 Then
                                 For i = 1 To Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount
-                                    If x >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X And x <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X + Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
-                                        If y <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y And y >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y - Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
+                                    If x >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X AndAlso x <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X + Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
+                                        If y <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y AndAlso y >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y - Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
                                             'Blocked!
                                             Exit Sub
                                         End If

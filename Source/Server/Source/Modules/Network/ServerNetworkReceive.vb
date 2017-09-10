@@ -189,7 +189,7 @@ Module ServerNetworkReceive
             username = EKeyPair.DecryptString(Buffer.ReadString)
             password = EKeyPair.DecryptString(Buffer.ReadString)
             ' Prevent hacking
-            If Len(username.Trim) < 3 Or Len(password.Trim) < 3 Then
+            If Len(username.Trim) < 3 OrElse Len(password.Trim) < 3 Then
                 AlertMsg(index, "Your username and password must be at least three characters in length")
                 Exit Sub
             End If
@@ -285,7 +285,7 @@ Module ServerNetworkReceive
                     Exit Sub
                 End If
 
-                If Len(Trim$(Name)) < 3 Or Len(Trim$(Password)) < 3 Then
+                If Len(Trim$(Name)) < 3 OrElse Len(Trim$(Password)) < 3 Then
                     AlertMsg(index, "Your name and password must be at least three characters in length")
                     Exit Sub
                 End If
@@ -422,9 +422,9 @@ Module ServerNetworkReceive
 
             Next
 
-            If (Sex < Enums.Sex.Male) Or (Sex > Enums.Sex.Female) Then Exit Sub
+            If (Sex < Enums.Sex.Male) OrElse (Sex > Enums.Sex.Female) Then Exit Sub
 
-            If Classes < 1 Or Classes > Max_Classes Then Exit Sub
+            If Classes < 1 OrElse Classes > Max_Classes Then Exit Sub
 
             ' Check if char already exists in slot
             If CharExist(index, slot) Then
@@ -578,9 +578,9 @@ Module ServerNetworkReceive
         Buffer.Dispose()
 
         ' Prevent hacking
-        If Dir < Direction.Up Or Dir > Direction.Right Then Exit Sub
+        If Dir < Direction.Up OrElse Dir > Direction.Right Then Exit Sub
 
-        If movement < 1 Or movement > 2 Then Exit Sub
+        If movement < 1 OrElse movement > 2 Then Exit Sub
 
         ' Prevent player from moving if they have casted a skill
         If TempPlayer(index).SkillBuffer > 0 Then
@@ -637,7 +637,7 @@ Module ServerNetworkReceive
         Buffer.Dispose()
 
         ' Prevent hacking
-        If dir < Direction.Up Or dir > Direction.Right Then Exit Sub
+        If dir < Direction.Up OrElse dir > Direction.Right Then Exit Sub
 
         SetPlayerDir(Index, dir)
 
@@ -857,7 +857,7 @@ Module ServerNetworkReceive
         Buffer.Dispose()
 
         ' Prevent hacking
-        If n < 0 Or n > MAX_CACHED_MAPS Then Exit Sub
+        If n < 0 OrElse n > MAX_CACHED_MAPS Then Exit Sub
 
         PlayerWarp(Index, n, GetPlayerX(Index), GetPlayerY(Index))
         PlayerMsg(Index, "You have been warped to map #" & n, ColorType.Yellow)
@@ -913,7 +913,7 @@ Module ServerNetworkReceive
         Buffer.Dispose()
 
         ' Prevent hacking
-        If dir < Direction.Up Or dir > Direction.Right Then Exit Sub
+        If dir < Direction.Up OrElse dir > Direction.Right Then Exit Sub
 
         PlayerMove(Index, dir, 1, True)
     End Sub
@@ -1156,7 +1156,7 @@ Module ServerNetworkReceive
 
         ' Refresh map for everyone online
         For i = 1 To GetPlayersOnline()
-            If IsPlaying(i) And GetPlayerMap(i) = MapNum Then
+            If IsPlaying(i) AndAlso GetPlayerMap(i) = MapNum Then
                 PlayerWarp(i, MapNum, GetPlayerX(i), GetPlayerY(i))
                 ' Send map
                 SendMapData(i, MapNum, True)
@@ -1205,13 +1205,13 @@ Module ServerNetworkReceive
         Amount = Buffer.ReadInt32
         Buffer.Dispose()
 
-        If TempPlayer(Index).InBank Or TempPlayer(Index).InShop Then Exit Sub
+        If TempPlayer(Index).InBank OrElse TempPlayer(Index).InShop Then Exit Sub
 
         ' Prevent hacking
-        If InvNum < 1 Or InvNum > MAX_INV Then Exit Sub
-        If GetPlayerInvItemNum(Index, InvNum) < 1 Or GetPlayerInvItemNum(Index, InvNum) > MAX_ITEMS Then Exit Sub
-        If Item(GetPlayerInvItemNum(Index, InvNum)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(Index, InvNum)).Stackable = 1 Then
-            If Amount < 1 Or Amount > GetPlayerInvItemValue(Index, InvNum) Then Exit Sub
+        If InvNum < 1 OrElse InvNum > MAX_INV Then Exit Sub
+        If GetPlayerInvItemNum(Index, InvNum) < 1 OrElse GetPlayerInvItemNum(Index, InvNum) > MAX_ITEMS Then Exit Sub
+        If Item(GetPlayerInvItemNum(Index, InvNum)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(Index, InvNum)).Stackable = 1 Then
+            If Amount < 1 OrElse Amount > GetPlayerInvItemValue(Index, InvNum) Then Exit Sub
         End If
 
         ' everything worked out fine
@@ -1401,7 +1401,7 @@ Module ServerNetworkReceive
 
         n = Buffer.ReadInt32
 
-        If n < 0 Or n > MAX_ITEMS Then
+        If n < 0 OrElse n > MAX_ITEMS Then
             Exit Sub
         End If
 
@@ -1573,7 +1573,7 @@ Module ServerNetworkReceive
         ShopNum = Buffer.ReadInt32
 
         ' Prevent hacking
-        If ShopNum < 0 Or ShopNum > MAX_SHOPS Then
+        If ShopNum < 0 OrElse ShopNum > MAX_SHOPS Then
             Exit Sub
         End If
 
@@ -1625,7 +1625,7 @@ Module ServerNetworkReceive
         skillnum = Buffer.ReadInt32
 
         ' Prevent hacking
-        If skillnum < 0 Or skillnum > MAX_SKILLS Then
+        If skillnum < 0 OrElse skillnum > MAX_SKILLS Then
             Exit Sub
         End If
 
@@ -1684,7 +1684,7 @@ Module ServerNetworkReceive
         i = Buffer.ReadInt32
 
         ' Check for invalid access level
-        If i >= 0 Or i <= 3 Then
+        If i >= 0 OrElse i <= 3 Then
 
             ' Check if player is on
             If n > 0 Then
@@ -1751,7 +1751,7 @@ Module ServerNetworkReceive
         rclick = Buffer.ReadInt32
 
         ' Prevent subscript out of range
-        If x < 0 Or x > Map(GetPlayerMap(Index)).MaxX Or y < 0 Or y > Map(GetPlayerMap(Index)).MaxY Then Exit Sub
+        If x < 0 OrElse x > Map(GetPlayerMap(Index)).MaxX OrElse y < 0 OrElse y > Map(GetPlayerMap(Index)).MaxY Then Exit Sub
 
         ' Check for a player
         For i = 1 To GetPlayersOnline()
@@ -1842,8 +1842,8 @@ Module ServerNetworkReceive
                 If Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex > 0 Then
                     If Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount > 0 Then
                         For i = 1 To Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount
-                            If x >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X And x <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X + Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
-                                If y <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y And y >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y - Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
+                            If x >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X AndAlso x <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X + Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureWidth - 1 Then
+                                If y <= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y AndAlso y >= Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y - Item(Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum).FurnitureHeight + 1 Then
                                     'Found an Item, get the index and lets pick it up!
                                     x = FindOpenInvSlot(Index, Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum)
                                     If x > 0 Then
@@ -1911,7 +1911,7 @@ Module ServerNetworkReceive
         Addlog("Recieved CMSG: CSwapInvSlots", PACKET_LOG)
         TextAdd("Recieved CMSG: CSwapInvSlots")
 
-        If TempPlayer(Index).InTrade > 0 Or TempPlayer(Index).InBank Or TempPlayer(Index).InShop Then Exit Sub
+        If TempPlayer(Index).InTrade > 0 OrElse TempPlayer(Index).InBank OrElse TempPlayer(Index).InShop Then Exit Sub
 
         ' Old Slot
         oldSlot = Buffer.ReadInt32
@@ -1952,7 +1952,7 @@ Module ServerNetworkReceive
         resourcenum = Buffer.ReadInt32
 
         ' Prevent hacking
-        If resourcenum < 0 Or resourcenum > MAX_RESOURCES Then Exit Sub
+        If resourcenum < 0 OrElse resourcenum > MAX_RESOURCES Then Exit Sub
 
         Resource(resourcenum).Animation = Buffer.ReadInt32()
         Resource(resourcenum).EmptyMessage = Buffer.ReadString()
@@ -2167,7 +2167,7 @@ Module ServerNetworkReceive
         skillslot = Buffer.ReadInt32
 
         ' Check for subscript out of range
-        If skillslot < 1 Or skillslot > MAX_PLAYER_SKILLS Then
+        If skillslot < 1 OrElse skillslot > MAX_PLAYER_SKILLS Then
             Exit Sub
         End If
 
@@ -2206,7 +2206,7 @@ Module ServerNetworkReceive
 
         ' not in shop, exit out
         shopnum = TempPlayer(Index).InShop
-        If shopnum < 1 Or shopnum > MAX_SHOPS Then Exit Sub
+        If shopnum < 1 OrElse shopnum > MAX_SHOPS Then Exit Sub
 
         With Shop(shopnum).TradeItem(shopslot)
             ' check trade exists
@@ -2214,7 +2214,7 @@ Module ServerNetworkReceive
 
             ' check has the cost item
             itemamount = HasItem(Index, .CostItem)
-            If itemamount = 0 Or itemamount < .CostValue Then
+            If itemamount = 0 OrElse itemamount < .CostValue Then
                 PlayerMsg(Index, "You do not have enough to buy this item.", ColorType.BrightRed)
                 ResetShopAction(Index)
                 Exit Sub
@@ -2245,10 +2245,10 @@ Module ServerNetworkReceive
         invSlot = Buffer.ReadInt32
 
         ' if invalid, exit out
-        If invSlot < 1 Or invSlot > MAX_INV Then Exit Sub
+        If invSlot < 1 OrElse invSlot > MAX_INV Then Exit Sub
 
         ' has item?
-        If GetPlayerInvItemNum(Index, invSlot) < 1 Or GetPlayerInvItemNum(Index, invSlot) > MAX_ITEMS Then Exit Sub
+        If GetPlayerInvItemNum(Index, invSlot) < 1 OrElse GetPlayerInvItemNum(Index, invSlot) > MAX_ITEMS Then Exit Sub
 
         ' seems to be valid
         itemNum = GetPlayerInvItemNum(Index, invSlot)
@@ -2363,7 +2363,7 @@ Module ServerNetworkReceive
         tradetarget = FindPlayer(Name)
 
         ' make sure we don't error
-        If tradetarget <= 0 Or tradetarget > MAX_PLAYERS Then Exit Sub
+        If tradetarget <= 0 OrElse tradetarget > MAX_PLAYERS Then Exit Sub
 
         ' can't trade with yourself..
         If tradetarget = Index Then
@@ -2550,16 +2550,16 @@ Module ServerNetworkReceive
 
         Buffer.Dispose()
 
-        If invslot <= 0 Or invslot > MAX_INV Then Exit Sub
+        If invslot <= 0 OrElse invslot > MAX_INV Then Exit Sub
 
         itemnum = GetPlayerInvItemNum(Index, invslot)
 
-        If itemnum <= 0 Or itemnum > MAX_ITEMS Then Exit Sub
+        If itemnum <= 0 OrElse itemnum > MAX_ITEMS Then Exit Sub
 
         ' make sure they have the amount they offer
-        If amount < 0 Or amount > GetPlayerInvItemValue(Index, invslot) Then Exit Sub
+        If amount < 0 OrElse amount > GetPlayerInvItemValue(Index, invslot) Then Exit Sub
 
-        If Item(itemnum).Type = ItemType.Currency Or Item(itemnum).Stackable = 1 Then
+        If Item(itemnum).Type = ItemType.Currency OrElse Item(itemnum).Stackable = 1 Then
 
             ' check if already offering same currency item
             For i = 1 To MAX_INV
@@ -2627,7 +2627,7 @@ Module ServerNetworkReceive
 
         Buffer.Dispose()
 
-        If tradeslot <= 0 Or tradeslot > MAX_INV Then Exit Sub
+        If tradeslot <= 0 OrElse tradeslot > MAX_INV Then Exit Sub
         If TempPlayer(Index).TradeOffer(tradeslot).Num <= 0 Then Exit Sub
 
         TempPlayer(Index).TradeOffer(tradeslot).Num = 0
@@ -2846,7 +2846,7 @@ Module ServerNetworkReceive
                 Exit Sub
             End If
 
-            If Len(Trim$(Name)) < 3 Or Len(Trim$(Password)) < 3 Then
+            If Len(Trim$(Name)) < 3 OrElse Len(Trim$(Password)) < 3 Then
                 AlertMsg(Index, "Your name and password must be at least three characters in length")
                 Exit Sub
             End If
@@ -3160,7 +3160,7 @@ Module ServerNetworkReceive
 
         ' Refresh map for everyone online
         For i = 1 To GetPlayersOnline()
-            If IsPlaying(i) And GetPlayerMap(i) = MapNum Then
+            If IsPlaying(i) AndAlso GetPlayerMap(i) = MapNum Then
                 PlayerWarp(i, MapNum, GetPlayerX(i), GetPlayerY(i))
                 ' Send map
                 SendMapData(i, MapNum, True)

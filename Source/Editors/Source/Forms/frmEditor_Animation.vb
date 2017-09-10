@@ -38,7 +38,7 @@
 
     Private Sub TxtName_TextChanged(ByVal sender As Object, ByVal e As EventArgs) Handles txtName.TextChanged
         Dim tmpIndex As Integer
-        If EditorIndex = 0 Or EditorIndex > MAX_ANIMATIONS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ANIMATIONS Then Exit Sub
         tmpIndex = lstIndex.SelectedIndex
         Animation(EditorIndex).Name = Trim$(txtName.Text)
         lstIndex.Items.RemoveAt(EditorIndex - 1)
@@ -53,7 +53,7 @@
     Private Sub BtnDelete_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnDelete.Click
         Dim tmpIndex As Integer
 
-        If EditorIndex = 0 Or EditorIndex > MAX_ANIMATIONS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ANIMATIONS Then Exit Sub
 
         ClearAnimation(EditorIndex)
 
@@ -75,7 +75,7 @@
     End Sub
 
     Private Sub CmbSound_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSound.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ANIMATIONS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ANIMATIONS Then Exit Sub
 
         Animation(EditorIndex).Sound = cmbSound.SelectedItem.ToString
     End Sub

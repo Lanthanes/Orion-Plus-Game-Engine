@@ -257,7 +257,7 @@ Public Module EditorHousing
 
         If Width > 4 Then Width = 4
         If Height > 4 Then Height = 4
-        If i <= 0 Or i > NumFurniture Then Exit Sub
+        If i <= 0 OrElse i > NumFurniture Then Exit Sub
 
         ' make sure it's not out of map
         If Furniture(Index).X > Map.MaxX Then Exit Sub

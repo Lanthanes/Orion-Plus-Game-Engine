@@ -13,7 +13,7 @@
     Private Sub BtnDelete_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnDelete.Click
         Dim tmpIndex As Integer
 
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         ClearItem(EditorIndex + 1)
 
@@ -26,7 +26,7 @@
     End Sub
 
     Private Sub LstIndex_Click(ByVal sender As Object, ByVal e As EventArgs) Handles lstIndex.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
         ItemEditorInit()
     End Sub
 
@@ -62,32 +62,32 @@
 
 #Region "Basics"
     Private Sub NudPic_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudPic.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Pic = nudPic.Value
         EditorItem_DrawItem()
     End Sub
 
     Private Sub CmbBind_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbBind.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).BindType = cmbBind.SelectedIndex
     End Sub
 
     Private Sub NudRarity_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudRarity.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Rarity = nudRarity.Value
     End Sub
 
     Private Sub CmbAnimation_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbAnimation.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Animation = cmbAnimation.SelectedIndex
     End Sub
 
     Private Sub CmbType_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbType.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         cmbSubType.Enabled = False
 
@@ -151,20 +151,20 @@
     End Sub
 
     Private Sub NudVitalMod_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitalMod.Click
-        If EditorIndex <= 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Data1 = nudVitalMod.Value
     End Sub
 
     Private Sub CmbSkills_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbSkills.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Data1 = cmbSkills.SelectedIndex
     End Sub
 
     Private Sub TxtName_TextChanged(ByVal sender As Object, ByVal e As EventArgs) Handles txtName.TextChanged
         Dim tmpIndex As Integer
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
         tmpIndex = lstIndex.SelectedIndex
         Item(EditorIndex).Name = Trim$(txtName.Text)
         lstIndex.Items.RemoveAt(EditorIndex - 1)
@@ -173,7 +173,7 @@
     End Sub
 
     Private Sub NudPrice_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudPrice.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Price = nudPrice.Value
     End Sub
@@ -187,31 +187,31 @@
     End Sub
 
     Private Sub CmbRecipe_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbRecipe.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Data1 = cmbRecipe.SelectedIndex
     End Sub
 
     Private Sub TxtDescription_TextChanged(sender As Object, e As EventArgs) Handles txtDescription.TextChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Description = Trim$(txtDescription.Text)
     End Sub
 
     Private Sub CmbSubType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSubType.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).SubType = cmbSubType.SelectedIndex
     End Sub
 
     Private Sub NudItemLvl_ValueChanged(sender As Object, e As EventArgs) Handles nudItemLvl.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).ItemLevel = nudItemLvl.Value
     End Sub
 
     Private Sub CmbPet_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPet.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Data1 = cmbPet.SelectedIndex
     End Sub
@@ -219,55 +219,55 @@
 
 #Region "Requirements"
     Private Sub CmbClassReq_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbClassReq.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).ClassReq = cmbClassReq.SelectedIndex
     End Sub
 
     Private Sub CmbAccessReq_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbAccessReq.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).AccessReq = cmbAccessReq.SelectedIndex
     End Sub
 
     Private Sub NudLevelReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLevelReq.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).LevelReq = nudLevelReq.Value
     End Sub
 
     Private Sub NudStrReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudStrReq.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Stat_Req(Stats.Strength) = nudStrReq.Value
     End Sub
 
     Private Sub NudEndReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudEndReq.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Stat_Req(Stats.Endurance) = nudEndReq.Value
     End Sub
 
     Private Sub NudVitReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitReq.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Stat_Req(Stats.Vitality) = nudVitReq.Value
     End Sub
 
     Private Sub NudLuckReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLuckReq.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Stat_Req(Stats.Luck) = nudLuckReq.Value
     End Sub
 
     Private Sub NudIntReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudIntReq.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Stat_Req(Stats.Intelligence) = nudIntReq.Value
     End Sub
 
     Private Sub NudSprReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSprReq.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Stat_Req(Stats.Spirit) = nudSprReq.Value
     End Sub
@@ -275,67 +275,67 @@
 
 #Region "Equipment"
     Private Sub CmbTool_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbTool.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
         Item(EditorIndex).Data3 = cmbTool.SelectedIndex
     End Sub
 
     Private Sub NudDamage_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudDamage.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Data2 = nudDamage.Value
     End Sub
 
     Private Sub NudSpeed_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSpeed.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
         lblSpeed.Text = "Speed: " & nudSpeed.Value / 1000 & " sec"
         Item(EditorIndex).Speed = nudSpeed.Value
     End Sub
 
     Private Sub NudPaperdoll_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudPaperdoll.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Paperdoll = nudPaperdoll.Value
         EditorItem_DrawPaperdoll()
     End Sub
 
     Private Sub NudStrength_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudStrength.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Add_Stat(Stats.Strength) = nudStrength.Value
     End Sub
 
     Private Sub NudLuck_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLuck.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Add_Stat(Stats.Luck) = nudLuck.Value
     End Sub
 
     Private Sub NudEndurance_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudEndurance.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Add_Stat(Stats.Endurance) = nudEndurance.Value
     End Sub
 
     Private Sub NudIntelligence_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudIntelligence.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Add_Stat(Stats.Intelligence) = nudIntelligence.Value
     End Sub
 
     Private Sub NudVitality_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitality.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Add_Stat(Stats.Vitality) = nudVitality.Value
     End Sub
 
     Private Sub NudSpirit_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSpirit.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Add_Stat(Stats.Spirit) = nudSpirit.Value
     End Sub
 
     Private Sub ChkKnockBack_CheckedChanged(sender As Object, e As EventArgs) Handles chkKnockBack.CheckedChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         If chkKnockBack.Checked = True Then
             Item(EditorIndex).KnockBack = 1
@@ -345,13 +345,13 @@
     End Sub
 
     Private Sub CmbKnockBackTiles_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbKnockBackTiles.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).KnockBackTiles = cmbKnockBackTiles.SelectedIndex
     End Sub
 
     Private Sub ChkRandomize_CheckedChanged(sender As Object, e As EventArgs) Handles chkRandomize.CheckedChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         If chkRandomize.Checked = True Then
             Item(EditorIndex).Randomize = 1
@@ -361,13 +361,13 @@
     End Sub
 
     Private Sub CmbProjectile_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbProjectile.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Projectile = cmbProjectile.SelectedIndex
     End Sub
 
     Private Sub CmbAmmo_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbAmmo.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Ammo = cmbAmmo.SelectedIndex
     End Sub
@@ -375,12 +375,12 @@
 
 #Region "Furniture"
     Private Sub CmbFurnitureType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbFurnitureType.SelectedIndexChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
         Item(EditorIndex).Data1 = cmbFurnitureType.SelectedIndex
     End Sub
 
     Private Sub OptNoFurnitureEditing_CheckedChanged(sender As Object, e As EventArgs) Handles optNoFurnitureEditing.CheckedChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
         If optNoFurnitureEditing.Checked = True Then
             lblSetOption.Text = "No Editing: Lets you look at the image without setting any options (blocks/fringes)."
         End If
@@ -388,7 +388,7 @@
     End Sub
 
     Private Sub OptSetBlocks_CheckedChanged(sender As Object, e As EventArgs) Handles optSetBlocks.CheckedChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
         If optSetBlocks.Checked = True Then
             lblSetOption.Text = "Set Blocks: Os are passable and Xs are not. Simply place Xs where you do not want the player to walk."
         End If
@@ -396,7 +396,7 @@
     End Sub
 
     Private Sub OptSetFringe_CheckedChanged(sender As Object, e As EventArgs) Handles optSetFringe.CheckedChanged
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
         If optSetFringe.Checked = True Then
             lblSetOption.Text = "Set Fringe: Os are draw on the fringe layer (the player can walk behind)."
         End If
@@ -404,11 +404,11 @@
     End Sub
 
     Private Sub NudFurniture_ValueChanged(sender As Object, e As EventArgs) Handles nudFurniture.Click
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
         Item(EditorIndex).Data2 = nudFurniture.Value
 
-        If nudFurniture.Value > 0 And nudFurniture.Value <= NumFurniture Then
+        If nudFurniture.Value > 0 AndAlso nudFurniture.Value <= NumFurniture Then
             Item(EditorIndex).FurnitureWidth = FurnitureGFXInfo(nudFurniture.Value).width / 32
             Item(EditorIndex).FurnitureHeight = FurnitureGFXInfo(nudFurniture.Value).height / 32
             If Item(EditorIndex).FurnitureHeight > 1 Then Item(EditorIndex).FurnitureHeight = Item(EditorIndex).FurnitureHeight - 1
@@ -421,7 +421,7 @@
     End Sub
 
     Private Sub PicFurniture_MouseDown(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picFurniture.MouseDown
-        If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+        If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
         Dim X As Long, Y As Long
         X = e.X / 32
         Y = e.Y / 32

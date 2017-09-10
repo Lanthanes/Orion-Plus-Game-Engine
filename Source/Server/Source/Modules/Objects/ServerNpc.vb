@@ -60,7 +60,7 @@ Module ServerNpc
         Dim NpcNum As Integer
 
         ' Check for subscript out of range
-        If MapNpcNum <= 0 Or MapNpcNum > MAX_MAP_NPCS Or Not IsPlaying(Index) Then
+        If MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Not IsPlaying(Index) Then
             Exit Function
         End If
 
@@ -94,19 +94,19 @@ Module ServerNpc
             If NpcNum > 0 Then
 
                 ' Check if at same coordinates
-                If (GetPlayerY(Index) + 1 = MapNpc(MapNum).Npc(MapNpcNum).Y) And (GetPlayerX(Index) = MapNpc(MapNum).Npc(MapNpcNum).X) Then
+                If (GetPlayerY(Index) + 1 = MapNpc(MapNum).Npc(MapNpcNum).Y) AndAlso (GetPlayerX(Index) = MapNpc(MapNum).Npc(MapNpcNum).X) Then
                     CanNpcAttackPlayer = True
                 Else
 
-                    If (GetPlayerY(Index) - 1 = MapNpc(MapNum).Npc(MapNpcNum).Y) And (GetPlayerX(Index) = MapNpc(MapNum).Npc(MapNpcNum).X) Then
+                    If (GetPlayerY(Index) - 1 = MapNpc(MapNum).Npc(MapNpcNum).Y) AndAlso (GetPlayerX(Index) = MapNpc(MapNum).Npc(MapNpcNum).X) Then
                         CanNpcAttackPlayer = True
                     Else
 
-                        If (GetPlayerY(Index) = MapNpc(MapNum).Npc(MapNpcNum).Y) And (GetPlayerX(Index) + 1 = MapNpc(MapNum).Npc(MapNpcNum).X) Then
+                        If (GetPlayerY(Index) = MapNpc(MapNum).Npc(MapNpcNum).Y) AndAlso (GetPlayerX(Index) + 1 = MapNpc(MapNum).Npc(MapNpcNum).X) Then
                             CanNpcAttackPlayer = True
                         Else
 
-                            If (GetPlayerY(Index) = MapNpc(MapNum).Npc(MapNpcNum).Y) And (GetPlayerX(Index) - 1 = MapNpc(MapNum).Npc(MapNpcNum).X) Then
+                            If (GetPlayerY(Index) = MapNpc(MapNum).Npc(MapNpcNum).Y) AndAlso (GetPlayerX(Index) - 1 = MapNpc(MapNum).Npc(MapNpcNum).X) Then
                                 CanNpcAttackPlayer = True
                             End If
                         End If
@@ -124,11 +124,11 @@ Module ServerNpc
         CanNpcAttackNpc = False
 
         ' Check for subscript out of range
-        If Attacker <= 0 Or Attacker > MAX_MAP_NPCS Then
+        If Attacker <= 0 OrElse Attacker > MAX_MAP_NPCS Then
             Exit Function
         End If
 
-        If Victim <= 0 Or Victim > MAX_MAP_NPCS Then
+        If Victim <= 0 OrElse Victim > MAX_MAP_NPCS Then
             Exit Function
         End If
 
@@ -171,19 +171,19 @@ Module ServerNpc
         VictimY = MapNpc(MapNum).Npc(Victim).Y
 
         ' Check if at same coordinates
-        If (VictimY + 1 = AttackerY) And (VictimX = AttackerX) Then
+        If (VictimY + 1 = AttackerY) AndAlso (VictimX = AttackerX) Then
             CanNpcAttackNpc = True
         Else
 
-            If (VictimY - 1 = AttackerY) And (VictimX = AttackerX) Then
+            If (VictimY - 1 = AttackerY) AndAlso (VictimX = AttackerX) Then
                 CanNpcAttackNpc = True
             Else
 
-                If (VictimY = AttackerY) And (VictimX + 1 = AttackerX) Then
+                If (VictimY = AttackerY) AndAlso (VictimX + 1 = AttackerX) Then
                     CanNpcAttackNpc = True
                 Else
 
-                    If (VictimY = AttackerY) And (VictimX - 1 = AttackerX) Then
+                    If (VictimY = AttackerY) AndAlso (VictimX - 1 = AttackerX) Then
                         CanNpcAttackNpc = True
                     End If
                 End If
@@ -199,7 +199,7 @@ Module ServerNpc
 
         ' Check for subscript out of range
 
-        If MapNpcNum <= 0 Or MapNpcNum > MAX_MAP_NPCS Or IsPlaying(Victim) = False Then Exit Sub
+        If MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse IsPlaying(Victim) = False Then Exit Sub
 
         ' Check for subscript out of range
         If MapNpc(GetPlayerMap(Victim)).Npc(MapNpcNum).Num <= 0 Then Exit Sub
@@ -315,8 +315,8 @@ Module ServerNpc
         Dim vNpcNum As Integer
         Dim n As Integer
 
-        If Attacker <= 0 Or Attacker > MAX_MAP_NPCS Then Exit Sub
-        If Victim <= 0 Or Victim > MAX_MAP_NPCS Then Exit Sub
+        If Attacker <= 0 OrElse Attacker > MAX_MAP_NPCS Then Exit Sub
+        If Victim <= 0 OrElse Victim > MAX_MAP_NPCS Then Exit Sub
 
         If Damage <= 0 Then Exit Sub
 
@@ -428,11 +428,11 @@ Module ServerNpc
         Dim Target As Integer
 
         ' Prevent subscript out of range
-        If skillslot <= 0 Or skillslot > MAX_NPC_SKILLS Then Exit Sub
+        If skillslot <= 0 OrElse skillslot > MAX_NPC_SKILLS Then Exit Sub
 
         skillnum = GetNpcSkill(MapNpc(MapNum).Npc(MapNpcNum).Num, skillslot)
 
-        If skillnum <= 0 Or skillnum > MAX_SKILLS Then Exit Sub
+        If skillnum <= 0 OrElse skillnum > MAX_SKILLS Then Exit Sub
 
         ' see if cooldown has finished
         If MapNpc(MapNum).Npc(MapNpcNum).SkillCD(skillslot) > GetTimeMs() Then
@@ -488,7 +488,7 @@ Module ServerNpc
                     '    HasBuffered = False
                     'Else
                     '    ' go through skill types
-                    '    If Skill(skillnum).Type <> SkillType.DAMAGEHP And Skill(skillnum).Type <> SkillType.DAMAGEMP Then
+                    '    If Skill(skillnum).Type <> SkillType.DAMAGEHP AndAlso Skill(skillnum).Type <> SkillType.DAMAGEMP Then
                     '        HasBuffered = True
                     '    Else
                     '        If CanAttackNpc(Index, Target, True) Then
@@ -604,7 +604,7 @@ Module ServerNpc
 
     Public Function IsNpcDead(ByVal MapNum As Integer, ByVal MapNpcNum As Integer)
         IsNpcDead = False
-        If MapNum < 0 Or MapNum > MAX_MAPS Or MapNpcNum < 0 Or MapNpcNum > MAX_MAP_NPCS Then Exit Function
+        If MapNum < 0 OrElse MapNum > MAX_MAPS OrElse MapNpcNum < 0 OrElse MapNpcNum > MAX_MAP_NPCS Then Exit Function
         If MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.HP) <= 0 Then IsNpcDead = True
     End Function
 

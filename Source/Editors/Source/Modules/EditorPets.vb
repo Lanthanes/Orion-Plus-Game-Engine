@@ -229,7 +229,7 @@ Module EditorPets
                 .cmbSkill4.Items.Add(i & ": " & Skill(i).Name)
             Next
             .txtName.Text = Trim$(Pet(EditorIndex).Name)
-            If Pet(EditorIndex).Sprite < 0 Or Pet(EditorIndex).Sprite > .nudSprite.Maximum Then Pet(EditorIndex).Sprite = 0
+            If Pet(EditorIndex).Sprite < 0 OrElse Pet(EditorIndex).Sprite > .nudSprite.Maximum Then Pet(EditorIndex).Sprite = 0
 
             .nudSprite.Value = Pet(EditorIndex).Sprite
             .EditorPet_DrawPet()

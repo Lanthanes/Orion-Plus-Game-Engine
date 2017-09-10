@@ -73,7 +73,7 @@ Module ClientText
         ' calc pos
         TextX = ConvertMapX(GetPlayerX(Index) * PIC_X) + Player(Index).XOffset + (PIC_X \ 2)
         TextX = TextX - (GetTextWidth((Trim$(Name))) / 2)
-        If GetPlayerSprite(Index) < 1 Or GetPlayerSprite(Index) > NumCharacters Then
+        If GetPlayerSprite(Index) < 1 OrElse GetPlayerSprite(Index) > NumCharacters Then
             TextY = ConvertMapY(GetPlayerY(Index) * PIC_Y) + Player(Index).YOffset - 16
         Else
             ' Determine location for text
@@ -105,7 +105,7 @@ Module ClientText
         End Select
 
         TextX = ConvertMapX(MapNpc(MapNpcNum).X * PIC_X) + MapNpc(MapNpcNum).XOffset + (PIC_X \ 2) - GetTextWidth((Trim$(Npc(npcNum).Name))) / 2
-        If Npc(npcNum).Sprite < 1 Or Npc(npcNum).Sprite > NumCharacters Then
+        If Npc(npcNum).Sprite < 1 OrElse Npc(npcNum).Sprite > NumCharacters Then
             TextY = ConvertMapY(MapNpc(MapNpcNum).Y * PIC_Y) + MapNpc(MapNpcNum).YOffset - 16
         Else
             TextY = ConvertMapY(MapNpc(MapNpcNum).Y * PIC_Y) + MapNpc(MapNpcNum).YOffset - (CharacterGFXInfo(Npc(npcNum).Sprite).Height / 4) + 16
@@ -131,7 +131,7 @@ Module ClientText
         If Map.MapEvents(Index).GraphicType = 0 Then
             TextY = ConvertMapY(Map.MapEvents(Index).Y * PIC_Y) + Map.MapEvents(Index).YOffset - 16
         ElseIf Map.MapEvents(Index).GraphicType = 1 Then
-            If Map.MapEvents(Index).GraphicNum < 1 Or Map.MapEvents(Index).GraphicNum > NumCharacters Then
+            If Map.MapEvents(Index).GraphicNum < 1 OrElse Map.MapEvents(Index).GraphicNum > NumCharacters Then
                 TextY = ConvertMapY(Map.MapEvents(Index).Y * PIC_Y) + Map.MapEvents(Index).YOffset - 16
             Else
                 ' Determine location for text
@@ -152,7 +152,7 @@ Module ClientText
         For i = 1 To MAX_QUESTS
             'check if the npc is the starter to any quest: [!] symbol
             'can accept the quest as a new one?
-            If Player(MyIndex).PlayerQuest(i).Status = QuestStatus.NotStarted Or Player(MyIndex).PlayerQuest(i).Status = QuestStatus.Repeatable Or (Player(MyIndex).PlayerQuest(i).Status = QuestStatus.Completed And Quest(i).Repeat = 1) Then
+            If Player(MyIndex).PlayerQuest(i).Status = QuestStatus.NotStarted OrElse Player(MyIndex).PlayerQuest(i).Status = QuestStatus.Repeatable OrElse (Player(MyIndex).PlayerQuest(i).Status = QuestStatus.Completed AndAlso Quest(i).Repeat = 1) Then
                 'the npc gives this quest?
                 If Map.MapEvents(Index).questnum = i Then
                     Name = "[!]"
@@ -185,8 +185,8 @@ Module ClientText
         Dim tY As Integer
 
         If frmEditor_MapEditor.tabpages.SelectedTab Is frmEditor_MapEditor.tpAttributes Then
-            For X = TileView.left To TileView.right
-                For y = TileView.top To TileView.bottom
+            For X = TileView.Left To TileView.Right
+                For y = TileView.Top To TileView.Bottom
                     If IsValidMapPoint(X, y) Then
                         With Map.Tile(X, y)
                             tX = ((ConvertMapX(X * PIC_X)) - 4) + (PIC_X * 0.5)
@@ -437,12 +437,12 @@ Module ClientText
                                         line = ""
                                         baseLine = ""
                                         remaining = remaining.Substring(i + 1)
-                                    Loop While (remaining.Length > 0) And (width < If(mode = WrapMode.Font, GetTextWidth(remaining, size), remaining.Length))
+                                    Loop While (remaining.Length > 0) AndAlso (width < If(mode = WrapMode.Font, GetTextWidth(remaining, size), remaining.Length))
                                     line = remaining
                                     Exit Select
 
                                 Case WrapType.Smart
-                                    If (line.Length < 1) Or (width < If(mode = WrapMode.Font, GetTextWidth(trim, size), trim.Length)) Then
+                                    If (line.Length < 1) OrElse (width < If(mode = WrapMode.Font, GetTextWidth(trim, size), trim.Length)) Then
                                         currentType = WrapType.BreakWord
                                     Else
                                         currentType = WrapType.Whitespace

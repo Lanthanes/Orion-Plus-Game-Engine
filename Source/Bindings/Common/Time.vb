@@ -137,9 +137,9 @@ Namespace Global.Orion
         Public Shared Function GetTimeOfDay(ByRef hours As Integer) As TimeOfDay
             If (hours < 6) Then
                 Return TimeOfDay.Night
-            ElseIf (6 <= hours And hours <= 9) Then
+            ElseIf (6 <= hours AndAlso hours <= 9) Then
                 Return TimeOfDay.Dawn
-            ElseIf (9 < hours And hours < 18) Then
+            ElseIf (9 < hours AndAlso hours < 18) Then
                 Return TimeOfDay.Day
             Else
                 Return TimeOfDay.Dusk

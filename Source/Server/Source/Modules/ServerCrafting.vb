@@ -204,7 +204,7 @@ Public Module ServerCrafting
 
         If TempPlayer(Index).IsCrafting = False Then Exit Sub
 
-        If recipeindex = 0 Or amount = 0 Then Exit Sub
+        If recipeindex = 0 OrElse amount = 0 Then Exit Sub
 
         If Not CheckLearnedRecipe(Index, recipeindex) Then Exit Sub
 

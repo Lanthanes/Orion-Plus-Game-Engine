@@ -334,8 +334,8 @@ Partial Class FrmEditor_MapEditor
         '
         'pnlTiles
         '
-        Me.pnlTiles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.pnlTiles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top OrElse System.Windows.Forms.AnchorStyles.Bottom) _
+            OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.pnlTiles.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(63, Byte), Integer), CType(CType(65, Byte), Integer))
         Me.pnlTiles.Controls.Add(Me.cmbAutoTile)
         Me.pnlTiles.Controls.Add(Me.cmbTileSets)
@@ -354,7 +354,7 @@ Partial Class FrmEditor_MapEditor
         '
         'cmbAutoTile
         '
-        Me.cmbAutoTile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.cmbAutoTile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmbAutoTile.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
         Me.cmbAutoTile.BorderColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
         Me.cmbAutoTile.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid
@@ -377,7 +377,7 @@ Partial Class FrmEditor_MapEditor
         '
         'cmbTileSets
         '
-        Me.cmbTileSets.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.cmbTileSets.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmbTileSets.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
         Me.cmbTileSets.BorderColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
         Me.cmbTileSets.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid
@@ -399,7 +399,7 @@ Partial Class FrmEditor_MapEditor
         '
         'cmbLayers
         '
-        Me.cmbLayers.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.cmbLayers.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmbLayers.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
         Me.cmbLayers.BorderColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
         Me.cmbLayers.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid
@@ -422,7 +422,7 @@ Partial Class FrmEditor_MapEditor
         '
         'DarkLabel4
         '
-        Me.DarkLabel4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.DarkLabel4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.DarkLabel4.AutoSize = True
         Me.DarkLabel4.BackColor = System.Drawing.Color.Transparent
         Me.DarkLabel4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
@@ -434,8 +434,8 @@ Partial Class FrmEditor_MapEditor
         '
         'pnlBack
         '
-        Me.pnlBack.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.pnlBack.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top OrElse System.Windows.Forms.AnchorStyles.Bottom) _
+            OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.pnlBack.BackColor = System.Drawing.Color.Black
         Me.pnlBack.Controls.Add(Me.picBackSelect)
         Me.pnlBack.Location = New System.Drawing.Point(3, 3)
@@ -454,7 +454,7 @@ Partial Class FrmEditor_MapEditor
         '
         'DarkLabel3
         '
-        Me.DarkLabel3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.DarkLabel3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.DarkLabel3.AutoSize = True
         Me.DarkLabel3.BackColor = System.Drawing.Color.Transparent
         Me.DarkLabel3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
@@ -466,8 +466,8 @@ Partial Class FrmEditor_MapEditor
         '
         'scrlPictureY
         '
-        Me.scrlPictureY.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.scrlPictureY.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top OrElse System.Windows.Forms.AnchorStyles.Bottom) _
+            OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.scrlPictureY.BackColor = System.Drawing.SystemColors.ControlDark
         Me.scrlPictureY.Location = New System.Drawing.Point(292, 3)
         Me.scrlPictureY.Name = "scrlPictureY"
@@ -476,7 +476,7 @@ Partial Class FrmEditor_MapEditor
         '
         'scrlPictureX
         '
-        Me.scrlPictureX.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.scrlPictureX.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.scrlPictureX.BackColor = System.Drawing.SystemColors.ControlDark
         Me.scrlPictureX.Location = New System.Drawing.Point(3, 451)
         Me.scrlPictureX.Name = "scrlPictureX"
@@ -486,7 +486,7 @@ Partial Class FrmEditor_MapEditor
         '
         'DarkLabel2
         '
-        Me.DarkLabel2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.DarkLabel2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.DarkLabel2.AutoSize = True
         Me.DarkLabel2.BackColor = System.Drawing.Color.Transparent
         Me.DarkLabel2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
@@ -498,7 +498,7 @@ Partial Class FrmEditor_MapEditor
         '
         'DarkLabel1
         '
-        Me.DarkLabel1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.DarkLabel1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.DarkLabel1.AutoSize = True
         Me.DarkLabel1.BackColor = System.Drawing.Color.Transparent
         Me.DarkLabel1.FlatStyle = System.Windows.Forms.FlatStyle.Flat

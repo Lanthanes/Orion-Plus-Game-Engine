@@ -61,7 +61,7 @@ Module ServerConsole
     End Sub
 
     Private Function CmdExists(Cmd As String) As Boolean
-        If LCase(Cmd) <> ("/help") And Cmd <> ("/exit") And Cmd <> ("/setadmin") And Cmd <> ("/kick") And Cmd <> ("/ban") Then
+        If LCase(Cmd) <> ("/help") AndAlso Cmd <> ("/exit") AndAlso Cmd <> ("/setadmin") AndAlso Cmd <> ("/kick") AndAlso Cmd <> ("/ban") Then
             Return False
         End If
 

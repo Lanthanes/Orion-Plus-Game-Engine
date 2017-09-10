@@ -1930,7 +1930,7 @@ Module ServerNetworkSend
                 ' add total worth
                 If TempPlayer(Index).TradeOffer(i).Num > 0 Then
                     ' currency?
-                    If Item(TempPlayer(Index).TradeOffer(i).Num).Type = ItemType.Currency Or Item(TempPlayer(Index).TradeOffer(i).Num).Stackable = 1 Then
+                    If Item(TempPlayer(Index).TradeOffer(i).Num).Type = ItemType.Currency OrElse Item(TempPlayer(Index).TradeOffer(i).Num).Stackable = 1 Then
                         If TempPlayer(Index).TradeOffer(i).Value = 0 Then TempPlayer(Index).TradeOffer(i).Value = 1
                         totalWorth = totalWorth + (Item(GetPlayerInvItemNum(Index, TempPlayer(Index).TradeOffer(i).Num)).Price * TempPlayer(Index).TradeOffer(i).Value)
                     Else
@@ -1947,7 +1947,7 @@ Module ServerNetworkSend
                 ' add total worth
                 If GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num) > 0 Then
                     ' currency?
-                    If Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Stackable = 1 Then
+                    If Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Stackable = 1 Then
                         If TempPlayer(tradeTarget).TradeOffer(i).Value = 0 Then TempPlayer(tradeTarget).TradeOffer(i).Value = 1
                         totalWorth = totalWorth + (Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Price * TempPlayer(tradeTarget).TradeOffer(i).Value)
                     Else

@@ -398,7 +398,7 @@ Module ServerGeneral
     ' Used for checking validity of names
     Function IsNameLegal(ByVal sInput As Integer) As Boolean
 
-        If (sInput >= 65 And sInput <= 90) Or (sInput >= 97 And sInput <= 122) Or (sInput = 95) Or (sInput = 32) Or (sInput >= 48 And sInput <= 57) Then
+        If (sInput >= 65 AndAlso sInput <= 90) OrElse (sInput >= 97 AndAlso sInput <= 122) OrElse (sInput = 95) OrElse (sInput = 32) OrElse (sInput >= 48 AndAlso sInput <= 57) Then
             Return True
         Else
             Return False
@@ -417,7 +417,7 @@ Module ServerGeneral
     Public Sub HandleShutdown()
 
         If Secs <= 0 Then Secs = 30
-        If Secs Mod 5 = 0 Or Secs <= 5 Then
+        If Secs Mod 5 = 0 OrElse Secs <= 5 Then
             GlobalMsg(String.Format("Server Shutdown in {0} seconds.", Secs))
             TextAdd(String.Format("Automated Server Shutdown in {0} seconds.", Secs))
         End If
