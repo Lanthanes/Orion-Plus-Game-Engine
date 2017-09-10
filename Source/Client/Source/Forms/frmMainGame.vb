@@ -7,7 +7,7 @@ Public Class FrmMainGame
     Protected Overrides ReadOnly Property CreateParams() As CreateParams
         Get
             Dim myCp As CreateParams = MyBase.CreateParams
-            myCp.ClassStyle = myCp.ClassStyle OrElse CP_NOCLOSE_BUTTON
+            myCp.ClassStyle = myCp.ClassStyle Or CP_NOCLOSE_BUTTON
             Return myCp
         End Get
     End Property
@@ -206,7 +206,7 @@ Public Class FrmMainGame
                 Else
                     ' rightclick menu
                     If PetAlive(MyIndex) Then
-                        If IsInBounds() AndAlso CurX = Player(MyIndex).Pet.X AndAlso CurY = Player(MyIndex).Pet.Y Then
+                        If IsInBounds() AndAlso CurX = Player(MyIndex).Pet.X And CurY = Player(MyIndex).Pet.Y Then
                             ShowPetStats = True
                         End If
                     Else
