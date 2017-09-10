@@ -9,7 +9,7 @@
 
     Private Sub TmrConnect_Tick(ByVal sender As Object, ByVal e As EventArgs) Handles tmrConnect.Tick
         Static i As Integer
-        If IsConnected() = True Then
+        If Socket.IsConnected() = True Then
             lblConnectionStatus.ForeColor = Color.Green
             lblConnectionStatus.Text = "Online..."
 
@@ -41,7 +41,7 @@
     End Function
 
     Private Sub BtnLogin_Click(sender As Object, e As EventArgs) Handles btnLogin.Click
-        If IsConnected() Then
+        If Socket.IsConnected() Then
             If IsLoginLegal(txtLogin.Text, txtPassword.Text) Then
                 SendEditorLogin(txtLogin.Text, txtPassword.Text)
             End If

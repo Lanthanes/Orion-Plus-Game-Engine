@@ -1197,7 +1197,7 @@ Module ServerPlayers
 
         ' send equipment of all people on new map
         If GetTotalMapPlayers(MapNum) > 0 Then
-            For i = 0 To GetPlayersOnline()
+            For i = 1 To GetPlayersOnline()
                 If IsPlaying(i) Then
                     If GetPlayerMap(i) = MapNum Then
                         SendMapEquipmentTo(i, Index)

@@ -20,7 +20,7 @@ Module ClientGeneral
 
         ReDim Player(MAX_PLAYERS)
 
-        For i = 0 To MAX_PLAYERS
+        For i = 1 To MAX_PLAYERS
             ClearPlayer(i)
         Next
 

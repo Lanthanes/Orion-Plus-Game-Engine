@@ -1905,7 +1905,7 @@ Module ClientGraphics
 
             If NumCharacters > 0 Then
                 ' Players
-                For I = 0 To TotalOnline 'MAX_PLAYERS
+                For I = 1 To TotalOnline 'MAX_PLAYERS
                     If IsPlaying(I) And GetPlayerMap(I) = GetPlayerMap(MyIndex) Then
                         If Player(I).Y = Y Then
                             DrawPlayer(I)
@@ -1947,7 +1947,7 @@ Module ClientGraphics
                     End If
                 End If
 
-                For I = 0 To TotalOnline 'MAX_PLAYERS
+                For I = 1 To TotalOnline 'MAX_PLAYERS
                     If IsPlaying(I) Then
                         If Player(I).Map = Player(MyIndex).Map Then
                             If CurX = Player(I).X And CurY = Player(I).Y Then
@@ -2066,7 +2066,7 @@ Module ClientGraphics
         End If
 
         ' draw player names
-        For I = 0 To TotalOnline 'MAX_PLAYERS
+        For I = 1 To TotalOnline 'MAX_PLAYERS
             If IsPlaying(I) And GetPlayerMap(I) = GetPlayerMap(MyIndex) Then
                 DrawPlayerName(I)
                 If PetAlive(I) Then

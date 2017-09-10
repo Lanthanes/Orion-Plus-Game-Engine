@@ -752,7 +752,7 @@ Module ClientNetworkReceive
         GettingMap = True
 
         ' Erase all players except self
-        For i = 0 To TotalOnline 'MAX_PLAYERS
+        For i = 1 To TotalOnline 'MAX_PLAYERS
             If i <> MyIndex Then
                 SetPlayerMap(i, 0)
             End If

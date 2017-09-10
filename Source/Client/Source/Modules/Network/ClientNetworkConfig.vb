@@ -1,4 +1,5 @@
-﻿Imports ASFW.Network
+﻿Imports System.Windows.Forms
+Imports ASFW.Network
 
 Friend Module ClientNetworkConfig
     Friend WithEvents Socket As Client

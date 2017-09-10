@@ -250,7 +250,7 @@ Module ServerNetworkReceive
             Exit Sub
         End If
 
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
                 If Trim$(Player(i).Login) = Trim$(Name) Then
                     AlertMsg(i, "Your account has been removed by an admin!")
@@ -707,7 +707,7 @@ Module ServerNetworkReceive
         End If
 
         ' Try to attack a player
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             TempIndex = i
 
             ' Make sure we dont try to attack ourselves
@@ -1134,7 +1134,7 @@ Module ServerNetworkReceive
         SpawnMapNpcs(MapNum)
         SpawnGlobalEvents(MapNum)
 
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
                 If Player(i).Character(TempPlayer(i).CurChar).Map = MapNum Then
                     SpawnMapEventsFor(i, MapNum)
@@ -1155,7 +1155,7 @@ Module ServerNetworkReceive
         CacheResources(MapNum)
 
         ' Refresh map for everyone online
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) And GetPlayerMap(i) = MapNum Then
                 PlayerWarp(i, MapNum, GetPlayerX(i), GetPlayerY(i))
                 ' Send map
@@ -1754,7 +1754,7 @@ Module ServerNetworkReceive
         If x < 0 Or x > Map(GetPlayerMap(Index)).MaxX Or y < 0 Or y > Map(GetPlayerMap(Index)).MaxY Then Exit Sub
 
         ' Check for a player
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
 
             If IsPlaying(i) Then
                 If GetPlayerMap(Index) = GetPlayerMap(i) Then
@@ -3138,7 +3138,7 @@ Module ServerNetworkReceive
         SpawnMapNpcs(MapNum)
         SpawnGlobalEvents(MapNum)
 
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
                 If Player(i).Character(TempPlayer(i).CurChar).Map = MapNum Then
                     SpawnMapEventsFor(i, MapNum)
@@ -3159,7 +3159,7 @@ Module ServerNetworkReceive
         CacheResources(MapNum)
 
         ' Refresh map for everyone online
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) And GetPlayerMap(i) = MapNum Then
                 PlayerWarp(i, MapNum, GetPlayerX(i), GetPlayerY(i))
                 ' Send map

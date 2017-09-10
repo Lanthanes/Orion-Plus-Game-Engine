@@ -113,7 +113,7 @@ Module ServerConsole
         If Parts.Length < 3 Then Exit Sub
 
         Name = Parts(1)
-        Power = CInt(Parts(2))
+        Integer.TryParse(Parts(2), Power)
 
         If Not FindPlayer(Name) > 0 Then Exit Sub
 

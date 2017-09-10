@@ -207,7 +207,7 @@ Public Module ClientProjectiles
         Next
 
         'Check for player collision
-        For i = 0 To MAX_PLAYERS
+        For i = 1 To MAX_PLAYERS
             If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
                 If GetPlayerX(i) = X And GetPlayerY(i) = Y Then
                     CanClearProjectile = True

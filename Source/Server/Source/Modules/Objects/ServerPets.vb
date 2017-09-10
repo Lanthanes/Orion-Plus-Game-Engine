@@ -431,7 +431,7 @@ Module ServerPets
         If x < 0 Or x > Map(GetPlayerMap(Index)).MaxX Or y < 0 Or y > Map(GetPlayerMap(Index)).MaxY Then Exit Sub
 
         ' Check for a player
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
 
             If IsPlaying(i) Then
                 If GetPlayerMap(Index) = GetPlayerMap(i) AndAlso GetPlayerX(i) = x AndAlso GetPlayerY(i) = y Then
@@ -621,7 +621,7 @@ Module ServerPets
         Dim Target As Integer, TargetTypes As Byte, TargetX As Integer, TargetY As Integer, target_verify As Boolean
 
         For MapNum = 1 To MAX_CACHED_MAPS
-            For PlayerIndex = 0 To GetPlayersOnline()
+            For PlayerIndex = 1 To GetPlayersOnline()
                 TickCount = GetTimeMs()
 
                 If GetPlayerMap(PlayerIndex) = MapNum AndAlso PetAlive(PlayerIndex) Then
@@ -633,7 +633,7 @@ Module ServerPets
                         ' make sure it's not stunned
                         If Not TempPlayer(PlayerIndex).PetStunDuration > 0 Then
 
-                            For i = 0 To Socket.HighIndex
+                            For i = 1 To Socket.HighIndex
                                 If TempPlayer(PlayerIndex).PetTargetType > 0 Then
                                     If TempPlayer(PlayerIndex).PetTargetType = 1 And TempPlayer(PlayerIndex).PetTarget = PlayerIndex Then
                                     Else
@@ -1093,7 +1093,7 @@ Module ServerPets
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 0 To GetPlayersOnline()
+                    For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = GetPetX(Index) + 1) And (GetPlayerY(i) = GetPetY(Index) - 1) Then
                                 CanPetMove = False
@@ -1134,7 +1134,7 @@ Module ServerPets
                         Exit Function
                     End If
 
-                    For i = 0 To GetPlayersOnline()
+                    For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = GetPetX(Index)) And (GetPlayerY(i) = GetPetY(Index) + 1) Then
                                 CanPetMove = False
@@ -1175,7 +1175,7 @@ Module ServerPets
                         Exit Function
                     End If
 
-                    For i = 0 To GetPlayersOnline()
+                    For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = GetPetX(Index) - 1) And (GetPlayerY(i) = GetPetY(Index)) Then
                                 CanPetMove = False
@@ -1216,7 +1216,7 @@ Module ServerPets
                         Exit Function
                     End If
 
-                    For i = 0 To GetPlayersOnline()
+                    For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = GetPetX(Index) + 1) And (GetPlayerY(i) = GetPetY(Index)) Then
                                 CanPetMove = False
@@ -1961,7 +1961,7 @@ Module ServerPets
             SendNpcDead(MapNum, mapnpcnum)
 
             'Loop through entire map and purge NPC from targets
-            For i = 0 To Socket.HighIndex
+            For i = 1 To Socket.HighIndex
 
                 If IsPlaying(i) Then
                     If GetPlayerMap(i) = MapNum Then
@@ -2555,7 +2555,7 @@ Module ServerPets
                     Case SkillType.DamageHp
                         DidCast = True
 
-                        For i = 0 To GetPlayersOnline()
+                        For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) AndAlso i <> Index Then
                                 If GetPlayerMap(i) = GetPlayerMap(Index) Then
                                     If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
@@ -2604,7 +2604,7 @@ Module ServerPets
 
                         DidCast = True
 
-                        For i = 0 To GetPlayersOnline()
+                        For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(Index) Then
                                 If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
                                     SpellPlayer_Effect(VitalType, increment, i, Vital, Skillnum)
@@ -2889,7 +2889,7 @@ Module ServerPets
             End If
 
             ' purge target info of anyone who targetted dead guy
-            For i = 0 To Socket.HighIndex
+            For i = 1 To Socket.HighIndex
 
                 If IsPlaying(i) And Socket.IsConnected(i) Then
                     If GetPlayerMap(i) = GetPlayerMap(Attacker) Then
@@ -3098,7 +3098,7 @@ Module ServerPets
             End If
 
             ' purge target info of anyone who targetted dead guy
-            For i = 0 To Socket.HighIndex
+            For i = 1 To Socket.HighIndex
 
                 If IsPlaying(i) And Socket.IsConnected(i) Then
                     If GetPlayerMap(i) = GetPlayerMap(Attacker) Then
@@ -3529,7 +3529,7 @@ Module ServerPets
             End If
 
             ' purge target info of anyone who targetted dead guy
-            For i = 0 To GetPlayersOnline()
+            For i = 1 To GetPlayersOnline()
                 If IsPlaying(i) And Socket.IsConnected(i) AndAlso GetPlayerMap(i) = GetPlayerMap(Attacker) Then
                     If TempPlayer(i).Target = TargetType.Pet AndAlso TempPlayer(i).Target = Victim Then
                         TempPlayer(i).Target = 0

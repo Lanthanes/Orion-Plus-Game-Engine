@@ -52,14 +52,14 @@ Friend Module ServerNetworkConfig
 
     Function IsMultiAccounts(ByVal Login As String) As Boolean
         ' Lol this was broke before ~ SpiceyWolf
-        For i As Integer = 0 To GetPlayersOnline()
+        For i As Integer = 1 To GetPlayersOnline()
             If Player(i).Login.Trim.ToLower() = Login.Trim.ToLower() Then Return True
         Next
         Return False
     End Function
 
     Public Sub SendDataToAll(ByRef data() As Byte, ByVal head As Integer)
-        For i As Integer = 0 To GetPlayersOnline()
+        For i As Integer = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
                 Socket.SendDataTo(i, data, head)
             End If
@@ -67,7 +67,7 @@ Friend Module ServerNetworkConfig
     End Sub
 
     Sub SendDataToAllBut(ByVal Index As Integer, ByRef Data() As Byte, ByVal head As Integer)
-        For i As Integer = 0 To GetPlayersOnline()
+        For i As Integer = 1 To GetPlayersOnline()
             If IsPlaying(i) AndAlso i <> Index Then
                 Socket.SendDataTo(i, Data, head)
             End If
@@ -75,7 +75,7 @@ Friend Module ServerNetworkConfig
     End Sub
 
     Sub SendDataToMapBut(ByVal Index As Integer, ByVal MapNum As Integer, ByRef Data() As Byte, ByVal head As Integer)
-        For i As Integer = 0 To GetPlayersOnline()
+        For i As Integer = 1 To GetPlayersOnline()
             If IsPlaying(i) AndAlso GetPlayerMap(i) = MapNum AndAlso i <> Index Then
                 Socket.SendDataTo(i, Data, head)
             End If
@@ -85,7 +85,7 @@ Friend Module ServerNetworkConfig
     Sub SendDataToMap(ByVal MapNum As Integer, ByRef Data() As Byte, ByVal head As Integer)
         Dim i As Integer
 
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
 
             If IsPlaying(i) Then
                 If GetPlayerMap(i) = MapNum Then

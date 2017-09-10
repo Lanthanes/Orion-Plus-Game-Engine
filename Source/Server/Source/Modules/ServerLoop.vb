@@ -151,7 +151,7 @@ Module ServerLoop
             TextAdd("Saving all online players...")
             GlobalMsg("Saving all online players...")
 
-            For i = 0 To GetPlayersOnline()
+            For i = 1 To GetPlayersOnline()
                 If IsPlaying(i) Then
                     SavePlayer(i)
                     SaveBank(i)
@@ -193,7 +193,7 @@ Module ServerLoop
     Private Sub UpdatePlayerVitals()
         Dim i As Integer
 
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
 
             If IsPlaying(i) Then
                 If GetPlayerVital(i, Vitals.HP) <> GetPlayerMaxVital(i, Vitals.HP) Then
@@ -295,7 +295,7 @@ Module ServerLoop
                                 ' make sure it's not stunned
                                 If Not MapNpc(MapNum).Npc(x).StunDuration > 0 Then
 
-                                    For i = 0 To GetPlayersOnline()
+                                    For i = 1 To GetPlayersOnline()
                                         If IsPlaying(i) Then
                                             If GetPlayerMap(i) = MapNum And MapNpc(MapNum).Npc(x).Target = 0 And GetPlayerAccess(i) <= AdminType.Monitor Then
                                                 If PetAlive(i) Then
@@ -1053,7 +1053,7 @@ Module ServerLoop
                 Select Case Skill(skillnum).Type
                     Case SkillType.DamageHp
                         DidCast = True
-                        For i = 0 To GetPlayersOnline()
+                        For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) Then
                                 If GetPlayerMap(i) = MapNum Then
                                     If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
@@ -1094,7 +1094,7 @@ Module ServerLoop
                         End If
 
                         DidCast = True
-                        For i = 0 To GetPlayersOnline()
+                        For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(NpcNum) Then
                                 If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
                                     SkillPlayer_Effect(VitalType, increment, i, Vital, skillnum)

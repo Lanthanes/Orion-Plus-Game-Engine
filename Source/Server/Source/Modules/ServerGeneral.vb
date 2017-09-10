@@ -80,7 +80,7 @@ Module ServerGeneral
 
         ReDim Bank(0 To MAX_PLAYERS)
 
-        For i = 0 To MAX_PLAYERS
+        For i = 1 To MAX_PLAYERS
             ReDim Bank(i).Item(MAX_BANK)
             ReDim Bank(i).ItemRand(MAX_BANK)
             For x = 1 To MAX_BANK
@@ -90,7 +90,7 @@ Module ServerGeneral
 
         ReDim Player(0 To MAX_PLAYERS)
 
-        For i = 0 To MAX_PLAYERS
+        For i = 1 To MAX_PLAYERS
             'multi char
             ReDim Player(i).Character(MAX_CHARS)
             For x = 1 To MAX_CHARS
@@ -116,12 +116,12 @@ Module ServerGeneral
 
         ReDim TempPlayer(0 To MAX_PLAYERS)
 
-        For i = 0 To MAX_PLAYERS
+        For i = 1 To MAX_PLAYERS
             ReDim TempPlayer(i).SkillCD(0 To MAX_PLAYER_SKILLS)
             ReDim TempPlayer(i).PetSkillCD(4)
         Next
 
-        For i = 0 To MAX_PLAYERS
+        For i = 1 To MAX_PLAYERS
             ReDim TempPlayer(i).TradeOffer(0 To MAX_INV)
         Next
 
@@ -200,7 +200,7 @@ Module ServerGeneral
         ' Init all the player sockets
         SetStatus("Initializing player array...")
 
-        For x = 0 To MAX_PLAYERS
+        For x = 1 To MAX_PLAYERS
             ClearPlayer(x)
         Next
 
@@ -255,7 +255,7 @@ Module ServerGeneral
         AddCommandHandler("/timespeed", AddressOf HandleCommandTimeSpeed)
 
         ' Start listener now that everything is loaded
-        Socket.StartListening(Options.Port, 5)
+        Socket.StartListening(Options.Port, 5, True)
 
         ' Starts the server loop
         ServerLoop.ServerLoop()
@@ -292,7 +292,7 @@ Module ServerGeneral
         SaveAllPlayersOnline()
 
         SetStatus("Unloading sockets...")
-        For i = 0 To MAX_PLAYERS
+        For i = 1 To MAX_PLAYERS
             SendLeftGame(i)
             LeftGame(i)
         Next

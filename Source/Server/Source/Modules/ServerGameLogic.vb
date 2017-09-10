@@ -6,7 +6,7 @@ Module ServerGameLogic
         Dim i As Integer, n As Integer
         n = 0
 
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) And GetPlayerMap(i) = MapNum Then
                 n = n + 1
             End If
@@ -18,7 +18,7 @@ Module ServerGameLogic
     Public Function GetPlayersOnline() As Integer
         Dim x As Integer
         x = 0
-        For i = 0 To Socket.HighIndex
+        For i = 1 To Socket.HighIndex
             If TempPlayer(i).InGame = True Then
                 x = x + 1
             End If
@@ -46,7 +46,7 @@ Module ServerGameLogic
     Function FindPlayer(ByVal Name As String) As Integer
         Dim i As Integer
 
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
                 ' Make sure we dont try to check a name thats to small
                 If Len(GetPlayerName(i)) >= Len(Trim$(Name)) Then
@@ -106,7 +106,7 @@ Module ServerGameLogic
 
         End If
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Function FindOpenMapItemSlot(ByVal MapNum As Integer) As Integer
@@ -258,7 +258,7 @@ Module ServerGameLogic
             SendMapNpcVitals(MapNum, MapNpcNum)
         End If
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Public Function Random(ByVal low As Int32, ByVal high As Int32) As Integer
@@ -271,7 +271,7 @@ Module ServerGameLogic
         NpcTileIsOpen = True
 
         If PlayersOnMap(MapNum) Then
-            For LoopI = 0 To Socket.HighIndex
+            For LoopI = 1 To Socket.HighIndex
                 If GetPlayerMap(LoopI) = MapNum AndAlso GetPlayerX(LoopI) = x AndAlso GetPlayerY(LoopI) = y Then
                     NpcTileIsOpen = False
                     Exit Function
@@ -338,7 +338,7 @@ Module ServerGameLogic
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 0 To GetPlayersOnline()
+                    For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y - 1) Then
                                 CanNpcMove = False
@@ -371,7 +371,7 @@ Module ServerGameLogic
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 0 To GetPlayersOnline()
+                    For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y + 1) Then
                                 CanNpcMove = False
@@ -404,7 +404,7 @@ Module ServerGameLogic
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 0 To GetPlayersOnline()
+                    For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X - 1) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
                                 CanNpcMove = False
@@ -437,7 +437,7 @@ Module ServerGameLogic
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 0 To GetPlayersOnline()
+                    For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X + 1) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
                                 CanNpcMove = False

@@ -380,7 +380,7 @@ Module ClientPlayer
         End If
 
         ' Check to see if a player is already on that tile
-        For i = 0 To MAX_PLAYERS
+        For i = 1 To MAX_PLAYERS
             If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
                 If Player(i).InHouse = Player(MyIndex).InHouse Then
                     If GetPlayerX(i) = X Then

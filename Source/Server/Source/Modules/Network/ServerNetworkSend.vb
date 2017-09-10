@@ -1014,7 +1014,7 @@ Module ServerNetworkSend
         Dim n As Integer
         Dim i As Integer
         s = ""
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
 
             If IsPlaying(i) Then
                 If i <> Index Then
@@ -1279,7 +1279,7 @@ Module ServerNetworkSend
         Dim i As Integer
         Dim data As Byte()
         ' Send all players on current map to index
-        For i = 0 To GetPlayersOnline()
+        For i = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
                 If i <> Index Then
                     If GetPlayerMap(i) = GetPlayerMap(Index) Then

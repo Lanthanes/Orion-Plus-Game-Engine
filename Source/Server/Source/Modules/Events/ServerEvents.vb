@@ -504,7 +504,7 @@ Public Module ServerEvents
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 0 To Socket.HighIndex
+                    For i = 1 To Socket.HighIndex
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = x) And (GetPlayerY(i) = y - 1) Then
                                 CanEventMove = False
@@ -589,7 +589,7 @@ Public Module ServerEvents
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 0 To Socket.HighIndex
+                    For i = 1 To Socket.HighIndex
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = x) And (GetPlayerY(i) = y + 1) Then
                                 CanEventMove = False
@@ -675,7 +675,7 @@ Public Module ServerEvents
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 0 To Socket.HighIndex
+                    For i = 1 To Socket.HighIndex
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = x - 1) And (GetPlayerY(i) = y) Then
                                 CanEventMove = False
@@ -761,7 +761,7 @@ Public Module ServerEvents
                     End If
 
                     ' Check to make sure that there is not a player in the way
-                    For i = 0 To Socket.HighIndex
+                    For i = 1 To Socket.HighIndex
                         If IsPlaying(i) Then
                             If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = x + 1) And (GetPlayerY(i) = y) Then
                                 CanEventMove = False
