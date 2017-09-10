@@ -107,19 +107,17 @@ Friend Module ServerNetworkConfig
     Friend Sub Socket_ConnectionLost(ByVal index As Integer) Handles Socket.ConnectionLost
         Console.WriteLine("Connection lost on index[" & index & "] - IP[" & Socket.ClientIp(index) & "]")
         LeftGame(index)
-        ClearPlayer(index)
     End Sub
 
     Friend Sub Socket_CrashReport(ByVal index As Integer, ByVal err As String) Handles Socket.CrashReport
         Console.WriteLine("There was a network error -> Index[" & index & "]")
         Console.WriteLine("Report: " & err)
         LeftGame(index)
-        ClearPlayer(index)
     End Sub
 
 #If DEBUG Then
     Friend Sub Socket_PacketReceieved() Handles Socket.PacketReceived
-        Console.WriteLine("Packet Invoke")
+        Console.WriteLine("Packet Invoked")
     End Sub
 #End If
 #End Region

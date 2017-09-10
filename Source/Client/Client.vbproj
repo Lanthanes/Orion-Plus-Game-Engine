@@ -71,8 +71,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ASFW, Version=1.0.6462.3622, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CS-ASFW.0.9.9.6\lib\ASFW.dll</HintPath>
+    <Reference Include="ASFW, Version=1.0.6462.30723, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-ASFW.0.9.9.7\lib\ASFW.dll</HintPath>
     </Reference>
     <Reference Include="DarkUI">
       <HintPath>..\Editors\DarkUI.dll</HintPath>
@@ -155,7 +155,6 @@
     <Compile Include="Source\Modules\ClientProjectiles.vb" />
     <Compile Include="Source\Modules\ClientQuest.vb" />
     <Compile Include="Source\Modules\ClientSound.vb" />
-    <Compile Include="Source\Modules\ClientTCP.vb" />
     <Compile Include="Source\Modules\ClientConstants.vb" />
     <Compile Include="Source\Modules\ClientDataBase.vb" />
     <Compile Include="Source\Modules\ClientTime.vb" />

@@ -65,8 +65,8 @@
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
-    <Reference Include="ASFW, Version=1.0.6462.3622, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CS-ASFW.0.9.9.6\lib\ASFW.dll</HintPath>
+    <Reference Include="ASFW, Version=1.0.6462.30723, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-ASFW.0.9.9.7\lib\ASFW.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -101,7 +101,6 @@
     <Compile Include="Source\Modules\ServerGameLogic.vb" />
     <Compile Include="Source\Modules\ServerGeneral.vb" />
     <Compile Include="Source\Modules\ServerGlobals.vb" />
-    <Compile Include="Source\Modules\ServerHandleData.vb" />
     <Compile Include="Source\Modules\Objects\ServerHousing.vb" />
     <Compile Include="Source\Modules\Objects\ServerInstances.vb" />
     <Compile Include="Source\Modules\ServerParties.vb" />

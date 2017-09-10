@@ -143,13 +143,7 @@ Module ClientGeneral
     End Sub
 
     Public Function IsLoginLegal(ByVal Username As String, ByVal Password As String) As Boolean
-
-        If Len(Trim$(Username)) >= 3 AndAlso Len(Trim$(Password)) >= 3 Then
-            IsLoginLegal = True
-        Else
-            IsLoginLegal = False
-        End If
-
+        Return Len(Trim$(Username)) >= 3 AndAlso Len(Trim$(Password)) >= 3
     End Function
 
     Public Function IsStringLegal(ByVal sInput As String) As Boolean
