@@ -1,7 +1,6 @@
 ﻿Imports System.IO
 Imports ASFW
 Imports ASFW.IO
-Imports ASFW.IO.FileIO
 
 Public Module ServerQuest
 #Region "Constants"
@@ -135,7 +134,7 @@ Public Module ServerQuest
             writer.WriteInt32(Quest(QuestNum).Task(I).TaskType)
         Next
 
-        BinaryFile.Save(filename, writer)
+        FileHandler.BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadQuests()
@@ -156,7 +155,7 @@ Public Module ServerQuest
         FileName = Path.Combine(Application.StartupPath, "data", "quests", String.Format("quest{0}.dat", QuestNum))
 
         Dim reader As New ByteStream()
-        BinaryFile.Load(FileName, reader)
+        FileHandler.BinaryFile.Load(FileName, reader)
 
         Quest(QuestNum).Name = reader.ReadString()
         Quest(QuestNum).QuestLog = reader.ReadString()
@@ -285,8 +284,13 @@ Public Module ServerQuest
 
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SQuestEditor)
+<<<<<<< HEAD
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
+=======
+        SendDataTo(Index, Buffer.ToArray)
+        Buffer.Dispose
+>>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
     End Sub
 
     Sub Packet_SaveQuest(ByVal Index As Integer, ByRef data() As Byte)
@@ -346,7 +350,7 @@ Public Module ServerQuest
             Quest(QuestNum).Task(I).TaskType = Buffer.ReadInt32
         Next
 
-        Buffer.Dispose()
+        Buffer.Dispose
 
         ' Save it
         SendQuests(Index) ' editor
@@ -422,7 +426,7 @@ Public Module ServerQuest
     End Sub
 
     Sub SendUpdateQuestToAll(ByVal QuestNum As Integer)
-        Dim Buffer As ByteStream
+        Dim Buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SUpdateQuest)
@@ -470,12 +474,17 @@ Public Module ServerQuest
             Buffer.WriteInt32(Quest(QuestNum).Task(I).TaskType)
         Next
 
+<<<<<<< HEAD
         SendDataToAll(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
+=======
+        SendDataToAll(Buffer.ToArray)
+        Buffer.Dispose
+>>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
     End Sub
 
     Sub SendUpdateQuestTo(ByVal Index As Integer, ByVal QuestNum As Integer)
-        Dim Buffer As ByteStream, I As Integer
+        Dim Buffer as ByteStream, I As Integer
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SUpdateQuest)
@@ -523,13 +532,18 @@ Public Module ServerQuest
             Buffer.WriteInt32(Quest(QuestNum).Task(I).TaskType)
         Next
 
+<<<<<<< HEAD
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
+=======
+        SendDataTo(Index, Buffer.ToArray)
+        Buffer.Dispose
+>>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
     End Sub
 
     Public Sub SendPlayerQuests(ByVal Index As Integer)
         Dim I As Integer
-        Dim Buffer As ByteStream
+        Dim Buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPlayerQuests)
@@ -540,13 +554,18 @@ Public Module ServerQuest
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(I).CurrentCount)
         Next
 
+<<<<<<< HEAD
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
+=======
+        SendDataTo(Index, Buffer.ToArray)
+        Buffer.Dispose
+>>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
 
     End Sub
 
     Public Sub SendPlayerQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
-        Dim Buffer As ByteStream
+        Dim Buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPlayerQuest)
@@ -556,13 +575,18 @@ Public Module ServerQuest
         Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).ActualTask)
         Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).CurrentCount)
 
+<<<<<<< HEAD
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
+=======
+        SendDataTo(Index, Buffer.ToArray)
+        Buffer.Dispose
+>>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
     End Sub
 
     'sends a message to the client that is shown on the screen
     Public Sub QuestMessage(ByVal Index As Integer, ByVal QuestNum As Integer, ByVal message As String, ByVal QuestNumForStart As Integer)
-        Dim Buffer As ByteStream
+        Dim Buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SQuestMessage)

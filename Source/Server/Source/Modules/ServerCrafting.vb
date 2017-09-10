@@ -1,7 +1,6 @@
 ﻿Imports System.IO
 Imports ASFW
 Imports ASFW.IO
-Imports ASFW.IO.FileIO
 
 Public Module ServerCrafting
 #Region "Globals"
@@ -69,7 +68,7 @@ Public Module ServerCrafting
 
         writer.WriteByte(Recipe(RecipeNum).CreateTime)
 
-        BinaryFile.Save(filename, writer)
+        FileHandler.BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadRecipes()
@@ -90,7 +89,7 @@ Public Module ServerCrafting
 
         filename = Path.Combine(Application.StartupPath, "data", "recipes", String.Format("recipe{0}.dat", RecipeNum))
         Dim reader As New ByteStream()
-        BinaryFile.Load(filename, reader)
+        FileHandler.BinaryFile.Load(filename, reader)
 
         Recipe(RecipeNum).Name = reader.ReadString()
         Recipe(RecipeNum).RecipeType = reader.ReadByte()
@@ -147,7 +146,7 @@ Public Module ServerCrafting
         Addlog("Sent SMSG: SRecipeEditor", PACKET_LOG)
         TextAdd("Sent SMSG: SRecipeEditor")
 
-        Buffer.Dispose()
+        Buffer.Dispose
 
     End Sub
 
@@ -182,7 +181,7 @@ Public Module ServerCrafting
         'send to all
         SendUpdateRecipeToAll(n)
 
-        Buffer.Dispose()
+        Buffer.Dispose
 
     End Sub
 
@@ -231,7 +230,7 @@ Public Module ServerCrafting
     End Sub
 
     Sub SendUpdateRecipeTo(ByVal Index As Integer, ByVal RecipeNum As Integer)
-        Dim Buffer As ByteStream, i As Integer
+        Dim Buffer as ByteStream, i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateRecipe)
         Buffer.WriteInt32(RecipeNum)
@@ -253,11 +252,11 @@ Public Module ServerCrafting
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose()
+        Buffer.Dispose
     End Sub
 
     Sub SendUpdateRecipeToAll(ByVal RecipeNum As Integer)
-        Dim Buffer As ByteStream
+        Dim Buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateRecipe)
         Buffer.WriteInt32(RecipeNum)
@@ -279,12 +278,12 @@ Public Module ServerCrafting
 
         SendDataToAll(Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose()
+        Buffer.Dispose
     End Sub
 
     Sub SendPlayerRecipes(ByVal Index As Integer)
         Dim i As Integer
-        Dim Buffer As ByteStream
+        Dim Buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SSendPlayerRecipe)
 
@@ -297,11 +296,11 @@ Public Module ServerCrafting
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose()
+        Buffer.Dispose
     End Sub
 
     Sub SendOpenCraft(ByVal Index As Integer)
-        Dim Buffer As ByteStream
+        Dim Buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SOpenCraft)
 
@@ -310,11 +309,11 @@ Public Module ServerCrafting
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose()
+        Buffer.Dispose
     End Sub
 
     Sub SendCraftUpdate(ByVal Index As Integer, ByVal done As Byte)
-        Dim Buffer As ByteStream
+        Dim Buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateCraft)
 

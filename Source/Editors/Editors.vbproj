@@ -50,8 +50,13 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Reference Include="ASFW, Version=1.0.6462.3622, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CS-ASFW.0.9.9.6\lib\ASFW.dll</HintPath>
+=======
+    <Reference Include="ASFW, Version=1.0.6459.32965, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-ASFW.0.9.9\lib\ASFW.dll</HintPath>
+>>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
     </Reference>
     <Reference Include="DarkUI">
       <HintPath>.\DarkUI.dll</HintPath>

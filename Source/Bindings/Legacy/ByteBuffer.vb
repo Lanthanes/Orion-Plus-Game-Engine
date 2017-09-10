@@ -2,15 +2,24 @@
 Imports ASFW
 
 Module BufferUtility
-    Public Function ReadUnicodeString(ByVal data As Byte()) As String
+    Public Sub CombineBufferAndData(ByRef Buffer As ByteStream, ByRef data As Byte())
+        If Buffer.Head + data.Length >= Buffer.Data.Length Then
+            ReDim Preserve Buffer.Data(Buffer.Head + data.Length)
+        End If
+
+        System.Buffer.BlockCopy(data, 0, Buffer.Data, Buffer.Head, data.Length)
+        Buffer.Head += data.Length
+    End Sub
+    Public Function ReadUnicodeString(ByRef Buffer As ByteStream) As String
+        Dim data As Byte() = Buffer.ReadBytes()
         If data Is Nothing OrElse data.Length = 0 Then Return "Null"
         Return Conv_String(Encoding.ASCII.GetString(data, 0, data.Length))
     End Function
 
-    Public Function WriteUnicodeString(ByVal Input As String)
-        If Input = vbNullString Then Return New Byte()
-        Return Encoding.ASCII.GetBytes(Conv_Uni(Input))
-    End Function
+    Public Sub WriteUnicodeString(ByRef Buffer As ByteStream, ByVal Input As String)
+        If Input = vbNullString Then Exit Sub
+        Buffer.WriteBytes(Encoding.ASCII.GetBytes(Conv_Uni(Input)))
+    End Sub
 
     Public Function Conv_String(ByVal message As String) As String
         Conv_String = ""

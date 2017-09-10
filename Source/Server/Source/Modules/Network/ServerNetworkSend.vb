@@ -21,8 +21,13 @@ Module ServerNetworkSend
 
         Buffer.WriteInt32(ServerPackets.SGlobalMsg)
         'Buffer.WriteString(Msg)
+<<<<<<< HEAD:Source/Server/Source/Modules/Network/ServerNetworkSend.vb
         Buffer.WriteBytes(WriteUnicodeString(Msg))
         SendDataToAll(Buffer.Data, Buffer.Head)
+=======
+        WriteUnicodeString(Buffer, Msg)
+        SendDataToAll(Buffer.ToArray)
+>>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap:Source/Server/Source/Modules/ServerTCP.vb
 
         Addlog("Sent SMSG: SGlobalMsg", PACKET_LOG)
         TextAdd("Sent SMSG: SGlobalMsg")
@@ -35,7 +40,7 @@ Module ServerNetworkSend
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPlayerMsg)
         'Buffer.WriteString(Msg)
-        Buffer.WriteBytes(WriteUnicodeString(Msg))
+        WriteUnicodeString(Buffer, Msg)
         Buffer.WriteInt32(Colour)
 
         Addlog("Sent SMSG: SPlayerMsg", PACKET_LOG)
@@ -1266,8 +1271,13 @@ Module ServerNetworkSend
         data = Compression.CompressBytes(Buffer.ToArray)
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SMapData)
+<<<<<<< HEAD:Source/Server/Source/Modules/Network/ServerNetworkSend.vb
         Buffer.WriteBlock(data)
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+=======
+        Buffer.WriteBytes(data)
+        SendDataTo(Index, Buffer.ToArray)
+>>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap:Source/Server/Source/Modules/ServerTCP.vb
 
         Addlog("Sent SMSG: SMapData", PACKET_LOG)
         TextAdd("Sent SMSG: SMapData")
@@ -1482,7 +1492,7 @@ Module ServerNetworkSend
 
         Buffer.WriteInt32(ServerPackets.SMapMsg)
         'Buffer.WriteString(Msg)
-        Buffer.WriteBytes(WriteUnicodeString(Msg))
+        WriteUnicodeString(Buffer, Msg)
 
         Addlog("Sent SMSG: SMapMsg", PACKET_LOG)
         TextAdd("Sent SMSG: SMapMsg")
@@ -1498,7 +1508,7 @@ Module ServerNetworkSend
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SActionMsg)
         'Buffer.WriteString(Message)
-        Buffer.WriteBytes(WriteUnicodeString(Message))
+        WriteUnicodeString(Buffer, Message)
         Buffer.WriteInt32(Color)
         Buffer.WriteInt32(MsgType)
         Buffer.WriteInt32(X)
@@ -1525,7 +1535,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(GetPlayerAccess(Index))
         Buffer.WriteInt32(GetPlayerPK(Index))
         'Buffer.WriteString(Message)
-        Buffer.WriteBytes(WriteUnicodeString(Message))
+        WriteUnicodeString(Buffer, Message)
         Buffer.WriteString("[Map] ")
         Buffer.WriteInt32(SayColour)
 
@@ -1638,7 +1648,7 @@ Module ServerNetworkSend
         Dim data() As Byte
         Buffer = New ByteStream(4)
 
-        Buffer.WriteBlock(ClassData)
+        CombineBufferAndData(Buffer, ClassData)
 
         i = 0
 
@@ -1650,7 +1660,7 @@ Module ServerNetworkSend
 
         'Write Number of Items it is Sending and then The Item Data
         Buffer.WriteInt32(i)
-        Buffer.WriteBlock(ItemsData)
+        CombineBufferAndData(Buffer, ItemsData)
 
         i = 0
 
@@ -1661,7 +1671,7 @@ Module ServerNetworkSend
         Next
 
         Buffer.WriteInt32(i)
-        Buffer.WriteBlock(AnimationsData)
+        CombineBufferAndData(Buffer, AnimationsData)
 
         i = 0
 
@@ -1672,7 +1682,7 @@ Module ServerNetworkSend
         Next
 
         Buffer.WriteInt32(i)
-        Buffer.WriteBlock(NpcsData)
+        CombineBufferAndData(Buffer, NpcsData)
 
         i = 0
 
@@ -1683,7 +1693,7 @@ Module ServerNetworkSend
         Next
 
         Buffer.WriteInt32(i)
-        Buffer.WriteBlock(ShopsData)
+        CombineBufferAndData(Buffer, ShopsData)
 
         i = 0
 
@@ -1694,7 +1704,7 @@ Module ServerNetworkSend
         Next
 
         Buffer.WriteInt32(i)
-        Buffer.WriteBlock(SkillsData)
+        CombineBufferAndData(Buffer, SkillsData)
 
         i = 0
 
@@ -1705,7 +1715,7 @@ Module ServerNetworkSend
         Next
 
         Buffer.WriteInt32(i)
-        Buffer.WriteBlock(ResourcesData)
+        CombineBufferAndData(Buffer, ResourcesData)
 
         data = Compression.CompressBytes(Buffer.ToArray)
 
@@ -1716,7 +1726,7 @@ Module ServerNetworkSend
         Addlog("Sent SMSG: SGameData", PACKET_LOG)
         TextAdd("Sent SMSG: SGameData")
 
-        Buffer.WriteBlock(data)
+        buffer.WriteBytes(data)
 
         Socket.SendDataTo(index, Buffer.Data, Buffer.Head)
 
@@ -1732,7 +1742,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(GetPlayerAccess(Index))
         Buffer.WriteInt32(GetPlayerPK(Index))
         'Buffer.WriteString(Message)
-        Buffer.WriteBytes(WriteUnicodeString(Message))
+        WriteUnicodeString(Buffer, Message)
         Buffer.WriteString("[Global] ")
         Buffer.WriteInt32(SayColour)
 
@@ -2290,7 +2300,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Target)
         Buffer.WriteInt32(TargetType)
         'Buffer.WriteString(Message)
-        Buffer.WriteBytes(WriteUnicodeString(Message))
+        WriteUnicodeString(Buffer, Message)
         Buffer.WriteInt32(Colour)
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 

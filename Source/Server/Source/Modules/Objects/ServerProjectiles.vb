@@ -1,7 +1,6 @@
 ﻿Imports System.IO
 Imports ASFW
 Imports ASFW.IO
-Imports ASFW.IO.FileIO
 
 Public Module ServerProjectiles
 
@@ -54,7 +53,7 @@ Public Module ServerProjectiles
         writer.WriteInt32(Projectiles(ProjectileNum).Speed)
         writer.WriteInt32(Projectiles(ProjectileNum).Damage)
 
-        BinaryFile.Save(filename, writer)
+        FileHandler.BinaryFile.Save(filename, writer)
 
     End Sub
 
@@ -67,7 +66,7 @@ Public Module ServerProjectiles
         For i = 1 To MAX_PROJECTILES
             filename = Path.Combine(Application.StartupPath, "data", "projectiles", String.Format("projectile{0}.dat", i))
             Dim reader As New ByteStream()
-            BinaryFile.Load(filename, reader)
+            FileHandler.BinaryFile.Load(filename, reader)
 
             Projectiles(i).Name = reader.ReadString()
             Projectiles(i).Sprite = reader.ReadInt32()
@@ -148,8 +147,13 @@ Public Module ServerProjectiles
 
         Buffer.WriteInt32(ServerPackets.SProjectileEditor)
 
+<<<<<<< HEAD
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
+=======
+        SendDataTo(Index, Buffer.ToArray())
+        Buffer.Dispose
+>>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
 
     End Sub
 
@@ -175,7 +179,7 @@ Public Module ServerProjectiles
         SendUpdateProjectileToAll(ProjectileNum)
         SaveProjectile(ProjectileNum)
         Addlog(GetPlayerLogin(Index) & " saved Projectile #" & ProjectileNum & ".", ADMIN_LOG)
-        Buffer.Dispose()
+        Buffer.Dispose
 
     End Sub
 
@@ -260,7 +264,7 @@ Public Module ServerProjectiles
 
 #Region "Outgoing"
     Sub SendUpdateProjectileToAll(ByVal ProjectileNum As Integer)
-        Dim Buffer As ByteStream
+        Dim Buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -272,13 +276,18 @@ Public Module ServerProjectiles
         Buffer.WriteInt32(Projectiles(ProjectileNum).Speed)
         Buffer.WriteInt32(Projectiles(ProjectileNum).Damage)
 
+<<<<<<< HEAD
         SendDataToAll(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
+=======
+        SendDataToAll(Buffer.ToArray)
+        Buffer.Dispose
+>>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
 
     End Sub
 
     Sub SendUpdateProjectileTo(ByVal Index As Integer, ByVal ProjectileNum As Integer)
-        Dim Buffer As ByteStream
+        Dim Buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -290,8 +299,13 @@ Public Module ServerProjectiles
         Buffer.WriteInt32(Projectiles(ProjectileNum).Speed)
         Buffer.WriteInt32(Projectiles(ProjectileNum).Damage)
 
+<<<<<<< HEAD
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
+=======
+        SendDataTo(Index, Buffer.ToArray)
+        Buffer.Dispose
+>>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
 
     End Sub
 
@@ -307,7 +321,7 @@ Public Module ServerProjectiles
     End Sub
 
     Sub SendProjectileToMap(ByVal MapNum As Integer, ByVal ProjectileNum As Integer)
-        Dim Buffer As ByteStream
+        Dim Buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SMapProjectile)
