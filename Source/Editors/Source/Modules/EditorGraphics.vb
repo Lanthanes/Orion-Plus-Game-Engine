@@ -428,7 +428,7 @@ Module EditorGraphics
     End Sub
 
     Public Function IsDirBlocked(ByRef blockvar As Byte, ByRef Dir As Byte) As Boolean
-        Return Not (Not blockvar And (2 ^ Dir))
+        Return Not (Not blockvar AndAlso (2 ^ Dir))
     End Function
 
     Public Function ConvertMapX(ByVal X As Integer) As Integer

@@ -1342,7 +1342,7 @@ Module ServerDatabase
 #Region "Skills"
     Sub SaveSkills()
         Dim i As Integer
-        SetStatus("Saving skills... ")
+        Console.WriteLine("Saving skills... ")
 
         For i = 1 To MAX_SKILLS
             SaveSkill(i)

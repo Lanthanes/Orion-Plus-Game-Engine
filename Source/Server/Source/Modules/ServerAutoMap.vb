@@ -268,7 +268,7 @@ Module ServerAutoMap
         Dim TotalMaps As Integer
         Dim tick As Integer
 
-        TextAdd("Working...")
+        Console.WriteLine("Working...")
         DoEvents()
         tick = GetTimeMs()
         TotalMaps = Size * Size
@@ -279,7 +279,7 @@ Module ServerAutoMap
         Next i
 
         tick = GetTimeMs() - tick
-        TextAdd("Done and cached resources in " & CDbl(tick / 1000) & "s")
+        Console.WriteLine("Done and cached resources in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
 
@@ -288,7 +288,7 @@ Module ServerAutoMap
         Dim TotalMaps As Integer
         Dim tick As Integer
 
-        TextAdd("Working...")
+        Console.WriteLine("Working...")
         DoEvents()
         tick = GetTimeMs()
         TotalMaps = Size * Size
@@ -298,7 +298,7 @@ Module ServerAutoMap
         Next i
 
         tick = GetTimeMs() - tick
-        TextAdd("Done overgrasses in " & CDbl(tick / 1000) & "s")
+        Console.WriteLine("Done overgrasses in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
 
@@ -461,7 +461,7 @@ Module ServerAutoMap
         Dim RiverSteps As Integer
         Dim tick As Integer
 
-        TextAdd("Working...")
+        Console.WriteLine("Working...")
         DoEvents()
         tick = GetTimeMs()
         RiverBorder = 4
@@ -575,7 +575,7 @@ SelectMap:
         Loop
 
         tick = GetTimeMs() - tick
-        TextAdd("Done " & TotalRivers & " rivers in " & CDbl(tick / 1000) & "s")
+        Console.WriteLine("Done " & TotalRivers & " rivers in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
 
@@ -788,7 +788,7 @@ Important:
         Dim TotalMaps As Integer
         Dim tick As Integer
         Dim MapCount As Integer
-        TextAdd("Working...")
+        Console.WriteLine("Working...")
         DoEvents()
         tick = GetTimeMs()
         TotalMaps = Size * Size
@@ -800,7 +800,7 @@ Important:
             End If
         Next i
         tick = GetTimeMs() - tick
-        TextAdd("Done mountains in " & (MapCount) & " maps in " & CDbl(tick / 1000) & "s")
+        Console.WriteLine("Done mountains in " & (MapCount) & " maps in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
 
@@ -1200,7 +1200,7 @@ ChangeDir:
         Dim Tries As Integer
         Dim tick As Integer
 
-        TextAdd("Working...")
+        Console.WriteLine("Working...")
         DoEvents()
         tick = GetTimeMs()
 
@@ -1261,7 +1261,7 @@ ChangeDir:
         End If
 
         tick = GetTimeMs() - tick
-        TextAdd("Done " & TotalPaths & " paths in " & CDbl(tick / 1000) & "s")
+        Console.WriteLine("Done " & TotalPaths & " paths in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
 
@@ -1366,7 +1366,7 @@ ChangeDir:
         Next mapnum
 
         tick = GetTimeMs() - tick
-        TextAdd("Done " & TotalMaps & " maps models in " & CDbl(tick / 1000) & "s")
+        Console.WriteLine("Done " & TotalMaps & " maps models in " & CDbl(tick / 1000) & "s")
         DoEvents()
 
         If PathsChecked = True Then MakePaths(MapStart, Size)
@@ -1376,7 +1376,7 @@ ChangeDir:
         If ResourcesChecked = True Then MakeResources(MapStart, Size)
 
         tick = GetTimeMs()
-        TextAdd("Working...")
+        Console.WriteLine("Working...")
         DoEvents()
 
         For mapnum = MapStart To MapStart + TotalMaps - 1
@@ -1387,8 +1387,8 @@ ChangeDir:
         tick = GetTimeMs() - tick
         StartTick = GetTimeMs() - StartTick
 
-        TextAdd("Cached all maps in " & CDbl(tick / 1000) & "s (" & ((tick / StartTick) * 100) & "%)")
-        TextAdd("Done " & TotalMaps & " maps in " & CDbl(StartTick / 1000) & "s")
+        Console.WriteLine("Cached all maps in " & CDbl(tick / 1000) & "s (" & ((tick / StartTick) * 100) & "%)")
+        Console.WriteLine("Done " & TotalMaps & " maps in " & CDbl(StartTick / 1000) & "s")
 
     End Sub
 

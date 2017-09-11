@@ -980,7 +980,7 @@ Module ServerPlayers
     End Sub
 
     Public Function IsDirBlocked(ByRef Blockvar As Byte, ByRef Dir As Byte) As Boolean
-        Return Not (Not Blockvar And (2 ^ Dir))
+        Return Not (Not Blockvar AndAlso (2 ^ Dir))
     End Function
 
     Function GetPlayerVital(ByVal Index As Integer, ByVal Vital As Vitals) As Integer
@@ -1092,7 +1092,7 @@ Module ServerPlayers
             JoinGame(Index)
             Dim text = String.Format("{0} | {1} has began playing {2}.", GetPlayerLogin(Index), GetPlayerName(Index), Options.GameName)
             Addlog(text, PLAYER_LOG)
-            TextAdd(text)
+            Console.WriteLine(text)
         End If
     End Sub
 
@@ -2921,7 +2921,7 @@ Module ServerPlayers
             ' Send a global message that he/she left
             GlobalMsg(String.Format("{0} has left {1}!", GetPlayerName(Index), Options.GameName))
 
-            TextAdd(String.Format("{0} has left {1}!", GetPlayerName(Index), Options.GameName))
+            Console.WriteLine(String.Format("{0} has left {1}!", GetPlayerName(Index), Options.GameName))
 
 
             TempPlayer(Index) = Nothing

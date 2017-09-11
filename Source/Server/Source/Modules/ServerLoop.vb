@@ -11,7 +11,6 @@ Module ServerLoop
         Dim LastUpdateMapSpawnItems As Integer
         Dim LastUpdatePlayerVitals As Integer
 
-        ServerOnline = True
         Do
             ' Update our current tick value.
             Tick = GetTimeMs()
@@ -72,11 +71,6 @@ Module ServerLoop
             End If
 
             If Tick > tmr1000 Then
-                ' Shut down the server if we're going down!
-                If isShuttingDown Then
-                    HandleShutdown()
-                End If
-
                 ' Handle our player crafting
                 Dim _playercrafts = (
                     From p In OnlinePlayers
@@ -148,7 +142,7 @@ Module ServerLoop
         Dim i As Integer
 
         If GetPlayersOnline() > 0 Then
-            TextAdd("Saving all online players...")
+            Console.WriteLine("Saving all online players...")
             GlobalMsg("Saving all online players...")
 
             For i = 1 To GetPlayersOnline()

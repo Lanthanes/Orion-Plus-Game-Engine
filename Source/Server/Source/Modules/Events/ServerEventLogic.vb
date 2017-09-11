@@ -119,7 +119,7 @@ Public Module ServerEventLogic
                                 Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                 Addlog("Sent SMSG: SSpawnEvent Remove Dead Events", PACKET_LOG)
-                                TextAdd("Sent SMSG: SSpawnEvent Remove Dead Events")
+                                Console.WriteLine("Sent SMSG: SSpawnEvent Remove Dead Events")
 
                                 Buffer.Dispose()
                             End If
@@ -338,7 +338,7 @@ Public Module ServerEventLogic
                             Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                             Addlog("Sent SMSG: SSpawnEvent Spawn New Events", PACKET_LOG)
-                            TextAdd("Sent SMSG: SSpawnEvent Spawn New Events")
+                            Console.WriteLine("Sent SMSG: SSpawnEvent Spawn New Events")
 
                             Buffer.Dispose()
                             z = 1
@@ -701,7 +701,7 @@ Public Module ServerEventLogic
                                                         SendDataToMap(i, Buffer.Data, Buffer.Head)
 
                                                         Addlog("Sent SMSG: SSpawnEvent Process Event Movement", PACKET_LOG)
-                                                        TextAdd("Sent SMSG: SSpawnEvent Process Event Movement")
+                                                        Console.WriteLine("Sent SMSG: SSpawnEvent Process Event Movement")
 
                                                         Buffer.Dispose()
                                                     End If
@@ -1266,7 +1266,7 @@ Public Module ServerEventLogic
                                                             Buffer.WriteInt32(0)
 
                                                             Addlog("Sent SMSG: SEventChat evShowText", PACKET_LOG)
-                                                            TextAdd("Sent SMSG: SEventChat evShowText")
+                                                            Console.WriteLine("Sent SMSG: SEventChat evShowText")
 
                                                             If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).CommandCount > .CurSlot Then
                                                                 If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evShowText OrElse Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.evShowChoices Then
@@ -1291,7 +1291,7 @@ Public Module ServerEventLogic
                                                             Buffer.WriteString(Trim(ParseEventText(i, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Text1)))
 
                                                             Addlog("Sent SMSG: SEventChat evShowChoices", PACKET_LOG)
-                                                            TextAdd("Sent SMSG: SEventChat")
+                                                            Console.WriteLine("Sent SMSG: SEventChat")
 
                                                             If Len(Trim$(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Text2)) > 0 Then
                                                                 w = 1
@@ -1813,7 +1813,7 @@ Public Module ServerEventLogic
                                                             Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SPlayBGM", PACKET_LOG)
-                                                            TextAdd("Sent SMSG: SPlayBGM")
+                                                            Console.WriteLine("Sent SMSG: SPlayBGM")
 
                                                             Buffer.Dispose()
                                                         Case EventType.evFadeoutBGM
@@ -1822,7 +1822,7 @@ Public Module ServerEventLogic
                                                             Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SFadeoutBGM", PACKET_LOG)
-                                                            TextAdd("Sent SMSG: SFadeoutBGM")
+                                                            Console.WriteLine("Sent SMSG: SFadeoutBGM")
 
                                                             Buffer.Dispose()
                                                         Case EventType.evPlaySound
@@ -1832,7 +1832,7 @@ Public Module ServerEventLogic
                                                             Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SPlaySound", PACKET_LOG)
-                                                            TextAdd("Sent SMSG: SPlaySound")
+                                                            Console.WriteLine("Sent SMSG: SPlaySound")
 
                                                             Buffer.Dispose()
                                                         Case EventType.evStopSound
@@ -1841,7 +1841,7 @@ Public Module ServerEventLogic
                                                             Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SStopSound", PACKET_LOG)
-                                                            TextAdd("Sent SMSG: SStopSound")
+                                                            Console.WriteLine("Sent SMSG: SStopSound")
 
                                                             Buffer.Dispose()
                                                         Case EventType.evSetAccess
@@ -1923,7 +1923,7 @@ Public Module ServerEventLogic
                                                             Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SPic evShowPicture", PACKET_LOG)
-                                                            TextAdd("Sent SMSG: SPic evShowPicture")
+                                                            Console.WriteLine("Sent SMSG: SPic evShowPicture")
 
                                                             Buffer.Dispose()
                                                         Case EventType.evHidePicture
@@ -1934,7 +1934,7 @@ Public Module ServerEventLogic
                                                             Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SPic evHidePicture", PACKET_LOG)
-                                                            TextAdd("Sent SMSG: SPic evHidePicture")
+                                                            Console.WriteLine("Sent SMSG: SPic evHidePicture")
 
                                                             Buffer.Dispose()
                                                         Case EventType.evWaitMovement
@@ -1956,7 +1956,7 @@ Public Module ServerEventLogic
                                                             Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SHoldPlayer", PACKET_LOG)
-                                                            TextAdd("Sent SMSG: SHoldPlayer")
+                                                            Console.WriteLine("Sent SMSG: SHoldPlayer")
 
                                                             Buffer.Dispose()
                                                         Case EventType.evReleasePlayer
@@ -1966,7 +1966,7 @@ Public Module ServerEventLogic
                                                             Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
                                                             Addlog("Sent SMSG: SHoldPlayer Release", PACKET_LOG)
-                                                            TextAdd("Sent SMSG: SHoldPlayer Release")
+                                                            Console.WriteLine("Sent SMSG: SHoldPlayer Release")
 
                                                             Buffer.Dispose()
                                                     End Select
@@ -1996,7 +1996,6 @@ Public Module ServerEventLogic
         'Check Removing and Adding of Events (Did switches change or something?)
 
         If Gettingmap = True Then Exit Sub
-        If ServerOnline = False Then Exit Sub
 
         RemoveDeadEvents()
 
@@ -2614,7 +2613,7 @@ nextevent:
                 Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
                 Addlog("Sent SMSG: SSpawnEvent For Player", PACKET_LOG)
-                TextAdd("Sent SMSG: SSpawnEvent For Player")
+                Console.WriteLine("Sent SMSG: SSpawnEvent For Player")
 
                 Buffer.Dispose
             Next

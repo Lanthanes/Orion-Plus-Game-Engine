@@ -864,7 +864,7 @@ Public Module ServerEvents
         Buffer.WriteInt32(eventID)
 
         Addlog("Sent SMSG: SEventDir", PACKET_LOG)
-        TextAdd("Sent SMSG: SEventDir")
+        Console.WriteLine("Sent SMSG: SEventDir")
 
         If globalevent Then
             Buffer.WriteInt32(TempEventMap(MapNum).Events(eventID).Dir)
@@ -923,7 +923,7 @@ Public Module ServerEvents
                     Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove Dir Up GlobalEvent", PACKET_LOG)
-                    TextAdd("Sent SMSG: SEventMove Dir Up GlobalEvent")
+                    Console.WriteLine("Sent SMSG: SEventMove Dir Up GlobalEvent")
 
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
@@ -942,7 +942,7 @@ Public Module ServerEvents
                     Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove Dir Up", PACKET_LOG)
-                    TextAdd("Sent SMSG: SEventMove Dir Up")
+                    Console.WriteLine("Sent SMSG: SEventMove Dir Up")
 
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
@@ -964,7 +964,7 @@ Public Module ServerEvents
                     Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove Down GlobalEvent", PACKET_LOG)
-                    TextAdd("Sent SMSG: SEventMove Down GlobalEvent")
+                    Console.WriteLine("Sent SMSG: SEventMove Down GlobalEvent")
 
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
@@ -983,7 +983,7 @@ Public Module ServerEvents
                     Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove", PACKET_LOG)
-                    TextAdd("Sent SMSG: SEventMove")
+                    Console.WriteLine("Sent SMSG: SEventMove")
 
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
@@ -1004,7 +1004,7 @@ Public Module ServerEvents
                     Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove Left GlobalEvent", PACKET_LOG)
-                    TextAdd("Sent SMSG: SEventMove Left GlobalEvent")
+                    Console.WriteLine("Sent SMSG: SEventMove Left GlobalEvent")
 
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
@@ -1023,7 +1023,7 @@ Public Module ServerEvents
                     Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove", PACKET_LOG)
-                    TextAdd("Sent SMSG: SEventMove")
+                    Console.WriteLine("Sent SMSG: SEventMove")
 
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
@@ -1044,7 +1044,7 @@ Public Module ServerEvents
                     Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove GlobalEvent", PACKET_LOG)
-                    TextAdd("Sent SMSG: SEventMove GlobalEvent")
+                    Console.WriteLine("Sent SMSG: SEventMove GlobalEvent")
 
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
@@ -1063,7 +1063,7 @@ Public Module ServerEvents
                     Buffer.WriteInt32(movementspeed)
 
                     Addlog("Sent SMSG: SEventMove", PACKET_LOG)
-                    TextAdd("Sent SMSG: SEventMove")
+                    Console.WriteLine("Sent SMSG: SEventMove")
 
                     If globalevent Then
                         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
@@ -1763,7 +1763,7 @@ Public Module ServerEvents
         Dim eventID As Integer, pageID As Integer, reply As Integer, i As Integer
         Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CEventChatReply", PACKET_LOG)
-        TextAdd("Recieved CMSG: CEventChatReply")
+        Console.WriteLine("Recieved CMSG: CEventChatReply")
 
 
         eventID = Buffer.ReadInt32
@@ -1815,7 +1815,7 @@ Public Module ServerEvents
         Dim x As Integer, y As Integer
         Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CEvent", PACKET_LOG)
-        TextAdd("Recieved CMSG: CEvent")
+        Console.WriteLine("Recieved CMSG: CEvent")
 
         i = Buffer.ReadInt32
         Buffer.Dispose()
@@ -1876,7 +1876,7 @@ Public Module ServerEvents
 
     Sub Packet_RequestSwitchesAndVariables(ByVal Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CRequestSwitchesAndVariables", PACKET_LOG)
-        TextAdd("Recieved CMSG: CRequestSwitchesAndVariables")
+        Console.WriteLine("Recieved CMSG: CRequestSwitchesAndVariables")
         SendSwitchesAndVariables(Index)
     End Sub
 
@@ -1885,7 +1885,7 @@ Public Module ServerEvents
         Dim Buffer As New ByteStream(data)
 
         Addlog("Recieved CMSG: CSwitchesAndVariables", PACKET_LOG)
-        TextAdd("Recieved CMSG: CSwitchesAndVariables")
+        Console.WriteLine("Recieved CMSG: CSwitchesAndVariables")
 
         For i = 1 To MAX_SWITCHES
             Switches(i) = Buffer.ReadString
@@ -1913,7 +1913,7 @@ Public Module ServerEvents
         Buffer.WriteInt32(ServerPackets.SSpecialEffect)
 
         Addlog("Sent SMSG: SSpecialEffect", PACKET_LOG)
-        TextAdd("Sent SMSG: SPecialEffect")
+        Console.WriteLine("Sent SMSG: SPecialEffect")
 
         Select Case EffectType
             Case EFFECT_TYPE_FADEIN
@@ -1950,7 +1950,7 @@ Public Module ServerEvents
         Buffer.WriteInt32(ServerPackets.SSwitchesAndVariables)
 
         Addlog("Sent SMSG: SSwitchesAndVariables", PACKET_LOG)
-        TextAdd("Sent SMSG: SSwitchesAndVariables")
+        Console.WriteLine("Sent SMSG: SSwitchesAndVariables")
 
         For i = 1 To MAX_SWITCHES
             Buffer.WriteString(Trim(Switches(i)))
@@ -1978,7 +1978,7 @@ Public Module ServerEvents
         MapNum = GetPlayerMap(Index)
 
         Addlog("Sent SMSG: SMapEventData", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapEventData")
+        Console.WriteLine("Sent SMSG: SMapEventData")
 
         'Event Data
         Buffer.WriteInt32(Map(MapNum).EventCount)

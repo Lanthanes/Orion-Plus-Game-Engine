@@ -21,22 +21,13 @@ Friend Module ServerNetworkConfig
         Socket.Dispose()
     End Sub
 
-    Friend Function GetIPv4() As String
-        Return Socket.GetIPv4()
-    End Function
-
     Public Function GetIP() As String
-        Dim uri_val As New Uri("http://ascensiongamedev.com/resources/myip.php")
-        Dim request = HttpWebRequest.Create(uri_val)
-
+        Dim request = HttpWebRequest.Create(New Uri("http://ascensiongamedev.com/resources/myip.php"))
         request.Method = WebRequestMethods.Http.Get
 
         Try
-            Dim response As HttpWebResponse = request.GetResponse()
-            Dim reader As New System.IO.StreamReader(response.GetResponseStream())
-            Dim myIP As String = reader.ReadToEnd()
-            response.Close()
-            Return myIP
+            Dim reader As New IO.StreamReader(request.GetResponse().GetResponseStream())
+            Return reader.ReadToEnd()
         Catch e As Exception
             Return "127.0.0.1"
         End Try
@@ -115,9 +106,20 @@ Friend Module ServerNetworkConfig
         LeftGame(index)
     End Sub
 
+
 #If DEBUG Then
-    Friend Sub Socket_PacketReceieved() Handles Socket.PacketReceived
-        Console.WriteLine("Packet Invoked")
+    Private Sub Socket_TrafficReceived(ByVal size As Integer, ByRef data() As Byte) Handles Socket.TrafficReceived
+        Console.WriteLine("Traffic Received : [Size: " & size & "]")
+        Dim tmpData = data
+        Dim BreakPointDummy As Integer
+        'Put breakline on BreakPointDummy to look at what is contained in data at runtime in the VS logger.
+    End Sub
+
+    Private Sub Socket_PacketReceived(ByVal size As Integer, ByVal header As Integer, ByRef data() As Byte) Handles Socket.PacketReceived
+        Console.WriteLine("Packet Received : [Size: " & size & "| Packet: " & CType(header, ServerPackets).ToString() & "]")
+        Dim tmpData = data
+        Dim BreakPointDummy As Integer
+        'Put breakline on BreakPointDummy to look at what is contained in data at runtime in the VS logger.
     End Sub
 #End If
 #End Region

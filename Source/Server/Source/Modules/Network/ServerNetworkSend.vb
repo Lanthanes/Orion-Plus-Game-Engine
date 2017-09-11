@@ -10,7 +10,7 @@ Module ServerNetworkSend
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SAlertMsg", PACKET_LOG)
-        TextAdd("Sent SMSG: SAlertMsg")
+        Console.WriteLine("Sent SMSG: SAlertMsg")
 
         Buffer.Dispose()
     End Sub
@@ -25,7 +25,7 @@ Module ServerNetworkSend
         SendDataToAll(Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SGlobalMsg", PACKET_LOG)
-        TextAdd("Sent SMSG: SGlobalMsg")
+        Console.WriteLine("Sent SMSG: SGlobalMsg")
 
         Buffer.Dispose()
     End Sub
@@ -39,7 +39,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Colour)
 
         Addlog("Sent SMSG: SPlayerMsg", PACKET_LOG)
-        TextAdd("Sent SMSG: SPlayerMsg")
+        Console.WriteLine("Sent SMSG: SPlayerMsg")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
@@ -66,7 +66,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Max_Classes)
 
         Addlog("Sent SMSG: SNewCharClasses", PACKET_LOG)
-        TextAdd("Sent SMSG: SNewCharClasses")
+        Console.WriteLine("Sent SMSG: SNewCharClasses")
 
         For i = 1 To Max_Classes
             Buffer.WriteString(GetClassName(i))
@@ -125,7 +125,7 @@ Module ServerNetworkSend
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SCloseTrade", PACKET_LOG)
-        TextAdd("Sent SMSG: SCloseTrade")
+        Console.WriteLine("Sent SMSG: SCloseTrade")
 
         Buffer.Dispose()
     End Sub
@@ -140,7 +140,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(GetPlayerNextLevel(Index))
 
         Addlog("Sent SMSG: SPlayerEXP", PACKET_LOG)
-        TextAdd("Sent SMSG: SPlayerEXP")
+        Console.WriteLine("Sent SMSG: SPlayerEXP")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
@@ -153,7 +153,7 @@ Module ServerNetworkSend
         Socket.SendDataTo(index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SLoadCharOk", PACKET_LOG)
-        TextAdd("Sent SMSG: SLoadCharOk")
+        Console.WriteLine("Sent SMSG: SLoadCharOk")
 
         Buffer.Dispose()
     End Sub
@@ -165,7 +165,7 @@ Module ServerNetworkSend
         Socket.SendDataTo(index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SLoginOk", PACKET_LOG)
-        TextAdd("Sent SMSG: SLoginOk")
+        Console.WriteLine("Sent SMSG: SLoginOk")
 
         Buffer.Dispose()
     End Sub
@@ -176,7 +176,7 @@ Module ServerNetworkSend
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SInGame", PACKET_LOG)
-        TextAdd("Sent SMSG: SInGame")
+        Console.WriteLine("Sent SMSG: SInGame")
 
         Buffer.Dispose()
     End Sub
@@ -189,7 +189,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Max_Classes)
 
         Addlog("Sent SMSG: SClassesData", PACKET_LOG)
-        TextAdd("Sent SMSG: SClassesData")
+        Console.WriteLine("Sent SMSG: SClassesData")
 
         For i = 1 To Max_Classes
             Buffer.WriteString(Trim$(GetClassName(i)))
@@ -252,7 +252,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Max_Classes)
 
         Addlog("Sent SMSG: SClassesData To All", PACKET_LOG)
-        TextAdd("Sent SMSG: SClassesData To All")
+        Console.WriteLine("Sent SMSG: SClassesData To All")
 
         For i = 1 To Max_Classes
             Buffer.WriteString(GetClassName(i))
@@ -315,7 +315,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SPlayerInv)
 
         Addlog("Sent SMSG: SPlayerInv", PACKET_LOG)
-        TextAdd("Sent SMSG: SPlayerInv")
+        Console.WriteLine("Sent SMSG: SPlayerInv")
 
         For i = 1 To MAX_INV
             Buffer.WriteInt32(GetPlayerInvItemNum(Index, i))
@@ -356,7 +356,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Item(itemNum).AccessReq)
 
         Addlog("Sent SMSG: SUpdateItem", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateItem")
+        Console.WriteLine("Sent SMSG: SUpdateItem")
 
         For i = 0 To Stats.Count - 1
             Buffer.WriteInt32(Item(itemNum).Add_Stat(i))
@@ -423,7 +423,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Item(itemNum).AccessReq)
 
         Addlog("Sent SMSG: SUpdateItem To All", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateItem To All")
+        Console.WriteLine("Sent SMSG: SUpdateItem To All")
 
         For i = 0 To Stats.Count - 1
             Buffer.WriteInt32(Item(itemNum).Add_Stat(i))
@@ -490,7 +490,7 @@ Module ServerNetworkSend
         SendDataToAllBut(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SLeftMap", PACKET_LOG)
-        TextAdd("Sent SMSG: SLeftMap")
+        Console.WriteLine("Sent SMSG: SLeftMap")
 
         Buffer.Dispose()
     End Sub
@@ -518,7 +518,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(GetPlayerEquipment(Index, EquipmentType.Gloves))
 
         Addlog("Sent SMSG: SMapWornEq", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapWornEq")
+        Console.WriteLine("Sent SMSG: SMapWornEq")
 
         SendDataToMap(GetPlayerMap(Index), Buffer.Data, Buffer.Head)
 
@@ -539,7 +539,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(GetPlayerEquipment(Index, EquipmentType.Gloves))
 
         Addlog("Sent SMSG: SMapWornEq To", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapWornEq To")
+        Console.WriteLine("Sent SMSG: SMapWornEq To")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -565,7 +565,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SUpdateNpc)
 
         Addlog("Sent SMSG: SUpdateNpc", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateNpc")
+        Console.WriteLine("Sent SMSG: SUpdateNpc")
 
         Buffer.WriteInt32(NpcNum)
         Buffer.WriteInt32(Npc(NpcNum).Animation)
@@ -610,7 +610,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SUpdateNpc)
 
         Addlog("Sent SMSG: SUpdateNpc To All", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateNpc To All")
+        Console.WriteLine("Sent SMSG: SUpdateNpc To All")
 
         Buffer.WriteInt32(NpcNum)
         Buffer.WriteInt32(Npc(NpcNum).Animation)
@@ -657,7 +657,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ResourceCache(GetPlayerMap(Index)).Resource_Count)
 
         Addlog("Sent SMSG: SResourcesCahce", PACKET_LOG)
-        TextAdd("Sent SMSG: SResourcesCache")
+        Console.WriteLine("Sent SMSG: SResourcesCache")
 
         If ResourceCache(GetPlayerMap(Index)).Resource_Count > 0 Then
 
@@ -709,7 +709,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Resource(ResourceNum).Walkthrough)
 
         Addlog("Sent SMSG: SUpdateResources", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateResources")
+        Console.WriteLine("Sent SMSG: SUpdateResources")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
@@ -740,7 +740,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Shop(shopNum).Face)
 
         Addlog("Sent SMSG: SUpdateShop", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateShop")
+        Console.WriteLine("Sent SMSG: SUpdateShop")
 
         For i = 0 To MAX_TRADES
             Buffer.WriteInt32(Shop(shopNum).TradeItem(i).CostItem)
@@ -765,7 +765,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Shop(shopNum).Face)
 
         Addlog("Sent SMSG: SUpdateShop To All", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateShop To All")
+        Console.WriteLine("Sent SMSG: SUpdateShop To All")
 
         For i = 0 To MAX_TRADES
             Buffer.WriteInt32(Shop(shopNum).TradeItem(i).CostItem)
@@ -822,7 +822,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Skill(skillnum).Y)
 
         Addlog("Sent SMSG: SUpdateSkill", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateSkill")
+        Console.WriteLine("Sent SMSG: SUpdateSkill")
 
         'projectiles
         Buffer.WriteInt32(Skill(skillnum).IsProjectile)
@@ -866,7 +866,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Skill(skillnum).Y)
 
         Addlog("Sent SMSG: SUpdateSkill To All", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateSkill To All")
+        Console.WriteLine("Sent SMSG: SUpdateSkill To All")
 
         'projectiles
         Buffer.WriteInt32(Skill(skillnum).IsProjectile)
@@ -893,7 +893,7 @@ Module ServerNetworkSend
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SPlayerStats", PACKET_LOG)
-        TextAdd("Sent SMSG: SPlayerStats")
+        Console.WriteLine("Sent SMSG: SPlayerStats")
 
         Buffer.Dispose()
     End Sub
@@ -905,7 +905,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(AnimationNum)
 
         Addlog("Sent SMSG: SUpdateAnimation", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateAnimation")
+        Console.WriteLine("Sent SMSG: SUpdateAnimation")
 
         For i = 0 To UBound(Animation(AnimationNum).Frames)
             Buffer.WriteInt32(Animation(AnimationNum).Frames(i))
@@ -939,7 +939,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(AnimationNum)
 
         Addlog("Sent SMSG: SUpdateAnimation To All", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateAnimation To All")
+        Console.WriteLine("Sent SMSG: SUpdateAnimation To All")
 
         For i = 0 To UBound(Animation(AnimationNum).Frames)
             Buffer.WriteInt32(Animation(AnimationNum).Frames(i))
@@ -979,15 +979,15 @@ Module ServerNetworkSend
             Case Vitals.HP
                 Buffer.WriteInt32(ServerPackets.SPlayerHp)
                 Addlog("Sent SMSG: SPlayerHp", PACKET_LOG)
-                TextAdd("Sent SMSG: SPlayerHp")
+                Console.WriteLine("Sent SMSG: SPlayerHp")
             Case Vitals.MP
                 Buffer.WriteInt32(ServerPackets.SPlayerMp)
                 Addlog("Sent SMSG: SPlayerMp", PACKET_LOG)
-                TextAdd("Sent SMSG: SPlayerMp")
+                Console.WriteLine("Sent SMSG: SPlayerMp")
             Case Vitals.SP
                 Buffer.WriteInt32(ServerPackets.SPlayerSp)
                 Addlog("Sent SMSG: SPlayerSp", PACKET_LOG)
-                TextAdd("Sent SMSG: SPlayerSp")
+                Console.WriteLine("Sent SMSG: SPlayerSp")
         End Select
 
         ' Set and send related data.
@@ -1042,7 +1042,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SPlayerWornEq)
 
         Addlog("Sent SMSG: SPlayerWornEq", PACKET_LOG)
-        TextAdd("Sent SMSG: SPlayerWornEq")
+        Console.WriteLine("Sent SMSG: SPlayerWornEq")
 
         For i = 1 To EquipmentType.Count - 1
             Buffer.WriteInt32(GetPlayerEquipment(Index, i))
@@ -1270,7 +1270,7 @@ Module ServerNetworkSend
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SMapData", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapData")
+        Console.WriteLine("Sent SMSG: SMapData")
 
         Buffer.Dispose()
     End Sub
@@ -1316,7 +1316,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(GetPlayerPK(Index))
 
         Addlog("Sent SMSG: SPlayerData", PACKET_LOG)
-        TextAdd("Sent SMSG: SPlayerData")
+        Console.WriteLine("Sent SMSG: SPlayerData")
 
         For i = 1 To Stats.Count - 1
             Buffer.WriteInt32(GetPlayerStat(Index, i))
@@ -1347,7 +1347,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SMapItemData)
 
         Addlog("Sent SMSG: SMapItemData", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapItemData")
+        Console.WriteLine("Sent SMSG: SMapItemData")
 
         For i = 1 To MAX_MAP_ITEMS
             Buffer.WriteInt32(MapItem(MapNum, i).Num)
@@ -1369,7 +1369,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SMapNpcData)
 
         Addlog("Sent SMSG: SMapNpcData", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapNpcData")
+        Console.WriteLine("Sent SMSG: SMapNpcData")
 
         For i = 1 To MAX_MAP_NPCS
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Num)
@@ -1392,7 +1392,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SMapNpcUpdate)
 
         Addlog("Sent SMSG: SMapNpcUpdate", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapNpcUpdate")
+        Console.WriteLine("Sent SMSG: SMapNpcUpdate")
 
         Buffer.WriteInt32(MapNpcNum)
 
@@ -1420,7 +1420,7 @@ Module ServerNetworkSend
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SPlayerXY", PACKET_LOG)
-        TextAdd("Sent SMSG: SPlayerXY")
+        Console.WriteLine("Sent SMSG: SPlayerXY")
 
         Buffer.Dispose()
     End Sub
@@ -1438,7 +1438,7 @@ Module ServerNetworkSend
         SendDataToMapBut(Index, GetPlayerMap(Index), Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SPlayerMove", PACKET_LOG)
-        TextAdd("Sent SMSG: SPlayerMove")
+        Console.WriteLine("Sent SMSG: SPlayerMove")
 
         Buffer.Dispose()
     End Sub
@@ -1452,7 +1452,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Y)
 
         Addlog("Sent SMSG: SDoorAnimation", PACKET_LOG)
-        TextAdd("Sent SMSG: SDoorAnimation")
+        Console.WriteLine("Sent SMSG: SDoorAnimation")
 
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
@@ -1469,7 +1469,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Value)
 
         Addlog("Sent SMSG: SMapKey", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapKey")
+        Console.WriteLine("Sent SMSG: SMapKey")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -1485,7 +1485,7 @@ Module ServerNetworkSend
         Buffer.WriteBytes(WriteUnicodeString(Msg))
 
         Addlog("Sent SMSG: SMapMsg", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapMsg")
+        Console.WriteLine("Sent SMSG: SMapMsg")
 
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
@@ -1505,7 +1505,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Y)
 
         Addlog("Sent SMSG: SActionMsg", PACKET_LOG)
-        TextAdd("Sent SMSG: SActionMsg")
+        Console.WriteLine("Sent SMSG: SActionMsg")
 
         If PlayerOnlyNum > 0 Then
             Socket.SendDataTo(PlayerOnlyNum, Buffer.Data, Buffer.Head)
@@ -1530,7 +1530,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(SayColour)
 
         Addlog("Sent SMSG: SSayMsg", PACKET_LOG)
-        TextAdd("Sent SMSG: SSayMsg")
+        Console.WriteLine("Sent SMSG: SSayMsg")
 
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
@@ -1551,7 +1551,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ResourceNum)
 
         Addlog("Sent SMSG: SUpdateResource", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateResource")
+        Console.WriteLine("Sent SMSG: SUpdateResource")
 
         Buffer.WriteInt32(Resource(ResourceNum).Animation)
         Buffer.WriteString(Resource(ResourceNum).EmptyMessage)
@@ -1581,7 +1581,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(MapNpcNum)
 
         Addlog("Sent SMSG: SMapNpcVitals", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapNpcVitals")
+        Console.WriteLine("Sent SMSG: SMapNpcVitals")
 
         For i = 1 To Vitals.Count - 1
             Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Vital(i))
@@ -1603,7 +1603,7 @@ Module ServerNetworkSend
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SMapKey", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapKey")
+        Console.WriteLine("Sent SMSG: SMapKey")
 
         Buffer.Dispose()
     End Sub
@@ -1616,7 +1616,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ResourceCache(MapNum).Resource_Count)
 
         Addlog("Sent SMSG: SResourceCache", PACKET_LOG)
-        TextAdd("Sent SMSG: SResourceCache")
+        Console.WriteLine("Sent SMSG: SResourceCache")
 
         If ResourceCache(MapNum).Resource_Count > 0 Then
 
@@ -1714,7 +1714,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SGameData)
 
         Addlog("Sent SMSG: SGameData", PACKET_LOG)
-        TextAdd("Sent SMSG: SGameData")
+        Console.WriteLine("Sent SMSG: SGameData")
 
         Buffer.WriteBlock(data)
 
@@ -1737,7 +1737,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(SayColour)
 
         Addlog("Sent SMSG: SSayMsg Global", PACKET_LOG)
-        TextAdd("Sent SMSG: SSayMsg Global")
+        Console.WriteLine("Sent SMSG: SSayMsg Global")
 
         SendDataToAll(Buffer.Data, Buffer.Head)
 
@@ -1754,7 +1754,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(GetPlayerInvItemValue(Index, InvSlot))
 
         Addlog("Sent SMSG: SPlayerInvUpdate", PACKET_LOG)
-        TextAdd("Sent SMSG: SPlayerInvUpdate")
+        Console.WriteLine("Sent SMSG: SPlayerInvUpdate")
 
         Buffer.WriteString(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvSlot).Prefix)
         Buffer.WriteString(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvSlot).Suffix)
@@ -1782,7 +1782,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(LockIndex)
 
         Addlog("Sent SMSG: SAnimation", PACKET_LOG)
-        TextAdd("Sent SMSG: SAnimation")
+        Console.WriteLine("Sent SMSG: SAnimation")
 
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
@@ -1798,7 +1798,7 @@ Module ServerNetworkSend
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SOpenShop", PACKET_LOG)
-        TextAdd("Sent SMSG: SOpenShop")
+        Console.WriteLine("Sent SMSG: SOpenShop")
 
         Buffer.Dispose()
     End Sub
@@ -1810,7 +1810,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SResetShopAction)
 
         Addlog("Sent SMSG: SResetShopAction", PACKET_LOG)
-        TextAdd("Sent SMSG: SResetShopAction")
+        Console.WriteLine("Sent SMSG: SResetShopAction")
 
         SendDataToAll(Buffer.Data, Buffer.Head)
 
@@ -1825,7 +1825,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SBank)
 
         Addlog("Sent SMSG: SBank", PACKET_LOG)
-        TextAdd("Sent SMSG: SBank")
+        Console.WriteLine("Sent SMSG: SBank")
 
         For i = 1 To MAX_BANK
             Buffer.WriteInt32(Bank(Index).Item(i).Num)
@@ -1854,7 +1854,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SClearSkillBuffer)
 
         Addlog("Sent SMSG: SClearSkillBuffer", PACKET_LOG)
-        TextAdd("Sent SMSG: SClearSkillBuffer")
+        Console.WriteLine("Sent SMSG: SClearSkillBuffer")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -1868,7 +1868,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SClearTradeTimer)
 
         Addlog("Sent SMSG: SClearTradeTimer", PACKET_LOG)
-        TextAdd("Sent SMSG: SClearTradeTimer")
+        Console.WriteLine("Sent SMSG: SClearTradeTimer")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -1882,7 +1882,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.STradeInvite)
 
         Addlog("Sent SMSG: STradeInvite", PACKET_LOG)
-        TextAdd("Sent SMSG: STradeInvite")
+        Console.WriteLine("Sent SMSG: STradeInvite")
 
         Buffer.WriteInt32(TradeIndex)
 
@@ -1901,7 +1901,7 @@ Module ServerNetworkSend
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: STrade", PACKET_LOG)
-        TextAdd("Sent SMSG: STrade")
+        Console.WriteLine("Sent SMSG: STrade")
 
         Buffer.Dispose()
     End Sub
@@ -1919,7 +1919,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(DataType)
 
         Addlog("Sent SMSG: STradeUpdate", PACKET_LOG)
-        TextAdd("Sent SMSG: STradeUpdate")
+        Console.WriteLine("Sent SMSG: STradeUpdate")
 
         If DataType = 0 Then ' own inventory
 
@@ -1974,7 +1974,7 @@ Module ServerNetworkSend
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: STradeStatus", PACKET_LOG)
-        TextAdd("Sent SMSG: STradeStatus")
+        Console.WriteLine("Sent SMSG: STradeStatus")
 
         Buffer.Dispose()
     End Sub
@@ -1987,7 +1987,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SMapItemData)
 
         Addlog("Sent SMSG: SMapItemData To All", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapItemdata To All")
+        Console.WriteLine("Sent SMSG: SMapItemdata To All")
 
         For i = 1 To MAX_MAP_ITEMS
             Buffer.WriteInt32(MapItem(MapNum, i).Num)
@@ -2009,7 +2009,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(TempPlayer(Index).StunDuration)
 
         Addlog("Sent SMSG: SStunned", PACKET_LOG)
-        TextAdd("Sent SMSG: SStunned")
+        Console.WriteLine("Sent SMSG: SStunned")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -2025,7 +2025,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Y)
 
         Addlog("Sent SMSG: SBlood", PACKET_LOG)
-        TextAdd("Sent SMSG: SBlood")
+        Console.WriteLine("Sent SMSG: SBlood")
 
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
@@ -2039,7 +2039,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SSkills)
 
         Addlog("Sent SMSG: SSkills", PACKET_LOG)
-        TextAdd("Sent SMSG: SSkills")
+        Console.WriteLine("Sent SMSG: SSkills")
 
         For i = 1 To MAX_PLAYER_SKILLS
             Buffer.WriteInt32(GetPlayerSkill(Index, i))
@@ -2057,7 +2057,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Slot)
 
         Addlog("Sent SMSG: SCooldown", PACKET_LOG)
-        TextAdd("Sent SMSG: SCooldown")
+        Console.WriteLine("Sent SMSG: SCooldown")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -2073,7 +2073,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(TargetType)
 
         Addlog("Sent SMSG: STarget", PACKET_LOG)
-        TextAdd("Sent SMSG: STarget")
+        Console.WriteLine("Sent SMSG: STarget")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -2088,7 +2088,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SMapReport)
 
         Addlog("Sent SMSG: SMapReport", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapReport")
+        Console.WriteLine("Sent SMSG: SMapReport")
 
         For I = 1 To MAX_MAPS
             Buffer.WriteString(Trim(Map(I).Name))
@@ -2106,7 +2106,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SAdmin)
 
         Addlog("Sent SMSG: SAdmin", PACKET_LOG)
-        TextAdd("Sent SMSG: SAdmin")
+        Console.WriteLine("Sent SMSG: SAdmin")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -2120,7 +2120,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SMapNames)
 
         Addlog("Sent SMSG: SMapNames", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapNames")
+        Console.WriteLine("Sent SMSG: SMapNames")
 
         For I = 1 To MAX_MAPS
             Buffer.WriteString(Trim(Map(I).Name))
@@ -2138,7 +2138,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SHotbar)
 
         Addlog("Sent SMSG: SHotbar", PACKET_LOG)
-        TextAdd("Sent SMSG: SHotbar")
+        Console.WriteLine("Sent SMSG: SHotbar")
 
         For i = 1 To MAX_HOTBAR
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).Hotbar(i).Slot)
@@ -2157,7 +2157,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SCritical)
 
         Addlog("Sent SMSG: SCritical", PACKET_LOG)
-        TextAdd("Sent SMSG: SCritical")
+        Console.WriteLine("Sent SMSG: SCritical")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -2182,7 +2182,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SNews)
 
         Addlog("Sent SMSG: SNews", PACKET_LOG)
-        TextAdd("Sent SMSG: SNews")
+        Console.WriteLine("Sent SMSG: SNews")
 
         Buffer.WriteString(Trim(Options.GameName))
         Buffer.WriteString(Trim(GetFileContents(Application.StartupPath & "\data\news.txt")))
@@ -2199,7 +2199,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SrClick)
 
         Addlog("Sent SMSG: SrClick", PACKET_LOG)
-        TextAdd("Sent SMSG: SrClick")
+        Console.WriteLine("Sent SMSG: SrClick")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -2213,7 +2213,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SClassEditor)
 
         Addlog("Sent SMSG: SClassEditor", PACKET_LOG)
-        TextAdd("Sent SMSG: SClassEditor")
+        Console.WriteLine("Sent SMSG: SClassEditor")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -2230,7 +2230,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SAutoMapper)
 
         Addlog("Sent SMSG: SAutoMapper", PACKET_LOG)
-        TextAdd("Sent SMSG: SAutoMapper")
+        Console.WriteLine("Sent SMSG: SAutoMapper")
 
         Buffer.WriteInt32(MapStart)
         Buffer.WriteInt32(MapSize)
@@ -2268,7 +2268,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SEmote)
 
         Addlog("Sent SMSG: SEmote", PACKET_LOG)
-        TextAdd("Sent SMSG: SEmote")
+        Console.WriteLine("Sent SMSG: SEmote")
 
         Buffer.WriteInt32(Index)
         Buffer.WriteInt32(Emote)
@@ -2285,7 +2285,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SChatBubble)
 
         Addlog("Sent SMSG: SChatBubble", PACKET_LOG)
-        TextAdd("Sent SMSG: SChatBubble")
+        Console.WriteLine("Sent SMSG: SChatBubble")
 
         Buffer.WriteInt32(Target)
         Buffer.WriteInt32(TargetType)
@@ -2303,7 +2303,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SAttack)
 
         Addlog("Sent SMSG: SPlayerAttack", PACKET_LOG)
-        TextAdd("Sent SMSG: SPlayerAttack")
+        Console.WriteLine("Sent SMSG: SPlayerAttack")
 
         Buffer.WriteInt32(Index)
         SendDataToMapBut(Index, GetPlayerMap(Index), Buffer.Data, Buffer.Head)
@@ -2315,7 +2315,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SAttack)
 
         Addlog("Sent SMSG: SNpcAttack", PACKET_LOG)
-        TextAdd("Sent SMSG: SNpcAttack")
+        Console.WriteLine("Sent SMSG: SNpcAttack")
 
         Buffer.WriteInt32(NpcNum)
         SendDataToMap(GetPlayerMap(Index), Buffer.Data, Buffer.Head)
@@ -2327,7 +2327,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.SNpcDead)
 
         Addlog("Sent SMSG: SNpcDead", PACKET_LOG)
-        TextAdd("Sent SMSG: SNpcDead")
+        Console.WriteLine("Sent SMSG: SNpcDead")
 
         Buffer.WriteInt32(Index)
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
@@ -2340,7 +2340,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.STotalOnline)
 
         Addlog("Sent SMSG: STotalOnline", PACKET_LOG)
-        TextAdd("Sent SMSG: STotalOnline")
+        Console.WriteLine("Sent SMSG: STotalOnline")
 
         Buffer.WriteInt32(GetPlayersOnline)
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
@@ -2354,7 +2354,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(ServerPackets.STotalOnline)
 
         Addlog("Sent SMSG: STotalOnline To All", PACKET_LOG)
-        TextAdd("Sent SMSG: STotalOnline To All")
+        Console.WriteLine("Sent SMSG: STotalOnline To All")
 
         Buffer.WriteInt32(GetPlayersOnline)
         SendDataToAll(Buffer.Data, Buffer.Head)

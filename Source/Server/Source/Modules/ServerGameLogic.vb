@@ -99,7 +99,7 @@ Module ServerGameLogic
                 Buffer.WriteInt32(y)
 
                 Addlog("Sent SMSG: SSpawnItem MapItemSlot", PACKET_LOG)
-                TextAdd("Sent SMSG: SSpawnItem MapItemSlot")
+                Console.WriteLine("Sent SMSG: SSpawnItem MapItemSlot")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             End If
@@ -246,7 +246,7 @@ Module ServerGameLogic
                 Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Dir)
 
                 Addlog("Recieved SMSG: SSpawnNpc", PACKET_LOG)
-                TextAdd("Recieved SMSG: SSpawnNpc")
+                Console.WriteLine("Recieved SMSG: SSpawnNpc")
 
                 For i = 1 To Vitals.Count - 1
                     Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Vital(i))
@@ -485,7 +485,7 @@ Module ServerGameLogic
                 Buffer.WriteInt32(Movement)
 
                 Addlog("Sent SMSG: SNpcMove Up", PACKET_LOG)
-                TextAdd("Sent SMSG: SNpcMove Up")
+                Console.WriteLine("Sent SMSG: SNpcMove Up")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             Case Direction.Down
@@ -499,7 +499,7 @@ Module ServerGameLogic
                 Buffer.WriteInt32(Movement)
 
                 Addlog("Sent SMSG: SNpcMove Down", PACKET_LOG)
-                TextAdd("Sent SMSG: SNpcMove Down")
+                Console.WriteLine("Sent SMSG: SNpcMove Down")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             Case Direction.Left
@@ -513,7 +513,7 @@ Module ServerGameLogic
                 Buffer.WriteInt32(Movement)
 
                 Addlog("Sent SMSG: SNpcMove Left", PACKET_LOG)
-                TextAdd("Sent SMSG: SNpcMove Left")
+                Console.WriteLine("Sent SMSG: SNpcMove Left")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             Case Direction.Right
@@ -527,7 +527,7 @@ Module ServerGameLogic
                 Buffer.WriteInt32(Movement)
 
                 Addlog("Sent SMSG: SNpcMove Right", PACKET_LOG)
-                TextAdd("Sent SMSG: SNpcMove Right")
+                Console.WriteLine("Sent SMSG: SNpcMove Right")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
         End Select
@@ -550,11 +550,11 @@ Module ServerGameLogic
         Buffer.WriteInt32(Dir)
 
         Addlog("Sent SMSG: SNpcDir", PACKET_LOG)
-        TextAdd("Sent SMSG: SNpcDir")
+        Console.WriteLine("Sent SMSG: SNpcDir")
 
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SpawnAllMapNpcs()
@@ -582,7 +582,7 @@ Module ServerGameLogic
         Buffer.WriteInt32(ServerPackets.SMapNpcData)
 
         Addlog("Sent SMSG: SMapNpcData", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapNpcData")
+        Console.WriteLine("Sent SMSG: SMapNpcData")
 
         For i = 1 To MAX_MAP_NPCS
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Num)

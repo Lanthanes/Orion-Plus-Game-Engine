@@ -27,7 +27,7 @@ Module ServerParties
         Buffer.WriteInt32(ServerPackets.SPartyInvite)
 
         Addlog("Sent SMSG: SPartyInvite", PACKET_LOG)
-        TextAdd("Sent SMSG: SPartyInvite")
+        Console.WriteLine("Sent SMSG: SPartyInvite")
 
         Buffer.WriteString(Trim$(Player(Target).Character(TempPlayer(Target).CurChar).Name))
 
@@ -40,7 +40,7 @@ Module ServerParties
         Buffer.WriteInt32(ServerPackets.SPartyUpdate)
 
         Addlog("Sent SMSG: SPartyUpdate", PACKET_LOG)
-        TextAdd("Sent SMSG: SPartyUpdate")
+        Console.WriteLine("Sent SMSG: SPartyUpdate")
 
         Buffer.WriteInt32(1)
         Buffer.WriteInt32(Party(PartyNum).Leader)
@@ -59,7 +59,7 @@ Module ServerParties
         Buffer.WriteInt32(ServerPackets.SPartyUpdate)
 
         Addlog("Sent SMSG: SPartyUpdate To Players", PACKET_LOG)
-        TextAdd("Sent SMSG: SPartyUpdate To Players")
+        Console.WriteLine("Sent SMSG: SPartyUpdate To Players")
 
         ' check if we're in a party
         partyNum = TempPlayer(Index).InParty
@@ -88,7 +88,7 @@ Module ServerParties
         Buffer.WriteInt32(Index)
 
         Addlog("Sent SMSG: SPartyVitals", PACKET_LOG)
-        TextAdd("Sent SMSG: SPartyVitals")
+        Console.WriteLine("Sent SMSG: SPartyVitals")
 
         For i = 1 To Vitals.Count - 1
             Buffer.WriteInt32(GetPlayerMaxVital(Index, i))
@@ -106,7 +106,7 @@ Module ServerParties
         Dim Buffer As New ByteStream(data)
 
         Addlog("Recieved CMSG: CRequestParty", PACKET_LOG)
-        TextAdd("Recieved CMSG: CRequestParty")
+        Console.WriteLine("Recieved CMSG: CRequestParty")
 
         n = FindPlayer(Buffer.ReadString)
         Buffer.Dispose()
@@ -126,21 +126,21 @@ Module ServerParties
 
     Public Sub Packet_AcceptParty(ByVal Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CAcceptParty", PACKET_LOG)
-        TextAdd("Recieved CMSG: CAcceptParty")
+        Console.WriteLine("Recieved CMSG: CAcceptParty")
 
         Party_InviteAccept(TempPlayer(Index).PartyInvite, Index)
     End Sub
 
     Public Sub Packet_DeclineParty(ByVal Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CDeclineParty", PACKET_LOG)
-        TextAdd("Recieved CMSG: CDeclineParty")
+        Console.WriteLine("Recieved CMSG: CDeclineParty")
 
         Party_InviteDecline(TempPlayer(Index).PartyInvite, Index)
     End Sub
 
     Public Sub Packet_LeaveParty(ByVal Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CLeaveParty", PACKET_LOG)
-        TextAdd("Recieved CMSG: CLeaveParty")
+        Console.WriteLine("Recieved CMSG: CLeaveParty")
 
         Party_PlayerLeave(Index)
     End Sub
@@ -148,7 +148,7 @@ Module ServerParties
     Public Sub Packet_PartyChatMsg(ByVal Index As Integer, ByRef data() As Byte)
         Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CPartyChatMsg", PACKET_LOG)
-        TextAdd("Recieved CMSG: CPartyChatMsg")
+        Console.WriteLine("Recieved CMSG: CPartyChatMsg")
 
         PartyMsg(Index, Buffer.ReadString)
 
