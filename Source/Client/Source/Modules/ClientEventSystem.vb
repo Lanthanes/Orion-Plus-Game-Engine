@@ -674,9 +674,9 @@ newlist:
                                         End If
                                     Case 8
                                         Select Case tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).ConditionalBranch.Data1
-                                            Case Sex.Male
+                                            Case SexType.Male
                                                 FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Conditional Branch: Player's Gender is Male")
-                                            Case Sex.Female
+                                            Case SexType.Female
                                                 FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Conditional Branch: Player's  Gender is Female")
                                         End Select
                                     Case 9
@@ -917,13 +917,13 @@ newlist:
                                     FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Warp Player To Map: " & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data1 & " Tile(" & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data2 & "," & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data3 & ") while retaining direction.")
                                 Else
                                     Select Case tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data4 - 1
-                                        Case Direction.Up
+                                        Case DirectionType.Up
                                             FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Warp Player To Map: " & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data1 & " Tile(" & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data2 & "," & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data3 & ") facing upward.")
-                                        Case Direction.Down
+                                        Case DirectionType.Down
                                             FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Warp Player To Map: " & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data1 & " Tile(" & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data2 & "," & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data3 & ") facing downward.")
-                                        Case Direction.Left
+                                        Case DirectionType.Left
                                             FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Warp Player To Map: " & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data1 & " Tile(" & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data2 & "," & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data3 & ") facing left.")
-                                        Case Direction.Right
+                                        Case DirectionType.Right
                                             FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Warp Player To Map: " & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data1 & " Tile(" & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data2 & "," & tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data3 & ") facing right.")
                                     End Select
                                 End If
@@ -994,15 +994,15 @@ newlist:
                                 FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Set Fog [Fog: " & CStr(tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data1) & " Speed: " & CStr(tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data2) & " Opacity: " & CStr(tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data3) & "]")
                             Case EventType.evSetWeather
                                 Select Case tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data1
-                                    Case Weather.None
+                                    Case WeatherType.None
                                         FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Set Weather [None]")
-                                    Case Weather.Rain
+                                    Case WeatherType.Rain
                                         FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Set Weather [Rain - Intensity: " & CStr(tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data2) & "]")
-                                    Case Weather.Snow
+                                    Case WeatherType.Snow
                                         FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Set Weather [Snow - Intensity: " & CStr(tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data2) & "]")
-                                    Case Weather.Sandstorm
+                                    Case WeatherType.Sandstorm
                                         FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Set Weather [Sand Storm - Intensity: " & CStr(tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data2) & "]")
-                                    Case Weather.Storm
+                                    Case WeatherType.Storm
                                         FrmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Set Weather [Storm - Intensity: " & CStr(tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).Data2) & "]")
                                 End Select
                             Case EventType.evSetTint
@@ -2373,13 +2373,13 @@ newlist:
             .MovementSpeed = MovementSpeed
 
             Select Case dir
-                Case Direction.Up
+                Case DirectionType.Up
                     .YOffset = PIC_Y
-                Case Direction.Down
+                Case DirectionType.Down
                     .YOffset = PIC_Y * -1
-                Case Direction.Left
+                Case DirectionType.Left
                     .XOffset = PIC_X
-                Case Direction.Right
+                Case DirectionType.Right
                     .XOffset = PIC_X * -1
             End Select
 
@@ -2995,25 +2995,25 @@ nextevent:
                 End If
 
                 Select Case Map.MapEvents(Id).dir
-                    Case Direction.Up
+                    Case DirectionType.Up
                         If (Map.MapEvents(Id).YOffset > 8) Then Anim = Map.MapEvents(Id).Steps
-                    Case Direction.Down
+                    Case DirectionType.Down
                         If (Map.MapEvents(Id).YOffset < -8) Then Anim = Map.MapEvents(Id).Steps
-                    Case Direction.Left
+                    Case DirectionType.Left
                         If (Map.MapEvents(Id).XOffset > 8) Then Anim = Map.MapEvents(Id).Steps
-                    Case Direction.Right
+                    Case DirectionType.Right
                         If (Map.MapEvents(Id).XOffset < -8) Then Anim = Map.MapEvents(Id).Steps
                 End Select
 
                 ' Set the left
                 Select Case Map.MapEvents(Id).ShowDir
-                    Case Direction.Up
+                    Case DirectionType.Up
                         spritetop = 3
-                    Case Direction.Right
+                    Case DirectionType.Right
                         spritetop = 2
-                    Case Direction.Down
+                    Case DirectionType.Down
                         spritetop = 0
-                    Case Direction.Left
+                    Case DirectionType.Left
                         spritetop = 1
                 End Select
 
@@ -3157,22 +3157,22 @@ nextevent:
 
         If Map.MapEvents(Id).Moving = 1 Then
             Select Case Map.MapEvents(Id).dir
-                Case Direction.Up
+                Case DirectionType.Up
                     Map.MapEvents(Id).YOffset = Map.MapEvents(Id).YOffset - ((ElapsedTime / 1000) * (Map.MapEvents(Id).MovementSpeed * SIZE_X))
                     If Map.MapEvents(Id).YOffset < 0 Then Map.MapEvents(Id).YOffset = 0
-                Case Direction.Down
+                Case DirectionType.Down
                     Map.MapEvents(Id).YOffset = Map.MapEvents(Id).YOffset + ((ElapsedTime / 1000) * (Map.MapEvents(Id).MovementSpeed * SIZE_X))
                     If Map.MapEvents(Id).YOffset > 0 Then Map.MapEvents(Id).YOffset = 0
-                Case Direction.Left
+                Case DirectionType.Left
                     Map.MapEvents(Id).XOffset = Map.MapEvents(Id).XOffset - ((ElapsedTime / 1000) * (Map.MapEvents(Id).MovementSpeed * SIZE_X))
                     If Map.MapEvents(Id).XOffset < 0 Then Map.MapEvents(Id).XOffset = 0
-                Case Direction.Right
+                Case DirectionType.Right
                     Map.MapEvents(Id).XOffset = Map.MapEvents(Id).XOffset + ((ElapsedTime / 1000) * (Map.MapEvents(Id).MovementSpeed * SIZE_X))
                     If Map.MapEvents(Id).XOffset > 0 Then Map.MapEvents(Id).XOffset = 0
             End Select
             ' Check if completed walking over to the next tile
             If Map.MapEvents(Id).Moving > 0 Then
-                If Map.MapEvents(Id).dir = Direction.Right OrElse Map.MapEvents(Id).dir = Direction.Down Then
+                If Map.MapEvents(Id).dir = DirectionType.Right OrElse Map.MapEvents(Id).dir = DirectionType.Down Then
                     If (Map.MapEvents(Id).XOffset >= 0) AndAlso (Map.MapEvents(Id).YOffset >= 0) Then
                         Map.MapEvents(Id).Moving = 0
                         If Map.MapEvents(Id).Steps = 1 Then

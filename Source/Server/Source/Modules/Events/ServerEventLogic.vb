@@ -241,13 +241,13 @@ Public Module ServerEventLogic
                                 If Map(MapNum).Events(id).Pages(z).GraphicType = 1 Then
                                     Select Case Map(MapNum).Events(id).Pages(z).GraphicY
                                         Case 0
-                                            .Dir = Direction.Down
+                                            .Dir = DirectionType.Down
                                         Case 1
-                                            .Dir = Direction.Left
+                                            .Dir = DirectionType.Left
                                         Case 2
-                                            .Dir = Direction.Right
+                                            .Dir = DirectionType.Right
                                         Case 3
-                                            .Dir = Direction.Up
+                                            .Dir = DirectionType.Up
                                     End Select
                                 Else
                                     .Dir = 0
@@ -426,32 +426,32 @@ Public Module ServerEventLogic
                                                     End Select
                                                     Select Case .MoveRoute(.MoveRouteStep).Index
                                                         Case 1
-                                                            If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, Direction.Up, isglobal) Then
-                                                                EventMove(playerID, MapNum, eventID, Direction.Up, actualmovespeed, isglobal)
+                                                            If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, DirectionType.Up, isglobal) Then
+                                                                EventMove(playerID, MapNum, eventID, DirectionType.Up, actualmovespeed, isglobal)
                                                             Else
                                                                 If .IgnoreIfCannotMove = 0 Then
                                                                     .MoveRouteStep = .MoveRouteStep - 1
                                                                 End If
                                                             End If
                                                         Case 2
-                                                            If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, Direction.Down, isglobal) Then
-                                                                EventMove(playerID, MapNum, eventID, Direction.Down, actualmovespeed, isglobal)
+                                                            If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, DirectionType.Down, isglobal) Then
+                                                                EventMove(playerID, MapNum, eventID, DirectionType.Down, actualmovespeed, isglobal)
                                                             Else
                                                                 If .IgnoreIfCannotMove = 0 Then
                                                                     .MoveRouteStep = .MoveRouteStep - 1
                                                                 End If
                                                             End If
                                                         Case 3
-                                                            If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, Direction.Left, isglobal) Then
-                                                                EventMove(playerID, MapNum, eventID, Direction.Left, actualmovespeed, isglobal)
+                                                            If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, DirectionType.Left, isglobal) Then
+                                                                EventMove(playerID, MapNum, eventID, DirectionType.Left, actualmovespeed, isglobal)
                                                             Else
                                                                 If .IgnoreIfCannotMove = 0 Then
                                                                     .MoveRouteStep = .MoveRouteStep - 1
                                                                 End If
                                                             End If
                                                         Case 4
-                                                            If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, Direction.Right, isglobal) Then
-                                                                EventMove(playerID, MapNum, eventID, Direction.Right, actualmovespeed, isglobal)
+                                                            If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, DirectionType.Right, isglobal) Then
+                                                                EventMove(playerID, MapNum, eventID, DirectionType.Right, actualmovespeed, isglobal)
                                                             Else
                                                                 If .IgnoreIfCannotMove = 0 Then
                                                                     .MoveRouteStep = .MoveRouteStep - 1
@@ -518,14 +518,14 @@ Public Module ServerEventLogic
                                                             End If
                                                         Case 9
                                                             Select Case .Dir
-                                                                Case Direction.Up
-                                                                    z = Direction.Down
-                                                                Case Direction.Down
-                                                                    z = Direction.Up
-                                                                Case Direction.Left
-                                                                    z = Direction.Right
-                                                                Case Direction.Right
-                                                                    z = Direction.Left
+                                                                Case DirectionType.Up
+                                                                    z = DirectionType.Down
+                                                                Case DirectionType.Down
+                                                                    z = DirectionType.Up
+                                                                Case DirectionType.Left
+                                                                    z = DirectionType.Right
+                                                                Case DirectionType.Right
+                                                                    z = DirectionType.Left
                                                             End Select
                                                             If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, z, isglobal) Then
                                                                 EventMove(playerID, MapNum, eventID, z, actualmovespeed, isglobal)
@@ -541,47 +541,47 @@ Public Module ServerEventLogic
                                                         Case 12
                                                             .MoveTimer = GetTimeMs() + 1000
                                                         Case 13
-                                                            EventDir(playerID, MapNum, eventID, Direction.Up, isglobal)
+                                                            EventDir(playerID, MapNum, eventID, DirectionType.Up, isglobal)
                                                         Case 14
-                                                            EventDir(playerID, MapNum, eventID, Direction.Down, isglobal)
+                                                            EventDir(playerID, MapNum, eventID, DirectionType.Down, isglobal)
                                                         Case 15
-                                                            EventDir(playerID, MapNum, eventID, Direction.Left, isglobal)
+                                                            EventDir(playerID, MapNum, eventID, DirectionType.Left, isglobal)
                                                         Case 16
-                                                            EventDir(playerID, MapNum, eventID, Direction.Right, isglobal)
+                                                            EventDir(playerID, MapNum, eventID, DirectionType.Right, isglobal)
                                                         Case 17
                                                             Select Case .Dir
-                                                                Case Direction.Up
-                                                                    z = Direction.Right
-                                                                Case Direction.Right
-                                                                    z = Direction.Down
-                                                                Case Direction.Left
-                                                                    z = Direction.Up
-                                                                Case Direction.Down
-                                                                    z = Direction.Left
+                                                                Case DirectionType.Up
+                                                                    z = DirectionType.Right
+                                                                Case DirectionType.Right
+                                                                    z = DirectionType.Down
+                                                                Case DirectionType.Left
+                                                                    z = DirectionType.Up
+                                                                Case DirectionType.Down
+                                                                    z = DirectionType.Left
                                                             End Select
                                                             EventDir(playerID, MapNum, eventID, z, isglobal)
                                                         Case 18
                                                             Select Case .Dir
-                                                                Case Direction.Up
-                                                                    z = Direction.Left
-                                                                Case Direction.Right
-                                                                    z = Direction.Up
-                                                                Case Direction.Left
-                                                                    z = Direction.Down
-                                                                Case Direction.Down
-                                                                    z = Direction.Right
+                                                                Case DirectionType.Up
+                                                                    z = DirectionType.Left
+                                                                Case DirectionType.Right
+                                                                    z = DirectionType.Up
+                                                                Case DirectionType.Left
+                                                                    z = DirectionType.Down
+                                                                Case DirectionType.Down
+                                                                    z = DirectionType.Right
                                                             End Select
                                                             EventDir(playerID, MapNum, eventID, z, isglobal)
                                                         Case 19
                                                             Select Case .Dir
-                                                                Case Direction.Up
-                                                                    z = Direction.Down
-                                                                Case Direction.Right
-                                                                    z = Direction.Left
-                                                                Case Direction.Left
-                                                                    z = Direction.Right
-                                                                Case Direction.Down
-                                                                    z = Direction.Up
+                                                                Case DirectionType.Up
+                                                                    z = DirectionType.Down
+                                                                Case DirectionType.Right
+                                                                    z = DirectionType.Left
+                                                                Case DirectionType.Left
+                                                                    z = DirectionType.Right
+                                                                Case DirectionType.Down
+                                                                    z = DirectionType.Up
                                                             End Select
                                                             EventDir(playerID, MapNum, eventID, z, isglobal)
                                                         Case 20
@@ -661,13 +661,13 @@ Public Module ServerEventLogic
                                                             If .GraphicType = 1 Then
                                                                 Select Case .GraphicY
                                                                     Case 0
-                                                                        .Dir = Direction.Down
+                                                                        .Dir = DirectionType.Down
                                                                     Case 1
-                                                                        .Dir = Direction.Left
+                                                                        .Dir = DirectionType.Left
                                                                     Case 2
-                                                                        .Dir = Direction.Right
+                                                                        .Dir = DirectionType.Right
                                                                     Case 3
-                                                                        .Dir = Direction.Up
+                                                                        .Dir = DirectionType.Up
                                                                 End Select
                                                             End If
                                                             'Need to Send Update to client
@@ -814,32 +814,32 @@ Public Module ServerEventLogic
                                                         TempPlayer(i).EventMap.EventPages(x).MoveRouteStep = TempPlayer(i).EventMap.EventPages(x).MoveRouteStep + 1
                                                         Select Case TempPlayer(i).EventMap.EventPages(x).MoveRoute(TempPlayer(i).EventMap.EventPages(x).MoveRouteStep).Index
                                                             Case 1
-                                                                If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, Direction.Up, isglobal) Then
-                                                                    EventMove(playerID, MapNum, eventID, Direction.Up, actualmovespeed, isglobal)
+                                                                If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, DirectionType.Up, isglobal) Then
+                                                                    EventMove(playerID, MapNum, eventID, DirectionType.Up, actualmovespeed, isglobal)
                                                                 Else
                                                                     If TempPlayer(i).EventMap.EventPages(x).IgnoreIfCannotMove = 0 Then
                                                                         .MoveRouteStep = .MoveRouteStep - 1
                                                                     End If
                                                                 End If
                                                             Case 2
-                                                                If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, Direction.Down, isglobal) Then
-                                                                    EventMove(playerID, MapNum, eventID, Direction.Down, actualmovespeed, isglobal)
+                                                                If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, DirectionType.Down, isglobal) Then
+                                                                    EventMove(playerID, MapNum, eventID, DirectionType.Down, actualmovespeed, isglobal)
                                                                 Else
                                                                     If .IgnoreIfCannotMove = 0 Then
                                                                         .MoveRouteStep = .MoveRouteStep - 1
                                                                     End If
                                                                 End If
                                                             Case 3
-                                                                If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, Direction.Left, isglobal) Then
-                                                                    EventMove(playerID, MapNum, eventID, Direction.Left, actualmovespeed, isglobal)
+                                                                If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, DirectionType.Left, isglobal) Then
+                                                                    EventMove(playerID, MapNum, eventID, DirectionType.Left, actualmovespeed, isglobal)
                                                                 Else
                                                                     If .IgnoreIfCannotMove = 0 Then
                                                                         .MoveRouteStep = .MoveRouteStep - 1
                                                                     End If
                                                                 End If
                                                             Case 4
-                                                                If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, Direction.Right, isglobal) Then
-                                                                    EventMove(playerID, MapNum, eventID, Direction.Right, actualmovespeed, isglobal)
+                                                                If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, DirectionType.Right, isglobal) Then
+                                                                    EventMove(playerID, MapNum, eventID, DirectionType.Right, actualmovespeed, isglobal)
                                                                 Else
                                                                     If .IgnoreIfCannotMove = 0 Then
                                                                         .MoveRouteStep = .MoveRouteStep - 1
@@ -919,14 +919,14 @@ Public Module ServerEventLogic
                                                                 End If
                                                             Case 9
                                                                 Select Case .Dir
-                                                                    Case Direction.Up
-                                                                        z = Direction.Down
-                                                                    Case Direction.Down
-                                                                        z = Direction.Up
-                                                                    Case Direction.Left
-                                                                        z = Direction.Right
-                                                                    Case Direction.Right
-                                                                        z = Direction.Left
+                                                                    Case DirectionType.Up
+                                                                        z = DirectionType.Down
+                                                                    Case DirectionType.Down
+                                                                        z = DirectionType.Up
+                                                                    Case DirectionType.Left
+                                                                        z = DirectionType.Right
+                                                                    Case DirectionType.Right
+                                                                        z = DirectionType.Left
                                                                 End Select
                                                                 If CanEventMove(playerID, MapNum, .X, .Y, eventID, WalkThrough, z, isglobal) Then
                                                                     EventMove(playerID, MapNum, eventID, z, actualmovespeed, isglobal)
@@ -942,47 +942,47 @@ Public Module ServerEventLogic
                                                             Case 12
                                                                 .MoveTimer = GetTimeMs() + 1000
                                                             Case 13
-                                                                EventDir(playerID, MapNum, eventID, Direction.Up, isglobal)
+                                                                EventDir(playerID, MapNum, eventID, DirectionType.Up, isglobal)
                                                             Case 14
-                                                                EventDir(playerID, MapNum, eventID, Direction.Down, isglobal)
+                                                                EventDir(playerID, MapNum, eventID, DirectionType.Down, isglobal)
                                                             Case 15
-                                                                EventDir(playerID, MapNum, eventID, Direction.Left, isglobal)
+                                                                EventDir(playerID, MapNum, eventID, DirectionType.Left, isglobal)
                                                             Case 16
-                                                                EventDir(playerID, MapNum, eventID, Direction.Right, isglobal)
+                                                                EventDir(playerID, MapNum, eventID, DirectionType.Right, isglobal)
                                                             Case 17
                                                                 Select Case .Dir
-                                                                    Case Direction.Up
-                                                                        z = Direction.Right
-                                                                    Case Direction.Right
-                                                                        z = Direction.Down
-                                                                    Case Direction.Left
-                                                                        z = Direction.Up
-                                                                    Case Direction.Down
-                                                                        z = Direction.Left
+                                                                    Case DirectionType.Up
+                                                                        z = DirectionType.Right
+                                                                    Case DirectionType.Right
+                                                                        z = DirectionType.Down
+                                                                    Case DirectionType.Left
+                                                                        z = DirectionType.Up
+                                                                    Case DirectionType.Down
+                                                                        z = DirectionType.Left
                                                                 End Select
                                                                 EventDir(playerID, MapNum, eventID, z, isglobal)
                                                             Case 18
                                                                 Select Case .Dir
-                                                                    Case Direction.Up
-                                                                        z = Direction.Left
-                                                                    Case Direction.Right
-                                                                        z = Direction.Up
-                                                                    Case Direction.Left
-                                                                        z = Direction.Down
-                                                                    Case Direction.Down
-                                                                        z = Direction.Right
+                                                                    Case DirectionType.Up
+                                                                        z = DirectionType.Left
+                                                                    Case DirectionType.Right
+                                                                        z = DirectionType.Up
+                                                                    Case DirectionType.Left
+                                                                        z = DirectionType.Down
+                                                                    Case DirectionType.Down
+                                                                        z = DirectionType.Right
                                                                 End Select
                                                                 EventDir(playerID, MapNum, eventID, z, isglobal)
                                                             Case 19
                                                                 Select Case .Dir
-                                                                    Case Direction.Up
-                                                                        z = Direction.Down
-                                                                    Case Direction.Right
-                                                                        z = Direction.Left
-                                                                    Case Direction.Left
-                                                                        z = Direction.Right
-                                                                    Case Direction.Down
-                                                                        z = Direction.Up
+                                                                    Case DirectionType.Up
+                                                                        z = DirectionType.Down
+                                                                    Case DirectionType.Right
+                                                                        z = DirectionType.Left
+                                                                    Case DirectionType.Left
+                                                                        z = DirectionType.Right
+                                                                    Case DirectionType.Down
+                                                                        z = DirectionType.Up
                                                                 End Select
                                                                 EventDir(playerID, MapNum, eventID, z, isglobal)
                                                             Case 20
@@ -1062,13 +1062,13 @@ Public Module ServerEventLogic
                                                                 If .GraphicType = 1 Then
                                                                     Select Case .GraphicY
                                                                         Case 0
-                                                                            .Dir = Direction.Down
+                                                                            .Dir = DirectionType.Down
                                                                         Case 1
-                                                                            .Dir = Direction.Left
+                                                                            .Dir = DirectionType.Left
                                                                         Case 2
-                                                                            .Dir = Direction.Right
+                                                                            .Dir = DirectionType.Right
                                                                         Case 3
-                                                                            .Dir = Direction.Up
+                                                                            .Dir = DirectionType.Up
                                                                     End Select
                                                                 End If
                                                                 'Need to Send Update to client
@@ -1707,11 +1707,11 @@ Public Module ServerEventLogic
                                                             End If
                                                             SendInventory(i)
                                                         Case EventType.evRestoreHP
-                                                            SetPlayerVital(i, Vitals.HP, GetPlayerMaxVital(i, Vitals.HP))
-                                                            SendVital(i, Vitals.HP)
+                                                            SetPlayerVital(i, VitalType.HP, GetPlayerMaxVital(i, VitalType.HP))
+                                                            SendVital(i, VitalType.HP)
                                                         Case EventType.evRestoreMP
-                                                            SetPlayerVital(i, Vitals.MP, GetPlayerMaxVital(i, Vitals.MP))
-                                                            SendVital(i, Vitals.MP)
+                                                            SetPlayerVital(i, VitalType.MP, GetPlayerMaxVital(i, VitalType.MP))
+                                                            SendVital(i, VitalType.MP)
                                                         Case EventType.evLevelUp
                                                             SetPlayerExp(i, GetPlayerNextLevel(i))
                                                             CheckPlayerLevelUp(i)
@@ -1751,9 +1751,9 @@ Public Module ServerEventLogic
                                                             SendPlayerData(i)
                                                         Case EventType.evChangeSex
                                                             If Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1 = 0 Then
-                                                                Player(i).Character(TempPlayer(i).CurChar).Sex = Sex.Male
+                                                                Player(i).Character(TempPlayer(i).CurChar).Sex = SexType.Male
                                                             ElseIf Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1 = 1 Then
-                                                                Player(i).Character(TempPlayer(i).CurChar).Sex = Sex.Female
+                                                                Player(i).Character(TempPlayer(i).CurChar).Sex = SexType.Female
                                                             End If
                                                             SendPlayerData(i)
                                                         Case EventType.evChangePK
@@ -2326,13 +2326,13 @@ Public Module ServerEventLogic
 
         'Ok we got a path. Now, lets look at the first step and see what direction we should take.
         If path(1).X > LastX Then
-            FindNpcPath = Direction.Right
+            FindNpcPath = DirectionType.Right
         ElseIf path(1).Y > LastY Then
-            FindNpcPath = Direction.Down
+            FindNpcPath = DirectionType.Down
         ElseIf path(1).Y < LastY Then
-            FindNpcPath = Direction.Up
+            FindNpcPath = DirectionType.Up
         ElseIf path(1).X < LastX Then
-            FindNpcPath = Direction.Left
+            FindNpcPath = DirectionType.Left
         End If
 
     End Function
@@ -2363,16 +2363,16 @@ Public Module ServerEventLogic
                         If Map(MapNum).Events(i).Pages(1).GraphicType = 1 Then
                             Select Case Map(MapNum).Events(i).Pages(1).GraphicY
                                 Case 0
-                                    TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).Dir = Direction.Down
+                                    TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).Dir = DirectionType.Down
                                 Case 1
-                                    TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).Dir = Direction.Left
+                                    TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).Dir = DirectionType.Left
                                 Case 2
-                                    TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).Dir = Direction.Right
+                                    TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).Dir = DirectionType.Right
                                 Case 3
-                                    TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).Dir = Direction.Up
+                                    TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).Dir = DirectionType.Up
                             End Select
                         Else
-                            TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).Dir = Direction.Down
+                            TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).Dir = DirectionType.Down
                         End If
                         TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).Active = 1
 
@@ -2501,13 +2501,13 @@ Public Module ServerEventLogic
                                 If Map(MapNum).Events(i).Pages(z).GraphicType = 1 Then
                                     Select Case Map(MapNum).Events(i).Pages(z).GraphicY
                                         Case 0
-                                            .Dir = Direction.Down
+                                            .Dir = DirectionType.Down
                                         Case 1
-                                            .Dir = Direction.Left
+                                            .Dir = DirectionType.Left
                                         Case 2
-                                            .Dir = Direction.Right
+                                            .Dir = DirectionType.Right
                                         Case 3
-                                            .Dir = Direction.Up
+                                            .Dir = DirectionType.Up
                                     End Select
                                 Else
                                     .Dir = 0

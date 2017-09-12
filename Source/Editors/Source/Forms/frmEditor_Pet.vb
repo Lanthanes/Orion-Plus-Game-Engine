@@ -95,37 +95,37 @@
     Private Sub NudStrength_ValueChanged(sender As Object, e As EventArgs) Handles nudStrength.ValueChanged
         If EditorIndex <= 0 OrElse EditorIndex > MAX_PETS Then Exit Sub
 
-        Pet(EditorIndex).Stat(Stats.Strength) = nudStrength.Value
+        Pet(EditorIndex).Stat(StatType.Strength) = nudStrength.Value
     End Sub
 
     Private Sub NudEndurance_ValueChanged(sender As Object, e As EventArgs) Handles nudEndurance.ValueChanged
         If EditorIndex <= 0 OrElse EditorIndex > MAX_PETS Then Exit Sub
 
-        Pet(EditorIndex).Stat(Stats.Endurance) = nudEndurance.Value
+        Pet(EditorIndex).Stat(StatType.Endurance) = nudEndurance.Value
     End Sub
 
     Private Sub NudVitality_ValueChanged(sender As Object, e As EventArgs) Handles nudVitality.ValueChanged
         If EditorIndex <= 0 OrElse EditorIndex > MAX_PETS Then Exit Sub
 
-        Pet(EditorIndex).Stat(Stats.Vitality) = nudVitality.Value
+        Pet(EditorIndex).Stat(StatType.Vitality) = nudVitality.Value
     End Sub
 
     Private Sub NudLuck_ValueChanged(sender As Object, e As EventArgs) Handles nudLuck.ValueChanged
         If EditorIndex <= 0 OrElse EditorIndex > MAX_PETS Then Exit Sub
 
-        Pet(EditorIndex).Stat(Stats.Luck) = nudLuck.Value
+        Pet(EditorIndex).Stat(StatType.Luck) = nudLuck.Value
     End Sub
 
     Private Sub NudIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nudIntelligence.ValueChanged
         If EditorIndex <= 0 OrElse EditorIndex > MAX_PETS Then Exit Sub
 
-        Pet(EditorIndex).Stat(Stats.Intelligence) = nudIntelligence.Value
+        Pet(EditorIndex).Stat(StatType.Intelligence) = nudIntelligence.Value
     End Sub
 
     Private Sub NudSpirit_ValueChanged(sender As Object, e As EventArgs) Handles nudSpirit.ValueChanged
         If EditorIndex <= 0 OrElse EditorIndex > MAX_PETS Then Exit Sub
 
-        Pet(EditorIndex).Stat(Stats.Spirit) = nudSpirit.Value
+        Pet(EditorIndex).Stat(StatType.Spirit) = nudSpirit.Value
     End Sub
 
     Private Sub NudLevel_ValueChanged(sender As Object, e As EventArgs) Handles nudLevel.ValueChanged

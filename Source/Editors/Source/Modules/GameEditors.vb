@@ -742,12 +742,12 @@
                 If .Speed > frmEditor_Item.nudSpeed.Maximum Then .Speed = frmEditor_Item.nudSpeed.Maximum
                 frmEditor_Item.nudSpeed.Value = .Speed
 
-                frmEditor_Item.nudStrength.Value = .Add_Stat(Stats.Strength)
-                frmEditor_Item.nudEndurance.Value = .Add_Stat(Stats.Endurance)
-                frmEditor_Item.nudIntelligence.Value = .Add_Stat(Stats.Intelligence)
-                frmEditor_Item.nudVitality.Value = .Add_Stat(Stats.Vitality)
-                frmEditor_Item.nudLuck.Value = .Add_Stat(Stats.Luck)
-                frmEditor_Item.nudSpirit.Value = .Add_Stat(Stats.Spirit)
+                frmEditor_Item.nudStrength.Value = .Add_Stat(StatType.Strength)
+                frmEditor_Item.nudEndurance.Value = .Add_Stat(StatType.Endurance)
+                frmEditor_Item.nudIntelligence.Value = .Add_Stat(StatType.Intelligence)
+                frmEditor_Item.nudVitality.Value = .Add_Stat(StatType.Vitality)
+                frmEditor_Item.nudLuck.Value = .Add_Stat(StatType.Luck)
+                frmEditor_Item.nudSpirit.Value = .Add_Stat(StatType.Spirit)
 
                 If .KnockBack = 1 Then
                     frmEditor_Item.chkKnockBack.Checked = True
@@ -813,12 +813,12 @@
             frmEditor_Item.cmbAccessReq.SelectedIndex = .AccessReq
             frmEditor_Item.nudLevelReq.Value = .LevelReq
 
-            frmEditor_Item.nudStrReq.Value = .Stat_Req(Stats.Strength)
-            frmEditor_Item.nudVitReq.Value = .Stat_Req(Stats.Vitality)
-            frmEditor_Item.nudLuckReq.Value = .Stat_Req(Stats.Luck)
-            frmEditor_Item.nudEndReq.Value = .Stat_Req(Stats.Endurance)
-            frmEditor_Item.nudIntReq.Value = .Stat_Req(Stats.Intelligence)
-            frmEditor_Item.nudSprReq.Value = .Stat_Req(Stats.Spirit)
+            frmEditor_Item.nudStrReq.Value = .Stat_Req(StatType.Strength)
+            frmEditor_Item.nudVitReq.Value = .Stat_Req(StatType.Vitality)
+            frmEditor_Item.nudLuckReq.Value = .Stat_Req(StatType.Luck)
+            frmEditor_Item.nudEndReq.Value = .Stat_Req(StatType.Endurance)
+            frmEditor_Item.nudIntReq.Value = .Stat_Req(StatType.Intelligence)
+            frmEditor_Item.nudSprReq.Value = .Stat_Req(StatType.Spirit)
 
             ' Build cmbClassReq
             frmEditor_Item.cmbClassReq.Items.Clear()
@@ -931,12 +931,12 @@
             .cmbQuest.SelectedIndex = Npc(EditorIndex).QuestNum
             .cmbSpawnPeriod.SelectedIndex = Npc(EditorIndex).SpawnTime
 
-            .nudStrength.Value = Npc(EditorIndex).Stat(Stats.Strength)
-            .nudEndurance.Value = Npc(EditorIndex).Stat(Stats.Endurance)
-            .nudIntelligence.Value = Npc(EditorIndex).Stat(Stats.Intelligence)
-            .nudSpirit.Value = Npc(EditorIndex).Stat(Stats.Spirit)
-            .nudLuck.Value = Npc(EditorIndex).Stat(Stats.Luck)
-            .nudVitality.Value = Npc(EditorIndex).Stat(Stats.Vitality)
+            .nudStrength.Value = Npc(EditorIndex).Stat(StatType.Strength)
+            .nudEndurance.Value = Npc(EditorIndex).Stat(StatType.Endurance)
+            .nudIntelligence.Value = Npc(EditorIndex).Stat(StatType.Intelligence)
+            .nudSpirit.Value = Npc(EditorIndex).Stat(StatType.Spirit)
+            .nudLuck.Value = Npc(EditorIndex).Stat(StatType.Luck)
+            .nudVitality.Value = Npc(EditorIndex).Stat(StatType.Vitality)
 
             .cmbSkill1.Items.Clear()
             .cmbSkill2.Items.Clear()
@@ -1343,16 +1343,16 @@
 
         frmEditor_Classes.DrawPreview()
 
-        For i = 1 To Stats.Count - 1
+        For i = 1 To StatType.Count - 1
             If Classes(EditorIndex).Stat(i) = 0 Then Classes(EditorIndex).Stat(i) = 1
         Next
 
-        frmEditor_Classes.nudStrength.Value = Classes(EditorIndex).Stat(Stats.Strength)
-        frmEditor_Classes.nudLuck.Value = Classes(EditorIndex).Stat(Stats.Luck)
-        frmEditor_Classes.nudEndurance.Value = Classes(EditorIndex).Stat(Stats.Endurance)
-        frmEditor_Classes.nudIntelligence.Value = Classes(EditorIndex).Stat(Stats.Intelligence)
-        frmEditor_Classes.nudVitality.Value = Classes(EditorIndex).Stat(Stats.Vitality)
-        frmEditor_Classes.nudSpirit.Value = Classes(EditorIndex).Stat(Stats.Spirit)
+        frmEditor_Classes.nudStrength.Value = Classes(EditorIndex).Stat(StatType.Strength)
+        frmEditor_Classes.nudLuck.Value = Classes(EditorIndex).Stat(StatType.Luck)
+        frmEditor_Classes.nudEndurance.Value = Classes(EditorIndex).Stat(StatType.Endurance)
+        frmEditor_Classes.nudIntelligence.Value = Classes(EditorIndex).Stat(StatType.Intelligence)
+        frmEditor_Classes.nudVitality.Value = Classes(EditorIndex).Stat(StatType.Vitality)
+        frmEditor_Classes.nudSpirit.Value = Classes(EditorIndex).Stat(StatType.Spirit)
 
         If Classes(EditorIndex).BaseExp < 10 Then
             frmEditor_Classes.nudBaseExp.Value = 10

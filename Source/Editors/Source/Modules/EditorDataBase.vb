@@ -235,8 +235,8 @@ Module ClientDataBase
 
             For x = 0 To SCREEN_MAPX
                 For y = 0 To SCREEN_MAPY
-                    ReDim Map.Tile(x, y).Layer(0 To MapLayer.Count - 1)
-                    For l = 0 To MapLayer.Count - 1
+                    ReDim Map.Tile(x, y).Layer(0 To LayerType.Count - 1)
+                    For l = 0 To LayerType.Count - 1
                         Map.Tile(x, y).Layer(l).Tileset = 0
                         Map.Tile(x, y).Layer(l).X = 0
                         Map.Tile(x, y).Layer(l).Y = 0
@@ -277,9 +277,9 @@ Module ClientDataBase
         MapNpc(Index).Steps = 0
         MapNpc(Index).Target = 0
         MapNpc(Index).TargetType = 0
-        MapNpc(Index).Vital(Vitals.HP) = 0
-        MapNpc(Index).Vital(Vitals.MP) = 0
-        MapNpc(Index).Vital(Vitals.SP) = 0
+        MapNpc(Index).Vital(VitalType.HP) = 0
+        MapNpc(Index).Vital(VitalType.MP) = 0
+        MapNpc(Index).Vital(VitalType.SP) = 0
         MapNpc(Index).X = 0
         MapNpc(Index).XOffset = 0
         MapNpc(Index).Y = 0
@@ -299,10 +299,10 @@ Module ClientDataBase
         Index = Index - 1
         Item(Index) = Nothing
         Item(Index) = New ItemRec
-        For x = 0 To Stats.Count - 1
+        For x = 0 To StatType.Count - 1
             ReDim Item(Index).Add_Stat(x)
         Next
-        For x = 0 To Stats.Count - 1
+        For x = 0 To StatType.Count - 1
             ReDim Item(Index).Stat_Req(x)
         Next
 
@@ -363,7 +363,7 @@ Module ClientDataBase
         Npc(Index) = Nothing
         Npc(Index).Name = ""
         Npc(Index).AttackSay = ""
-        ReDim Npc(Index).Stat(0 To Stats.Count - 1)
+        ReDim Npc(Index).Stat(0 To StatType.Count - 1)
         ReDim Npc(Index).Skill(0 To MAX_NPC_SKILLS)
 
         ReDim Npc(Index).DropItem(5)

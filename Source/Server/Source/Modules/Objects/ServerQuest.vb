@@ -366,12 +366,12 @@ Public Module ServerQuest
         Order = Buffer.ReadInt32 '1 = accept, 2 = cancel
 
         If Order = 1 Then
-            Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.Started '1
+            Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatusType.Started '1
             Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).ActualTask = 1
             Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).CurrentCount = 0
             PlayerMsg(Index, "New quest accepted: " & Trim$(Quest(QuestNum).Name) & "!", ColorType.BrightGreen)
         ElseIf Order = 2 Then
-            Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.NotStarted '2
+            Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatusType.NotStarted '2
             Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).ActualTask = 1
             Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).CurrentCount = 0
 
@@ -379,7 +379,7 @@ Public Module ServerQuest
 
             If GetPlayerAccess(Index) > 0 AndAlso QuestNum = 1 Then
                 For I = 1 To MAX_QUESTS
-                    Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(I).Status = QuestStatus.NotStarted '2
+                    Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(I).Status = QuestStatusType.NotStarted '2
                     Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(I).ActualTask = 1
                     Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(I).CurrentCount = 0
                 Next
@@ -581,7 +581,7 @@ Public Module ServerQuest
 
     Public Sub ResetQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
         If GetPlayerAccess(Index) > 0 Then
-            Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.NotStarted
+            Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatusType.NotStarted
             Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).ActualTask = 1
             Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).CurrentCount = 0
 
@@ -596,7 +596,7 @@ Public Module ServerQuest
         If QuestInProgress(Index, QuestNum) Then Exit Function
 
         'Check if player has the quest 0 (not started) or 3 (completed but it can be started again)
-        If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.NotStarted OrElse Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.Repeatable Then
+        If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatusType.NotStarted OrElse Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatusType.Repeatable Then
             For i = 1 To Quest(QuestNum).ReqCount
                 'Check if item is needed
                 If Quest(QuestNum).Requirement(i) = 1 Then
@@ -611,7 +611,7 @@ Public Module ServerQuest
                 'Check if previous quest is needed
                 If Quest(QuestNum).Requirement(i) = 2 Then
                     If Quest(QuestNum).RequirementIndex(i) > 0 AndAlso Quest(QuestNum).RequirementIndex(i) <= MAX_QUESTS Then
-                        If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(Quest(QuestNum).Requirement(2)).Status = QuestStatus.NotStarted OrElse Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(Quest(QuestNum).Requirement(2)).Status = QuestStatus.Started Then
+                        If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(Quest(QuestNum).Requirement(2)).Status = QuestStatusType.NotStarted OrElse Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(Quest(QuestNum).Requirement(2)).Status = QuestStatusType.Started Then
                             PlayerMsg(Index, "You need to complete the " & Trim$(Quest(Quest(QuestNum).Requirement(2)).Name) & " quest in order to take this quest!", ColorType.Yellow)
                             Exit Function
                         End If
@@ -643,7 +643,7 @@ Public Module ServerQuest
         QuestInProgress = False
         If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
-        If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.Started Then 'Status=1 means started
+        If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatusType.Started Then 'Status=1 means started
             QuestInProgress = True
         End If
     End Function
@@ -843,9 +843,9 @@ Public Module ServerQuest
 
         'Check if quest is repeatable, set it as completed
         If Quest(QuestNum).Repeat = True Then
-            Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.Repeatable
+            Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatusType.Repeatable
         Else
-            Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.Completed
+            Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatusType.Completed
         End If
         PlayerMsg(Index, Trim$(Quest(QuestNum).Name) & ": quest completed", ColorType.BrightGreen)
 

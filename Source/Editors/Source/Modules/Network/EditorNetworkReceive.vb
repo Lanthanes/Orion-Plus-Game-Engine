@@ -117,11 +117,11 @@ Module EditorNetworkReceive
         ReDim Classes(0 To Max_Classes)
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Stat(0 To Stats.Count - 1)
+            ReDim Classes(i).Stat(0 To StatType.Count - 1)
         Next
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Vital(0 To Vitals.Count - 1)
+            ReDim Classes(i).Vital(0 To VitalType.Count - 1)
         Next
 
         For i = 1 To Max_Classes
@@ -130,9 +130,9 @@ Module EditorNetworkReceive
                 .Name = Trim$(Buffer.ReadString)
                 .Desc = Trim$(Buffer.ReadString)
 
-                .Vital(Vitals.HP) = Buffer.ReadInt32
-                .Vital(Vitals.MP) = Buffer.ReadInt32
-                .Vital(Vitals.SP) = Buffer.ReadInt32
+                .Vital(VitalType.HP) = Buffer.ReadInt32
+                .Vital(VitalType.MP) = Buffer.ReadInt32
+                .Vital(VitalType.SP) = Buffer.ReadInt32
 
                 ' get array size
                 z = Buffer.ReadInt32
@@ -152,12 +152,12 @@ Module EditorNetworkReceive
                     .FemaleSprite(X) = Buffer.ReadInt32
                 Next
 
-                .Stat(Stats.Strength) = Buffer.ReadInt32
-                .Stat(Stats.Endurance) = Buffer.ReadInt32
-                .Stat(Stats.Vitality) = Buffer.ReadInt32
-                .Stat(Stats.Intelligence) = Buffer.ReadInt32
-                .Stat(Stats.Luck) = Buffer.ReadInt32
-                .Stat(Stats.Spirit) = Buffer.ReadInt32
+                .Stat(StatType.Strength) = Buffer.ReadInt32
+                .Stat(StatType.Endurance) = Buffer.ReadInt32
+                .Stat(StatType.Vitality) = Buffer.ReadInt32
+                .Stat(StatType.Intelligence) = Buffer.ReadInt32
+                .Stat(StatType.Luck) = Buffer.ReadInt32
+                .Stat(StatType.Spirit) = Buffer.ReadInt32
 
                 ReDim .StartItem(5)
                 ReDim .StartValue(5)
@@ -231,9 +231,9 @@ Module EditorNetworkReceive
                         Map.Tile(X, Y).Data3 = Buffer.ReadInt32
                         Map.Tile(X, Y).DirBlock = Buffer.ReadInt32
 
-                        ReDim Map.Tile(X, Y).Layer(0 To MapLayer.Count - 1)
+                        ReDim Map.Tile(X, Y).Layer(0 To LayerType.Count - 1)
 
-                        For i = 0 To MapLayer.Count - 1
+                        For i = 0 To LayerType.Count - 1
                             Map.Tile(X, Y).Layer(i).Tileset = Buffer.ReadInt32
                             Map.Tile(X, Y).Layer(i).X = Buffer.ReadInt32
                             Map.Tile(X, Y).Layer(i).Y = Buffer.ReadInt32
@@ -386,8 +386,8 @@ Module EditorNetworkReceive
                 MapNpc(i).X = Buffer.ReadInt32()
                 MapNpc(i).Y = Buffer.ReadInt32()
                 MapNpc(i).Dir = Buffer.ReadInt32()
-                MapNpc(i).Vital(Vitals.HP) = Buffer.ReadInt32()
-                MapNpc(i).Vital(Vitals.MP) = Buffer.ReadInt32()
+                MapNpc(i).Vital(VitalType.HP) = Buffer.ReadInt32()
+                MapNpc(i).Vital(VitalType.MP) = Buffer.ReadInt32()
             Next
 
             If Buffer.ReadInt32 = 1 Then
@@ -446,8 +446,8 @@ Module EditorNetworkReceive
                 .X = Buffer.ReadInt32
                 .Y = Buffer.ReadInt32
                 .Dir = Buffer.ReadInt32
-                .Vital(Vitals.HP) = Buffer.ReadInt32
-                .Vital(Vitals.MP) = Buffer.ReadInt32
+                .Vital(VitalType.HP) = Buffer.ReadInt32
+                .Vital(VitalType.MP) = Buffer.ReadInt32
             End With
 
         Next
@@ -467,8 +467,8 @@ Module EditorNetworkReceive
             .X = Buffer.ReadInt32
             .Y = Buffer.ReadInt32
             .Dir = Buffer.ReadInt32
-            .Vital(Vitals.HP) = Buffer.ReadInt32
-            .Vital(Vitals.MP) = Buffer.ReadInt32
+            .Vital(VitalType.HP) = Buffer.ReadInt32
+            .Vital(VitalType.MP) = Buffer.ReadInt32
         End With
 
         Buffer.Dispose()
@@ -490,7 +490,7 @@ Module EditorNetworkReceive
         ' Update the item
         Item(n).AccessReq = Buffer.ReadInt32()
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Item(n).Add_Stat(i) = Buffer.ReadInt32()
         Next
 
@@ -517,7 +517,7 @@ Module EditorNetworkReceive
         Item(n).Stackable = Buffer.ReadInt32()
         Item(n).Description = Trim$(Buffer.ReadString())
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Item(n).Stat_Req(i) = Buffer.ReadInt32()
         Next
 
@@ -581,7 +581,7 @@ Module EditorNetworkReceive
         Npc(i).SpawnSecs = Buffer.ReadInt32()
         Npc(i).Sprite = Buffer.ReadInt32()
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Npc(i).Stat(i) = Buffer.ReadInt32()
         Next
 
@@ -748,11 +748,11 @@ Module EditorNetworkReceive
         ReDim Classes(0 To Max_Classes)
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Stat(0 To Stats.Count - 1)
+            ReDim Classes(i).Stat(0 To StatType.Count - 1)
         Next
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Vital(0 To Vitals.Count - 1)
+            ReDim Classes(i).Vital(0 To VitalType.Count - 1)
         Next
 
         For i = 1 To Max_Classes
@@ -761,9 +761,9 @@ Module EditorNetworkReceive
                 .Name = Trim(Buffer.ReadString)
                 .Desc = Trim$(Buffer.ReadString)
 
-                .Vital(Vitals.HP) = Buffer.ReadInt32
-                .Vital(Vitals.MP) = Buffer.ReadInt32
-                .Vital(Vitals.SP) = Buffer.ReadInt32
+                .Vital(VitalType.HP) = Buffer.ReadInt32
+                .Vital(VitalType.MP) = Buffer.ReadInt32
+                .Vital(VitalType.SP) = Buffer.ReadInt32
 
                 ' get array size
                 z = Buffer.ReadInt32
@@ -783,12 +783,12 @@ Module EditorNetworkReceive
                     .FemaleSprite(x) = Buffer.ReadInt32
                 Next
 
-                .Stat(Stats.Strength) = Buffer.ReadInt32
-                .Stat(Stats.Endurance) = Buffer.ReadInt32
-                .Stat(Stats.Vitality) = Buffer.ReadInt32
-                .Stat(Stats.Intelligence) = Buffer.ReadInt32
-                .Stat(Stats.Luck) = Buffer.ReadInt32
-                .Stat(Stats.Spirit) = Buffer.ReadInt32
+                .Stat(StatType.Strength) = Buffer.ReadInt32
+                .Stat(StatType.Endurance) = Buffer.ReadInt32
+                .Stat(StatType.Vitality) = Buffer.ReadInt32
+                .Stat(StatType.Intelligence) = Buffer.ReadInt32
+                .Stat(StatType.Luck) = Buffer.ReadInt32
+                .Stat(StatType.Spirit) = Buffer.ReadInt32
 
                 ReDim .StartItem(5)
                 ReDim .StartValue(5)
@@ -822,7 +822,7 @@ Module EditorNetworkReceive
             ' Update the item
             Item(n).AccessReq = Buffer.ReadInt32()
 
-            For z = 0 To Stats.Count - 1
+            For z = 0 To StatType.Count - 1
                 Item(n).Add_Stat(z) = Buffer.ReadInt32()
             Next
 
@@ -849,7 +849,7 @@ Module EditorNetworkReceive
             Item(n).Stackable = Buffer.ReadInt32()
             Item(n).Description = Trim$(Buffer.ReadString())
 
-            For z = 0 To Stats.Count - 1
+            For z = 0 To StatType.Count - 1
                 Item(n).Stat_Req(z) = Buffer.ReadInt32()
             Next
 
@@ -942,7 +942,7 @@ Module EditorNetworkReceive
             Npc(n).SpawnSecs = Buffer.ReadInt32()
             Npc(n).Sprite = Buffer.ReadInt32()
 
-            For z = 0 To Stats.Count - 1
+            For z = 0 To StatType.Count - 1
                 Npc(n).Stat(z) = Buffer.ReadInt32()
             Next
 
@@ -1120,7 +1120,7 @@ Module EditorNetworkReceive
         myXml.WriteString("Resources", "ResourcesNum", Buffer.ReadString())
 
         For Prefab = 1 To TilePrefab.Count - 1
-            ReDim Tile(Prefab).Layer(0 To MapLayer.Count - 1)
+            ReDim Tile(Prefab).Layer(0 To LayerType.Count - 1)
 
             Layer = Buffer.ReadInt32()
             myXml.WriteString("Prefab" & Prefab, "Layer" & Layer & "Tileset", Buffer.ReadInt32)

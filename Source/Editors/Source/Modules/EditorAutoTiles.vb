@@ -59,8 +59,8 @@ Public Module EditorAutoTiles
     '\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     Public Sub PlaceAutotile(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal tileQuarter As Byte, ByVal autoTileLetter As String)
 
-        If layerNum > MapLayer.Count - 1 Then
-            layerNum = layerNum - (MapLayer.Count - 1)
+        If layerNum > LayerType.Count - 1 Then
+            layerNum = layerNum - (LayerType.Count - 1)
             With Autotile(X, Y).ExLayer(layerNum).QuarterTile(tileQuarter)
                 Select Case autoTileLetter
                     Case "a"
@@ -207,8 +207,8 @@ Public Module EditorAutoTiles
         ReDim Autotile(0 To Map.MaxX, 0 To Map.MaxY)
         For X = 0 To Map.MaxX
             For Y = 0 To Map.MaxY
-                ReDim Autotile(X, Y).Layer(0 To MapLayer.Count - 1)
-                For i = 0 To MapLayer.Count - 1
+                ReDim Autotile(X, Y).Layer(0 To LayerType.Count - 1)
+                For i = 0 To LayerType.Count - 1
                     ReDim Autotile(X, Y).Layer(i).srcX(0 To 4)
                     ReDim Autotile(X, Y).Layer(i).srcY(0 To 4)
                     ReDim Autotile(X, Y).Layer(i).QuarterTile(0 To 4)
@@ -284,7 +284,7 @@ Public Module EditorAutoTiles
 
         For X = 0 To Map.MaxX
             For Y = 0 To Map.MaxY
-                For layerNum = 1 To MapLayer.Count - 1
+                For layerNum = 1 To LayerType.Count - 1
                     ' calculate the subtile positions and place them
                     CalculateAutotile(X, Y, layerNum)
                     ' cache the rendering state of the tiles and set them
@@ -309,7 +309,7 @@ Public Module EditorAutoTiles
                 Exit Sub
             End If
             ' check if it's a key - hide mask if key is closed
-            If layerNum = MapLayer.Mask Then
+            If layerNum = LayerType.Mask Then
                 If .Type = TileType.Key Then
                     If TempTile(X, Y).DoorOpen = False Then
                         Autotile(X, Y).Layer(layerNum).renderState = RENDER_STATE_NONE
@@ -744,7 +744,7 @@ Public Module EditorAutoTiles
         ' we'll exit out early if true
         Dim exTile As Boolean
 
-        If layerNum > MapLayer.Count - 1 Then exTile = True : layerNum = layerNum - (MapLayer.Count - 1)
+        If layerNum > LayerType.Count - 1 Then exTile = True : layerNum = layerNum - (LayerType.Count - 1)
         CheckTileMatch = True
         ' if it's off the map then set it as autotile and exit out early
         If X2 < 0 OrElse X2 > Map.MaxX OrElse Y2 < 0 OrElse Y2 > Map.MaxY Then

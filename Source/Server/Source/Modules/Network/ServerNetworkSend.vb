@@ -72,9 +72,9 @@ Module ServerNetworkSend
             Buffer.WriteString(GetClassName(i))
             Buffer.WriteString(Trim$(Classes(i).Desc))
 
-            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.HP))
-            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.MP))
-            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.SP))
+            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.HP))
+            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.MP))
+            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.SP))
 
             ' set sprite array size
             n = UBound(Classes(i).MaleSprite)
@@ -94,12 +94,12 @@ Module ServerNetworkSend
                 Buffer.WriteInt32(Classes(i).FemaleSprite(q))
             Next
 
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Strength))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Endurance))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Vitality))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Luck))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Intelligence))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Spirit))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Strength))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Endurance))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Vitality))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Luck))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Intelligence))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Spirit))
 
             For q = 1 To 5
                 Buffer.WriteInt32(Classes(i).StartItem(q))
@@ -195,9 +195,9 @@ Module ServerNetworkSend
             Buffer.WriteString(Trim$(GetClassName(i)))
             Buffer.WriteString(Trim$(Classes(i).Desc))
 
-            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.HP))
-            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.MP))
-            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.SP))
+            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.HP))
+            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.MP))
+            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.SP))
 
             ' set sprite array size
             n = UBound(Classes(i).MaleSprite)
@@ -221,12 +221,12 @@ Module ServerNetworkSend
                 Buffer.WriteInt32(Classes(i).FemaleSprite(q))
             Next
 
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Strength))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Endurance))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Vitality))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Intelligence))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Luck))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Spirit))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Strength))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Endurance))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Vitality))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Intelligence))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Luck))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Spirit))
 
             For q = 1 To 5
                 Buffer.WriteInt32(Classes(i).StartItem(q))
@@ -258,9 +258,9 @@ Module ServerNetworkSend
             Buffer.WriteString(GetClassName(i))
             Buffer.WriteString(Trim$(Classes(i).Desc))
 
-            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.HP))
-            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.MP))
-            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.SP))
+            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.HP))
+            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.MP))
+            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.SP))
 
             ' set sprite array size
             n = UBound(Classes(i).MaleSprite)
@@ -284,12 +284,12 @@ Module ServerNetworkSend
                 Buffer.WriteInt32(Classes(i).FemaleSprite(q))
             Next
 
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Strength))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Endurance))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Vitality))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Intelligence))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Luck))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Spirit))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Strength))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Endurance))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Vitality))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Intelligence))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Luck))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Spirit))
 
             For q = 1 To 5
                 Buffer.WriteInt32(Classes(i).StartItem(q))
@@ -323,7 +323,7 @@ Module ServerNetworkSend
             Buffer.WriteString(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(i).Prefix)
             Buffer.WriteString(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(i).Suffix)
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(i).Rarity)
-            For n = 1 To Stats.Count - 1
+            For n = 1 To StatType.Count - 1
                 Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(i).Stat(n))
             Next
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(i).Damage)
@@ -358,7 +358,7 @@ Module ServerNetworkSend
         Addlog("Sent SMSG: SUpdateItem", PACKET_LOG)
         Console.WriteLine("Sent SMSG: SUpdateItem")
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Buffer.WriteInt32(Item(itemNum).Add_Stat(i))
         Next
 
@@ -385,7 +385,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Item(itemNum).Stackable)
         Buffer.WriteString(Trim$(Item(itemNum).Description))
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Buffer.WriteInt32(Item(itemNum).Stat_Req(i))
         Next
 
@@ -425,7 +425,7 @@ Module ServerNetworkSend
         Addlog("Sent SMSG: SUpdateItem To All", PACKET_LOG)
         Console.WriteLine("Sent SMSG: SUpdateItem To All")
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Buffer.WriteInt32(Item(itemNum).Add_Stat(i))
         Next
 
@@ -452,7 +452,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Item(itemNum).Stackable)
         Buffer.WriteString(Trim$(Item(itemNum).Description))
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Buffer.WriteInt32(Item(itemNum).Stat_Req(i))
         Next
 
@@ -587,7 +587,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Npc(NpcNum).SpawnSecs)
         Buffer.WriteInt32(Npc(NpcNum).Sprite)
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Buffer.WriteInt32(Npc(NpcNum).Stat(i))
         Next
 
@@ -632,7 +632,7 @@ Module ServerNetworkSend
         Buffer.WriteInt32(Npc(NpcNum).SpawnSecs)
         Buffer.WriteInt32(Npc(NpcNum).Sprite)
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Buffer.WriteInt32(Npc(NpcNum).Stat(i))
         Next
 
@@ -884,12 +884,12 @@ Module ServerNetworkSend
 
         Buffer.WriteInt32(ServerPackets.SPlayerStats)
         Buffer.WriteInt32(Index)
-        Buffer.WriteInt32(GetPlayerStat(Index, Stats.Strength))
-        Buffer.WriteInt32(GetPlayerStat(Index, Stats.Endurance))
-        Buffer.WriteInt32(GetPlayerStat(Index, Stats.Vitality))
-        Buffer.WriteInt32(GetPlayerStat(Index, Stats.Luck))
-        Buffer.WriteInt32(GetPlayerStat(Index, Stats.Intelligence))
-        Buffer.WriteInt32(GetPlayerStat(Index, Stats.Spirit))
+        Buffer.WriteInt32(GetPlayerStat(Index, StatType.Strength))
+        Buffer.WriteInt32(GetPlayerStat(Index, StatType.Endurance))
+        Buffer.WriteInt32(GetPlayerStat(Index, StatType.Vitality))
+        Buffer.WriteInt32(GetPlayerStat(Index, StatType.Luck))
+        Buffer.WriteInt32(GetPlayerStat(Index, StatType.Intelligence))
+        Buffer.WriteInt32(GetPlayerStat(Index, StatType.Spirit))
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SPlayerStats", PACKET_LOG)
@@ -965,26 +965,26 @@ Module ServerNetworkSend
     End Sub
 
     Sub SendVitals(ByVal Index As Integer)
-        For i = 1 To Vitals.Count - 1
+        For i = 1 To VitalType.Count - 1
             SendVital(Index, i)
         Next
     End Sub
 
-    Sub SendVital(ByVal Index As Integer, ByVal Vital As Vitals)
+    Sub SendVital(ByVal Index As Integer, ByVal Vital As VitalType)
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         ' Get our packet type.
         Select Case Vital
-            Case Vitals.HP
+            Case VitalType.HP
                 Buffer.WriteInt32(ServerPackets.SPlayerHp)
                 Addlog("Sent SMSG: SPlayerHp", PACKET_LOG)
                 Console.WriteLine("Sent SMSG: SPlayerHp")
-            Case Vitals.MP
+            Case VitalType.MP
                 Buffer.WriteInt32(ServerPackets.SPlayerMp)
                 Addlog("Sent SMSG: SPlayerMp", PACKET_LOG)
                 Console.WriteLine("Sent SMSG: SPlayerMp")
-            Case Vitals.SP
+            Case VitalType.SP
                 Buffer.WriteInt32(ServerPackets.SPlayerSp)
                 Addlog("Sent SMSG: SPlayerSp", PACKET_LOG)
                 Console.WriteLine("Sent SMSG: SPlayerSp")
@@ -1054,7 +1054,7 @@ Module ServerNetworkSend
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(i).Damage)
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(i).Speed)
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(i).Rarity)
-            For n = 1 To Stats.Count - 1
+            For n = 1 To StatType.Count - 1
                 Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(i).Stat(n))
             Next
         Next
@@ -1110,7 +1110,7 @@ Module ServerNetworkSend
                     Buffer.WriteInt32(Map(MapNum).Tile(x, y).Data2)
                     Buffer.WriteInt32(Map(MapNum).Tile(x, y).Data3)
                     Buffer.WriteInt32(Map(MapNum).Tile(x, y).DirBlock)
-                    For i = 0 To MapLayer.Count - 1
+                    For i = 0 To LayerType.Count - 1
                         Buffer.WriteInt32(Map(MapNum).Tile(x, y).Layer(i).Tileset)
                         Buffer.WriteInt32(Map(MapNum).Tile(x, y).Layer(i).X)
                         Buffer.WriteInt32(Map(MapNum).Tile(x, y).Layer(i).Y)
@@ -1245,8 +1245,8 @@ Module ServerNetworkSend
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).X)
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Y)
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Dir)
-            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(Vitals.HP))
-            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(Vitals.MP))
+            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(VitalType.HP))
+            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(VitalType.MP))
         Next
 
         'send Resource cache
@@ -1318,7 +1318,7 @@ Module ServerNetworkSend
         Addlog("Sent SMSG: SPlayerData", PACKET_LOG)
         Console.WriteLine("Sent SMSG: SPlayerData")
 
-        For i = 1 To Stats.Count - 1
+        For i = 1 To StatType.Count - 1
             Buffer.WriteInt32(GetPlayerStat(Index, i))
         Next
 
@@ -1376,8 +1376,8 @@ Module ServerNetworkSend
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).X)
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Y)
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Dir)
-            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(Vitals.HP))
-            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(Vitals.MP))
+            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(VitalType.HP))
+            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(VitalType.MP))
         Next
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
@@ -1401,8 +1401,8 @@ Module ServerNetworkSend
             Buffer.WriteInt32(.X)
             Buffer.WriteInt32(.Y)
             Buffer.WriteInt32(.Dir)
-            Buffer.WriteInt32(.Vital(Vitals.HP))
-            Buffer.WriteInt32(.Vital(Vitals.MP))
+            Buffer.WriteInt32(.Vital(VitalType.HP))
+            Buffer.WriteInt32(.Vital(VitalType.MP))
         End With
 
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
@@ -1583,7 +1583,7 @@ Module ServerNetworkSend
         Addlog("Sent SMSG: SMapNpcVitals", PACKET_LOG)
         Console.WriteLine("Sent SMSG: SMapNpcVitals")
 
-        For i = 1 To Vitals.Count - 1
+        For i = 1 To VitalType.Count - 1
             Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Vital(i))
         Next
 
@@ -1759,7 +1759,7 @@ Module ServerNetworkSend
         Buffer.WriteString(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvSlot).Prefix)
         Buffer.WriteString(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvSlot).Suffix)
         Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvSlot).Rarity)
-        For n = 1 To Stats.Count - 1
+        For n = 1 To StatType.Count - 1
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvSlot).Stat(n))
         Next n
         Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvSlot).Damage)
@@ -1837,7 +1837,7 @@ Module ServerNetworkSend
             Buffer.WriteInt32(Bank(Index).ItemRand(i).Damage)
             Buffer.WriteInt32(Bank(Index).ItemRand(i).Speed)
 
-            For x = 1 To Stats.Count - 1
+            For x = 1 To StatType.Count - 1
                 Buffer.WriteInt32(Bank(Index).ItemRand(i).Stat(x))
             Next
         Next
@@ -2244,7 +2244,7 @@ Module ServerNetworkSend
         Buffer.WriteString(myXml.ReadString("Resources", "ResourcesNum"))
 
         For Prefab = 1 To TilePrefab.Count - 1
-            For Layer = 1 To MapLayer.Count - 1
+            For Layer = 1 To LayerType.Count - 1
                 If Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "Tileset")) > 0 Then
                     Buffer.WriteInt32(Layer)
                     Buffer.WriteInt32(Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "Tileset")))

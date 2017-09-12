@@ -36,13 +36,13 @@
     End Enum
 
     ''' <Summary> Sex Constant </Summary>
-    Enum Sex As Byte
+    Enum SexType As Byte
         Male
         Female
     End Enum
 
     ''' <Summary> Map Moral Constant </Summary>
-    Enum MapMoral As Byte
+    Enum MapMoralType As Byte
         None
         Safe
         Indoors
@@ -95,7 +95,7 @@
     End Enum
 
     ''' <Summary> Direction Constant </Summary>
-    Enum Direction As Byte
+    Enum DirectionType As Byte
         Up
         Down
         Left
@@ -155,7 +155,7 @@
     End Enum
 
     ''' <Summary> Stats used by Players, Npcs and Classes </Summary>
-    Public Enum Stats As Byte
+    Public Enum StatType As Byte
         Strength = 1
         Endurance
         Vitality
@@ -167,7 +167,7 @@
     End Enum
 
     ''' <Summary> Vitals used by Players, Npcs, and Classes </Summary>
-    Public Enum Vitals As Byte
+    Public Enum VitalType As Byte
         HP = 1
         MP
         SP
@@ -188,7 +188,7 @@
     End Enum
 
     ''' <Summary> Layers in a map </Summary>
-    Public Enum MapLayer As Byte
+    Public Enum LayerType As Byte
         Ground = 1
         Mask
         Mask2
@@ -235,7 +235,7 @@
         RARITY_EPIC
     End Enum
 
-    Public Enum Weather
+    Public Enum WeatherType
         None
         Rain
         Snow
@@ -257,7 +257,7 @@
         TalkEvent
     End Enum
 
-    Public Enum QuestStatus
+    Public Enum QuestStatusType
         NotStarted
         Started
         Completed

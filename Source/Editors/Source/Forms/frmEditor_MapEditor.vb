@@ -600,7 +600,7 @@ Public Class FrmEditor_MapEditor
             ReDim tempArr(0 To .MaxX, 0 To .MaxY)
             For X = 0 To .MaxX
                 For Y = 0 To .MaxY
-                    ReDim tempArr(X, Y).Layer(0 To MapLayer.Count - 1)
+                    ReDim tempArr(X, Y).Layer(0 To LayerType.Count - 1)
 
                     tempArr(X, Y).Data1 = .Tile(X, Y).Data1
                     tempArr(X, Y).Data2 = .Tile(X, Y).Data2
@@ -608,7 +608,7 @@ Public Class FrmEditor_MapEditor
                     tempArr(X, Y).DirBlock = .Tile(X, Y).DirBlock
                     tempArr(X, Y).Type = .Tile(X, Y).Type
 
-                    For i = 1 To MapLayer.Count - 1
+                    For i = 1 To LayerType.Count - 1
                         tempArr(X, Y).Layer(i).AutoTile = .Tile(X, Y).Layer(i).AutoTile
                         tempArr(X, Y).Layer(i).Tileset = .Tile(X, Y).Layer(i).Tileset
                         tempArr(X, Y).Layer(i).X = .Tile(X, Y).Layer(i).X
@@ -631,9 +631,9 @@ Public Class FrmEditor_MapEditor
 
             For X = 0 To .MaxX
                 For Y = 0 To .MaxY
-                    ReDim Preserve .Tile(X, Y).Layer(0 To MapLayer.Count - 1)
+                    ReDim Preserve .Tile(X, Y).Layer(0 To LayerType.Count - 1)
 
-                    ReDim Preserve Autotile(X, Y).Layer(0 To MapLayer.Count - 1)
+                    ReDim Preserve Autotile(X, Y).Layer(0 To LayerType.Count - 1)
 
                     If X <= x2 Then
                         If Y <= y2 Then
@@ -643,7 +643,7 @@ Public Class FrmEditor_MapEditor
                             .Tile(X, Y).DirBlock = tempArr(X, Y).DirBlock
                             .Tile(X, Y).Type = tempArr(X, Y).Type
 
-                            For i = 1 To MapLayer.Count - 1
+                            For i = 1 To LayerType.Count - 1
                                 .Tile(X, Y).Layer(i).AutoTile = tempArr(X, Y).Layer(i).AutoTile
                                 .Tile(X, Y).Layer(i).Tileset = tempArr(X, Y).Layer(i).Tileset
                                 .Tile(X, Y).Layer(i).X = tempArr(X, Y).Layer(i).X

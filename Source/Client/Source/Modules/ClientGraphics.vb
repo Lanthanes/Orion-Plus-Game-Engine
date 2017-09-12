@@ -1072,16 +1072,16 @@ Module ClientGraphics
         Else
             ' If not attacking, walk normally
             Select Case GetPlayerDir(Index)
-                Case Direction.Up
+                Case DirectionType.Up
 
                     If (Player(Index).YOffset > 8) Then Anim = Player(Index).Steps
-                Case Direction.Down
+                Case DirectionType.Down
 
                     If (Player(Index).YOffset < -8) Then Anim = Player(Index).Steps
-                Case Direction.Left
+                Case DirectionType.Left
 
                     If (Player(Index).XOffset > 8) Then Anim = Player(Index).Steps
-                Case Direction.Right
+                Case DirectionType.Right
 
                     If (Player(Index).XOffset < -8) Then Anim = Player(Index).Steps
             End Select
@@ -1099,13 +1099,13 @@ Module ClientGraphics
 
         ' Set the left
         Select Case GetPlayerDir(Index)
-            Case Direction.Up
+            Case DirectionType.Up
                 spriteleft = 3
-            Case Direction.Right
+            Case DirectionType.Right
                 spriteleft = 2
-            Case Direction.Down
+            Case DirectionType.Down
                 spriteleft = 0
-            Case Direction.Left
+            Case DirectionType.Left
                 spriteleft = 1
         End Select
 
@@ -1221,13 +1221,13 @@ Module ClientGraphics
         Else
             ' If not attacking, walk normally
             Select Case MapNpc(MapNpcNum).Dir
-                Case Direction.Up
+                Case DirectionType.Up
                     If (MapNpc(MapNpcNum).YOffset > 8) Then anim = MapNpc(MapNpcNum).Steps
-                Case Direction.Down
+                Case DirectionType.Down
                     If (MapNpc(MapNpcNum).YOffset < -8) Then anim = MapNpc(MapNpcNum).Steps
-                Case Direction.Left
+                Case DirectionType.Left
                     If (MapNpc(MapNpcNum).XOffset > 8) Then anim = MapNpc(MapNpcNum).Steps
-                Case Direction.Right
+                Case DirectionType.Right
                     If (MapNpc(MapNpcNum).XOffset < -8) Then anim = MapNpc(MapNpcNum).Steps
             End Select
         End If
@@ -1242,13 +1242,13 @@ Module ClientGraphics
 
         ' Set the left
         Select Case MapNpc(MapNpcNum).Dir
-            Case Direction.Up
+            Case DirectionType.Up
                 spriteleft = 3
-            Case Direction.Right
+            Case DirectionType.Right
                 spriteleft = 2
-            Case Direction.Down
+            Case DirectionType.Down
                 spriteleft = 0
-            Case Direction.Left
+            Case DirectionType.Left
                 spriteleft = 1
         End Select
 
@@ -1272,10 +1272,10 @@ Module ClientGraphics
 
         If Npc(MapNpc(MapNpcNum).Num).Behaviour = NpcBehavior.Quest Then
             If CanStartQuest(Npc(MapNpc(MapNpcNum).Num).QuestNum) Then
-                If Player(MyIndex).PlayerQuest(Npc(MapNpc(MapNpcNum).Num).QuestNum).Status = QuestStatus.NotStarted Then
+                If Player(MyIndex).PlayerQuest(Npc(MapNpc(MapNpcNum).Num).QuestNum).Status = QuestStatusType.NotStarted Then
                     DrawEmotes(X, Y, 5)
                 End If
-            ElseIf Player(MyIndex).PlayerQuest(Npc(MapNpc(MapNpcNum).Num).QuestNum).Status = QuestStatus.Started Then
+            ElseIf Player(MyIndex).PlayerQuest(Npc(MapNpc(MapNpcNum).Num).QuestNum).Status = QuestStatusType.Started Then
                 DrawEmotes(X, Y, 9)
             End If
         End If
@@ -1457,7 +1457,7 @@ Module ClientGraphics
         If Map.Tile Is Nothing Then Exit Sub
         If MapData = False Then Exit Sub
 
-        For i = MapLayer.Ground To MapLayer.Mask2
+        For i = LayerType.Ground To LayerType.Mask2
             If Map.Tile(X, Y).Layer Is Nothing Then Exit Sub
             ' skip tile if tileset isn't set
             If Map.Tile(X, Y).Layer(i).Tileset > 0 AndAlso Map.Tile(X, Y).Layer(i).Tileset <= NumTileSets Then
@@ -1499,7 +1499,7 @@ Module ClientGraphics
         If Map.Tile Is Nothing Then Exit Sub
         If MapData = False Then Exit Sub
 
-        For i = MapLayer.Fringe To MapLayer.Fringe2
+        For i = LayerType.Fringe To LayerType.Fringe2
             If Map.Tile(X, Y).Layer Is Nothing Then Exit Sub
             ' skip tile if tileset isn't set
             If Map.Tile(X, Y).Layer(i).Tileset > 0 AndAlso Map.Tile(X, Y).Layer(i).Tileset <= NumTileSets Then
@@ -2135,7 +2135,7 @@ Module ClientGraphics
     End Sub
 
     Public Sub DrawPanorama(ByVal Index As Integer)
-        If Map.Moral = MapMoral.Indoors Then Exit Sub
+        If Map.Moral = MapMoralType.Indoors Then Exit Sub
 
         If Index < 1 OrElse Index > NumParallax Then Exit Sub
 
@@ -2160,7 +2160,7 @@ Module ClientGraphics
         Dim horz As Integer = 0
         Dim vert As Integer = 0
 
-        If Map.Moral = MapMoral.Indoors Then Exit Sub
+        If Map.Moral = MapMoralType.Indoors Then Exit Sub
 
         If Index < 1 OrElse Index > NumParallax Then Exit Sub
 
@@ -2264,9 +2264,9 @@ Module ClientGraphics
                         ' lock to npc
                         tmpX = MapNpc(i).X * PIC_X + MapNpc(i).XOffset
                         tmpY = MapNpc(i).Y * PIC_Y + MapNpc(i).YOffset + 35
-                        If MapNpc(i).Vital(Vitals.HP) > 0 Then
+                        If MapNpc(i).Vital(VitalType.HP) > 0 Then
                             ' calculate the width to fill
-                            barWidth = ((MapNpc(i).Vital(Vitals.HP) / (Npc(MapNpc(i).Num).Hp) * 32))
+                            barWidth = ((MapNpc(i).Vital(VitalType.HP) / (Npc(MapNpc(i).Num).Hp) * 32))
                             ' draw bars
                             rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
                             Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
@@ -2274,9 +2274,9 @@ Module ClientGraphics
                             rectShape.FillColor = SFML.Graphics.Color.Red
                             GameWindow.Draw(rectShape)
 
-                            If MapNpc(i).Vital(Vitals.MP) > 0 Then
+                            If MapNpc(i).Vital(VitalType.MP) > 0 Then
                                 ' calculate the width to fill
-                                barWidth = ((MapNpc(i).Vital(Vitals.MP) / (Npc(MapNpc(i).Num).Stat(Stats.Intelligence) * 2) * 32))
+                                barWidth = ((MapNpc(i).Vital(VitalType.MP) / (Npc(MapNpc(i).Num).Stat(StatType.Intelligence) * 2) * 32))
                                 ' draw bars
                                 rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
                                 Dim rectShape2 As New RectangleShape(New Vector2f(barWidth, 4))
@@ -2429,7 +2429,7 @@ Module ClientGraphics
                 ' check if NPC exists
                 If MapNpc(lockindex).Num > 0 Then
                     ' check if alive
-                    If MapNpc(lockindex).Vital(Vitals.HP) > 0 Then
+                    If MapNpc(lockindex).Vital(VitalType.HP) > 0 Then
                         ' exists, is alive, set x & y
                         X = (MapNpc(lockindex).X * PIC_X) + 16 - (width / 2) + MapNpc(lockindex).XOffset
                         Y = (MapNpc(lockindex).Y * PIC_Y) + 16 - (height / 2) + MapNpc(lockindex).YOffset
@@ -2885,17 +2885,17 @@ Module ClientGraphics
         DrawText(CharWindowX + 250, CharWindowY + 14, Strings.Get("charwindow", "charstatslbl"), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
 
         'strength stat
-        DrawText(CharWindowX + 210, CharWindowY + 30, Strings.Get("charwindow", "charstrength") & GetPlayerStat(MyIndex, Stats.Strength), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
+        DrawText(CharWindowX + 210, CharWindowY + 30, Strings.Get("charwindow", "charstrength") & GetPlayerStat(MyIndex, StatType.Strength), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
         'endurance stat
-        DrawText(CharWindowX + 210, CharWindowY + 50, Strings.Get("charwindow", "charendurance") & GetPlayerStat(MyIndex, Stats.Endurance), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
+        DrawText(CharWindowX + 210, CharWindowY + 50, Strings.Get("charwindow", "charendurance") & GetPlayerStat(MyIndex, StatType.Endurance), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
         'vitality stat
-        DrawText(CharWindowX + 210, CharWindowY + 70, Strings.Get("charwindow", "charvitality") & GetPlayerStat(MyIndex, Stats.Vitality), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
+        DrawText(CharWindowX + 210, CharWindowY + 70, Strings.Get("charwindow", "charvitality") & GetPlayerStat(MyIndex, StatType.Vitality), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
         'intelligence stat
-        DrawText(CharWindowX + 210, CharWindowY + 90, Strings.Get("charwindow", "charintelligence") & GetPlayerStat(MyIndex, Stats.Intelligence), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
+        DrawText(CharWindowX + 210, CharWindowY + 90, Strings.Get("charwindow", "charintelligence") & GetPlayerStat(MyIndex, StatType.Intelligence), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
         'luck stat
-        DrawText(CharWindowX + 210, CharWindowY + 110, Strings.Get("charwindow", "charluck") & GetPlayerStat(MyIndex, Stats.Luck), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
+        DrawText(CharWindowX + 210, CharWindowY + 110, Strings.Get("charwindow", "charluck") & GetPlayerStat(MyIndex, StatType.Luck), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
         'spirit stat
-        DrawText(CharWindowX + 210, CharWindowY + 130, Strings.Get("charwindow", "charspirit") & GetPlayerStat(MyIndex, Stats.Spirit), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
+        DrawText(CharWindowX + 210, CharWindowY + 130, Strings.Get("charwindow", "charspirit") & GetPlayerStat(MyIndex, StatType.Spirit), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
 
         If GetPlayerPOINTS(MyIndex) > 0 Then
             'strength upgrade
@@ -3940,7 +3940,7 @@ NextLoop:
     Sub DrawNight()
         Dim X As Integer, Y As Integer
 
-        If Map.Moral = MapMoral.Indoors Then Exit Sub
+        If Map.Moral = MapMoralType.Indoors Then Exit Sub
 
         Select Case Time.Instance.TimeOfDay
             Case TimeOfDay.Dawn

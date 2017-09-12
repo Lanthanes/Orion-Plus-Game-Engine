@@ -26,16 +26,16 @@ Module ServerPlayers
         If Not IsSkill Then
             ' Check if at same coordinates
             Select Case GetPlayerDir(Attacker)
-                Case Direction.Up
+                Case DirectionType.Up
 
                     If Not ((GetPlayerY(Victim) + 1 = GetPlayerY(Attacker)) AndAlso (GetPlayerX(Victim) = GetPlayerX(Attacker))) Then Exit Function
-                Case Direction.Down
+                Case DirectionType.Down
 
                     If Not ((GetPlayerY(Victim) - 1 = GetPlayerY(Attacker)) AndAlso (GetPlayerX(Victim) = GetPlayerX(Attacker))) Then Exit Function
-                Case Direction.Left
+                Case DirectionType.Left
 
                     If Not ((GetPlayerY(Victim) = GetPlayerY(Attacker)) AndAlso (GetPlayerX(Victim) + 1 = GetPlayerX(Attacker))) Then Exit Function
-                Case Direction.Right
+                Case DirectionType.Right
 
                     If Not ((GetPlayerY(Victim) = GetPlayerY(Attacker)) AndAlso (GetPlayerX(Victim) - 1 = GetPlayerX(Attacker))) Then Exit Function
                 Case Else
@@ -44,7 +44,7 @@ Module ServerPlayers
         End If
 
         ' Check if map is attackable
-        If Not Map(GetPlayerMap(Attacker)).Moral = MapMoral.None Then
+        If Not Map(GetPlayerMap(Attacker)).Moral = MapMoralType.None Then
             If GetPlayerPK(Victim) = False Then
                 PlayerMsg(Attacker, "This is a safe zone!", ColorType.BrightRed)
                 Exit Function
@@ -52,7 +52,7 @@ Module ServerPlayers
         End If
 
         ' Make sure they have more then 0 hp
-        If GetPlayerVital(Victim, Vitals.HP) <= 0 Then Exit Function
+        If GetPlayerVital(Victim, VitalType.HP) <= 0 Then Exit Function
 
         ' Check to make sure that they dont have access
         If GetPlayerAccess(Attacker) > AdminType.Monitor Then
@@ -93,7 +93,7 @@ Module ServerPlayers
             n = Int(Rnd() * 2)
 
             If n = 1 Then
-                i = (GetPlayerStat(Index, Stats.Endurance) \ 2) + (GetPlayerLevel(Index) \ 2)
+                i = (GetPlayerStat(Index, StatType.Endurance) \ 2) + (GetPlayerLevel(Index) \ 2)
                 n = Int(Rnd() * 100) + 1
 
                 If n <= i Then
@@ -113,7 +113,7 @@ Module ServerPlayers
             n = (Rnd()) * 2
 
             If n = 1 Then
-                i = (GetPlayerStat(Index, Stats.Strength) \ 2) + (GetPlayerLevel(Index) \ 2)
+                i = (GetPlayerStat(Index, StatType.Strength) \ 2) + (GetPlayerLevel(Index) \ 2)
                 n = Int(Rnd() * 100) + 1
 
                 If n <= i Then
@@ -136,9 +136,9 @@ Module ServerPlayers
 
         If GetPlayerEquipment(Index, EquipmentType.Weapon) > 0 Then
             weaponNum = GetPlayerEquipment(Index, EquipmentType.Weapon)
-            GetPlayerDamage = (GetPlayerStat(Index, Stats.Strength) * 2) + (Item(weaponNum).Data2 * 2) + (GetPlayerLevel(Index) * 3) + Random(0, 20)
+            GetPlayerDamage = (GetPlayerStat(Index, StatType.Strength) * 2) + (Item(weaponNum).Data2 * 2) + (GetPlayerLevel(Index) * 3) + Random(0, 20)
         Else
-            GetPlayerDamage = (GetPlayerStat(Index, Stats.Strength) * 2) + (GetPlayerLevel(Index) * 3) + Random(0, 20)
+            GetPlayerDamage = (GetPlayerStat(Index, StatType.Strength) * 2) + (GetPlayerLevel(Index) * 3) + Random(0, 20)
         End If
 
     End Function
@@ -156,7 +156,7 @@ Module ServerPlayers
         Helm = GetPlayerEquipment(Index, EquipmentType.Helmet)
         Shoes = GetPlayerEquipment(Index, EquipmentType.Shoes)
         Gloves = GetPlayerEquipment(Index, EquipmentType.Gloves)
-        GetPlayerProtection = (GetPlayerStat(Index, Stats.Endurance) \ 5)
+        GetPlayerProtection = (GetPlayerStat(Index, StatType.Endurance) \ 5)
 
         If Armor > 0 Then
             GetPlayerProtection = GetPlayerProtection + Item(Armor).Data2
@@ -201,7 +201,7 @@ Module ServerPlayers
             SendDataToMapBut(Attacker, GetPlayerMap(Attacker), Buffer.Data, Buffer.Head)
             Buffer.Dispose()
 
-            If Damage >= GetPlayerVital(Victim, Vitals.HP) Then
+            If Damage >= GetPlayerVital(Victim, VitalType.HP) Then
 
                 SendActionMsg(GetPlayerMap(Victim), "-" & Damage, ColorType.BrightRed, 1, (GetPlayerX(Victim) * 32), (GetPlayerY(Victim) * 32))
 
@@ -252,8 +252,8 @@ Module ServerPlayers
                 OnDeath(Victim)
             Else
                 ' Player not dead, just do the damage
-                SetPlayerVital(Victim, Vitals.HP, GetPlayerVital(Victim, Vitals.HP) - Damage)
-                SendVital(Victim, Vitals.HP)
+                SetPlayerVital(Victim, VitalType.HP, GetPlayerVital(Victim, VitalType.HP) - Damage)
+                SendVital(Victim, VitalType.HP)
                 SendActionMsg(GetPlayerMap(Victim), "-" & Damage, ColorType.BrightRed, 1, (GetPlayerX(Victim) * 32), (GetPlayerY(Victim) * 32))
 
                 'if a stunning skill, stun the player
@@ -277,7 +277,7 @@ Module ServerPlayers
             SendDataToMap(mapnum, Buffer.Data, Buffer.Head)
             Buffer.Dispose()
 
-            If Damage >= GetPlayerVital(Victim, Vitals.HP) Then
+            If Damage >= GetPlayerVital(Victim, VitalType.HP) Then
 
                 SendActionMsg(mapnum, "-" & Damage, ColorType.BrightRed, 1, (GetPlayerX(Victim) * 32), (GetPlayerY(Victim) * 32))
 
@@ -295,8 +295,8 @@ Module ServerPlayers
                 OnDeath(Victim)
             Else
                 ' Player not dead, just do the damage
-                SetPlayerVital(Victim, Vitals.HP, GetPlayerVital(Victim, Vitals.HP) - Damage)
-                SendVital(Victim, Vitals.HP)
+                SetPlayerVital(Victim, VitalType.HP, GetPlayerVital(Victim, VitalType.HP) - Damage)
+                SendVital(Victim, VitalType.HP)
                 SendActionMsg(mapnum, "-" & Damage, ColorType.BrightRed, 1, (GetPlayerX(Victim) * 32), (GetPlayerY(Victim) * 32))
 
                 'if a stunning skill, stun the player
@@ -345,7 +345,7 @@ Module ServerPlayers
         NpcNum = MapNpc(MapNum).Npc(MapNpcNum).Num
 
         ' Make sure the npc isn't already dead
-        If MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.HP) <= 0 Then
+        If MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.HP) <= 0 Then
             Exit Function
         End If
 
@@ -371,16 +371,16 @@ Module ServerPlayers
 
                 ' Check if at same coordinates
                 Select Case GetPlayerDir(Attacker)
-                    Case Direction.Up
+                    Case DirectionType.Up
                         atkX = GetPlayerX(Attacker)
                         atkY = GetPlayerY(Attacker) - 1
-                    Case Direction.Down
+                    Case DirectionType.Down
                         atkX = GetPlayerX(Attacker)
                         atkY = GetPlayerY(Attacker) + 1
-                    Case Direction.Left
+                    Case DirectionType.Left
                         atkX = GetPlayerX(Attacker) - 1
                         atkY = GetPlayerY(Attacker)
-                    Case Direction.Right
+                    Case DirectionType.Right
                         atkX = GetPlayerX(Attacker) + 1
                         atkY = GetPlayerY(Attacker)
                 End Select
@@ -449,7 +449,7 @@ Module ServerPlayers
         End If
 
         ' Deal damage to our NPC.
-        MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.HP) = MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.HP) - Damage
+        MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.HP) = MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.HP) - Damage
 
         ' Set the NPC target to the player so they can come after them.
         MapNpc(MapNum).Npc(MapNpcNum).TargetType = TargetType.Player
@@ -504,8 +504,8 @@ Module ServerPlayers
         If Damage > 0 Then
             If increment Then
                 sSymbol = "+"
-                If Vital = Vitals.HP Then Colour = ColorType.BrightGreen
-                If Vital = Vitals.MP Then Colour = ColorType.BrightBlue
+                If Vital = VitalType.HP Then Colour = ColorType.BrightGreen
+                If Vital = VitalType.MP Then Colour = ColorType.BrightBlue
             Else
                 sSymbol = "-"
                 Colour = ColorType.Blue
@@ -539,7 +539,7 @@ Module ServerPlayers
 
         CanPlayerDodge = False
 
-        rate = GetPlayerStat(Index, Stats.Luck) / 4
+        rate = GetPlayerStat(Index, StatType.Luck) / 4
         rndNum = Random(1, 100)
 
         If rndNum <= rate Then
@@ -553,7 +553,7 @@ Module ServerPlayers
 
         CanPlayerParry = False
 
-        rate = GetPlayerStat(Index, Stats.Luck) / 6
+        rate = GetPlayerStat(Index, StatType.Luck) / 6
         rndNum = Random(1, 100)
 
         If rndNum <= rate Then
@@ -600,7 +600,7 @@ Module ServerPlayers
                 Next
 
                 ' take away armour
-                Damage = Damage - ((GetPlayerStat(Victim, Stats.Spirit) * 2) + (GetPlayerLevel(Victim) * 3) + armor)
+                Damage = Damage - ((GetPlayerStat(Victim, StatType.Spirit) * 2) + (GetPlayerLevel(Victim) * 3) + armor)
 
                 ' * 1.5 if it's a crit!
                 If CanPlayerCriticalHit(Attacker) Then
@@ -636,7 +636,7 @@ Module ServerPlayers
         TempPlayer(Attacker).StopRegenTimer = GetTimeMs()
 
         ' Deal damage to our player.
-        SetPlayerVital(Victim, Vitals.HP, GetPlayerVital(Victim, Vitals.HP) - Damage)
+        SetPlayerVital(Victim, VitalType.HP, GetPlayerVital(Victim, VitalType.HP) - Damage)
 
         ' Send all the visuals to our player.
         If Weapon > 0 Then
@@ -654,7 +654,7 @@ Module ServerPlayers
 
         If Not IsPlayerDead(Victim) Then
             ' Send our player's new vitals to everyone that needs them.
-            SendVital(Victim, Vitals.HP)
+            SendVital(Victim, VitalType.HP)
             If TempPlayer(Victim).InParty > 0 Then SendPartyVitals(TempPlayer(Victim).InParty, Victim)
         Else
             ' Handle our dead player.
@@ -698,7 +698,7 @@ Module ServerPlayers
                 Exit Sub
             Else
 
-                Damage = Damage - ((Npc(npcnum).Stat(Stats.Spirit) * 2) + (Npc(npcnum).Level * 3))
+                Damage = Damage - ((Npc(npcnum).Stat(StatType.Spirit) * 2) + (Npc(npcnum).Level * 3))
 
                 ' * 1.5 if it's a crit!
                 If CanPlayerCriticalHit(Index) Then
@@ -725,7 +725,7 @@ Module ServerPlayers
     Public Function IsPlayerDead(ByVal Index As Integer)
         IsPlayerDead = False
         If Index < 0 OrElse Index > MAX_PLAYERS OrElse Not TempPlayer(Index).InGame Then Exit Function
-        If GetPlayerVital(Index, Vitals.HP) <= 0 Then IsPlayerDead = True
+        If GetPlayerVital(Index, VitalType.HP) <= 0 Then IsPlayerDead = True
     End Function
 
 
@@ -770,7 +770,7 @@ Module ServerPlayers
         ' Set our NPC's data to default so we know it's dead.
         MapNpc(MapNum).Npc(MapNpcNum).Num = 0
         MapNpc(MapNum).Npc(MapNpcNum).SpawnWait = GetTimeMs()
-        MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.HP) = 0
+        MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.HP) = 0
 
         ' Notify all our clients that the NPC has died.
         SendNpcDead(MapNum, MapNpcNum)
@@ -872,24 +872,24 @@ Module ServerPlayers
         Player(Index).Character(TempPlayer(Index).CurChar).Sprite = Sprite
     End Sub
 
-    Function GetPlayerMaxVital(ByVal Index As Integer, ByVal Vital As Vitals) As Integer
+    Function GetPlayerMaxVital(ByVal Index As Integer, ByVal Vital As VitalType) As Integer
 
         GetPlayerMaxVital = 0
 
         If Index > MAX_PLAYERS Then Exit Function
 
         Select Case Vital
-            Case Vitals.HP
-                GetPlayerMaxVital = (Player(Index).Character(TempPlayer(Index).CurChar).Level + (GetPlayerStat(Index, Stats.Vitality) \ 2) + Classes(Player(Index).Character(TempPlayer(Index).CurChar).Classes).Stat(Stats.Vitality)) * 2
-            Case Vitals.MP
-                GetPlayerMaxVital = (Player(Index).Character(TempPlayer(Index).CurChar).Level + (GetPlayerStat(Index, Stats.Intelligence) \ 2) + Classes(Player(Index).Character(TempPlayer(Index).CurChar).Classes).Stat(Stats.Intelligence)) * 2
-            Case Vitals.SP
-                GetPlayerMaxVital = (Player(Index).Character(TempPlayer(Index).CurChar).Level + (GetPlayerStat(Index, Stats.Spirit) \ 2) + Classes(Player(Index).Character(TempPlayer(Index).CurChar).Classes).Stat(Stats.Spirit)) * 2
+            Case VitalType.HP
+                GetPlayerMaxVital = (Player(Index).Character(TempPlayer(Index).CurChar).Level + (GetPlayerStat(Index, StatType.Vitality) \ 2) + Classes(Player(Index).Character(TempPlayer(Index).CurChar).Classes).Stat(StatType.Vitality)) * 2
+            Case VitalType.MP
+                GetPlayerMaxVital = (Player(Index).Character(TempPlayer(Index).CurChar).Level + (GetPlayerStat(Index, StatType.Intelligence) \ 2) + Classes(Player(Index).Character(TempPlayer(Index).CurChar).Classes).Stat(StatType.Intelligence)) * 2
+            Case VitalType.SP
+                GetPlayerMaxVital = (Player(Index).Character(TempPlayer(Index).CurChar).Level + (GetPlayerStat(Index, StatType.Spirit) \ 2) + Classes(Player(Index).Character(TempPlayer(Index).CurChar).Classes).Stat(StatType.Spirit)) * 2
         End Select
 
     End Function
 
-    Public Function GetPlayerStat(ByVal Index As Integer, ByVal Stat As Stats) As Integer
+    Public Function GetPlayerStat(ByVal Index As Integer, ByVal Stat As StatType) As Integer
         Dim x As Integer, i As Integer
 
         GetPlayerStat = 0
@@ -966,7 +966,7 @@ Module ServerPlayers
         Player(Index).Character(TempPlayer(Index).CurChar).Dir = Dir
     End Sub
 
-    Sub SetPlayerVital(ByVal Index As Integer, ByVal Vital As Vitals, ByVal Value As Integer)
+    Sub SetPlayerVital(ByVal Index As Integer, ByVal Vital As VitalType, ByVal Value As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Vital(Vital) = Value
 
         If GetPlayerVital(Index, Vital) > GetPlayerMaxVital(Index, Vital) Then
@@ -983,7 +983,7 @@ Module ServerPlayers
         Return Not (Not Blockvar AndAlso (2 ^ Dir))
     End Function
 
-    Function GetPlayerVital(ByVal Index As Integer, ByVal Vital As Vitals) As Integer
+    Function GetPlayerVital(ByVal Index As Integer, ByVal Vital As VitalType) As Integer
         GetPlayerVital = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerVital = Player(Index).Character(TempPlayer(Index).CurChar).Vital(Vital)
@@ -1002,7 +1002,7 @@ Module ServerPlayers
     End Function
 
     Function GetPlayerNextLevel(ByVal Index As Integer) As Integer
-        GetPlayerNextLevel = ((GetPlayerLevel(Index) + 1) * (GetPlayerStat(Index, Stats.Strength) + GetPlayerStat(Index, Stats.Endurance) + GetPlayerStat(Index, Stats.Intelligence) + GetPlayerStat(Index, Stats.Spirit) + GetPlayerPOINTS(Index)) + StatPtsPerLvl) * Classes(GetPlayerClass(Index)).BaseExp '25
+        GetPlayerNextLevel = ((GetPlayerLevel(Index) + 1) * (GetPlayerStat(Index, StatType.Strength) + GetPlayerStat(Index, StatType.Endurance) + GetPlayerStat(Index, StatType.Intelligence) + GetPlayerStat(Index, StatType.Spirit) + GetPlayerPOINTS(Index)) + StatPtsPerLvl) * Classes(GetPlayerClass(Index)).BaseExp '25
     End Function
 
     Function GetPlayerExp(ByVal Index As Integer) As Integer
@@ -1027,14 +1027,14 @@ Module ServerPlayers
         Player(Index).Character(TempPlayer(Index).CurChar).Exp = Exp
     End Sub
 
-    Public Function GetPlayerRawStat(ByVal Index As Integer, ByVal Stat As Stats) As Integer
+    Public Function GetPlayerRawStat(ByVal Index As Integer, ByVal Stat As StatType) As Integer
         GetPlayerRawStat = 0
         If Index > MAX_PLAYERS Then Exit Function
 
         GetPlayerRawStat = Player(Index).Character(TempPlayer(Index).CurChar).Stat(Stat)
     End Function
 
-    Public Sub SetPlayerStat(ByVal Index As Integer, ByVal Stat As Stats, ByVal Value As Integer)
+    Public Sub SetPlayerStat(ByVal Index As Integer, ByVal Stat As StatType, ByVal Value As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Stat(Stat) = Value
     End Sub
 
@@ -1214,7 +1214,7 @@ Module ServerPlayers
             For i = 1 To MAX_MAP_NPCS
 
                 If MapNpc(OldMap).Npc(i).Num > 0 Then
-                    MapNpc(OldMap).Npc(i).Vital(Vitals.HP) = GetNpcMaxVital(MapNpc(OldMap).Npc(i).Num, Vitals.HP)
+                    MapNpc(OldMap).Npc(i).Vital(VitalType.HP) = GetNpcMaxVital(MapNpc(OldMap).Npc(i).Num, VitalType.HP)
                 End If
 
             Next
@@ -1247,7 +1247,7 @@ Module ServerPlayers
         'Debug.Print("Server-PlayerMove")
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False OrElse Dir < Direction.Up OrElse Dir > Direction.Right OrElse Movement < 1 OrElse Movement > 2 Then
+        If IsPlaying(Index) = False OrElse Dir < DirectionType.Up OrElse Dir > DirectionType.Right OrElse Movement < 1 OrElse Movement > 2 Then
             Exit Sub
         End If
 
@@ -1256,13 +1256,13 @@ Module ServerPlayers
         MapNum = GetPlayerMap(Index)
 
         Select Case Dir
-            Case Direction.Up
+            Case DirectionType.Up
 
                 ' Check to make sure not outside of boundries
                 If GetPlayerY(Index) > 0 Then
 
                     ' Check to make sure that the tile is walkable
-                    If Not IsDirBlocked(Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index)).DirBlock, Direction.Up + 1) Then
+                    If Not IsDirBlocked(Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index)).DirBlock, DirectionType.Up + 1) Then
                         If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) - 1).Type <> TileType.Blocked Then
                             If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) - 1).Type <> TileType.Resource Then
 
@@ -1310,13 +1310,13 @@ Module ServerPlayers
                     End If
                 End If
 
-            Case Direction.Down
+            Case DirectionType.Down
 
                 ' Check to make sure not outside of boundries
                 If GetPlayerY(Index) < Map(MapNum).MaxY Then
 
                     ' Check to make sure that the tile is walkable
-                    If Not IsDirBlocked(Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index)).DirBlock, Direction.Down + 1) Then
+                    If Not IsDirBlocked(Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index)).DirBlock, DirectionType.Down + 1) Then
                         If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) + 1).Type <> TileType.Blocked Then
                             If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) + 1).Type <> TileType.Resource Then
 
@@ -1362,13 +1362,13 @@ Module ServerPlayers
                     End If
                 End If
 
-            Case Direction.Left
+            Case DirectionType.Left
 
                 ' Check to make sure not outside of boundries
                 If GetPlayerX(Index) > 0 Then
 
                     ' Check to make sure that the tile is walkable
-                    If Not IsDirBlocked(Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index)).DirBlock, Direction.Left + 1) Then
+                    If Not IsDirBlocked(Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index)).DirBlock, DirectionType.Left + 1) Then
                         If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) - 1, GetPlayerY(Index)).Type <> TileType.Blocked Then
                             If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) - 1, GetPlayerY(Index)).Type <> TileType.Resource Then
 
@@ -1415,13 +1415,13 @@ Module ServerPlayers
                     End If
                 End If
 
-            Case Direction.Right
+            Case DirectionType.Right
 
                 ' Check to make sure not outside of boundries
                 If GetPlayerX(Index) < Map(MapNum).MaxX Then
 
                     ' Check to make sure that the tile is walkable
-                    If Not IsDirBlocked(Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index)).DirBlock, Direction.Right + 1) Then
+                    If Not IsDirBlocked(Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index)).DirBlock, DirectionType.Right + 1) Then
                         If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) + 1, GetPlayerY(Index)).Type <> TileType.Blocked Then
                             If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) + 1, GetPlayerY(Index)).Type <> TileType.Resource Then
 
@@ -1547,7 +1547,7 @@ Module ServerPlayers
                 VitalType = .Data1
                 amount = .Data2
                 If Not GetPlayerVital(Index, VitalType) = GetPlayerMaxVital(Index, VitalType) Then
-                    If VitalType = Enums.Vitals.HP Then
+                    If VitalType = Enums.VitalType.HP Then
                         Colour = ColorType.BrightGreen
                     Else
                         Colour = ColorType.BrightBlue
@@ -1566,13 +1566,13 @@ Module ServerPlayers
             If .Type = TileType.Trap Then
                 amount = .Data1
                 SendActionMsg(GetPlayerMap(Index), "-" & amount, ColorType.BrightRed, ActionMsgType.Scroll, GetPlayerX(Index) * 32, GetPlayerY(Index) * 32, 1)
-                If GetPlayerVital(Index, Enums.Vitals.HP) - amount <= 0 Then
+                If GetPlayerVital(Index, Enums.VitalType.HP) - amount <= 0 Then
                     KillPlayer(Index)
                     PlayerMsg(Index, "You've been killed by a trap.", ColorType.BrightRed)
                 Else
-                    SetPlayerVital(Index, Enums.Vitals.HP, GetPlayerVital(Index, Enums.Vitals.HP) - amount)
+                    SetPlayerVital(Index, Enums.VitalType.HP, GetPlayerVital(Index, Enums.VitalType.HP) - amount)
                     PlayerMsg(Index, "You've been injured by a trap.", ColorType.BrightRed)
-                    SendVital(Index, Enums.Vitals.HP)
+                    SendVital(Index, Enums.VitalType.HP)
                     ' send vitals to party if in one
                     If TempPlayer(Index).InParty > 0 Then SendPartyVitals(TempPlayer(Index).InParty, Index)
                 End If
@@ -1752,7 +1752,7 @@ Module ServerPlayers
                                         Player(Index).Character(TempPlayer(Index).CurChar).RandInv(n).Rarity = MapItem(MapNum, i).RandData.Rarity
                                         Player(Index).Character(TempPlayer(Index).CurChar).RandInv(n).Damage = MapItem(MapNum, i).RandData.Damage
                                         Player(Index).Character(TempPlayer(Index).CurChar).RandInv(n).Speed = MapItem(MapNum, i).RandData.Speed
-                                        For m = 1 To Stats.Count - 1
+                                        For m = 1 To StatType.Count - 1
                                             Player(Index).Character(TempPlayer(Index).CurChar).RandInv(n).Stat(m) = MapItem(GetPlayerMap(Index), i).RandData.Stat(m)
                                         Next m
                                     Else ' Nothing has been generated yet!
@@ -1980,7 +1980,7 @@ Module ServerPlayers
 
     Public Sub UseItem(ByVal Index As Integer, ByVal InvNum As Integer)
         Dim InvItemNum As Integer, i As Integer, n As Integer, x As Integer, y As Integer, tempitem As Integer
-        Dim m As Integer, tempdata(Stats.Count + 3) As Long, tempstr(2) As String
+        Dim m As Integer, tempdata(StatType.Count + 3) As Long, tempstr(2) As String
 
         ' Prevent hacking
         If InvNum < 1 OrElse InvNum > MAX_ITEMS Then Exit Sub
@@ -1993,7 +1993,7 @@ Module ServerPlayers
             ' Find out what kind of item it is
             Select Case Item(InvItemNum).Type
                 Case ItemType.Equipment
-                    For i = 1 To Stats.Count - 1
+                    For i = 1 To StatType.Count - 1
                         If GetPlayerStat(Index, i) < Item(InvItemNum).Stat_Req(i) Then
                             PlayerMsg(Index, "You do not meet the stat requirements to equip this item.", ColorType.BrightRed)
                             Exit Sub
@@ -2039,7 +2039,7 @@ Module ServerPlayers
                                 tempdata(1) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Weapon).Damage
                                 tempdata(2) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Weapon).Speed
                                 tempdata(3) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Weapon).Rarity
-                                For i = 1 To Stats.Count - 1
+                                For i = 1 To StatType.Count - 1
                                     tempdata(i + 3) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Weapon).Stat(i)
                                 Next
                             End If
@@ -2053,7 +2053,7 @@ Module ServerPlayers
                             Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Weapon).Speed = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Speed
                             Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Weapon).Rarity = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Rarity
 
-                            For i = 1 To Stats.Count - 1
+                            For i = 1 To StatType.Count - 1
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Weapon).Stat(i) = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Stat(i)
                             Next
 
@@ -2079,7 +2079,7 @@ Module ServerPlayers
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Speed = tempdata(2)
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Rarity = tempdata(3)
 
-                                For i = 1 To Stats.Count - 1
+                                For i = 1 To StatType.Count - 1
                                     Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Stat(i) = tempdata(i + 3)
                                 Next
 
@@ -2107,7 +2107,7 @@ Module ServerPlayers
                                 tempdata(1) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Armor).Damage
                                 tempdata(2) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Armor).Speed
                                 tempdata(3) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Armor).Rarity
-                                For i = 1 To Stats.Count - 1
+                                For i = 1 To StatType.Count - 1
                                     tempdata(i + 3) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Armor).Stat(i)
                                 Next
                             End If
@@ -2121,7 +2121,7 @@ Module ServerPlayers
                             Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Armor).Speed = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Speed
                             Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Armor).Rarity = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Rarity
 
-                            For i = 1 To Stats.Count - 1
+                            For i = 1 To StatType.Count - 1
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Armor).Stat(i) = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Stat(i)
                             Next
 
@@ -2141,7 +2141,7 @@ Module ServerPlayers
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Speed = tempdata(2)
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Rarity = tempdata(3)
 
-                                For i = 1 To Stats.Count - 1
+                                For i = 1 To StatType.Count - 1
                                     Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Stat(i) = tempdata(i + 3)
                                 Next i
 
@@ -2169,7 +2169,7 @@ Module ServerPlayers
                                 tempdata(1) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Helmet).Damage
                                 tempdata(2) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Helmet).Speed
                                 tempdata(3) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Helmet).Rarity
-                                For i = 1 To Stats.Count - 1
+                                For i = 1 To StatType.Count - 1
                                     tempdata(i + 3) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Helmet).Stat(i)
                                 Next i
                             End If
@@ -2183,7 +2183,7 @@ Module ServerPlayers
                             Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Helmet).Speed = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Speed
                             Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Helmet).Rarity = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Rarity
 
-                            For i = 1 To Stats.Count - 1
+                            For i = 1 To StatType.Count - 1
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Helmet).Stat(i) = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Stat(i)
                             Next
 
@@ -2203,7 +2203,7 @@ Module ServerPlayers
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Speed = tempdata(2)
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Rarity = tempdata(3)
 
-                                For i = 1 To Stats.Count - 1
+                                For i = 1 To StatType.Count - 1
                                     Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Stat(i) = tempdata(i + 3)
                                 Next
 
@@ -2234,7 +2234,7 @@ Module ServerPlayers
                                 tempdata(1) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shield).Damage
                                 tempdata(2) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shield).Speed
                                 tempdata(3) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shield).Rarity
-                                For i = 1 To Stats.Count - 1
+                                For i = 1 To StatType.Count - 1
                                     tempdata(i + 3) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shield).Stat(i)
                                 Next i
                             End If
@@ -2248,7 +2248,7 @@ Module ServerPlayers
                             Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shield).Speed = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Speed
                             Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shield).Rarity = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Rarity
 
-                            For i = 1 To Stats.Count - 1
+                            For i = 1 To StatType.Count - 1
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shield).Stat(i) = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Stat(i)
                             Next
 
@@ -2268,7 +2268,7 @@ Module ServerPlayers
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Speed = tempdata(2)
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Rarity = tempdata(3)
 
-                                For i = 1 To Stats.Count - 1
+                                For i = 1 To StatType.Count - 1
                                     Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Stat(i) = tempdata(i + 3)
                                 Next
 
@@ -2294,7 +2294,7 @@ Module ServerPlayers
                                 tempdata(1) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shoes).Damage
                                 tempdata(2) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shoes).Speed
                                 tempdata(3) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shoes).Rarity
-                                For i = 1 To Stats.Count - 1
+                                For i = 1 To StatType.Count - 1
                                     tempdata(i + 3) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shoes).Stat(i)
                                 Next i
                             End If
@@ -2308,7 +2308,7 @@ Module ServerPlayers
                             Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shoes).Speed = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Speed
                             Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shoes).Rarity = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Rarity
 
-                            For i = 1 To Stats.Count - 1
+                            For i = 1 To StatType.Count - 1
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Shoes).Stat(i) = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Stat(i)
                             Next
 
@@ -2328,7 +2328,7 @@ Module ServerPlayers
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Speed = tempdata(2)
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Rarity = tempdata(3)
 
-                                For i = 1 To Stats.Count - 1
+                                For i = 1 To StatType.Count - 1
                                     Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Stat(i) = tempdata(i + 3)
                                 Next
 
@@ -2354,7 +2354,7 @@ Module ServerPlayers
                                 tempdata(1) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Gloves).Damage
                                 tempdata(2) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Gloves).Speed
                                 tempdata(3) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Gloves).Rarity
-                                For i = 1 To Stats.Count - 1
+                                For i = 1 To StatType.Count - 1
                                     tempdata(i + 3) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Gloves).Stat(i)
                                 Next i
                             End If
@@ -2368,7 +2368,7 @@ Module ServerPlayers
                             Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Gloves).Speed = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Speed
                             Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Gloves).Rarity = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Rarity
 
-                            For i = 1 To Stats.Count - 1
+                            For i = 1 To StatType.Count - 1
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EquipmentType.Gloves).Stat(i) = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvNum).Stat(i)
                             Next
 
@@ -2388,7 +2388,7 @@ Module ServerPlayers
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Speed = tempdata(2)
                                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Rarity = tempdata(3)
 
-                                For i = 1 To Stats.Count - 1
+                                For i = 1 To StatType.Count - 1
                                     Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Stat(i) = tempdata(i + 3)
                                 Next
 
@@ -2409,7 +2409,7 @@ Module ServerPlayers
 
                 Case ItemType.Consumable
 
-                    For i = 1 To Stats.Count - 1
+                    For i = 1 To StatType.Count - 1
                         If GetPlayerStat(Index, i) < Item(InvItemNum).Stat_Req(i) Then
                             PlayerMsg(Index, "You do not meet the stat requirements to use this item.", ColorType.BrightRed)
                             Exit Sub
@@ -2442,13 +2442,13 @@ Module ServerPlayers
                         Case ConsumableType.Hp
                             SendActionMsg(GetPlayerMap(Index), "+" & Item(InvItemNum).Data1, ColorType.BrightGreen, ActionMsgType.Scroll, GetPlayerX(Index) * 32, GetPlayerY(Index) * 32)
                             SendAnimation(GetPlayerMap(Index), Item(InvItemNum).Animation, 0, 0, TargetType.Player, Index)
-                            SetPlayerVital(Index, Vitals.HP, GetPlayerVital(Index, Vitals.HP) + Item(InvItemNum).Data1)
+                            SetPlayerVital(Index, VitalType.HP, GetPlayerVital(Index, VitalType.HP) + Item(InvItemNum).Data1)
                             If Item(InvItemNum).Stackable = 1 Then
                                 TakeInvItem(Index, InvItemNum, 1)
                             Else
                                 TakeInvItem(Index, InvItemNum, 0)
                             End If
-                            SendVital(Index, Vitals.HP)
+                            SendVital(Index, VitalType.HP)
 
                             ' send vitals to party if in one
                             If TempPlayer(Index).InParty > 0 Then SendPartyVitals(TempPlayer(Index).InParty, Index)
@@ -2456,26 +2456,26 @@ Module ServerPlayers
                         Case ConsumableType.Mp
                             SendActionMsg(GetPlayerMap(Index), "+" & Item(InvItemNum).Data1, ColorType.BrightBlue, ActionMsgType.Scroll, GetPlayerX(Index) * 32, GetPlayerY(Index) * 32)
                             SendAnimation(GetPlayerMap(Index), Item(InvItemNum).Animation, 0, 0, TargetType.Player, Index)
-                            SetPlayerVital(Index, Vitals.MP, GetPlayerVital(Index, Vitals.MP) + Item(InvItemNum).Data1)
+                            SetPlayerVital(Index, VitalType.MP, GetPlayerVital(Index, VitalType.MP) + Item(InvItemNum).Data1)
                             If Item(InvItemNum).Stackable = 1 Then
                                 TakeInvItem(Index, InvItemNum, 1)
                             Else
                                 TakeInvItem(Index, InvItemNum, 0)
                             End If
-                            SendVital(Index, Vitals.MP)
+                            SendVital(Index, VitalType.MP)
 
                             ' send vitals to party if in one
                             If TempPlayer(Index).InParty > 0 Then SendPartyVitals(TempPlayer(Index).InParty, Index)
 
                         Case ConsumableType.Mp
                             SendAnimation(GetPlayerMap(Index), Item(InvItemNum).Animation, 0, 0, TargetType.Player, Index)
-                            SetPlayerVital(Index, Vitals.SP, GetPlayerVital(Index, Vitals.SP) + Item(InvItemNum).Data1)
+                            SetPlayerVital(Index, VitalType.SP, GetPlayerVital(Index, VitalType.SP) + Item(InvItemNum).Data1)
                             If Item(InvItemNum).Stackable = 1 Then
                                 TakeInvItem(Index, InvItemNum, 1)
                             Else
                                 TakeInvItem(Index, InvItemNum, 0)
                             End If
-                            SendVital(Index, Vitals.SP)
+                            SendVital(Index, VitalType.SP)
 
                             ' send vitals to party if in one
                             If TempPlayer(Index).InParty > 0 Then SendPartyVitals(TempPlayer(Index).InParty, Index)
@@ -2487,7 +2487,7 @@ Module ServerPlayers
                 Case ItemType.Key
                     InvItemNum = GetPlayerInvItemNum(Index, InvNum)
 
-                    For i = 1 To Stats.Count - 1
+                    For i = 1 To StatType.Count - 1
                         If GetPlayerStat(Index, i) < Item(InvItemNum).Stat_Req(i) Then
                             PlayerMsg(Index, "You do not meet the stat requirements to use this item.", ColorType.BrightRed)
                             Exit Sub
@@ -2509,7 +2509,7 @@ Module ServerPlayers
                     End If
 
                     Select Case GetPlayerDir(Index)
-                        Case Direction.Up
+                        Case DirectionType.Up
 
                             If GetPlayerY(Index) > 0 Then
                                 x = GetPlayerX(Index)
@@ -2518,7 +2518,7 @@ Module ServerPlayers
                                 Exit Sub
                             End If
 
-                        Case Direction.Down
+                        Case DirectionType.Down
 
                             If GetPlayerY(Index) < Map(GetPlayerMap(Index)).MaxY Then
                                 x = GetPlayerX(Index)
@@ -2527,7 +2527,7 @@ Module ServerPlayers
                                 Exit Sub
                             End If
 
-                        Case Direction.Left
+                        Case DirectionType.Left
 
                             If GetPlayerX(Index) > 0 Then
                                 x = GetPlayerX(Index) - 1
@@ -2536,7 +2536,7 @@ Module ServerPlayers
                                 Exit Sub
                             End If
 
-                        Case Direction.Right
+                        Case DirectionType.Right
 
                             If GetPlayerX(Index) < Map(GetPlayerMap(Index)).MaxX Then
                                 x = GetPlayerX(Index) + 1
@@ -2570,7 +2570,7 @@ Module ServerPlayers
                 Case ItemType.Skill
                     InvItemNum = GetPlayerInvItemNum(Index, InvNum)
 
-                    For i = 1 To Stats.Count - 1
+                    For i = 1 To StatType.Count - 1
                         If GetPlayerStat(Index, i) < Item(InvItemNum).Stat_Req(i) Then
                             PlayerMsg(Index, "You do not meet the stat requirements to use this item.", ColorType.BrightRed)
                             Exit Sub
@@ -2652,8 +2652,8 @@ Module ServerPlayers
         Dim OldSuffix As String, OldSpeed As Integer, OldDamage As Integer
         Dim NewNum As Integer, NewValue As Integer, NewRarity As Integer, NewPrefix As String
         Dim NewSuffix As String, NewSpeed As Integer, NewDamage As Integer
-        Dim NewStats(0 To Stats.Count - 1) As Integer
-        Dim OldStats(0 To Stats.Count - 1) As Integer
+        Dim NewStats(0 To StatType.Count - 1) As Integer
+        Dim OldStats(0 To StatType.Count - 1) As Integer
 
         If OldSlot = 0 OrElse NewSlot = 0 Then Exit Sub
 
@@ -2681,7 +2681,7 @@ Module ServerPlayers
             NewDamage = .Damage
             NewSpeed = .Speed
             NewRarity = .Rarity
-            For i = 1 To Stats.Count - 1
+            For i = 1 To StatType.Count - 1
                 NewStats(i) = .Stat(i)
             Next i
         End With
@@ -2692,7 +2692,7 @@ Module ServerPlayers
             OldDamage = .Damage
             OldSpeed = .Speed
             OldRarity = .Rarity
-            For i = 1 To Stats.Count - 1
+            For i = 1 To StatType.Count - 1
                 OldStats(i) = .Stat(i)
             Next i
         End With
@@ -2703,7 +2703,7 @@ Module ServerPlayers
             .Damage = OldDamage
             .Speed = OldSpeed
             .Rarity = OldRarity
-            For i = 1 To Stats.Count - 1
+            For i = 1 To StatType.Count - 1
                 .Stat(i) = OldStats(i)
             Next i
         End With
@@ -2714,7 +2714,7 @@ Module ServerPlayers
             .Damage = NewDamage
             .Speed = NewSpeed
             .Rarity = NewRarity
-            For i = 1 To Stats.Count - 1
+            For i = 1 To StatType.Count - 1
                 .Stat(i) = NewStats(i)
             Next i
         End With
@@ -2781,7 +2781,7 @@ Module ServerPlayers
             Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Damage = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EqSlot).Damage
             Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Speed = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EqSlot).Speed
             Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Rarity = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EqSlot).Rarity
-            For i = 1 To Stats.Count - 1
+            For i = 1 To StatType.Count - 1
                 Player(Index).Character(TempPlayer(Index).CurChar).RandInv(m).Stat(i) = Player(Index).Character(TempPlayer(Index).CurChar).RandEquip(EqSlot).Stat(i)
             Next
 
@@ -2960,10 +2960,10 @@ Module ServerPlayers
         'Dim i As Integer
 
         ' Set HP to nothing
-        SetPlayerVital(Index, Vitals.HP, 0)
+        SetPlayerVital(Index, VitalType.HP, 0)
 
         ' Warp player away
-        SetPlayerDir(Index, Direction.Down)
+        SetPlayerDir(Index, DirectionType.Down)
 
         With Map(GetPlayerMap(Index))
             ' to the bootmap if it is set
@@ -2980,9 +2980,9 @@ Module ServerPlayers
         SendClearSkillBuffer(Index)
 
         ' Restore vitals
-        SetPlayerVital(Index, Vitals.HP, GetPlayerMaxVital(Index, Vitals.HP))
-        SetPlayerVital(Index, Vitals.MP, GetPlayerMaxVital(Index, Vitals.MP))
-        SetPlayerVital(Index, Vitals.SP, GetPlayerMaxVital(Index, Vitals.SP))
+        SetPlayerVital(Index, VitalType.HP, GetPlayerMaxVital(Index, VitalType.HP))
+        SetPlayerVital(Index, VitalType.MP, GetPlayerMaxVital(Index, VitalType.MP))
+        SetPlayerVital(Index, VitalType.SP, GetPlayerMaxVital(Index, VitalType.SP))
         SendVitals(Index)
 
         ' send vitals to party if in one
@@ -2996,7 +2996,7 @@ Module ServerPlayers
 
     End Sub
 
-    Function GetPlayerVitalRegen(ByVal Index As Integer, ByVal Vital As Vitals) As Integer
+    Function GetPlayerVitalRegen(ByVal Index As Integer, ByVal Vital As VitalType) As Integer
         Dim i As Integer
 
         ' Prevent subscript out of range
@@ -3006,12 +3006,12 @@ Module ServerPlayers
         End If
 
         Select Case Vital
-            Case Vitals.HP
-                i = (GetPlayerStat(Index, Stats.Vitality) \ 2)
-            Case Vitals.MP
-                i = (GetPlayerStat(Index, Stats.Spirit) \ 2)
-            Case Vitals.SP
-                i = (GetPlayerStat(Index, Stats.Spirit) \ 2)
+            Case VitalType.HP
+                i = (GetPlayerStat(Index, StatType.Vitality) \ 2)
+            Case VitalType.MP
+                i = (GetPlayerStat(Index, StatType.Spirit) \ 2)
+            Case VitalType.SP
+                i = (GetPlayerStat(Index, StatType.Spirit) \ 2)
         End Select
 
         If i < 2 Then i = 2
@@ -3143,7 +3143,7 @@ Module ServerPlayers
         MPCost = Skill(skillnum).MpCost
 
         ' Check if they have enough MP
-        If GetPlayerVital(Index, Vitals.MP) < MPCost Then
+        If GetPlayerVital(Index, VitalType.MP) < MPCost Then
             PlayerMsg(Index, "Not enough mana!", ColorType.Yellow)
             Exit Sub
         End If
@@ -3285,7 +3285,7 @@ Module ServerPlayers
                     Bank(Index).ItemRand(BankSlot).Damage = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvSlot).Damage
                     Bank(Index).ItemRand(BankSlot).Speed = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvSlot).Speed
 
-                    For i = 1 To Stats.Count - 1
+                    For i = 1 To StatType.Count - 1
                         Bank(Index).ItemRand(BankSlot).Stat(i) = Player(Index).Character(TempPlayer(Index).CurChar).RandInv(InvSlot).Stat(i)
                     Next
 
@@ -3375,7 +3375,7 @@ Module ServerPlayers
                     Player(Index).Character(TempPlayer(Index).CurChar).RandInv(invSlot).Rarity = Bank(Index).ItemRand(BankSlot).Rarity
                     Player(Index).Character(TempPlayer(Index).CurChar).RandInv(invSlot).Damage = Bank(Index).ItemRand(BankSlot).Damage
                     Player(Index).Character(TempPlayer(Index).CurChar).RandInv(invSlot).Speed = Bank(Index).ItemRand(BankSlot).Speed
-                    For i = 1 To Stats.Count - 1
+                    For i = 1 To StatType.Count - 1
                         Player(Index).Character(TempPlayer(Index).CurChar).RandInv(invSlot).Stat(i) = Bank(Index).ItemRand(BankSlot).Stat(i)
                     Next i
 
@@ -3414,8 +3414,8 @@ Module ServerPlayers
         SetPlayerBankItemNum(Index, OldSlot, NewNum)
         SetPlayerBankItemValue(Index, OldSlot, NewValue)
 
-        ReDim OldStats(Stats.Count - 1)
-        ReDim NewStats(Stats.Count - 1)
+        ReDim OldStats(StatType.Count - 1)
+        ReDim NewStats(StatType.Count - 1)
 
         ' RandomInv
         With Bank(Index).ItemRand(NewSlot)
@@ -3424,7 +3424,7 @@ Module ServerPlayers
             NewDamage = .Damage
             NewSpeed = .Speed
             NewRarity = .Rarity
-            For i = 1 To Stats.Count - 1
+            For i = 1 To StatType.Count - 1
                 NewStats(i) = .Stat(i)
             Next i
         End With
@@ -3435,7 +3435,7 @@ Module ServerPlayers
             OldDamage = .Damage
             OldSpeed = .Speed
             OldRarity = .Rarity
-            For i = 1 To Stats.Count - 1
+            For i = 1 To StatType.Count - 1
                 OldStats(i) = .Stat(i)
             Next i
         End With
@@ -3446,7 +3446,7 @@ Module ServerPlayers
             .Damage = OldDamage
             .Speed = OldSpeed
             .Rarity = OldRarity
-            For i = 1 To Stats.Count - 1
+            For i = 1 To StatType.Count - 1
                 .Stat(i) = OldStats(i)
             Next i
         End With
@@ -3457,7 +3457,7 @@ Module ServerPlayers
             .Damage = NewDamage
             .Speed = NewSpeed
             .Rarity = NewRarity
-            For i = 1 To Stats.Count - 1
+            For i = 1 To StatType.Count - 1
                 .Stat(i) = NewStats(i)
             Next i
         End With

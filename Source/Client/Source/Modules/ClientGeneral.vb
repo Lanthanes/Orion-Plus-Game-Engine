@@ -38,7 +38,7 @@ Module ClientGeneral
         ReDim Map.Npc(MAX_MAP_NPCS)
         ReDim MapNpc(MAX_MAP_NPCS)
         For i = 0 To MAX_MAP_NPCS
-            For x = 0 To Vitals.Count - 1
+            For x = 0 To VitalType.Count - 1
                 ReDim MapNpc(i).Vital(x)
             Next
         Next
@@ -191,9 +191,9 @@ Module ClientGeneral
                     SetStatus(Strings.Get("mainmenu", "sendaddchar"))
 
                     If FrmMenu.rdoMale.Checked = True Then
-                        SendAddChar(SelectedChar, FrmMenu.txtCharName.Text, Sex.Male, FrmMenu.cmbClass.SelectedIndex + 1, newCharSprite)
+                        SendAddChar(SelectedChar, FrmMenu.txtCharName.Text, SexType.Male, FrmMenu.cmbClass.SelectedIndex + 1, newCharSprite)
                     Else
-                        SendAddChar(SelectedChar, FrmMenu.txtCharName.Text, Sex.Female, FrmMenu.cmbClass.SelectedIndex + 1, newCharSprite)
+                        SendAddChar(SelectedChar, FrmMenu.txtCharName.Text, SexType.Female, FrmMenu.cmbClass.SelectedIndex + 1, newCharSprite)
                     End If
                 End If
 

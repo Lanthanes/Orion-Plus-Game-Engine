@@ -138,37 +138,37 @@
     Private Sub NudStrength_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudStrength.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
-        Npc(EditorIndex).Stat(Stats.Strength) = nudStrength.Value
+        Npc(EditorIndex).Stat(StatType.Strength) = nudStrength.Value
     End Sub
 
     Private Sub NudEndurance_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudEndurance.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
-        Npc(EditorIndex).Stat(Stats.Endurance) = nudEndurance.Value
+        Npc(EditorIndex).Stat(StatType.Endurance) = nudEndurance.Value
     End Sub
 
     Private Sub NudVitality_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitality.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
-        Npc(EditorIndex).Stat(Stats.Vitality) = nudVitality.Value
+        Npc(EditorIndex).Stat(StatType.Vitality) = nudVitality.Value
     End Sub
 
     Private Sub NudLuck_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLuck.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
-        Npc(EditorIndex).Stat(Stats.Luck) = nudLuck.Value
+        Npc(EditorIndex).Stat(StatType.Luck) = nudLuck.Value
     End Sub
 
     Private Sub NudIntelligence_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudIntelligence.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
-        Npc(EditorIndex).Stat(Stats.Intelligence) = nudIntelligence.Value
+        Npc(EditorIndex).Stat(StatType.Intelligence) = nudIntelligence.Value
     End Sub
 
     Private Sub NudSpirit_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSpirit.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
-        Npc(EditorIndex).Stat(Stats.Spirit) = nudSpirit.Value
+        Npc(EditorIndex).Stat(StatType.Spirit) = nudSpirit.Value
     End Sub
 #End Region
 

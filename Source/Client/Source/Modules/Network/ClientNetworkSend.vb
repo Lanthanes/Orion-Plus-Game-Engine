@@ -102,7 +102,7 @@ Module ClientNetworkSend
                 Buffer.WriteInt32(Map.Tile(X, Y).Data2)
                 Buffer.WriteInt32(Map.Tile(X, Y).Data3)
                 Buffer.WriteInt32(Map.Tile(X, Y).DirBlock)
-                For i = 0 To MapLayer.Count - 1
+                For i = 0 To LayerType.Count - 1
                     Buffer.WriteInt32(Map.Tile(X, Y).Layer(i).Tileset)
                     Buffer.WriteInt32(Map.Tile(X, Y).Layer(i).X)
                     Buffer.WriteInt32(Map.Tile(X, Y).Layer(i).Y)

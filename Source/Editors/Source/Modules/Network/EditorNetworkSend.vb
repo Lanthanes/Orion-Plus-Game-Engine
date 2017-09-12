@@ -58,7 +58,7 @@ Module EditorNetworkSend
                 Buffer.WriteInt32(Map.Tile(X, Y).Data2)
                 Buffer.WriteInt32(Map.Tile(X, Y).Data3)
                 Buffer.WriteInt32(Map.Tile(X, Y).DirBlock)
-                For i = 0 To MapLayer.Count - 1
+                For i = 0 To LayerType.Count - 1
                     Buffer.WriteInt32(Map.Tile(X, Y).Layer(i).Tileset)
                     Buffer.WriteInt32(Map.Tile(X, Y).Layer(i).X)
                     Buffer.WriteInt32(Map.Tile(X, Y).Layer(i).Y)
@@ -202,7 +202,7 @@ Module EditorNetworkSend
         Buffer.WriteInt32(itemNum)
         Buffer.WriteInt32(Item(itemNum).AccessReq)
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Buffer.WriteInt32(Item(itemNum).Add_Stat(i))
         Next
 
@@ -229,7 +229,7 @@ Module EditorNetworkSend
         Buffer.WriteInt32(Item(itemNum).Stackable)
         Buffer.WriteString(Trim$(Item(itemNum).Description))
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Buffer.WriteInt32(Item(itemNum).Stat_Req(i))
         Next
 
@@ -340,7 +340,7 @@ Module EditorNetworkSend
         Buffer.WriteInt32(Npc(NpcNum).SpawnSecs)
         Buffer.WriteInt32(Npc(NpcNum).Sprite)
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Buffer.WriteInt32(Npc(NpcNum).Stat(i))
         Next
 
@@ -562,12 +562,12 @@ Module EditorNetworkSend
                 Buffer.WriteInt32(Classes(i).FemaleSprite(q))
             Next
 
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Strength))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Endurance))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Vitality))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Intelligence))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Luck))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Spirit))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Strength))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Endurance))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Vitality))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Intelligence))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Luck))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Spirit))
 
             For q = 1 To 5
                 Buffer.WriteInt32(Classes(i).StartItem(q))
@@ -631,7 +631,7 @@ Module EditorNetworkSend
         Buffer.WriteString(myXml.ReadString("Resources", "ResourcesNum"))
 
         For Prefab = 1 To TilePrefab.Count - 1
-            For Layer = 1 To MapLayer.Count - 1
+            For Layer = 1 To LayerType.Count - 1
                 If Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "Tileset")) > 0 Then
                     Buffer.WriteInt32(Layer)
                     Buffer.WriteInt32(Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "Tileset")))

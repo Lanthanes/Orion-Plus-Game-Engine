@@ -425,9 +425,9 @@ Public Class frmEditor_MapEditor
 
             For X = 0 To .MaxX
                 For Y = 0 To .MaxY
-                    ReDim .Tile(X, Y).Layer(0 To MapLayer.Count - 1)
+                    ReDim .Tile(X, Y).Layer(0 To LayerType.Count - 1)
 
-                    ReDim Autotile(X, Y).Layer(0 To MapLayer.Count - 1)
+                    ReDim Autotile(X, Y).Layer(0 To LayerType.Count - 1)
 
                     If X <= x2 Then
                         If Y <= y2 Then

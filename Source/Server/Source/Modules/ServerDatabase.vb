@@ -51,7 +51,7 @@ Module ServerDatabase
         Next
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Stat(0 To Stats.Count - 1)
+            ReDim Classes(i).Stat(0 To StatType.Count - 1)
             ReDim Classes(i).StartItem(0 To 5)
             ReDim Classes(i).StartValue(0 To 5)
         Next
@@ -104,12 +104,12 @@ Module ServerDatabase
             Next
 
             ' continue
-            Classes(i).Stat(Stats.Strength) = Val(myXml.ReadString("CLASS" & i, "Str"))
-            Classes(i).Stat(Stats.Endurance) = Val(myXml.ReadString("CLASS" & i, "End"))
-            Classes(i).Stat(Stats.Vitality) = Val(myXml.ReadString("CLASS" & i, "Vit"))
-            Classes(i).Stat(Stats.Luck) = Val(myXml.ReadString("CLASS" & i, "Luck"))
-            Classes(i).Stat(Stats.Intelligence) = Val(myXml.ReadString("CLASS" & i, "Int"))
-            Classes(i).Stat(Stats.Spirit) = Val(myXml.ReadString("CLASS" & i, "Speed"))
+            Classes(i).Stat(StatType.Strength) = Val(myXml.ReadString("CLASS" & i, "Str"))
+            Classes(i).Stat(StatType.Endurance) = Val(myXml.ReadString("CLASS" & i, "End"))
+            Classes(i).Stat(StatType.Vitality) = Val(myXml.ReadString("CLASS" & i, "Vit"))
+            Classes(i).Stat(StatType.Luck) = Val(myXml.ReadString("CLASS" & i, "Luck"))
+            Classes(i).Stat(StatType.Intelligence) = Val(myXml.ReadString("CLASS" & i, "Int"))
+            Classes(i).Stat(StatType.Spirit) = Val(myXml.ReadString("CLASS" & i, "Speed"))
 
             Classes(i).BaseExp = Val(myXml.ReadString("CLASS" & i, "BaseExp"))
 
@@ -161,12 +161,12 @@ Module ServerDatabase
 
             tmpstring = ""
 
-            myXml.WriteString("CLASS" & i, "Str", Str(Classes(i).Stat(Stats.Strength)))
-            myXml.WriteString("CLASS" & i, "End", Str(Classes(i).Stat(Stats.Endurance)))
-            myXml.WriteString("CLASS" & i, "Vit", Str(Classes(i).Stat(Stats.Vitality)))
-            myXml.WriteString("CLASS" & i, "Luck", Str(Classes(i).Stat(Stats.Luck)))
-            myXml.WriteString("CLASS" & i, "Int", Str(Classes(i).Stat(Stats.Intelligence)))
-            myXml.WriteString("CLASS" & i, "Speed", Str(Classes(i).Stat(Stats.Spirit)))
+            myXml.WriteString("CLASS" & i, "Str", Str(Classes(i).Stat(StatType.Strength)))
+            myXml.WriteString("CLASS" & i, "End", Str(Classes(i).Stat(StatType.Endurance)))
+            myXml.WriteString("CLASS" & i, "Vit", Str(Classes(i).Stat(StatType.Vitality)))
+            myXml.WriteString("CLASS" & i, "Luck", Str(Classes(i).Stat(StatType.Luck)))
+            myXml.WriteString("CLASS" & i, "Int", Str(Classes(i).Stat(StatType.Intelligence)))
+            myXml.WriteString("CLASS" & i, "Speed", Str(Classes(i).Stat(StatType.Spirit)))
 
             myXml.WriteString("CLASS" & i, "BaseExp", Str(Classes(i).BaseExp))
 
@@ -186,16 +186,16 @@ Module ServerDatabase
 
     End Sub
 
-    Function GetClassMaxVital(ByVal ClassNum As Integer, ByVal Vital As Vitals) As Integer
+    Function GetClassMaxVital(ByVal ClassNum As Integer, ByVal Vital As VitalType) As Integer
         GetClassMaxVital = 0
 
         Select Case Vital
-            Case Vitals.HP
-                GetClassMaxVital = (1 + (Classes(ClassNum).Stat(Stats.Vitality) \ 2) + Classes(ClassNum).Stat(Stats.Vitality)) * 2
-            Case Vitals.MP
-                GetClassMaxVital = (1 + (Classes(ClassNum).Stat(Stats.Intelligence) \ 2) + Classes(ClassNum).Stat(Stats.Intelligence)) * 2
-            Case Vitals.SP
-                GetClassMaxVital = (1 + (Classes(ClassNum).Stat(Stats.Spirit) \ 2) + Classes(ClassNum).Stat(Stats.Spirit)) * 2
+            Case VitalType.HP
+                GetClassMaxVital = (1 + (Classes(ClassNum).Stat(StatType.Vitality) \ 2) + Classes(ClassNum).Stat(StatType.Vitality)) * 2
+            Case VitalType.MP
+                GetClassMaxVital = (1 + (Classes(ClassNum).Stat(StatType.Intelligence) \ 2) + Classes(ClassNum).Stat(StatType.Intelligence)) * 2
+            Case VitalType.SP
+                GetClassMaxVital = (1 + (Classes(ClassNum).Stat(StatType.Spirit) \ 2) + Classes(ClassNum).Stat(StatType.Spirit)) * 2
         End Select
 
     End Function
@@ -240,7 +240,7 @@ Module ServerDatabase
 
         For x = 0 To MAX_MAPX
             For y = 0 To MAX_MAPY
-                ReDim Map(MapNum).Tile(x, y).Layer(0 To MapLayer.Count - 1)
+                ReDim Map(MapNum).Tile(x, y).Layer(0 To LayerType.Count - 1)
             Next
         Next
 
@@ -310,7 +310,7 @@ Module ServerDatabase
                 writer.WriteInt32(Map(MapNum).Tile(x, y).Data2)
                 writer.WriteInt32(Map(MapNum).Tile(x, y).Data3)
                 writer.WriteByte(Map(MapNum).Tile(x, y).DirBlock)
-                For l = 0 To MapLayer.Count - 1
+                For l = 0 To LayerType.Count - 1
                     writer.WriteByte(Map(MapNum).Tile(x, y).Layer(l).Tileset)
                     writer.WriteByte(Map(MapNum).Tile(x, y).Layer(l).X)
                     writer.WriteByte(Map(MapNum).Tile(x, y).Layer(l).Y)
@@ -666,8 +666,8 @@ Module ServerDatabase
                 Map(MapNum).Tile(x, y).Data2 = reader.ReadInt32()
                 Map(MapNum).Tile(x, y).Data3 = reader.ReadInt32()
                 Map(MapNum).Tile(x, y).DirBlock = reader.ReadByte()
-                ReDim Map(MapNum).Tile(x, y).Layer(0 To MapLayer.Count - 1)
-                For l = 0 To MapLayer.Count - 1
+                ReDim Map(MapNum).Tile(x, y).Layer(0 To LayerType.Count - 1)
+                For l = 0 To LayerType.Count - 1
                     Map(MapNum).Tile(x, y).Layer(l).Tileset = reader.ReadByte()
                     Map(MapNum).Tile(x, y).Layer(l).X = reader.ReadByte()
                     Map(MapNum).Tile(x, y).Layer(l).Y = reader.ReadByte()
@@ -770,7 +770,7 @@ Module ServerDatabase
         writer.WriteByte(Item(itemNum).Mastery)
         writer.WriteInt32(Item(itemNum).Price)
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             writer.WriteByte(Item(itemNum).Add_Stat(i))
         Next
 
@@ -779,7 +779,7 @@ Module ServerDatabase
         writer.WriteInt32(Item(itemNum).TwoHanded)
         writer.WriteByte(Item(itemNum).BindType)
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             writer.WriteByte(Item(itemNum).Stat_Req(i))
         Next
 
@@ -850,7 +850,7 @@ Module ServerDatabase
         Item(ItemNum).Mastery = reader.ReadByte()
         Item(ItemNum).Price = reader.ReadInt32()
 
-        For s = 0 To Stats.Count - 1
+        For s = 0 To StatType.Count - 1
             Item(ItemNum).Add_Stat(s) = reader.ReadByte()
         Next
 
@@ -859,7 +859,7 @@ Module ServerDatabase
         Item(ItemNum).TwoHanded = reader.ReadInt32()
         Item(ItemNum).BindType = reader.ReadByte()
 
-        For s = 0 To Stats.Count - 1
+        For s = 0 To StatType.Count - 1
             Item(ItemNum).Stat_Req(s) = reader.ReadByte()
         Next
 
@@ -912,8 +912,8 @@ Module ServerDatabase
         Item(Index).Description = ""
 
         For i = 0 To MAX_ITEMS
-            ReDim Item(i).Add_Stat(0 To Stats.Count - 1)
-            ReDim Item(i).Stat_Req(0 To Stats.Count - 1)
+            ReDim Item(i).Add_Stat(0 To StatType.Count - 1)
+            ReDim Item(i).Stat_Req(0 To StatType.Count - 1)
             ReDim Item(i).FurnitureBlocks(0 To 3, 0 To 3)
             ReDim Item(i).FurnitureFringe(0 To 3, 0 To 3)
         Next
@@ -962,7 +962,7 @@ Module ServerDatabase
             writer.WriteInt32(Npc(NpcNum).DropItemValue(i))
         Next
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             writer.WriteByte(Npc(NpcNum).Stat(i))
         Next
 
@@ -1017,7 +1017,7 @@ Module ServerDatabase
             Npc(NpcNum).DropItemValue(i) = reader.ReadInt32()
         Next
 
-        For n = 0 To Stats.Count - 1
+        For n = 0 To StatType.Count - 1
             Npc(NpcNum).Stat(n) = reader.ReadByte()
         Next
 
@@ -1055,7 +1055,7 @@ Module ServerDatabase
     Sub ClearMapNpc(ByVal Index As Integer, ByVal MapNum As Integer)
         MapNpc(MapNum).Npc(Index) = Nothing
 
-        ReDim MapNpc(MapNum).Npc(Index).Vital(0 To Vitals.Count)
+        ReDim MapNpc(MapNum).Npc(Index).Vital(0 To VitalType.Count)
         ReDim MapNpc(MapNum).Npc(Index).SkillCD(MAX_NPC_SKILLS)
     End Sub
 
@@ -1084,7 +1084,7 @@ Module ServerDatabase
         Npc(Index) = Nothing
         Npc(Index).Name = ""
         Npc(Index).AttackSay = ""
-        ReDim Npc(Index).Stat(0 To Stats.Count - 1)
+        ReDim Npc(Index).Stat(0 To StatType.Count - 1)
         For i = 1 To 5
             ReDim Npc(Index).DropChance(5)
             ReDim Npc(Index).DropItem(5)
@@ -1756,7 +1756,7 @@ Module ServerDatabase
             Bank(Index).ItemRand(i).Damage = reader.ReadInt32()
             Bank(Index).ItemRand(i).Speed = reader.ReadInt32()
 
-            For x = 1 To Stats.Count - 1
+            For x = 1 To StatType.Count - 1
                 Bank(Index).ItemRand(i).Stat(x) = reader.ReadInt32()
             Next
         Next
@@ -1780,7 +1780,7 @@ Module ServerDatabase
             writer.WriteInt32(Bank(Index).ItemRand(i).Damage)
             writer.WriteInt32(Bank(Index).ItemRand(i).Speed)
 
-            For x = 1 To Stats.Count - 1
+            For x = 1 To StatType.Count - 1
                 writer.WriteInt32(Bank(Index).ItemRand(i).Stat(x))
             Next
 
@@ -1809,8 +1809,8 @@ Module ServerDatabase
             Bank(Index).ItemRand(i).Damage = 0
             Bank(Index).ItemRand(i).Speed = 0
 
-            ReDim Bank(Index).ItemRand(i).Stat(Stats.Count - 1)
-            For x = 1 To Stats.Count - 1
+            ReDim Bank(Index).ItemRand(i).Stat(StatType.Count - 1)
+            For x = 1 To StatType.Count - 1
                 Bank(Index).ItemRand(i).Stat(x) = 0
             Next
         Next
@@ -1846,11 +1846,11 @@ Module ServerDatabase
 
         Player(Index).Character(CharNum).Sprite = 0
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Player(Index).Character(CharNum).Stat(i) = 0
         Next
 
-        For i = 0 To Vitals.Count - 1
+        For i = 0 To VitalType.Count - 1
             Player(Index).Character(CharNum).Vital(i) = 0
         Next
 
@@ -1916,8 +1916,8 @@ Module ServerDatabase
             Player(Index).Character(CharNum).RandInv(i).Damage = 0
             Player(Index).Character(CharNum).RandInv(i).Speed = 0
 
-            ReDim Player(Index).Character(CharNum).RandInv(i).Stat(Stats.Count - 1)
-            For x = 1 To Stats.Count - 1
+            ReDim Player(Index).Character(CharNum).RandInv(i).Stat(StatType.Count - 1)
+            For x = 1 To StatType.Count - 1
                 Player(Index).Character(CharNum).RandInv(i).Stat(x) = 0
             Next
         Next
@@ -1930,8 +1930,8 @@ Module ServerDatabase
             Player(Index).Character(CharNum).RandEquip(i).Damage = 0
             Player(Index).Character(CharNum).RandEquip(i).Speed = 0
 
-            ReDim Player(Index).Character(CharNum).RandEquip(i).Stat(Stats.Count - 1)
-            For x = 1 To Stats.Count - 1
+            ReDim Player(Index).Character(CharNum).RandEquip(i).Stat(StatType.Count - 1)
+            For x = 1 To StatType.Count - 1
                 Player(Index).Character(CharNum).RandEquip(i).Stat(x) = 0
             Next
         Next
@@ -1942,8 +1942,8 @@ Module ServerDatabase
         Player(Index).Character(CharNum).Pet.Mana = 0
         Player(Index).Character(CharNum).Pet.Level = 0
 
-        ReDim Player(Index).Character(CharNum).Pet.Stat(Stats.Count - 1)
-        For i = 1 To Stats.Count - 1
+        ReDim Player(Index).Character(CharNum).Pet.Stat(StatType.Count - 1)
+        For i = 1 To StatType.Count - 1
             Player(Index).Character(CharNum).Pet.Stat(i) = 0
         Next
 
@@ -2000,11 +2000,11 @@ Module ServerDatabase
 
         Player(Index).Character(CharNum).Sprite = reader.ReadInt32()
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Player(Index).Character(CharNum).Stat(i) = reader.ReadByte()
         Next
 
-        For i = 0 To Vitals.Count - 1
+        For i = 0 To VitalType.Count - 1
             Player(Index).Character(CharNum).Vital(i) = reader.ReadInt32()
         Next
 
@@ -2068,8 +2068,8 @@ Module ServerDatabase
             Player(Index).Character(CharNum).RandInv(i).Damage = reader.ReadInt32()
             Player(Index).Character(CharNum).RandInv(i).Speed = reader.ReadInt32()
 
-            ReDim Player(Index).Character(CharNum).RandInv(i).Stat(Stats.Count - 1)
-            For x = 1 To Stats.Count - 1
+            ReDim Player(Index).Character(CharNum).RandInv(i).Stat(StatType.Count - 1)
+            For x = 1 To StatType.Count - 1
                 Player(Index).Character(CharNum).RandInv(i).Stat(x) = reader.ReadInt32()
             Next
         Next
@@ -2082,8 +2082,8 @@ Module ServerDatabase
             Player(Index).Character(CharNum).RandEquip(i).Damage = reader.ReadInt32()
             Player(Index).Character(CharNum).RandEquip(i).Speed = reader.ReadInt32()
 
-            ReDim Player(Index).Character(CharNum).RandEquip(i).Stat(Stats.Count - 1)
-            For x = 1 To Stats.Count - 1
+            ReDim Player(Index).Character(CharNum).RandEquip(i).Stat(StatType.Count - 1)
+            For x = 1 To StatType.Count - 1
                 Player(Index).Character(CharNum).RandEquip(i).Stat(x) = reader.ReadInt32()
             Next
         Next
@@ -2094,8 +2094,8 @@ Module ServerDatabase
         Player(Index).Character(CharNum).Pet.Mana = reader.ReadInt32()
         Player(Index).Character(CharNum).Pet.Level = reader.ReadInt32()
 
-        ReDim Player(Index).Character(CharNum).Pet.Stat(Stats.Count - 1)
-        For i = 1 To Stats.Count - 1
+        ReDim Player(Index).Character(CharNum).Pet.Stat(StatType.Count - 1)
+        For i = 1 To StatType.Count - 1
             Player(Index).Character(CharNum).Pet.Stat(i) = reader.ReadByte()
         Next
 
@@ -2149,11 +2149,11 @@ Module ServerDatabase
 
         writer.WriteInt32(Player(Index).Character(CharNum).Sprite)
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             writer.WriteByte(Player(Index).Character(CharNum).Stat(i))
         Next
 
-        For i = 0 To Vitals.Count - 1
+        For i = 0 To VitalType.Count - 1
             writer.WriteInt32(Player(Index).Character(CharNum).Vital(i))
         Next
 
@@ -2209,7 +2209,7 @@ Module ServerDatabase
             writer.WriteInt32(Player(Index).Character(CharNum).RandInv(i).Rarity)
             writer.WriteInt32(Player(Index).Character(CharNum).RandInv(i).Damage)
             writer.WriteInt32(Player(Index).Character(CharNum).RandInv(i).Speed)
-            For x = 1 To Stats.Count - 1
+            For x = 1 To StatType.Count - 1
                 writer.WriteInt32(Player(Index).Character(CharNum).RandInv(i).Stat(x))
             Next
         Next
@@ -2220,7 +2220,7 @@ Module ServerDatabase
             writer.WriteInt32(Player(Index).Character(CharNum).RandEquip(i).Rarity)
             writer.WriteInt32(Player(Index).Character(CharNum).RandEquip(i).Damage)
             writer.WriteInt32(Player(Index).Character(CharNum).RandEquip(i).Speed)
-            For x = 1 To Stats.Count - 1
+            For x = 1 To StatType.Count - 1
                 writer.WriteInt32(Player(Index).Character(CharNum).RandEquip(i).Stat(x))
             Next
         Next
@@ -2231,7 +2231,7 @@ Module ServerDatabase
         writer.WriteInt32(Player(Index).Character(CharNum).Pet.Mana)
         writer.WriteInt32(Player(Index).Character(CharNum).Pet.Level)
 
-        For i = 1 To Stats.Count - 1
+        For i = 1 To StatType.Count - 1
             writer.WriteByte(Player(Index).Character(CharNum).Pet.Stat(i))
         Next
 
@@ -2273,7 +2273,7 @@ Module ServerDatabase
             Player(Index).Character(CharNum).Sex = Sex
             Player(Index).Character(CharNum).Classes = ClassNum
 
-            If Player(Index).Character(CharNum).Sex = Enums.Sex.Male Then
+            If Player(Index).Character(CharNum).Sex = Enums.SexType.Male Then
                 Player(Index).Character(CharNum).Sprite = Classes(ClassNum).MaleSprite(Sprite - 1)
             Else
                 Player(Index).Character(CharNum).Sprite = Classes(ClassNum).FemaleSprite(Sprite - 1)
@@ -2281,18 +2281,18 @@ Module ServerDatabase
 
             Player(Index).Character(CharNum).Level = 1
 
-            For n = 1 To Stats.Count - 1
+            For n = 1 To StatType.Count - 1
                 Player(Index).Character(CharNum).Stat(n) = Classes(ClassNum).Stat(n)
             Next n
 
-            Player(Index).Character(CharNum).Dir = Direction.Down
+            Player(Index).Character(CharNum).Dir = DirectionType.Down
             Player(Index).Character(CharNum).Map = Classes(ClassNum).StartMap
             Player(Index).Character(CharNum).X = Classes(ClassNum).StartX
             Player(Index).Character(CharNum).Y = Classes(ClassNum).StartY
-            Player(Index).Character(CharNum).Dir = Direction.Down
-            Player(Index).Character(CharNum).Vital(Vitals.HP) = GetPlayerMaxVital(Index, Vitals.HP)
-            Player(Index).Character(CharNum).Vital(Vitals.MP) = GetPlayerMaxVital(Index, Vitals.MP)
-            Player(Index).Character(CharNum).Vital(Vitals.SP) = GetPlayerMaxVital(Index, Vitals.SP)
+            Player(Index).Character(CharNum).Dir = DirectionType.Down
+            Player(Index).Character(CharNum).Vital(VitalType.HP) = GetPlayerMaxVital(Index, VitalType.HP)
+            Player(Index).Character(CharNum).Vital(VitalType.MP) = GetPlayerMaxVital(Index, VitalType.MP)
+            Player(Index).Character(CharNum).Vital(VitalType.SP) = GetPlayerMaxVital(Index, VitalType.SP)
 
             ' set starter equipment
             For n = 1 To 5
@@ -2306,7 +2306,7 @@ Module ServerDatabase
                         Player(Index).Character(TempPlayer(Index).CurChar).RandInv(n).Rarity = RarityType.RARITY_COMMON
                         Player(Index).Character(TempPlayer(Index).CurChar).RandInv(n).Damage = Item(Classes(ClassNum).StartItem(n)).Data2
                         Player(Index).Character(TempPlayer(Index).CurChar).RandInv(n).Speed = Item(Classes(ClassNum).StartItem(n)).Speed
-                        For i = 1 To Stats.Count - 1
+                        For i = 1 To StatType.Count - 1
                             Player(Index).Character(TempPlayer(Index).CurChar).RandInv(n).Stat(i) = Item(Classes(ClassNum).StartItem(n)).Add_Stat(i)
                         Next
                     End If
@@ -2531,9 +2531,9 @@ Module ServerDatabase
         For i = 1 To Max_Classes
             Buffer.WriteString(Trim$(GetClassName(i)))
             Buffer.WriteString(Trim(Classes(i).Desc))
-            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.HP))
-            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.MP))
-            Buffer.WriteInt32(GetClassMaxVital(i, Vitals.SP))
+            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.HP))
+            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.MP))
+            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.SP))
 
             ' set sprite array size
             n = UBound(Classes(i).MaleSprite)
@@ -2557,12 +2557,12 @@ Module ServerDatabase
                 Buffer.WriteInt32(Classes(i).FemaleSprite(q))
             Next
 
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Strength))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Endurance))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Vitality))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Intelligence))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Luck))
-            Buffer.WriteInt32(Classes(i).Stat(Stats.Spirit))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Strength))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Endurance))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Vitality))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Intelligence))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Luck))
+            Buffer.WriteInt32(Classes(i).Stat(StatType.Spirit))
 
             For q = 1 To 5
                 Buffer.WriteInt32(Classes(i).StartItem(q))
@@ -2602,7 +2602,7 @@ Module ServerDatabase
         Buffer.WriteInt32(itemNum)
         Buffer.WriteInt32(Item(itemNum).AccessReq)
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Buffer.WriteInt32(Item(itemNum).Add_Stat(i))
         Next
 
@@ -2629,7 +2629,7 @@ Module ServerDatabase
         Buffer.WriteInt32(Item(itemNum).Stackable)
         Buffer.WriteString(Trim$(Item(itemNum).Description))
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Buffer.WriteInt32(Item(itemNum).Stat_Req(i))
         Next
 
@@ -2744,7 +2744,7 @@ Module ServerDatabase
         Buffer.WriteInt32(Npc(NpcNum).SpawnSecs)
         Buffer.WriteInt32(Npc(NpcNum).Sprite)
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Buffer.WriteInt32(Npc(NpcNum).Stat(i))
         Next
 

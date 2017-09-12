@@ -324,7 +324,7 @@ Public Module ClientQuest
         QuestInProgress = False
         If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
-        If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Started Then 'Status=1 means started
+        If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatusType.Started Then 'Status=1 means started
             QuestInProgress = True
         End If
     End Function
@@ -333,7 +333,7 @@ Public Module ClientQuest
         QuestCompleted = False
         If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
-        If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Completed OrElse Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Repeatable Then
+        If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatusType.Completed OrElse Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatusType.Repeatable Then
             QuestCompleted = True
         End If
     End Function
@@ -361,7 +361,7 @@ Public Module ClientQuest
         If QuestInProgress(QuestNum) Then Exit Function
 
         'Check if player has the quest 0 (not started) or 3 (completed but it can be started again)
-        If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.NotStarted OrElse Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Repeatable Then
+        If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatusType.NotStarted OrElse Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatusType.Repeatable Then
 
             For i = 1 To Quest(QuestNum).ReqCount
                 'Check if item is needed
@@ -376,7 +376,7 @@ Public Module ClientQuest
                 'Check if previous quest is needed
                 If Quest(QuestNum).Requirement(i) = 2 Then
                     If Quest(QuestNum).RequirementIndex(i) > 0 AndAlso Quest(QuestNum).RequirementIndex(i) <= MAX_QUESTS Then
-                        If Player(MyIndex).PlayerQuest(Quest(QuestNum).RequirementIndex(i)).Status = QuestStatus.NotStarted OrElse Player(MyIndex).PlayerQuest(Quest(QuestNum).RequirementIndex(i)).Status = QuestStatus.Started Then
+                        If Player(MyIndex).PlayerQuest(Quest(QuestNum).RequirementIndex(i)).Status = QuestStatusType.NotStarted OrElse Player(MyIndex).PlayerQuest(Quest(QuestNum).RequirementIndex(i)).Status = QuestStatusType.Started Then
                             Exit Function
                         End If
                     End If
@@ -484,11 +484,11 @@ Public Module ClientQuest
         End If
 
         'Quest Status
-        If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Started Then
+        If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatusType.Started Then
             QuestStatus2Text = Strings.Get("quests", "queststarted")
             AbandonQuestText = Strings.Get("quests", "questcancel")
             AbandonQuestVisible = True
-        ElseIf Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatus.Completed Then
+        ElseIf Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatusType.Completed Then
             QuestStatus2Text = Strings.Get("quests", "questcomplete")
             AbandonQuestVisible = False
         Else

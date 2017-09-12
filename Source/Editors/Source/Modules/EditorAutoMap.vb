@@ -103,8 +103,8 @@
         ReDim Tile(TilePrefab.Count - 1)
         For Prefab = 1 To TilePrefab.Count - 1
 
-            ReDim Tile(Prefab).Layer(0 To MapLayer.Count - 1)
-            For Layer = 1 To MapLayer.Count - 1
+            ReDim Tile(Prefab).Layer(0 To LayerType.Count - 1)
+            For Layer = 1 To LayerType.Count - 1
                 Tile(Prefab).Layer(Layer).Tileset = Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "Tileset"))
                 Tile(Prefab).Layer(Layer).X = Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "X"))
                 Tile(Prefab).Layer(Layer).Y = Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "Y"))
@@ -136,7 +136,7 @@
         DetailCount = UBound(Detail) + 1
 
         ReDim Preserve Detail(0 To DetailCount)
-        ReDim Preserve Detail(DetailCount).Tile.Layer(0 To MapLayer.Count - 1)
+        ReDim Preserve Detail(DetailCount).Tile.Layer(0 To LayerType.Count - 1)
 
         Detail(DetailCount).DetailBase = Prefab
         Detail(DetailCount).Tile.Type = TileType

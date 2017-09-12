@@ -168,13 +168,13 @@ Public Module ClientProjectiles
         ' check to see if it's time to move the Projectile
         If GetTickCount() > MapProjectiles(ProjectileNum).TravelTime Then
             Select Case MapProjectiles(ProjectileNum).dir
-                Case Direction.Up
+                Case DirectionType.Up
                     MapProjectiles(ProjectileNum).Y = MapProjectiles(ProjectileNum).Y - 1
-                Case Direction.Down
+                Case DirectionType.Down
                     MapProjectiles(ProjectileNum).Y = MapProjectiles(ProjectileNum).Y + 1
-                Case Direction.Left
+                Case DirectionType.Left
                     MapProjectiles(ProjectileNum).X = MapProjectiles(ProjectileNum).X - 1
-                Case Direction.Right
+                Case DirectionType.Right
                     MapProjectiles(ProjectileNum).X = MapProjectiles(ProjectileNum).X + 1
             End Select
             MapProjectiles(ProjectileNum).TravelTime = GetTickCount() + Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed
@@ -259,13 +259,13 @@ Public Module ClientProjectiles
 
         'Find the offset
         Select Case MapProjectiles(ProjectileNum).dir
-            Case Direction.Up
+            Case DirectionType.Up
                 YOffset = ((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_Y
-            Case Direction.Down
+            Case DirectionType.Down
                 YOffset = -((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_Y
-            Case Direction.Left
+            Case DirectionType.Left
                 XOffset = ((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_X
-            Case Direction.Right
+            Case DirectionType.Right
                 XOffset = -((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_X
         End Select
 

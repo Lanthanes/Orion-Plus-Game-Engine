@@ -45,16 +45,16 @@ Module ClientPlayer
             End If
 
             Select Case Player(MyIndex).Dir
-                Case Direction.Up
+                Case DirectionType.Up
                     X = GetPlayerX(MyIndex)
                     Y = GetPlayerY(MyIndex) - 1
-                Case Direction.Down
+                Case DirectionType.Down
                     X = GetPlayerX(MyIndex)
                     Y = GetPlayerY(MyIndex) + 1
-                Case Direction.Left
+                Case DirectionType.Left
                     X = GetPlayerX(MyIndex) - 1
                     Y = GetPlayerY(MyIndex)
-                Case Direction.Right
+                Case DirectionType.Right
                     X = GetPlayerX(MyIndex) + 1
                     Y = GetPlayerY(MyIndex)
             End Select
@@ -96,19 +96,19 @@ Module ClientPlayer
             End If
 
             Select Case GetPlayerDir(MyIndex)
-                Case Direction.Up
+                Case DirectionType.Up
                     SendPlayerMove()
                     Player(MyIndex).YOffset = PIC_Y
                     SetPlayerY(MyIndex, GetPlayerY(MyIndex) - 1)
-                Case Direction.Down
+                Case DirectionType.Down
                     SendPlayerMove()
                     Player(MyIndex).YOffset = PIC_Y * -1
                     SetPlayerY(MyIndex, GetPlayerY(MyIndex) + 1)
-                Case Direction.Left
+                Case DirectionType.Left
                     SendPlayerMove()
                     Player(MyIndex).XOffset = PIC_X
                     SetPlayerX(MyIndex, GetPlayerX(MyIndex) - 1)
-                Case Direction.Right
+                Case DirectionType.Right
                     SendPlayerMove()
                     Player(MyIndex).XOffset = PIC_X * -1
                     SetPlayerX(MyIndex, GetPlayerX(MyIndex) + 1)
@@ -194,15 +194,15 @@ Module ClientPlayer
         d = GetPlayerDir(MyIndex)
 
         If DirUp Then
-            SetPlayerDir(MyIndex, Direction.Up)
+            SetPlayerDir(MyIndex, DirectionType.Up)
 
             ' Check to see if they are trying to go out of bounds
             If GetPlayerY(MyIndex) > 0 Then
-                If CheckDirection(Direction.Up) Then
+                If CheckDirection(DirectionType.Up) Then
                     CanMove = False
 
                     ' Set the new direction if they weren't facing that direction
-                    If d <> Direction.Up Then
+                    If d <> DirectionType.Up Then
                         SendPlayerDir()
                     End If
 
@@ -224,15 +224,15 @@ Module ClientPlayer
         End If
 
         If DirDown Then
-            SetPlayerDir(MyIndex, Direction.Down)
+            SetPlayerDir(MyIndex, DirectionType.Down)
 
             ' Check to see if they are trying to go out of bounds
             If GetPlayerY(MyIndex) < Map.MaxY Then
-                If CheckDirection(Direction.Down) Then
+                If CheckDirection(DirectionType.Down) Then
                     CanMove = False
 
                     ' Set the new direction if they weren't facing that direction
-                    If d <> Direction.Down Then
+                    If d <> DirectionType.Down Then
                         SendPlayerDir()
                     End If
 
@@ -254,15 +254,15 @@ Module ClientPlayer
         End If
 
         If DirLeft Then
-            SetPlayerDir(MyIndex, Direction.Left)
+            SetPlayerDir(MyIndex, DirectionType.Left)
 
             ' Check to see if they are trying to go out of bounds
             If GetPlayerX(MyIndex) > 0 Then
-                If CheckDirection(Direction.Left) Then
+                If CheckDirection(DirectionType.Left) Then
                     CanMove = False
 
                     ' Set the new direction if they weren't facing that direction
-                    If d <> Direction.Left Then
+                    If d <> DirectionType.Left Then
                         SendPlayerDir()
                     End If
 
@@ -284,15 +284,15 @@ Module ClientPlayer
         End If
 
         If DirRight Then
-            SetPlayerDir(MyIndex, Direction.Right)
+            SetPlayerDir(MyIndex, DirectionType.Right)
 
             ' Check to see if they are trying to go out of bounds
             If GetPlayerX(MyIndex) < Map.MaxX Then
-                If CheckDirection(Direction.Right) Then
+                If CheckDirection(DirectionType.Right) Then
                     CanMove = False
 
                     ' Set the new direction if they weren't facing that direction
-                    If d <> Direction.Right Then
+                    If d <> DirectionType.Right Then
                         SendPlayerDir()
                     End If
 
@@ -329,16 +329,16 @@ Module ClientPlayer
         End If
 
         Select Case Direction
-            Case Enums.Direction.Up
+            Case Enums.DirectionType.Up
                 X = GetPlayerX(MyIndex)
                 Y = GetPlayerY(MyIndex) - 1
-            Case Enums.Direction.Down
+            Case Enums.DirectionType.Down
                 X = GetPlayerX(MyIndex)
                 Y = GetPlayerY(MyIndex) + 1
-            Case Enums.Direction.Left
+            Case Enums.DirectionType.Left
                 X = GetPlayerX(MyIndex) - 1
                 Y = GetPlayerY(MyIndex)
-            Case Enums.Direction.Right
+            Case Enums.DirectionType.Right
                 X = GetPlayerX(MyIndex) + 1
                 Y = GetPlayerY(MyIndex)
         End Select
@@ -433,23 +433,23 @@ Module ClientPlayer
         End Select
 
         Select Case GetPlayerDir(Index)
-            Case Direction.Up
+            Case DirectionType.Up
                 Player(Index).YOffset = Player(Index).YOffset - MovementSpeed
                 If Player(Index).YOffset < 0 Then Player(Index).YOffset = 0
-            Case Direction.Down
+            Case DirectionType.Down
                 Player(Index).YOffset = Player(Index).YOffset + MovementSpeed
                 If Player(Index).YOffset > 0 Then Player(Index).YOffset = 0
-            Case Direction.Left
+            Case DirectionType.Left
                 Player(Index).XOffset = Player(Index).XOffset - MovementSpeed
                 If Player(Index).XOffset < 0 Then Player(Index).XOffset = 0
-            Case Direction.Right
+            Case DirectionType.Right
                 Player(Index).XOffset = Player(Index).XOffset + MovementSpeed
                 If Player(Index).XOffset > 0 Then Player(Index).XOffset = 0
         End Select
 
         ' Check if completed walking over to the next tile
         If Player(Index).Moving > 0 Then
-            If GetPlayerDir(Index) = Direction.Right OrElse GetPlayerDir(Index) = Direction.Down Then
+            If GetPlayerDir(Index) = DirectionType.Right OrElse GetPlayerDir(Index) = DirectionType.Down Then
                 If (Player(Index).XOffset >= 0) AndAlso (Player(Index).YOffset >= 0) Then
                     Player(Index).Moving = 0
                     If Player(Index).Steps = 1 Then
@@ -517,7 +517,7 @@ Module ClientPlayer
         End If
 
         ' Check if player has enough MP
-        If GetPlayerVital(MyIndex, Vitals.MP) < Skill(PlayerSkills(skillslot)).MpCost Then
+        If GetPlayerVital(MyIndex, VitalType.MP) < Skill(PlayerSkills(skillslot)).MpCost Then
             AddText("Not enough MP to cast " & Trim$(Skill(PlayerSkills(skillslot)).Name) & ".", QColorType.AlertColor)
             Exit Sub
         End If
@@ -570,7 +570,7 @@ Module ClientPlayer
         Player(Index).POINTS = POINTS
     End Sub
 
-    Sub SetPlayerStat(ByVal Index As Integer, ByVal Stat As Stats, ByVal Value As Integer)
+    Sub SetPlayerStat(ByVal Index As Integer, ByVal Stat As StatType, ByVal Value As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         If Value <= 0 Then Value = 1
         If Value > Byte.MaxValue Then Value = Byte.MaxValue
@@ -609,7 +609,7 @@ Module ClientPlayer
         Player(Index).PK = PK
     End Sub
 
-    Sub SetPlayerVital(ByVal Index As Integer, ByVal Vital As Vitals, ByVal Value As Integer)
+    Sub SetPlayerVital(ByVal Index As Integer, ByVal Vital As VitalType, ByVal Value As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Vital(Vital) = Value
 
@@ -618,16 +618,16 @@ Module ClientPlayer
         End If
     End Sub
 
-    Function GetPlayerMaxVital(ByVal Index As Integer, ByVal Vital As Vitals) As Integer
+    Function GetPlayerMaxVital(ByVal Index As Integer, ByVal Vital As VitalType) As Integer
         GetPlayerMaxVital = 0
         If Index > MAX_PLAYERS Then Exit Function
 
         Select Case Vital
-            Case Vitals.HP
+            Case VitalType.HP
                 GetPlayerMaxVital = Player(Index).MaxHP
-            Case Vitals.MP
+            Case VitalType.MP
                 GetPlayerMaxVital = Player(Index).MaxMP
-            Case Vitals.SP
+            Case VitalType.SP
                 GetPlayerMaxVital = Player(Index).MaxSP
         End Select
 
@@ -663,7 +663,7 @@ Module ClientPlayer
         Player(Index).Dir = Dir
     End Sub
 
-    Function GetPlayerVital(ByVal Index As Integer, ByVal Vital As Vitals) As Integer
+    Function GetPlayerVital(ByVal Index As Integer, ByVal Vital As VitalType) As Integer
         GetPlayerVital = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerVital = Player(Index).Vital(Vital)
@@ -699,7 +699,7 @@ Module ClientPlayer
         GetPlayerEquipment = Player(Index).Equipment(EquipmentSlot)
     End Function
 
-    Function GetPlayerStat(ByVal Index As Integer, ByVal Stat As Stats) As Integer
+    Function GetPlayerStat(ByVal Index As Integer, ByVal Stat As StatType) As Integer
         GetPlayerStat = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerStat = Player(Index).Stat(Stat)
@@ -764,15 +764,15 @@ Module ClientPlayer
         Player(Index).POINTS = 0
         Player(Index).Sprite = 0
 
-        ReDim Player(Index).Stat(Stats.Count - 1)
-        For x = 1 To Stats.Count - 1
+        ReDim Player(Index).Stat(StatType.Count - 1)
+        For x = 1 To StatType.Count - 1
             Player(Index).Stat(x) = 0
         Next
 
         Player(Index).Steps = 0
 
-        ReDim Player(Index).Vital(Vitals.Count - 1)
-        For i = 1 To Vitals.Count - 1
+        ReDim Player(Index).Vital(VitalType.Count - 1)
+        For i = 1 To VitalType.Count - 1
             Player(Index).Vital(i) = 0
         Next
 
@@ -783,16 +783,16 @@ Module ClientPlayer
 
         ReDim Player(Index).RandEquip(EquipmentType.Count - 1)
         For y = 1 To EquipmentType.Count - 1
-            ReDim Player(Index).RandEquip(y).Stat(Stats.Count - 1)
-            For x = 1 To Stats.Count - 1
+            ReDim Player(Index).RandEquip(y).Stat(StatType.Count - 1)
+            For x = 1 To StatType.Count - 1
                 Player(Index).RandEquip(y).Stat(x) = 0
             Next
         Next
 
         ReDim Player(Index).RandInv(MAX_INV)
         For y = 1 To MAX_INV
-            ReDim Player(Index).RandInv(y).Stat(Stats.Count - 1)
-            For x = 1 To Stats.Count - 1
+            ReDim Player(Index).RandInv(y).Stat(StatType.Count - 1)
+            For x = 1 To StatType.Count - 1
                 Player(Index).RandInv(y).Stat(x) = 0
             Next
         Next
@@ -811,8 +811,8 @@ Module ClientPlayer
         Player(Index).Pet.Mana = 0
         Player(Index).Pet.Level = 0
 
-        ReDim Player(Index).Pet.Stat(Stats.Count - 1)
-        For i = 1 To Stats.Count - 1
+        ReDim Player(Index).Pet.Stat(StatType.Count - 1)
+        For i = 1 To StatType.Count - 1
             Player(Index).Pet.Stat(i) = 0
         Next
 

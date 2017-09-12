@@ -152,7 +152,7 @@ Module ClientText
         For i = 1 To MAX_QUESTS
             'check if the npc is the starter to any quest: [!] symbol
             'can accept the quest as a new one?
-            If Player(MyIndex).PlayerQuest(i).Status = QuestStatus.NotStarted OrElse Player(MyIndex).PlayerQuest(i).Status = QuestStatus.Repeatable OrElse (Player(MyIndex).PlayerQuest(i).Status = QuestStatus.Completed AndAlso Quest(i).Repeat = 1) Then
+            If Player(MyIndex).PlayerQuest(i).Status = QuestStatusType.NotStarted OrElse Player(MyIndex).PlayerQuest(i).Status = QuestStatusType.Repeatable OrElse (Player(MyIndex).PlayerQuest(i).Status = QuestStatusType.Completed AndAlso Quest(i).Repeat = 1) Then
                 'the npc gives this quest?
                 If Map.MapEvents(Index).questnum = i Then
                     Name = "[!]"
@@ -165,7 +165,7 @@ Module ClientText
                     End If
                     Exit For
                 End If
-            ElseIf Player(MyIndex).PlayerQuest(i).Status = QuestStatus.Started Then
+            ElseIf Player(MyIndex).PlayerQuest(i).Status = QuestStatusType.Started Then
                 If Map.MapEvents(Index).questnum = i Then
                     Name = "[*]"
                     TextX = ConvertMapX(Map.MapEvents(Index).X * PIC_X) + Map.MapEvents(Index).XOffset + (PIC_X \ 2) - GetTextWidth((Trim$("[*]"))) + 8

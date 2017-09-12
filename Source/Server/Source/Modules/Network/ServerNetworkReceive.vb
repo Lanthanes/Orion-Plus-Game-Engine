@@ -417,7 +417,7 @@ Module ServerNetworkReceive
 
             Next
 
-            If (Sex < Enums.Sex.Male) OrElse (Sex > Enums.Sex.Female) Then Exit Sub
+            If (Sex < Enums.SexType.Male) OrElse (Sex > Enums.SexType.Female) Then Exit Sub
 
             If Classes < 1 OrElse Classes > Max_Classes Then Exit Sub
 
@@ -573,7 +573,7 @@ Module ServerNetworkReceive
         Buffer.Dispose()
 
         ' Prevent hacking
-        If Dir < Direction.Up OrElse Dir > Direction.Right Then Exit Sub
+        If Dir < DirectionType.Up OrElse Dir > DirectionType.Right Then Exit Sub
 
         If movement < 1 OrElse movement > 2 Then Exit Sub
 
@@ -632,7 +632,7 @@ Module ServerNetworkReceive
         Buffer.Dispose()
 
         ' Prevent hacking
-        If dir < Direction.Up OrElse dir > Direction.Right Then Exit Sub
+        If dir < DirectionType.Up OrElse dir > DirectionType.Right Then Exit Sub
 
         SetPlayerDir(Index, dir)
 
@@ -720,22 +720,22 @@ Module ServerNetworkReceive
 
         ' Check tradeskills
         Select Case GetPlayerDir(Index)
-            Case Direction.Up
+            Case DirectionType.Up
 
                 If GetPlayerY(Index) = 0 Then Exit Sub
                 x = GetPlayerX(Index)
                 y = GetPlayerY(Index) - 1
-            Case Direction.Down
+            Case DirectionType.Down
 
                 If GetPlayerY(Index) = Map(GetPlayerMap(Index)).MaxY Then Exit Sub
                 x = GetPlayerX(Index)
                 y = GetPlayerY(Index) + 1
-            Case Direction.Left
+            Case DirectionType.Left
 
                 If GetPlayerX(Index) = 0 Then Exit Sub
                 x = GetPlayerX(Index) - 1
                 y = GetPlayerY(Index)
-            Case Direction.Right
+            Case DirectionType.Right
 
                 If GetPlayerX(Index) = Map(GetPlayerMap(Index)).MaxX Then Exit Sub
                 x = GetPlayerX(Index) + 1
@@ -763,10 +763,10 @@ Module ServerNetworkReceive
             If GetPlayerAccess(Index) > AdminType.Monitor Then
                 PlayerMsg(Index, "-=- Stats for " & GetPlayerName(i) & " -=-", ColorType.Yellow)
                 PlayerMsg(Index, "Level: " & GetPlayerLevel(i) & "  Exp: " & GetPlayerExp(i) & "/" & GetPlayerNextLevel(i), ColorType.Yellow)
-                PlayerMsg(Index, "HP: " & GetPlayerVital(i, Vitals.HP) & "/" & GetPlayerMaxVital(i, Vitals.HP) & "  MP: " & GetPlayerVital(i, Vitals.MP) & "/" & GetPlayerMaxVital(i, Vitals.MP) & "  SP: " & GetPlayerVital(i, Vitals.SP) & "/" & GetPlayerMaxVital(i, Vitals.SP), ColorType.Yellow)
-                PlayerMsg(Index, "Strength: " & GetPlayerStat(i, Stats.Strength) & "  Defense: " & GetPlayerStat(i, Stats.Endurance) & "  Magic: " & GetPlayerStat(i, Stats.Intelligence) & "  Speed: " & GetPlayerStat(i, Stats.Spirit), ColorType.Yellow)
-                n = (GetPlayerStat(i, Stats.Strength) \ 2) + (GetPlayerLevel(i) \ 2)
-                i = (GetPlayerStat(i, Stats.Endurance) \ 2) + (GetPlayerLevel(i) \ 2)
+                PlayerMsg(Index, "HP: " & GetPlayerVital(i, VitalType.HP) & "/" & GetPlayerMaxVital(i, VitalType.HP) & "  MP: " & GetPlayerVital(i, VitalType.MP) & "/" & GetPlayerMaxVital(i, VitalType.MP) & "  SP: " & GetPlayerVital(i, VitalType.SP) & "/" & GetPlayerMaxVital(i, VitalType.SP), ColorType.Yellow)
+                PlayerMsg(Index, "Strength: " & GetPlayerStat(i, StatType.Strength) & "  Defense: " & GetPlayerStat(i, StatType.Endurance) & "  Magic: " & GetPlayerStat(i, StatType.Intelligence) & "  Speed: " & GetPlayerStat(i, StatType.Spirit), ColorType.Yellow)
+                n = (GetPlayerStat(i, StatType.Strength) \ 2) + (GetPlayerLevel(i) \ 2)
+                i = (GetPlayerStat(i, StatType.Endurance) \ 2) + (GetPlayerLevel(i) \ 2)
 
                 If n > 100 Then n = 100
                 If i > 100 Then i = 100
@@ -887,10 +887,10 @@ Module ServerNetworkReceive
 
         PlayerMsg(Index, "-=- Stats for " & GetPlayerName(Index) & " -=-", ColorType.Yellow)
         PlayerMsg(Index, "Level: " & GetPlayerLevel(Index) & "  Exp: " & GetPlayerExp(Index) & "/" & GetPlayerNextLevel(Index), ColorType.Yellow)
-        PlayerMsg(Index, "HP: " & GetPlayerVital(Index, Vitals.HP) & "/" & GetPlayerMaxVital(Index, Vitals.HP) & "  MP: " & GetPlayerVital(Index, Vitals.MP) & "/" & GetPlayerMaxVital(Index, Vitals.MP) & "  SP: " & GetPlayerVital(Index, Vitals.SP) & "/" & GetPlayerMaxVital(Index, Vitals.SP), ColorType.Yellow)
-        PlayerMsg(Index, "STR: " & GetPlayerStat(Index, Stats.Strength) & "  DEF: " & GetPlayerStat(Index, Stats.Endurance) & "  MAGI: " & GetPlayerStat(Index, Stats.Intelligence) & "  Speed: " & GetPlayerStat(Index, Stats.Spirit), ColorType.Yellow)
-        n = (GetPlayerStat(Index, Stats.Strength) \ 2) + (GetPlayerLevel(Index) \ 2)
-        i = (GetPlayerStat(Index, Stats.Endurance) \ 2) + (GetPlayerLevel(Index) \ 2)
+        PlayerMsg(Index, "HP: " & GetPlayerVital(Index, VitalType.HP) & "/" & GetPlayerMaxVital(Index, VitalType.HP) & "  MP: " & GetPlayerVital(Index, VitalType.MP) & "/" & GetPlayerMaxVital(Index, VitalType.MP) & "  SP: " & GetPlayerVital(Index, VitalType.SP) & "/" & GetPlayerMaxVital(Index, VitalType.SP), ColorType.Yellow)
+        PlayerMsg(Index, "STR: " & GetPlayerStat(Index, StatType.Strength) & "  DEF: " & GetPlayerStat(Index, StatType.Endurance) & "  MAGI: " & GetPlayerStat(Index, StatType.Intelligence) & "  Speed: " & GetPlayerStat(Index, StatType.Spirit), ColorType.Yellow)
+        n = (GetPlayerStat(Index, StatType.Strength) \ 2) + (GetPlayerLevel(Index) \ 2)
+        i = (GetPlayerStat(Index, StatType.Endurance) \ 2) + (GetPlayerLevel(Index) \ 2)
 
         If n > 100 Then n = 100
         If i > 100 Then i = 100
@@ -908,7 +908,7 @@ Module ServerNetworkReceive
         Buffer.Dispose()
 
         ' Prevent hacking
-        If dir < Direction.Up OrElse dir > Direction.Right Then Exit Sub
+        If dir < DirectionType.Up OrElse dir > DirectionType.Right Then Exit Sub
 
         PlayerMove(Index, dir, 1, True)
     End Sub
@@ -977,8 +977,8 @@ Module ServerNetworkReceive
                     .Tile(x, y).Data2 = Buffer.ReadInt32
                     .Tile(x, y).Data3 = Buffer.ReadInt32
                     .Tile(x, y).DirBlock = Buffer.ReadInt32
-                    ReDim .Tile(x, y).Layer(0 To MapLayer.Count - 1)
-                    For i = 0 To MapLayer.Count - 1
+                    ReDim .Tile(x, y).Layer(0 To LayerType.Count - 1)
+                    For i = 0 To LayerType.Count - 1
                         .Tile(x, y).Layer(i).Tileset = Buffer.ReadInt32
                         .Tile(x, y).Layer(i).X = Buffer.ReadInt32
                         .Tile(x, y).Layer(i).Y = Buffer.ReadInt32
@@ -1403,7 +1403,7 @@ Module ServerNetworkReceive
         ' Update the item
         Item(n).AccessReq = Buffer.ReadInt32()
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Item(n).Add_Stat(i) = Buffer.ReadInt32()
         Next
 
@@ -1430,7 +1430,7 @@ Module ServerNetworkReceive
         Item(n).Stackable = Buffer.ReadInt32()
         Item(n).Description = Trim$(Buffer.ReadString)
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Item(n).Stat_Req(i) = Buffer.ReadInt32()
         Next
 
@@ -1514,7 +1514,7 @@ Module ServerNetworkReceive
         Npc(NpcNum).SpawnSecs = Buffer.ReadInt32()
         Npc(NpcNum).Sprite = Buffer.ReadInt32()
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Npc(NpcNum).Stat(i) = Buffer.ReadInt32()
         Next
 
@@ -2757,7 +2757,7 @@ Module ServerNetworkReceive
         ReDim Classes(0 To Max_Classes)
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Stat(0 To Stats.Count - 1)
+            ReDim Classes(i).Stat(0 To StatType.Count - 1)
         Next
 
         For i = 1 To Max_Classes
@@ -2785,12 +2785,12 @@ Module ServerNetworkReceive
                     .FemaleSprite(x) = Buffer.ReadInt32
                 Next
 
-                .Stat(Stats.Strength) = Buffer.ReadInt32
-                .Stat(Stats.Endurance) = Buffer.ReadInt32
-                .Stat(Stats.Vitality) = Buffer.ReadInt32
-                .Stat(Stats.Intelligence) = Buffer.ReadInt32
-                .Stat(Stats.Luck) = Buffer.ReadInt32
-                .Stat(Stats.Spirit) = Buffer.ReadInt32
+                .Stat(StatType.Strength) = Buffer.ReadInt32
+                .Stat(StatType.Endurance) = Buffer.ReadInt32
+                .Stat(StatType.Vitality) = Buffer.ReadInt32
+                .Stat(StatType.Intelligence) = Buffer.ReadInt32
+                .Stat(StatType.Luck) = Buffer.ReadInt32
+                .Stat(StatType.Spirit) = Buffer.ReadInt32
 
                 ReDim .StartItem(5)
                 ReDim .StartValue(5)
@@ -2977,8 +2977,8 @@ Module ServerNetworkReceive
                     .Tile(x, y).Data2 = Buffer.ReadInt32
                     .Tile(x, y).Data3 = Buffer.ReadInt32
                     .Tile(x, y).DirBlock = Buffer.ReadInt32
-                    ReDim .Tile(x, y).Layer(0 To MapLayer.Count - 1)
-                    For i = 0 To MapLayer.Count - 1
+                    ReDim .Tile(x, y).Layer(0 To LayerType.Count - 1)
+                    For i = 0 To LayerType.Count - 1
                         .Tile(x, y).Layer(i).Tileset = Buffer.ReadInt32
                         .Tile(x, y).Layer(i).X = Buffer.ReadInt32
                         .Tile(x, y).Layer(i).Y = Buffer.ReadInt32
@@ -3193,7 +3193,7 @@ Module ServerNetworkReceive
         myXml.WriteString("Resources", "ResourcesNum", Buffer.ReadString())
 
         For Prefab = 1 To TilePrefab.Count - 1
-            ReDim Tile(Prefab).Layer(0 To MapLayer.Count - 1)
+            ReDim Tile(Prefab).Layer(0 To LayerType.Count - 1)
 
             Layer = Buffer.ReadInt32()
             myXml.WriteString("Prefab" & Prefab, "Layer" & Layer & "Tileset", Buffer.ReadInt32)

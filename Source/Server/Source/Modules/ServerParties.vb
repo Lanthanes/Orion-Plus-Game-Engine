@@ -90,7 +90,7 @@ Module ServerParties
         Addlog("Sent SMSG: SPartyVitals", PACKET_LOG)
         Console.WriteLine("Sent SMSG: SPartyVitals")
 
-        For i = 1 To Vitals.Count - 1
+        For i = 1 To VitalType.Count - 1
             Buffer.WriteInt32(GetPlayerMaxVital(Index, i))
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).Vital(i))
         Next

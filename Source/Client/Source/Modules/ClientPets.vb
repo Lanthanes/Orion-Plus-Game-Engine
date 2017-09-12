@@ -84,7 +84,7 @@ Module ClientPets
 
         Pet(Index).Name = ""
 
-        ReDim Pet(Index).Stat(Stats.Count - 1)
+        ReDim Pet(Index).Stat(StatType.Count - 1)
         ReDim Pet(Index).Skill(4)
     End Sub
 
@@ -182,7 +182,7 @@ Module ClientPets
         Player(n).Pet.Mana = Buffer.ReadInt32
         Player(n).Pet.Level = Buffer.ReadInt32
 
-        For i = 1 To Stats.Count - 1
+        For i = 1 To StatType.Count - 1
             Player(n).Pet.Stat(i) = Buffer.ReadInt32
         Next
 
@@ -223,7 +223,7 @@ Module ClientPets
             .LevelPnts = Buffer.ReadInt32
             .StatType = Buffer.ReadInt32
             .LevelingType = Buffer.ReadInt32
-            For i = 1 To Stats.Count - 1
+            For i = 1 To StatType.Count - 1
                 .Stat(i) = Buffer.ReadInt32
             Next
 
@@ -259,13 +259,13 @@ Module ClientPets
             .Moving = Movement
 
             Select Case .Dir
-                Case Direction.Up
+                Case DirectionType.Up
                     .YOffset = PIC_Y
-                Case Direction.Down
+                Case DirectionType.Down
                     .YOffset = PIC_Y * -1
-                Case Direction.Left
+                Case DirectionType.Left
                     .XOffset = PIC_X
-                Case Direction.Right
+                Case DirectionType.Right
                     .XOffset = PIC_X * -1
             End Select
         End With
@@ -345,19 +345,19 @@ Module ClientPets
         If Player(Index).Pet.Moving = MovementType.Walking Then
 
             Select Case Player(Index).Pet.Dir
-                Case Direction.Up
+                Case DirectionType.Up
                     Player(Index).Pet.YOffset = Player(Index).Pet.YOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
                     If Player(Index).Pet.YOffset < 0 Then Player(Index).Pet.YOffset = 0
 
-                Case Direction.Down
+                Case DirectionType.Down
                     Player(Index).Pet.YOffset = Player(Index).Pet.YOffset + ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
                     If Player(Index).Pet.YOffset > 0 Then Player(Index).Pet.YOffset = 0
 
-                Case Direction.Left
+                Case DirectionType.Left
                     Player(Index).Pet.XOffset = Player(Index).Pet.XOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
                     If Player(Index).Pet.XOffset < 0 Then Player(Index).Pet.XOffset = 0
 
-                Case Direction.Right
+                Case DirectionType.Right
                     Player(Index).Pet.XOffset = Player(Index).Pet.XOffset + ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
                     If Player(Index).Pet.XOffset > 0 Then Player(Index).Pet.XOffset = 0
 
@@ -365,7 +365,7 @@ Module ClientPets
 
             ' Check if completed walking over to the next tile
             If Player(Index).Pet.Moving > 0 Then
-                If Player(Index).Pet.Dir = Direction.Right OrElse Player(Index).Pet.Dir = Direction.Down Then
+                If Player(Index).Pet.Dir = DirectionType.Right OrElse Player(Index).Pet.Dir = DirectionType.Down Then
                     If (Player(Index).Pet.XOffset >= 0) AndAlso (Player(Index).Pet.YOffset >= 0) Then
                         Player(Index).Pet.Moving = 0
                         If Player(Index).Pet.Steps = 1 Then
@@ -434,13 +434,13 @@ Module ClientPets
         Else
             ' If not attacking, walk normally
             Select Case Player(Index).Pet.Dir
-                Case Direction.Up
+                Case DirectionType.Up
                     If (Player(Index).Pet.YOffset > 8) Then Anim = Player(Index).Pet.Steps
-                Case Direction.Down
+                Case DirectionType.Down
                     If (Player(Index).Pet.YOffset < -8) Then Anim = Player(Index).Pet.Steps
-                Case Direction.Left
+                Case DirectionType.Left
                     If (Player(Index).Pet.XOffset > 8) Then Anim = Player(Index).Pet.Steps
-                Case Direction.Right
+                Case DirectionType.Right
                     If (Player(Index).Pet.XOffset < -8) Then Anim = Player(Index).Pet.Steps
             End Select
         End If
@@ -455,13 +455,13 @@ Module ClientPets
 
         ' Set the left
         Select Case Player(Index).Pet.Dir
-            Case Direction.Up
+            Case DirectionType.Up
                 spriteleft = 3
-            Case Direction.Right
+            Case DirectionType.Right
                 spriteleft = 2
-            Case Direction.Down
+            Case DirectionType.Down
                 spriteleft = 0
-            Case Direction.Left
+            Case DirectionType.Left
                 spriteleft = 1
         End Select
 
@@ -609,13 +609,13 @@ Module ClientPets
         RenderSprite(CharacterSprite(sprite), GameWindow, PetStatX + 10, PetStatY + 10 + (PetStatsGFXInfo.Height / 4) - (rec.Height / 2), rec.X, rec.Y, rec.Width, rec.Height)
 
         'stats
-        DrawText(PetStatX + 65, PetStatY + 50, "Strength: " & Player(MyIndex).Pet.Stat(Stats.Strength), SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
-        DrawText(PetStatX + 65, PetStatY + 65, "Endurance: " & Player(MyIndex).Pet.Stat(Stats.Endurance), SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
-        DrawText(PetStatX + 65, PetStatY + 80, "Vitality: " & Player(MyIndex).Pet.Stat(Stats.Vitality), SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
+        DrawText(PetStatX + 65, PetStatY + 50, "Strength: " & Player(MyIndex).Pet.Stat(StatType.Strength), SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
+        DrawText(PetStatX + 65, PetStatY + 65, "Endurance: " & Player(MyIndex).Pet.Stat(StatType.Endurance), SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
+        DrawText(PetStatX + 65, PetStatY + 80, "Vitality: " & Player(MyIndex).Pet.Stat(StatType.Vitality), SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
 
-        DrawText(PetStatX + 165, PetStatY + 50, "Luck: " & Player(MyIndex).Pet.Stat(Stats.Luck), SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
-        DrawText(PetStatX + 165, PetStatY + 65, "Intelligence: " & Player(MyIndex).Pet.Stat(Stats.Intelligence), SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
-        DrawText(PetStatX + 165, PetStatY + 80, "Spirit: " & Player(MyIndex).Pet.Stat(Stats.Spirit), SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
+        DrawText(PetStatX + 165, PetStatY + 50, "Luck: " & Player(MyIndex).Pet.Stat(StatType.Luck), SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
+        DrawText(PetStatX + 165, PetStatY + 65, "Intelligence: " & Player(MyIndex).Pet.Stat(StatType.Intelligence), SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
+        DrawText(PetStatX + 165, PetStatY + 80, "Spirit: " & Player(MyIndex).Pet.Stat(StatType.Spirit), SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
 
         DrawText(PetStatX + 65, PetStatY + 95, "Experience: " & Player(MyIndex).Pet.Exp & "/" & Player(MyIndex).Pet.TNL, SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
     End Sub

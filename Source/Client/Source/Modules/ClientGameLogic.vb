@@ -343,19 +343,19 @@ Module ClientGameLogic
         If MapNpc(MapNpcNum).Moving = MovementType.Walking Then
 
             Select Case MapNpc(MapNpcNum).Dir
-                Case Direction.Up
+                Case DirectionType.Up
                     MapNpc(MapNpcNum).YOffset = MapNpc(MapNpcNum).YOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
                     If MapNpc(MapNpcNum).YOffset < 0 Then MapNpc(MapNpcNum).YOffset = 0
 
-                Case Direction.Down
+                Case DirectionType.Down
                     MapNpc(MapNpcNum).YOffset = MapNpc(MapNpcNum).YOffset + ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
                     If MapNpc(MapNpcNum).YOffset > 0 Then MapNpc(MapNpcNum).YOffset = 0
 
-                Case Direction.Left
+                Case DirectionType.Left
                     MapNpc(MapNpcNum).XOffset = MapNpc(MapNpcNum).XOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
                     If MapNpc(MapNpcNum).XOffset < 0 Then MapNpc(MapNpcNum).XOffset = 0
 
-                Case Direction.Right
+                Case DirectionType.Right
                     MapNpc(MapNpcNum).XOffset = MapNpc(MapNpcNum).XOffset + ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
                     If MapNpc(MapNpcNum).XOffset > 0 Then MapNpc(MapNpcNum).XOffset = 0
 
@@ -363,7 +363,7 @@ Module ClientGameLogic
 
             ' Check if completed walking over to the next tile
             If MapNpc(MapNpcNum).Moving > 0 Then
-                If MapNpc(MapNpcNum).Dir = Direction.Right OrElse MapNpc(MapNpcNum).Dir = Direction.Down Then
+                If MapNpc(MapNpcNum).Dir = DirectionType.Right OrElse MapNpc(MapNpcNum).Dir = DirectionType.Down Then
                     If (MapNpc(MapNpcNum).XOffset >= 0) AndAlso (MapNpc(MapNpcNum).YOffset >= 0) Then
                         MapNpc(MapNpcNum).Moving = 0
                         If MapNpc(MapNpcNum).Steps = 1 Then
@@ -1092,22 +1092,22 @@ Continue1:
         ' Equipment specific
         If Item(itemnum).Randomize <> 0 Then
             If WindowType = 0 Then
-                If Player(MyIndex).RandInv(InvNum).Stat(Stats.Strength) > 0 Then
-                    ItemDescStr = "+" & Player(MyIndex).RandInv(InvNum).Stat(Stats.Strength)
+                If Player(MyIndex).RandInv(InvNum).Stat(StatType.Strength) > 0 Then
+                    ItemDescStr = "+" & Player(MyIndex).RandInv(InvNum).Stat(StatType.Strength)
                 Else
                     ItemDescStr = Strings.Get("itemdescription", "none")
                 End If
             Else
-                If Player(MyIndex).RandEquip(InvNum).Stat(Stats.Strength) > 0 Then
-                    ItemDescStr = "+" & Player(MyIndex).RandEquip(InvNum).Stat(Stats.Strength)
+                If Player(MyIndex).RandEquip(InvNum).Stat(StatType.Strength) > 0 Then
+                    ItemDescStr = "+" & Player(MyIndex).RandEquip(InvNum).Stat(StatType.Strength)
                 Else
                     ItemDescStr = Strings.Get("itemdescription", "none")
                 End If
             End If
 
         Else
-            If Item(itemnum).Add_Stat(Stats.Strength) > 0 Then
-                ItemDescStr = "+" & Item(itemnum).Add_Stat(Stats.Strength)
+            If Item(itemnum).Add_Stat(StatType.Strength) > 0 Then
+                ItemDescStr = "+" & Item(itemnum).Add_Stat(StatType.Strength)
             Else
                 ItemDescStr = Strings.Get("itemdescription", "none")
             End If
@@ -1115,21 +1115,21 @@ Continue1:
 
         If Item(itemnum).Randomize <> 0 Then
             If WindowType = 0 Then
-                If Player(MyIndex).RandInv(InvNum).Stat(Stats.Vitality) > 0 Then
-                    ItemDescVit = "+" & Player(MyIndex).RandInv(InvNum).Stat(Stats.Vitality)
+                If Player(MyIndex).RandInv(InvNum).Stat(StatType.Vitality) > 0 Then
+                    ItemDescVit = "+" & Player(MyIndex).RandInv(InvNum).Stat(StatType.Vitality)
                 Else
                     ItemDescVit = Strings.Get("itemdescription", "none")
                 End If
             Else
-                If Player(MyIndex).RandEquip(InvNum).Stat(Stats.Vitality) > 0 Then
-                    ItemDescVit = "+" & Player(MyIndex).RandEquip(InvNum).Stat(Stats.Vitality)
+                If Player(MyIndex).RandEquip(InvNum).Stat(StatType.Vitality) > 0 Then
+                    ItemDescVit = "+" & Player(MyIndex).RandEquip(InvNum).Stat(StatType.Vitality)
                 Else
                     ItemDescVit = Strings.Get("itemdescription", "none")
                 End If
             End If
         Else
-            If Item(itemnum).Add_Stat(Stats.Vitality) > 0 Then
-                ItemDescVit = "+" & Item(itemnum).Add_Stat(Stats.Vitality)
+            If Item(itemnum).Add_Stat(StatType.Vitality) > 0 Then
+                ItemDescVit = "+" & Item(itemnum).Add_Stat(StatType.Vitality)
             Else
                 ItemDescVit = Strings.Get("itemdescription", "none")
             End If
@@ -1137,21 +1137,21 @@ Continue1:
 
         If Item(itemnum).Randomize <> 0 Then
             If WindowType = 0 Then
-                If Player(MyIndex).RandInv(InvNum).Stat(Stats.Intelligence) > 0 Then
-                    ItemDescInt = "+" & Player(MyIndex).RandInv(InvNum).Stat(Stats.Intelligence)
+                If Player(MyIndex).RandInv(InvNum).Stat(StatType.Intelligence) > 0 Then
+                    ItemDescInt = "+" & Player(MyIndex).RandInv(InvNum).Stat(StatType.Intelligence)
                 Else
                     ItemDescInt = Strings.Get("itemdescription", "none")
                 End If
             Else
-                If Player(MyIndex).RandEquip(InvNum).Stat(Stats.Intelligence) > 0 Then
-                    ItemDescInt = "+" & Player(MyIndex).RandEquip(InvNum).Stat(Stats.Intelligence)
+                If Player(MyIndex).RandEquip(InvNum).Stat(StatType.Intelligence) > 0 Then
+                    ItemDescInt = "+" & Player(MyIndex).RandEquip(InvNum).Stat(StatType.Intelligence)
                 Else
                     ItemDescInt = Strings.Get("itemdescription", "none")
                 End If
             End If
         Else
-            If Item(itemnum).Add_Stat(Stats.Intelligence) > 0 Then
-                ItemDescInt = "+" & Item(itemnum).Add_Stat(Stats.Intelligence)
+            If Item(itemnum).Add_Stat(StatType.Intelligence) > 0 Then
+                ItemDescInt = "+" & Item(itemnum).Add_Stat(StatType.Intelligence)
             Else
                 ItemDescInt = Strings.Get("itemdescription", "none")
             End If
@@ -1159,22 +1159,22 @@ Continue1:
 
         If Item(itemnum).Randomize <> 0 Then
             If WindowType = 0 Then
-                If Player(MyIndex).RandInv(InvNum).Stat(Stats.Endurance) > 0 Then
-                    ItemDescEnd = "+" & Player(MyIndex).RandInv(InvNum).Stat(Stats.Endurance)
+                If Player(MyIndex).RandInv(InvNum).Stat(StatType.Endurance) > 0 Then
+                    ItemDescEnd = "+" & Player(MyIndex).RandInv(InvNum).Stat(StatType.Endurance)
                 Else
                     ItemDescEnd = Strings.Get("itemdescription", "none")
                 End If
             Else
-                If Player(MyIndex).RandEquip(InvNum).Stat(Stats.Endurance) > 0 Then
-                    ItemDescEnd = "+" & Player(MyIndex).RandEquip(InvNum).Stat(Stats.Endurance)
+                If Player(MyIndex).RandEquip(InvNum).Stat(StatType.Endurance) > 0 Then
+                    ItemDescEnd = "+" & Player(MyIndex).RandEquip(InvNum).Stat(StatType.Endurance)
                 Else
                     ItemDescEnd = Strings.Get("itemdescription", "none")
                 End If
             End If
 
         Else
-            If Item(itemnum).Add_Stat(Stats.Endurance) > 0 Then
-                ItemDescEnd = "+" & Item(itemnum).Add_Stat(Stats.Endurance)
+            If Item(itemnum).Add_Stat(StatType.Endurance) > 0 Then
+                ItemDescEnd = "+" & Item(itemnum).Add_Stat(StatType.Endurance)
             Else
                 ItemDescEnd = Strings.Get("itemdescription", "none")
             End If
@@ -1182,22 +1182,22 @@ Continue1:
 
         If Item(itemnum).Randomize <> 0 Then
             If WindowType = 0 Then
-                If Player(MyIndex).RandInv(InvNum).Stat(Stats.Luck) > 0 Then
-                    ItemDescLuck = "+" & Player(MyIndex).RandInv(InvNum).Stat(Stats.Luck)
+                If Player(MyIndex).RandInv(InvNum).Stat(StatType.Luck) > 0 Then
+                    ItemDescLuck = "+" & Player(MyIndex).RandInv(InvNum).Stat(StatType.Luck)
                 Else
                     ItemDescLuck = Strings.Get("itemdescription", "none")
                 End If
             Else
-                If Player(MyIndex).RandEquip(InvNum).Stat(Stats.Luck) > 0 Then
-                    ItemDescLuck = "+" & Player(MyIndex).RandEquip(InvNum).Stat(Stats.Luck)
+                If Player(MyIndex).RandEquip(InvNum).Stat(StatType.Luck) > 0 Then
+                    ItemDescLuck = "+" & Player(MyIndex).RandEquip(InvNum).Stat(StatType.Luck)
                 Else
                     ItemDescLuck = Strings.Get("itemdescription", "none")
                 End If
             End If
 
         Else
-            If Item(itemnum).Add_Stat(Stats.Luck) > 0 Then
-                ItemDescLuck = "+" & Item(itemnum).Add_Stat(Stats.Luck)
+            If Item(itemnum).Add_Stat(StatType.Luck) > 0 Then
+                ItemDescLuck = "+" & Item(itemnum).Add_Stat(StatType.Luck)
             Else
                 ItemDescLuck = Strings.Get("itemdescription", "none")
             End If
@@ -1205,22 +1205,22 @@ Continue1:
 
         If Item(itemnum).Randomize <> 0 Then
             If WindowType = 0 Then
-                If Player(MyIndex).RandInv(InvNum).Stat(Stats.Spirit) > 0 Then
-                    ItemDescSpr = "+" & Player(MyIndex).RandInv(InvNum).Stat(Stats.Spirit)
+                If Player(MyIndex).RandInv(InvNum).Stat(StatType.Spirit) > 0 Then
+                    ItemDescSpr = "+" & Player(MyIndex).RandInv(InvNum).Stat(StatType.Spirit)
                 Else
                     ItemDescSpr = Strings.Get("itemdescription", "none")
                 End If
             Else
-                If Player(MyIndex).RandEquip(InvNum).Stat(Stats.Spirit) > 0 Then
-                    ItemDescSpr = "+" & Player(MyIndex).RandEquip(InvNum).Stat(Stats.Spirit)
+                If Player(MyIndex).RandEquip(InvNum).Stat(StatType.Spirit) > 0 Then
+                    ItemDescSpr = "+" & Player(MyIndex).RandEquip(InvNum).Stat(StatType.Spirit)
                 Else
                     ItemDescSpr = Strings.Get("itemdescription", "none")
                 End If
             End If
 
         Else
-            If Item(itemnum).Add_Stat(Stats.Spirit) > 0 Then
-                ItemDescSpr = "+" & Item(itemnum).Add_Stat(Stats.Spirit)
+            If Item(itemnum).Add_Stat(StatType.Spirit) > 0 Then
+                ItemDescSpr = "+" & Item(itemnum).Add_Stat(StatType.Spirit)
             Else
                 ItemDescSpr = Strings.Get("itemdescription", "none")
             End If
@@ -1400,9 +1400,9 @@ Continue1:
         'DrawMapNameY = 1
 
         Select Case Map.Moral
-            Case MapMoral.None
+            Case MapMoralType.None
                 DrawMapNameColor = SFML.Graphics.Color.Red
-            Case MapMoral.Safe
+            Case MapMoralType.Safe
                 DrawMapNameColor = SFML.Graphics.Color.Green
             Case Else
                 DrawMapNameColor = SFML.Graphics.Color.White

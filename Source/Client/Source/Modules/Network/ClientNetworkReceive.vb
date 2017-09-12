@@ -271,11 +271,11 @@ Module ClientNetworkReceive
                 .Name = Trim(Buffer.ReadString)
                 .Desc = Trim(Buffer.ReadString)
 
-                ReDim .Vital(0 To Vitals.Count - 1)
+                ReDim .Vital(0 To VitalType.Count - 1)
 
-                .Vital(Vitals.HP) = Buffer.ReadInt32
-                .Vital(Vitals.MP) = Buffer.ReadInt32
-                .Vital(Vitals.SP) = Buffer.ReadInt32
+                .Vital(VitalType.HP) = Buffer.ReadInt32
+                .Vital(VitalType.MP) = Buffer.ReadInt32
+                .Vital(VitalType.SP) = Buffer.ReadInt32
 
                 ' get array size
                 z = Buffer.ReadInt32
@@ -295,14 +295,14 @@ Module ClientNetworkReceive
                     .FemaleSprite(X) = Buffer.ReadInt32
                 Next
 
-                ReDim .Stat(0 To Stats.Count - 1)
+                ReDim .Stat(0 To StatType.Count - 1)
 
-                .Stat(Stats.Strength) = Buffer.ReadInt32
-                .Stat(Stats.Endurance) = Buffer.ReadInt32
-                .Stat(Stats.Vitality) = Buffer.ReadInt32
-                .Stat(Stats.Intelligence) = Buffer.ReadInt32
-                .Stat(Stats.Luck) = Buffer.ReadInt32
-                .Stat(Stats.Spirit) = Buffer.ReadInt32
+                .Stat(StatType.Strength) = Buffer.ReadInt32
+                .Stat(StatType.Endurance) = Buffer.ReadInt32
+                .Stat(StatType.Vitality) = Buffer.ReadInt32
+                .Stat(StatType.Intelligence) = Buffer.ReadInt32
+                .Stat(StatType.Luck) = Buffer.ReadInt32
+                .Stat(StatType.Spirit) = Buffer.ReadInt32
 
                 ReDim .StartItem(5)
                 ReDim .StartValue(5)
@@ -356,11 +356,11 @@ Module ClientNetworkReceive
                 .Name = Trim(Buffer.ReadString)
                 .Desc = Trim(Buffer.ReadString)
 
-                ReDim .Vital(0 To Vitals.Count - 1)
+                ReDim .Vital(0 To VitalType.Count - 1)
 
-                .Vital(Vitals.HP) = Buffer.ReadInt32
-                .Vital(Vitals.MP) = Buffer.ReadInt32
-                .Vital(Vitals.SP) = Buffer.ReadInt32
+                .Vital(VitalType.HP) = Buffer.ReadInt32
+                .Vital(VitalType.MP) = Buffer.ReadInt32
+                .Vital(VitalType.SP) = Buffer.ReadInt32
 
                 ' get array size
                 z = Buffer.ReadInt32
@@ -380,14 +380,14 @@ Module ClientNetworkReceive
                     .FemaleSprite(X) = Buffer.ReadInt32
                 Next
 
-                ReDim .Stat(0 To Stats.Count - 1)
+                ReDim .Stat(0 To StatType.Count - 1)
 
-                .Stat(Stats.Strength) = Buffer.ReadInt32
-                .Stat(Stats.Endurance) = Buffer.ReadInt32
-                .Stat(Stats.Vitality) = Buffer.ReadInt32
-                .Stat(Stats.Intelligence) = Buffer.ReadInt32
-                .Stat(Stats.Luck) = Buffer.ReadInt32
-                .Stat(Stats.Spirit) = Buffer.ReadInt32
+                .Stat(StatType.Strength) = Buffer.ReadInt32
+                .Stat(StatType.Endurance) = Buffer.ReadInt32
+                .Stat(StatType.Vitality) = Buffer.ReadInt32
+                .Stat(StatType.Intelligence) = Buffer.ReadInt32
+                .Stat(StatType.Luck) = Buffer.ReadInt32
+                .Stat(StatType.Spirit) = Buffer.ReadInt32
 
                 ReDim .StartItem(5)
                 ReDim .StartValue(5)
@@ -433,7 +433,7 @@ Module ClientNetworkReceive
             Player(MyIndex).RandInv(i).Prefix = Buffer.ReadString
             Player(MyIndex).RandInv(i).Suffix = Buffer.ReadString
             Player(MyIndex).RandInv(i).Rarity = Buffer.ReadInt32
-            For n = 1 To Stats.Count - 1
+            For n = 1 To StatType.Count - 1
                 Player(MyIndex).RandInv(i).Stat(n) = Buffer.ReadInt32
             Next
             Player(MyIndex).RandInv(i).Damage = Buffer.ReadInt32
@@ -459,7 +459,7 @@ Module ClientNetworkReceive
         Player(MyIndex).RandInv(n).Prefix = Buffer.ReadString
         Player(MyIndex).RandInv(n).Suffix = Buffer.ReadString
         Player(MyIndex).RandInv(n).Rarity = Buffer.ReadInt32
-        For i = 1 To Stats.Count - 1
+        For i = 1 To StatType.Count - 1
             Player(MyIndex).RandInv(n).Stat(i) = Buffer.ReadInt32
         Next
         Player(MyIndex).RandInv(n).Damage = Buffer.ReadInt32
@@ -488,7 +488,7 @@ Module ClientNetworkReceive
             Player(MyIndex).RandEquip(i).Speed = Buffer.ReadInt32
             Player(MyIndex).RandEquip(i).Rarity = Buffer.ReadInt32
 
-            For n = 1 To Stats.Count - 1
+            For n = 1 To StatType.Count - 1
                 Player(MyIndex).RandEquip(i).Stat(n) = Buffer.ReadInt32
             Next
         Next
@@ -507,12 +507,12 @@ Module ClientNetworkReceive
         Dim Buffer As New ByteStream(Data)
         Player(MyIndex).MaxHP = Buffer.ReadInt32
 
-        SetPlayerVital(MyIndex, Vitals.HP, Buffer.ReadInt32)
+        SetPlayerVital(MyIndex, VitalType.HP, Buffer.ReadInt32)
 
-        If GetPlayerMaxVital(MyIndex, Vitals.HP) > 0 Then
-            lblHPText = GetPlayerVital(MyIndex, Vitals.HP) & "/" & GetPlayerMaxVital(MyIndex, Vitals.HP)
+        If GetPlayerMaxVital(MyIndex, VitalType.HP) > 0 Then
+            lblHPText = GetPlayerVital(MyIndex, VitalType.HP) & "/" & GetPlayerMaxVital(MyIndex, VitalType.HP)
             ' hp bar
-            picHpWidth = Int(((GetPlayerVital(MyIndex, Vitals.HP) / 169) / (GetPlayerMaxVital(MyIndex, Vitals.HP) / 169)) * 169)
+            picHpWidth = Int(((GetPlayerVital(MyIndex, VitalType.HP) / 169) / (GetPlayerMaxVital(MyIndex, VitalType.HP) / 169)) * 169)
         End If
 
         Buffer.Dispose()
@@ -521,12 +521,12 @@ Module ClientNetworkReceive
     Private Sub Packet_PlayerMP(ByRef Data() As Byte)
         Dim Buffer As New ByteStream(Data)
         Player(MyIndex).MaxMP = Buffer.ReadInt32
-        SetPlayerVital(MyIndex, Vitals.MP, Buffer.ReadInt32)
+        SetPlayerVital(MyIndex, VitalType.MP, Buffer.ReadInt32)
 
-        If GetPlayerMaxVital(MyIndex, Vitals.MP) > 0 Then
-            lblManaText = GetPlayerVital(MyIndex, Vitals.MP) & "/" & GetPlayerMaxVital(MyIndex, Vitals.MP)
+        If GetPlayerMaxVital(MyIndex, VitalType.MP) > 0 Then
+            lblManaText = GetPlayerVital(MyIndex, VitalType.MP) & "/" & GetPlayerMaxVital(MyIndex, VitalType.MP)
             ' mp bar
-            picManaWidth = Int(((GetPlayerVital(MyIndex, Vitals.MP) / 169) / (GetPlayerMaxVital(MyIndex, Vitals.MP) / 169)) * 169)
+            picManaWidth = Int(((GetPlayerVital(MyIndex, VitalType.MP) / 169) / (GetPlayerMaxVital(MyIndex, VitalType.MP) / 169)) * 169)
         End If
 
         Buffer.Dispose()
@@ -535,7 +535,7 @@ Module ClientNetworkReceive
     Private Sub Packet_PlayerSP(ByRef Data() As Byte)
         Dim Buffer As New ByteStream(Data)
         Player(MyIndex).MaxSP = Buffer.ReadInt32
-        SetPlayerVital(MyIndex, Vitals.SP, Buffer.ReadInt32)
+        SetPlayerVital(MyIndex, VitalType.SP, Buffer.ReadInt32)
 
         Buffer.Dispose()
     End Sub
@@ -544,7 +544,7 @@ Module ClientNetworkReceive
         Dim i As Integer, index As Integer
         Dim Buffer As New ByteStream(Data)
         index = Buffer.ReadInt32
-        For i = 1 To Stats.Count - 1
+        For i = 1 To StatType.Count - 1
             SetPlayerStat(index, i, Buffer.ReadInt32)
         Next
         UpdateCharacterPanel = True
@@ -568,7 +568,7 @@ Module ClientNetworkReceive
         SetPlayerAccess(i, Buffer.ReadInt32)
         SetPlayerPK(i, Buffer.ReadInt32)
 
-        For X = 1 To Stats.Count - 1
+        For X = 1 To StatType.Count - 1
             SetPlayerStat(i, X, Buffer.ReadInt32)
         Next
 
@@ -623,13 +623,13 @@ Module ClientNetworkReceive
         Player(i).Moving = n
 
         Select Case GetPlayerDir(i)
-            Case Direction.Up
+            Case DirectionType.Up
                 Player(i).YOffset = PIC_Y
-            Case Direction.Down
+            Case DirectionType.Down
                 Player(i).YOffset = PIC_Y * -1
-            Case Direction.Left
+            Case DirectionType.Left
                 Player(i).XOffset = PIC_X
-            Case Direction.Right
+            Case DirectionType.Right
                 Player(i).XOffset = PIC_X * -1
         End Select
 
@@ -655,13 +655,13 @@ Module ClientNetworkReceive
             .Moving = Movement
 
             Select Case .Dir
-                Case Direction.Up
+                Case DirectionType.Up
                     .YOffset = PIC_Y
-                Case Direction.Down
+                Case DirectionType.Down
                     .YOffset = PIC_Y * -1
-                Case Direction.Left
+                Case DirectionType.Left
                     .XOffset = PIC_X
-                Case Direction.Right
+                Case DirectionType.Right
                     .XOffset = PIC_X * -1
             End Select
         End With
@@ -835,9 +835,9 @@ Module ClientNetworkReceive
                         Map.Tile(X, Y).Data3 = Buffer.ReadInt32
                         Map.Tile(X, Y).DirBlock = Buffer.ReadInt32
 
-                        ReDim Map.Tile(X, Y).Layer(0 To MapLayer.Count - 1)
+                        ReDim Map.Tile(X, Y).Layer(0 To LayerType.Count - 1)
 
-                        For i = 0 To MapLayer.Count - 1
+                        For i = 0 To LayerType.Count - 1
                             Map.Tile(X, Y).Layer(i).Tileset = Buffer.ReadInt32
                             Map.Tile(X, Y).Layer(i).X = Buffer.ReadInt32
                             Map.Tile(X, Y).Layer(i).Y = Buffer.ReadInt32
@@ -989,8 +989,8 @@ Module ClientNetworkReceive
                 MapNpc(i).X = Buffer.ReadInt32()
                 MapNpc(i).Y = Buffer.ReadInt32()
                 MapNpc(i).Dir = Buffer.ReadInt32()
-                MapNpc(i).Vital(Vitals.HP) = Buffer.ReadInt32()
-                MapNpc(i).Vital(Vitals.MP) = Buffer.ReadInt32()
+                MapNpc(i).Vital(VitalType.HP) = Buffer.ReadInt32()
+                MapNpc(i).Vital(VitalType.MP) = Buffer.ReadInt32()
             Next
 
             If Buffer.ReadInt32 = 1 Then
@@ -1056,8 +1056,8 @@ Module ClientNetworkReceive
                 .X = Buffer.ReadInt32
                 .Y = Buffer.ReadInt32
                 .Dir = Buffer.ReadInt32
-                .Vital(Vitals.HP) = Buffer.ReadInt32
-                .Vital(Vitals.MP) = Buffer.ReadInt32
+                .Vital(VitalType.HP) = Buffer.ReadInt32
+                .Vital(VitalType.MP) = Buffer.ReadInt32
             End With
 
         Next
@@ -1075,8 +1075,8 @@ Module ClientNetworkReceive
             .X = Buffer.ReadInt32
             .Y = Buffer.ReadInt32
             .Dir = Buffer.ReadInt32
-            .Vital(Vitals.HP) = Buffer.ReadInt32
-            .Vital(Vitals.MP) = Buffer.ReadInt32
+            .Vital(VitalType.HP) = Buffer.ReadInt32
+            .Vital(VitalType.MP) = Buffer.ReadInt32
         End With
 
         Buffer.Dispose()
@@ -1171,7 +1171,7 @@ Module ClientNetworkReceive
         ' Update the item
         Item(n).AccessReq = Buffer.ReadInt32()
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Item(n).Add_Stat(i) = Buffer.ReadInt32()
         Next
 
@@ -1198,7 +1198,7 @@ Module ClientNetworkReceive
         Item(n).Stackable = Buffer.ReadInt32()
         Item(n).Description = Trim$(Buffer.ReadString())
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Item(n).Stat_Req(i) = Buffer.ReadInt32()
         Next
 
@@ -1243,7 +1243,7 @@ Module ClientNetworkReceive
             .Y = Buffer.ReadInt32
             .Dir = Buffer.ReadInt32
 
-            For i = 1 To Vitals.Count - 1
+            For i = 1 To VitalType.Count - 1
                 .Vital(i) = Buffer.ReadInt32
             Next
             ' Client use only
@@ -1291,7 +1291,7 @@ Module ClientNetworkReceive
         Npc(i).SpawnSecs = Buffer.ReadInt32()
         Npc(i).Sprite = Buffer.ReadInt32()
 
-        For i = 0 To Stats.Count - 1
+        For i = 0 To StatType.Count - 1
             Npc(i).Stat(i) = Buffer.ReadInt32()
         Next
 
@@ -1575,7 +1575,7 @@ Module ClientNetworkReceive
         Dim MapNpcNum As Integer
         Dim Buffer As New ByteStream(Data)
         MapNpcNum = Buffer.ReadInt32
-        For i = 1 To Vitals.Count - 1
+        For i = 1 To VitalType.Count - 1
             MapNpc(MapNpcNum).Vital(i) = Buffer.ReadInt32
         Next
 
@@ -1664,7 +1664,7 @@ Module ClientNetworkReceive
             Bank.ItemRand(i).Damage = Buffer.ReadInt32
             Bank.ItemRand(i).Speed = Buffer.ReadInt32
 
-            For x = 1 To Stats.Count - 1
+            For x = 1 To StatType.Count - 1
                 Bank.ItemRand(i).Stat(x) = Buffer.ReadInt32
             Next
         Next
@@ -1762,11 +1762,11 @@ Module ClientNetworkReceive
         ReDim Classes(0 To Max_Classes)
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Stat(0 To Stats.Count - 1)
+            ReDim Classes(i).Stat(0 To StatType.Count - 1)
         Next
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Vital(0 To Vitals.Count - 1)
+            ReDim Classes(i).Vital(0 To VitalType.Count - 1)
         Next
 
         For i = 1 To Max_Classes
@@ -1775,9 +1775,9 @@ Module ClientNetworkReceive
                 .Name = Trim(Buffer.ReadString)
                 .Desc = Trim$(Buffer.ReadString)
 
-                .Vital(Vitals.HP) = Buffer.ReadInt32
-                .Vital(Vitals.MP) = Buffer.ReadInt32
-                .Vital(Vitals.SP) = Buffer.ReadInt32
+                .Vital(VitalType.HP) = Buffer.ReadInt32
+                .Vital(VitalType.MP) = Buffer.ReadInt32
+                .Vital(VitalType.SP) = Buffer.ReadInt32
 
                 ' get array size
                 z = Buffer.ReadInt32
@@ -1797,12 +1797,12 @@ Module ClientNetworkReceive
                     .FemaleSprite(x) = Buffer.ReadInt32
                 Next
 
-                .Stat(Stats.Strength) = Buffer.ReadInt32
-                .Stat(Stats.Endurance) = Buffer.ReadInt32
-                .Stat(Stats.Vitality) = Buffer.ReadInt32
-                .Stat(Stats.Intelligence) = Buffer.ReadInt32
-                .Stat(Stats.Luck) = Buffer.ReadInt32
-                .Stat(Stats.Spirit) = Buffer.ReadInt32
+                .Stat(StatType.Strength) = Buffer.ReadInt32
+                .Stat(StatType.Endurance) = Buffer.ReadInt32
+                .Stat(StatType.Vitality) = Buffer.ReadInt32
+                .Stat(StatType.Intelligence) = Buffer.ReadInt32
+                .Stat(StatType.Luck) = Buffer.ReadInt32
+                .Stat(StatType.Spirit) = Buffer.ReadInt32
 
                 ReDim .StartItem(5)
                 ReDim .StartValue(5)
@@ -1836,7 +1836,7 @@ Module ClientNetworkReceive
             ' Update the item
             Item(n).AccessReq = Buffer.ReadInt32()
 
-            For z = 0 To Stats.Count - 1
+            For z = 0 To StatType.Count - 1
                 Item(n).Add_Stat(z) = Buffer.ReadInt32()
             Next
 
@@ -1863,7 +1863,7 @@ Module ClientNetworkReceive
             Item(n).Stackable = Buffer.ReadInt32()
             Item(n).Description = Trim$(Buffer.ReadString())
 
-            For z = 0 To Stats.Count - 1
+            For z = 0 To StatType.Count - 1
                 Item(n).Stat_Req(z) = Buffer.ReadInt32()
             Next
 
@@ -1963,7 +1963,7 @@ Module ClientNetworkReceive
             Npc(n).SpawnSecs = Buffer.ReadInt32()
             Npc(n).Sprite = Buffer.ReadInt32()
 
-            For z = 0 To Stats.Count - 1
+            For z = 0 To StatType.Count - 1
                 Npc(n).Stat(z) = Buffer.ReadInt32()
             Next
 

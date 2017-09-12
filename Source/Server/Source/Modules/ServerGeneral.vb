@@ -74,7 +74,7 @@ Module ServerGeneral
 
         For i = 0 To MAX_CACHED_MAPS
             For x = 0 To MAX_MAP_NPCS
-                ReDim MapNpc(i).Npc(x).Vital(0 To Vitals.Count)
+                ReDim MapNpc(i).Npc(x).Vital(0 To VitalType.Count)
             Next
         Next
 
@@ -84,7 +84,7 @@ Module ServerGeneral
             ReDim Bank(i).Item(MAX_BANK)
             ReDim Bank(i).ItemRand(MAX_BANK)
             For x = 1 To MAX_BANK
-                ReDim Bank(i).ItemRand(x).Stat(Stats.Count - 1)
+                ReDim Bank(i).ItemRand(x).Stat(StatType.Count - 1)
             Next
         Next
 
@@ -96,8 +96,8 @@ Module ServerGeneral
             For x = 1 To MAX_CHARS
                 ReDim Player(i).Character(x).Switches(MAX_SWITCHES)
                 ReDim Player(i).Character(x).Variables(MAX_VARIABLES)
-                ReDim Player(i).Character(x).Vital(Vitals.Count - 1)
-                ReDim Player(i).Character(x).Stat(Stats.Count - 1)
+                ReDim Player(i).Character(x).Vital(VitalType.Count - 1)
+                ReDim Player(i).Character(x).Stat(StatType.Count - 1)
                 ReDim Player(i).Character(x).Equipment(EquipmentType.Count - 1)
                 ReDim Player(i).Character(x).Inv(MAX_INV)
                 ReDim Player(i).Character(x).Skill(MAX_PLAYER_SKILLS)
@@ -106,10 +106,10 @@ Module ServerGeneral
                 ReDim Player(i).Character(x).RandEquip(EquipmentType.Count - 1)
                 ReDim Player(i).Character(x).RandInv(MAX_INV)
                 For y = 1 To EquipmentType.Count - 1
-                    ReDim Player(i).Character(x).RandEquip(y).Stat(Stats.Count - 1)
+                    ReDim Player(i).Character(x).RandEquip(y).Stat(StatType.Count - 1)
                 Next
                 For y = 1 To MAX_INV
-                    ReDim Player(i).Character(x).RandInv(y).Stat(Stats.Count - 1)
+                    ReDim Player(i).Character(x).RandInv(y).Stat(StatType.Count - 1)
                 Next
             Next
         Next
@@ -129,18 +129,18 @@ Module ServerGeneral
 
         ReDim Classes(0 To Max_Classes)
         For i = 0 To Max_Classes
-            ReDim Classes(i).Stat(0 To Stats.Count - 1)
+            ReDim Classes(i).Stat(0 To StatType.Count - 1)
             ReDim Classes(i).StartItem(0 To 5)
             ReDim Classes(i).StartValue(0 To 5)
         Next
 
         For i = 0 To MAX_ITEMS
-            ReDim Item(i).Add_Stat(0 To Stats.Count - 1)
-            ReDim Item(i).Stat_Req(0 To Stats.Count - 1)
+            ReDim Item(i).Add_Stat(0 To StatType.Count - 1)
+            ReDim Item(i).Stat_Req(0 To StatType.Count - 1)
             ReDim Item(i).FurnitureBlocks(0 To 3, 0 To 3)
             ReDim Item(i).FurnitureFringe(0 To 3, 0 To 3)
         Next
-        ReDim Npc(0 To MAX_NPCS).Stat(0 To Stats.Count - 1)
+        ReDim Npc(0 To MAX_NPCS).Stat(0 To StatType.Count - 1)
 
         ReDim Shop(0 To MAX_SHOPS).TradeItem(0 To MAX_TRADES)
 

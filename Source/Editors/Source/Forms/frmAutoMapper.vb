@@ -83,7 +83,7 @@
     Private Sub CmbPrefab_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPrefab.SelectedIndexChanged
         Dim Layer As Long
 
-        For Layer = 1 To MapLayer.Count
+        For Layer = 1 To LayerType.Count
             If Tile(cmbPrefab.SelectedIndex + 1).Layer(Layer).Tileset > 0 Then
                 Exit For
             End If

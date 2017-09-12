@@ -239,37 +239,37 @@
     Private Sub NudStrReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudStrReq.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
-        Item(EditorIndex).Stat_Req(Stats.Strength) = nudStrReq.Value
+        Item(EditorIndex).Stat_Req(StatType.Strength) = nudStrReq.Value
     End Sub
 
     Private Sub NudEndReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudEndReq.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
-        Item(EditorIndex).Stat_Req(Stats.Endurance) = nudEndReq.Value
+        Item(EditorIndex).Stat_Req(StatType.Endurance) = nudEndReq.Value
     End Sub
 
     Private Sub NudVitReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitReq.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
-        Item(EditorIndex).Stat_Req(Stats.Vitality) = nudVitReq.Value
+        Item(EditorIndex).Stat_Req(StatType.Vitality) = nudVitReq.Value
     End Sub
 
     Private Sub NudLuckReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLuckReq.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
-        Item(EditorIndex).Stat_Req(Stats.Luck) = nudLuckReq.Value
+        Item(EditorIndex).Stat_Req(StatType.Luck) = nudLuckReq.Value
     End Sub
 
     Private Sub NudIntReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudIntReq.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
-        Item(EditorIndex).Stat_Req(Stats.Intelligence) = nudIntReq.Value
+        Item(EditorIndex).Stat_Req(StatType.Intelligence) = nudIntReq.Value
     End Sub
 
     Private Sub NudSprReq_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSprReq.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
-        Item(EditorIndex).Stat_Req(Stats.Spirit) = nudSprReq.Value
+        Item(EditorIndex).Stat_Req(StatType.Spirit) = nudSprReq.Value
     End Sub
 #End Region
 
@@ -301,37 +301,37 @@
     Private Sub NudStrength_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudStrength.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
-        Item(EditorIndex).Add_Stat(Stats.Strength) = nudStrength.Value
+        Item(EditorIndex).Add_Stat(StatType.Strength) = nudStrength.Value
     End Sub
 
     Private Sub NudLuck_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLuck.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
-        Item(EditorIndex).Add_Stat(Stats.Luck) = nudLuck.Value
+        Item(EditorIndex).Add_Stat(StatType.Luck) = nudLuck.Value
     End Sub
 
     Private Sub NudEndurance_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudEndurance.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
-        Item(EditorIndex).Add_Stat(Stats.Endurance) = nudEndurance.Value
+        Item(EditorIndex).Add_Stat(StatType.Endurance) = nudEndurance.Value
     End Sub
 
     Private Sub NudIntelligence_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudIntelligence.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
-        Item(EditorIndex).Add_Stat(Stats.Intelligence) = nudIntelligence.Value
+        Item(EditorIndex).Add_Stat(StatType.Intelligence) = nudIntelligence.Value
     End Sub
 
     Private Sub NudVitality_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitality.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
-        Item(EditorIndex).Add_Stat(Stats.Vitality) = nudVitality.Value
+        Item(EditorIndex).Add_Stat(StatType.Vitality) = nudVitality.Value
     End Sub
 
     Private Sub NudSpirit_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSpirit.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
-        Item(EditorIndex).Add_Stat(Stats.Spirit) = nudSpirit.Value
+        Item(EditorIndex).Add_Stat(StatType.Spirit) = nudSpirit.Value
     End Sub
 
     Private Sub ChkKnockBack_CheckedChanged(sender As Object, e As EventArgs) Handles chkKnockBack.CheckedChanged

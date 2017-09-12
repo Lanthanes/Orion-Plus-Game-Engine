@@ -119,7 +119,7 @@ Module EditorPets
             Buffer.WriteInt32(.StatType)
             Buffer.WriteInt32(.LevelingType)
 
-            For i = 1 To Stats.Count - 1
+            For i = 1 To StatType.Count - 1
                 Buffer.WriteInt32(.Stat(i))
             Next
 
@@ -149,7 +149,7 @@ Module EditorPets
         Dim Buffer As New ByteStream(Data)
         n = Buffer.ReadInt32
 
-        ReDim Pet(n).Stat(Stats.Count - 1)
+        ReDim Pet(n).Stat(StatType.Count - 1)
         ReDim Pet(n).Skill(4)
 
         With Pet(n)
@@ -163,7 +163,7 @@ Module EditorPets
             .LevelPnts = Buffer.ReadInt32
             .StatType = Buffer.ReadInt32
             .LevelingType = Buffer.ReadInt32
-            For i = 1 To Stats.Count - 1
+            For i = 1 To StatType.Count - 1
                 .Stat(i) = Buffer.ReadInt32
             Next
             For i = 1 To 4
@@ -186,7 +186,7 @@ Module EditorPets
 
         Pet(Index).Name = ""
 
-        ReDim Pet(Index).Stat(Stats.Count - 1)
+        ReDim Pet(Index).Stat(StatType.Count - 1)
         ReDim Pet(Index).Skill(4)
     End Sub
 
@@ -236,12 +236,12 @@ Module EditorPets
 
             .nudRange.Value = Pet(EditorIndex).Range
 
-            .nudStrength.Value = Pet(EditorIndex).Stat(Stats.Strength)
-            .nudEndurance.Value = Pet(EditorIndex).Stat(Stats.Endurance)
-            .nudVitality.Value = Pet(EditorIndex).Stat(Stats.Vitality)
-            .nudLuck.Value = Pet(EditorIndex).Stat(Stats.Luck)
-            .nudIntelligence.Value = Pet(EditorIndex).Stat(Stats.Intelligence)
-            .nudSpirit.Value = Pet(EditorIndex).Stat(Stats.Spirit)
+            .nudStrength.Value = Pet(EditorIndex).Stat(StatType.Strength)
+            .nudEndurance.Value = Pet(EditorIndex).Stat(StatType.Endurance)
+            .nudVitality.Value = Pet(EditorIndex).Stat(StatType.Vitality)
+            .nudLuck.Value = Pet(EditorIndex).Stat(StatType.Luck)
+            .nudIntelligence.Value = Pet(EditorIndex).Stat(StatType.Intelligence)
+            .nudSpirit.Value = Pet(EditorIndex).Stat(StatType.Spirit)
             .nudLevel.Value = Pet(EditorIndex).Level
 
             If Pet(EditorIndex).StatType = 1 Then

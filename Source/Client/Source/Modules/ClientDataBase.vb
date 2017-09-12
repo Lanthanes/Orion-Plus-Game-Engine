@@ -333,8 +333,8 @@ Module ClientDataBase
 
             For x = 0 To SCREEN_MAPX
                 For y = 0 To SCREEN_MAPY
-                    ReDim Map.Tile(x, y).Layer(0 To MapLayer.Count - 1)
-                    For l = 0 To MapLayer.Count - 1
+                    ReDim Map.Tile(x, y).Layer(0 To LayerType.Count - 1)
+                    For l = 0 To LayerType.Count - 1
                         Map.Tile(x, y).Layer(l).Tileset = 0
                         Map.Tile(x, y).Layer(l).X = 0
                         Map.Tile(x, y).Layer(l).Y = 0
@@ -375,9 +375,9 @@ Module ClientDataBase
         MapNpc(Index).Steps = 0
         MapNpc(Index).Target = 0
         MapNpc(Index).TargetType = 0
-        MapNpc(Index).Vital(Vitals.HP) = 0
-        MapNpc(Index).Vital(Vitals.MP) = 0
-        MapNpc(Index).Vital(Vitals.SP) = 0
+        MapNpc(Index).Vital(VitalType.HP) = 0
+        MapNpc(Index).Vital(VitalType.MP) = 0
+        MapNpc(Index).Vital(VitalType.SP) = 0
         MapNpc(Index).X = 0
         MapNpc(Index).XOffset = 0
         MapNpc(Index).Y = 0
@@ -406,10 +406,10 @@ Module ClientDataBase
         'Index = Index - 1
         Item(Index) = Nothing
         Item(Index) = New ItemRec
-        For x = 0 To Stats.Count - 1
+        For x = 0 To StatType.Count - 1
             ReDim Item(Index).Add_Stat(x)
         Next
-        For x = 0 To Stats.Count - 1
+        For x = 0 To StatType.Count - 1
             ReDim Item(Index).Stat_Req(x)
         Next
 
@@ -480,7 +480,7 @@ Module ClientDataBase
 
         Npc(Index).Name = ""
         Npc(Index).AttackSay = ""
-        For x = 0 To Stats.Count - 1
+        For x = 0 To StatType.Count - 1
             ReDim Npc(Index).Stat(x)
         Next
 
@@ -610,7 +610,7 @@ Module ClientDataBase
         ReDim Bank.Item(MAX_BANK)
         ReDim Bank.ItemRand(MAX_BANK)
         For x = 1 To MAX_BANK
-            ReDim Bank.ItemRand(x).Stat(Stats.Count - 1)
+            ReDim Bank.ItemRand(x).Stat(StatType.Count - 1)
         Next
     End Sub
 

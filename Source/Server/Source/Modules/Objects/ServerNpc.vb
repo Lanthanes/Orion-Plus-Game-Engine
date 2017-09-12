@@ -37,7 +37,7 @@ Module ServerNpc
                     End If
                 Next
                 ' take away armour
-                Damage = Damage - ((GetPlayerStat(Index, Stats.Spirit) * 2) + (GetPlayerLevel(Index) * 2) + armor)
+                Damage = Damage - ((GetPlayerStat(Index, StatType.Spirit) * 2) + (GetPlayerLevel(Index) * 2) + armor)
 
                 ' * 1.5 if crit hit
                 If CanNpcCrit(npcnum) Then
@@ -73,7 +73,7 @@ Module ServerNpc
         NpcNum = MapNpc(MapNum).Npc(MapNpcNum).Num
 
         ' Make sure the npc isn't already dead
-        If MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.HP) <= 0 Then
+        If MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.HP) <= 0 Then
             Exit Function
         End If
 
@@ -149,12 +149,12 @@ Module ServerNpc
         If vNpcNum <= 0 Then Exit Function
 
         ' Make sure the npcs arent already dead
-        If MapNpc(MapNum).Npc(Attacker).Vital(Vitals.HP) <= 0 Then
+        If MapNpc(MapNum).Npc(Attacker).Vital(VitalType.HP) <= 0 Then
             Exit Function
         End If
 
         ' Make sure the npc isn't already dead
-        If MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) <= 0 Then
+        If MapNpc(MapNum).Npc(Victim).Vital(VitalType.HP) <= 0 Then
             Exit Function
         End If
 
@@ -219,9 +219,9 @@ Module ServerNpc
         MapNpc(MapNum).Npc(MapNpcNum).StopRegen = True
         MapNpc(MapNum).Npc(MapNpcNum).StopRegenTimer = GetTimeMs()
 
-        If Damage >= GetPlayerVital(Victim, Vitals.HP) Then
+        If Damage >= GetPlayerVital(Victim, VitalType.HP) Then
             ' Say damage
-            SendActionMsg(GetPlayerMap(Victim), "-" & GetPlayerVital(Victim, Vitals.HP), ColorType.BrightRed, 1, (GetPlayerX(Victim) * 32), (GetPlayerY(Victim) * 32))
+            SendActionMsg(GetPlayerMap(Victim), "-" & GetPlayerVital(Victim, VitalType.HP), ColorType.BrightRed, 1, (GetPlayerX(Victim) * 32), (GetPlayerY(Victim) * 32))
 
             ' Set NPC target to 0
             MapNpc(MapNum).Npc(MapNpcNum).Target = 0
@@ -287,8 +287,8 @@ Module ServerNpc
             GlobalMsg(GetPlayerName(Victim) & " has been killed by " & Name)
         Else
             ' Player not dead, just do the damage
-            SetPlayerVital(Victim, Vitals.HP, GetPlayerVital(Victim, Vitals.HP) - Damage)
-            SendVital(Victim, Vitals.HP)
+            SetPlayerVital(Victim, VitalType.HP, GetPlayerVital(Victim, VitalType.HP) - Damage)
+            SendVital(Victim, VitalType.HP)
             SendAnimation(MapNum, Npc(MapNpc(GetPlayerMap(Victim)).Npc(MapNpcNum).Num).Animation, 0, 0, TargetType.Player, Victim)
 
             ' send vitals to party if in one
@@ -332,7 +332,7 @@ Module ServerNpc
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
 
-        If Damage >= MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) Then
+        If Damage >= MapNpc(MapNum).Npc(Victim).Vital(VitalType.HP) Then
             SendActionMsg(MapNum, "-" & Damage, ColorType.BrightRed, 1, (MapNpc(MapNum).Npc(Victim).X * 32), (MapNpc(MapNum).Npc(Victim).Y * 32))
             SendBlood(MapNum, MapNpc(MapNum).Npc(Victim).X, MapNpc(MapNum).Npc(Victim).Y)
 
@@ -352,7 +352,7 @@ Module ServerNpc
             ' Reset victim's stuff so it dies in loop
             MapNpc(MapNum).Npc(Victim).Num = 0
             MapNpc(MapNum).Npc(Victim).SpawnWait = GetTimeMs()
-            MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) = 0
+            MapNpc(MapNum).Npc(Victim).Vital(VitalType.HP) = 0
 
             ' send npc death packet to map
             Buffer = New ByteStream(4)
@@ -362,7 +362,7 @@ Module ServerNpc
             Buffer.Dispose()
         Else
             ' npc not dead, just do the damage
-            MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) = MapNpc(MapNum).Npc(Victim).Vital(Vitals.HP) - Damage
+            MapNpc(MapNum).Npc(Victim).Vital(VitalType.HP) = MapNpc(MapNum).Npc(Victim).Vital(VitalType.HP) - Damage
             ' Say damage
             SendActionMsg(MapNum, "-" & Damage, ColorType.BrightRed, 1, (MapNpc(MapNum).Npc(Victim).X * 32), (MapNpc(MapNum).Npc(Victim).Y * 32))
             SendBlood(MapNum, MapNpc(MapNum).Npc(Victim).X, MapNpc(MapNum).Npc(Victim).Y)
@@ -443,7 +443,7 @@ Module ServerNpc
         MPCost = Skill(skillnum).MpCost
 
         ' Check if they have enough MP
-        If MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.MP) < MPCost Then Exit Sub
+        If MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.MP) < MPCost Then Exit Sub
 
         ' find out what kind of skill it is! self cast, target or AOE
         If Skill(skillnum).Range > 0 Then
@@ -514,7 +514,7 @@ Module ServerNpc
 
         CanNpcBlock = False
 
-        stat = Npc(npcnum).Stat(Stats.Luck) / 5  'guessed shield agility
+        stat = Npc(npcnum).Stat(StatType.Luck) / 5  'guessed shield agility
         rate = stat / 12.08
         rndNum = Random(1, 100)
 
@@ -528,7 +528,7 @@ Module ServerNpc
 
         CanNpcCrit = False
 
-        rate = Npc(npcnum).Stat(Stats.Luck) / 3
+        rate = Npc(npcnum).Stat(StatType.Luck) / 3
         rndNum = Random(1, 100)
 
         If rndNum <= rate Then CanNpcCrit = True
@@ -541,7 +541,7 @@ Module ServerNpc
 
         CanNpcDodge = False
 
-        rate = Npc(npcnum).Stat(Stats.Luck) / 4
+        rate = Npc(npcnum).Stat(StatType.Luck) / 4
         rndNum = Random(1, 100)
 
         If rndNum <= rate Then CanNpcDodge = True
@@ -554,7 +554,7 @@ Module ServerNpc
 
         CanNpcParry = False
 
-        rate = Npc(npcnum).Stat(Stats.Luck) / 6
+        rate = Npc(npcnum).Stat(StatType.Luck) / 6
         rndNum = Random(1, 100)
 
         If rndNum <= rate Then CanNpcParry = True
@@ -563,7 +563,7 @@ Module ServerNpc
 
     Function GetNpcDamage(npcnum As Integer) As Integer
 
-        GetNpcDamage = (Npc(npcnum).Stat(Stats.Strength) * 2) + (Npc(npcnum).Damage * 2) + (Npc(npcnum).Level * 3) + Random(1, 20)
+        GetNpcDamage = (Npc(npcnum).Stat(StatType.Strength) * 2) + (Npc(npcnum).Damage * 2) + (Npc(npcnum).Level * 3) + Random(1, 20)
 
     End Function
 
@@ -574,8 +574,8 @@ Module ServerNpc
         If Damage > 0 Then
             If increment Then
                 sSymbol = "+"
-                If Vital = Vitals.HP Then Colour = ColorType.BrightGreen
-                If Vital = Vitals.MP Then Colour = ColorType.BrightBlue
+                If Vital = VitalType.HP Then Colour = ColorType.BrightGreen
+                If Vital = VitalType.MP Then Colour = ColorType.BrightBlue
             Else
                 sSymbol = "-"
                 Colour = ColorType.Blue
@@ -605,7 +605,7 @@ Module ServerNpc
     Public Function IsNpcDead(ByVal MapNum As Integer, ByVal MapNpcNum As Integer)
         IsNpcDead = False
         If MapNum < 0 OrElse MapNum > MAX_MAPS OrElse MapNpcNum < 0 OrElse MapNpcNum > MAX_MAP_NPCS Then Exit Function
-        If MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.HP) <= 0 Then IsNpcDead = True
+        If MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.HP) <= 0 Then IsNpcDead = True
     End Function
 
     Public Sub DropNpcItems(ByVal MapNum As Integer, ByVal MapNpcNum As Integer)

@@ -72,13 +72,13 @@ Module ClientParties
 
         ' set vitals
         Player(playerNum).MaxHP = Buffer.ReadInt32
-        Player(playerNum).Vital(Vitals.HP) = Buffer.ReadInt32
+        Player(playerNum).Vital(VitalType.HP) = Buffer.ReadInt32
 
         Player(playerNum).MaxMP = Buffer.ReadInt32
-        Player(playerNum).Vital(Vitals.MP) = Buffer.ReadInt32
+        Player(playerNum).Vital(VitalType.MP) = Buffer.ReadInt32
 
         Player(playerNum).MaxSP = Buffer.ReadInt32
-        Player(playerNum).Vital(Vitals.SP) = Buffer.ReadInt32
+        Player(playerNum).Vital(VitalType.SP) = Buffer.ReadInt32
 
         Buffer.Dispose()
     End Sub
@@ -158,9 +158,9 @@ Module ClientParties
             DrawText(X, Y, theName, SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
 
             ' draw hp
-            If Player(playerNum).Vital(Vitals.HP) > 0 Then
+            If Player(playerNum).Vital(VitalType.HP) > 0 Then
                 ' calculate the width to fill
-                barwidth = ((Player(playerNum).Vital(Vitals.HP) / (GetPlayerMaxVital(playerNum, Vitals.HP)) * 64))
+                barwidth = ((Player(playerNum).Vital(VitalType.HP) / (GetPlayerMaxVital(playerNum, VitalType.HP)) * 64))
                 ' draw bars
                 rec(1) = New Rectangle(X, Y, barwidth, 6)
                 Dim rectShape As New RectangleShape(New Vector2f(barwidth, 6))
@@ -169,9 +169,9 @@ Module ClientParties
                 GameWindow.Draw(rectShape)
             End If
             ' draw mp
-            If Player(playerNum).Vital(Vitals.MP) > 0 Then
+            If Player(playerNum).Vital(VitalType.MP) > 0 Then
                 ' calculate the width to fill
-                barwidth = ((Player(playerNum).Vital(Vitals.MP) / (GetPlayerMaxVital(playerNum, Vitals.MP)) * 64))
+                barwidth = ((Player(playerNum).Vital(VitalType.MP) / (GetPlayerMaxVital(playerNum, VitalType.MP)) * 64))
                 ' draw bars
                 rec(1) = New Rectangle(X, Y, barwidth, 6)
                 Dim rectShape2 As New RectangleShape(New Vector2f(barwidth, 6))
@@ -196,8 +196,8 @@ Module ClientParties
                         Y = 115 + ((I - 1) * 30)
 
                         ' make sure we actually have the data before rendering
-                        If GetPlayerVital(playerNum, Vitals.HP) > 0 AndAlso GetPlayerMaxVital(playerNum, Vitals.HP) > 0 Then
-                            barwidth = ((Player(playerNum).Vital(Vitals.HP) / (GetPlayerMaxVital(playerNum, Vitals.HP)) * 64))
+                        If GetPlayerVital(playerNum, VitalType.HP) > 0 AndAlso GetPlayerMaxVital(playerNum, VitalType.HP) > 0 Then
+                            barwidth = ((Player(playerNum).Vital(VitalType.HP) / (GetPlayerMaxVital(playerNum, VitalType.HP)) * 64))
                         End If
                         rec(1) = New Rectangle(X, Y, barwidth, 6)
                         Dim rectShape As New RectangleShape(New Vector2f(barwidth, 6))
@@ -207,8 +207,8 @@ Module ClientParties
                         ' draw mp
                         Y = 115 + ((I - 1) * 30)
                         ' make sure we actually have the data before rendering
-                        If GetPlayerVital(playerNum, Vitals.MP) > 0 AndAlso GetPlayerMaxVital(playerNum, Vitals.MP) > 0 Then
-                            barwidth = ((Player(playerNum).Vital(Vitals.MP) / (GetPlayerMaxVital(playerNum, Vitals.MP)) * 64))
+                        If GetPlayerVital(playerNum, VitalType.MP) > 0 AndAlso GetPlayerMaxVital(playerNum, VitalType.MP) > 0 Then
+                            barwidth = ((Player(playerNum).Vital(VitalType.MP) / (GetPlayerMaxVital(playerNum, VitalType.MP)) * 64))
                         End If
                         rec(1) = New Rectangle(X, Y, barwidth, 6)
                         Dim rectShape2 As New RectangleShape(New Vector2f(barwidth, 6))

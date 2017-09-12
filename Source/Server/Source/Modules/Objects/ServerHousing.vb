@@ -222,7 +222,7 @@ Public Module ServerHousing
         If Player(Index).Character(TempPlayer(Index).CurChar).InHouse = Index Then
             If Item(ItemNum).Type = ItemType.Furniture Then
                 ' stat requirements
-                For i = 1 To Stats.Count - 1
+                For i = 1 To StatType.Count - 1
                     If GetPlayerRawStat(Index, i) < Item(ItemNum).Stat_Req(i) Then
                         PlayerMsg(Index, "You do not meet the stat requirements to use this item.", ColorType.BrightRed)
                         Exit Sub

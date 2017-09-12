@@ -26,19 +26,19 @@ Module ServerGameLogic
         GetPlayersOnline = x
     End Function
 
-    Function GetNpcMaxVital(ByVal NpcNum As Integer, ByVal Vital As Vitals) As Integer
+    Function GetNpcMaxVital(ByVal NpcNum As Integer, ByVal Vital As VitalType) As Integer
         GetNpcMaxVital = 0
 
         ' Prevent subscript out of range
         If NpcNum <= 0 OrElse NpcNum > MAX_NPCS Then Exit Function
 
         Select Case Vital
-            Case Vitals.HP
+            Case VitalType.HP
                 GetNpcMaxVital = Npc(NpcNum).Hp
-            Case Vitals.MP
-                GetNpcMaxVital = Npc(NpcNum).Stat(Stats.Intelligence) * 2
-            Case Vitals.SP
-                GetNpcMaxVital = Npc(NpcNum).Stat(Stats.Spirit) * 2
+            Case VitalType.MP
+                GetNpcMaxVital = Npc(NpcNum).Stat(StatType.Intelligence) * 2
+            Case VitalType.SP
+                GetNpcMaxVital = Npc(NpcNum).Stat(StatType.Spirit) * 2
         End Select
 
     End Function
@@ -183,9 +183,9 @@ Module ServerGameLogic
             MapNpc(MapNum).Npc(MapNpcNum).Target = 0
             MapNpc(MapNum).Npc(MapNpcNum).TargetType = 0 ' clear
 
-            MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.HP) = GetNpcMaxVital(NpcNum, Vitals.HP)
-            MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.MP) = GetNpcMaxVital(NpcNum, Vitals.MP)
-            MapNpc(MapNum).Npc(MapNpcNum).Vital(Vitals.SP) = GetNpcMaxVital(NpcNum, Vitals.SP)
+            MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.HP) = GetNpcMaxVital(NpcNum, VitalType.HP)
+            MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.MP) = GetNpcMaxVital(NpcNum, VitalType.MP)
+            MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.SP) = GetNpcMaxVital(NpcNum, VitalType.SP)
 
             MapNpc(MapNum).Npc(MapNpcNum).Dir = Int(Rnd() * 4)
 
@@ -248,7 +248,7 @@ Module ServerGameLogic
                 Addlog("Recieved SMSG: SSpawnNpc", PACKET_LOG)
                 Console.WriteLine("Recieved SMSG: SSpawnNpc")
 
-                For i = 1 To Vitals.Count - 1
+                For i = 1 To VitalType.Count - 1
                     Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Vital(i))
                 Next
 
@@ -316,7 +316,7 @@ Module ServerGameLogic
         Dim y As Integer
 
         ' Check for subscript out of range
-        If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Dir < Direction.Up OrElse Dir > Direction.Right Then
+        If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Dir < DirectionType.Up OrElse Dir > DirectionType.Right Then
             Exit Function
         End If
 
@@ -325,7 +325,7 @@ Module ServerGameLogic
         CanNpcMove = True
 
         Select Case Dir
-            Case Direction.Up
+            Case DirectionType.Up
 
                 ' Check to make sure not outside of boundries
                 If y > 0 Then
@@ -358,7 +358,7 @@ Module ServerGameLogic
                     CanNpcMove = False
                 End If
 
-            Case Direction.Down
+            Case DirectionType.Down
 
                 ' Check to make sure not outside of boundries
                 If y < Map(MapNum).MaxY Then
@@ -391,7 +391,7 @@ Module ServerGameLogic
                     CanNpcMove = False
                 End If
 
-            Case Direction.Left
+            Case DirectionType.Left
 
                 ' Check to make sure not outside of boundries
                 If x > 0 Then
@@ -424,7 +424,7 @@ Module ServerGameLogic
                     CanNpcMove = False
                 End If
 
-            Case Direction.Right
+            Case DirectionType.Right
 
                 ' Check to make sure not outside of boundries
                 If x < Map(MapNum).MaxX Then
@@ -467,14 +467,14 @@ Module ServerGameLogic
         Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
-        If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Dir < Direction.Up OrElse Dir > Direction.Right OrElse Movement < 1 OrElse Movement > 2 Then
+        If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Dir < DirectionType.Up OrElse Dir > DirectionType.Right OrElse Movement < 1 OrElse Movement > 2 Then
             Exit Sub
         End If
 
         MapNpc(MapNum).Npc(MapNpcNum).Dir = Dir
 
         Select Case Dir
-            Case Direction.Up
+            Case DirectionType.Up
                 MapNpc(MapNum).Npc(MapNpcNum).Y = MapNpc(MapNum).Npc(MapNpcNum).Y - 1
 
                 Buffer.WriteInt32(ServerPackets.SNpcMove)
@@ -488,7 +488,7 @@ Module ServerGameLogic
                 Console.WriteLine("Sent SMSG: SNpcMove Up")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
-            Case Direction.Down
+            Case DirectionType.Down
                 MapNpc(MapNum).Npc(MapNpcNum).Y = MapNpc(MapNum).Npc(MapNpcNum).Y + 1
 
                 Buffer.WriteInt32(ServerPackets.SNpcMove)
@@ -502,7 +502,7 @@ Module ServerGameLogic
                 Console.WriteLine("Sent SMSG: SNpcMove Down")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
-            Case Direction.Left
+            Case DirectionType.Left
                 MapNpc(MapNum).Npc(MapNpcNum).X = MapNpc(MapNum).Npc(MapNpcNum).X - 1
 
                 Buffer.WriteInt32(ServerPackets.SNpcMove)
@@ -516,7 +516,7 @@ Module ServerGameLogic
                 Console.WriteLine("Sent SMSG: SNpcMove Left")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
-            Case Direction.Right
+            Case DirectionType.Right
                 MapNpc(MapNum).Npc(MapNpcNum).X = MapNpc(MapNum).Npc(MapNpcNum).X + 1
 
                 Buffer.WriteInt32(ServerPackets.SNpcMove)
@@ -539,7 +539,7 @@ Module ServerGameLogic
         Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
-        If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Dir < Direction.Up OrElse Dir > Direction.Right Then
+        If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Dir < DirectionType.Up OrElse Dir > DirectionType.Right Then
             Exit Sub
         End If
 
@@ -589,8 +589,8 @@ Module ServerGameLogic
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).X)
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Y)
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Dir)
-            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(Vitals.HP))
-            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(Vitals.MP))
+            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(VitalType.HP))
+            Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Vital(VitalType.MP))
         Next
 
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)

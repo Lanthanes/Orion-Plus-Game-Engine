@@ -470,13 +470,13 @@ Module EditorGraphics
         Else
             ' If not attacking, walk normally
             Select Case MapNpc(MapNpcNum).Dir
-                Case Direction.Up
+                Case DirectionType.Up
                     If (MapNpc(MapNpcNum).YOffset > 8) Then anim = MapNpc(MapNpcNum).Steps
-                Case Direction.Down
+                Case DirectionType.Down
                     If (MapNpc(MapNpcNum).YOffset < -8) Then anim = MapNpc(MapNpcNum).Steps
-                Case Direction.Left
+                Case DirectionType.Left
                     If (MapNpc(MapNpcNum).XOffset > 8) Then anim = MapNpc(MapNpcNum).Steps
-                Case Direction.Right
+                Case DirectionType.Right
                     If (MapNpc(MapNpcNum).XOffset < -8) Then anim = MapNpc(MapNpcNum).Steps
             End Select
         End If
@@ -491,13 +491,13 @@ Module EditorGraphics
 
         ' Set the left
         Select Case MapNpc(MapNpcNum).Dir
-            Case Direction.Up
+            Case DirectionType.Up
                 spriteleft = 3
-            Case Direction.Right
+            Case DirectionType.Right
                 spriteleft = 2
-            Case Direction.Down
+            Case DirectionType.Down
                 spriteleft = 0
-            Case Direction.Left
+            Case DirectionType.Left
                 spriteleft = 1
         End Select
 
@@ -662,7 +662,7 @@ Module EditorGraphics
         If MapData = False Then Exit Sub
 
         With Map.Tile(X, Y)
-            For i = MapLayer.Ground To MapLayer.Mask2
+            For i = LayerType.Ground To LayerType.Mask2
                 ' skip tile if tileset isn't set
                 If .Layer(i).Tileset > 0 AndAlso .Layer(i).Tileset <= NumTileSets Then
                     If TileSetTextureInfo(.Layer(i).Tileset).IsLoaded = False Then
@@ -705,7 +705,7 @@ Module EditorGraphics
         If MapData = False Then Exit Sub
 
         With Map.Tile(X, Y)
-            For i = MapLayer.Fringe To MapLayer.Fringe2
+            For i = LayerType.Fringe To LayerType.Fringe2
                 ' skip tile if tileset isn't set
                 If .Layer(i).Tileset > 0 AndAlso .Layer(i).Tileset <= NumTileSets Then
                     If TileSetTextureInfo(.Layer(i).Tileset).IsLoaded = False Then
@@ -1727,9 +1727,9 @@ Module EditorGraphics
         DrawMapNameY = 1
 
         Select Case Map.Moral
-            Case MapMoral.None
+            Case MapMoralType.None
                 DrawMapNameColor = Color.Red
-            Case MapMoral.Safe
+            Case MapMoralType.Safe
                 DrawMapNameColor = Color.Green
             Case Else
                 DrawMapNameColor = Color.White

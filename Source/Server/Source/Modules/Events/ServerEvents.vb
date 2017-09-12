@@ -471,7 +471,7 @@ Public Module ServerEvents
 
         ' Check for subscript out of range
 
-        If MapNum <= 0 OrElse MapNum > MAX_MAPS OrElse Dir < Direction.Up OrElse Dir > Direction.Right Then Exit Function
+        If MapNum <= 0 OrElse MapNum > MAX_MAPS OrElse Dir < DirectionType.Up OrElse Dir > DirectionType.Right Then Exit Function
 
         If Gettingmap = True Then Exit Function
 
@@ -480,7 +480,7 @@ Public Module ServerEvents
         If Index = 0 Then Exit Function
 
         Select Case Dir
-            Case Direction.Up
+            Case DirectionType.Up
 
                 ' Check to make sure not outside of boundries
                 If y > 0 Then
@@ -558,7 +558,7 @@ Public Module ServerEvents
                     End If
 
                     ' Directional blocking
-                    If IsDirBlocked(Map(MapNum).Tile(x, y).DirBlock, Direction.Up + 1) Then
+                    If IsDirBlocked(Map(MapNum).Tile(x, y).DirBlock, DirectionType.Up + 1) Then
                         CanEventMove = False
                         Exit Function
                     End If
@@ -566,7 +566,7 @@ Public Module ServerEvents
                     CanEventMove = False
                 End If
 
-            Case Direction.Down
+            Case DirectionType.Down
 
                 ' Check to make sure not outside of boundries
                 If y < Map(MapNum).MaxY Then
@@ -644,7 +644,7 @@ Public Module ServerEvents
                     End If
 
                     ' Directional blocking
-                    If IsDirBlocked(Map(MapNum).Tile(x, y).DirBlock, Direction.Down + 1) Then
+                    If IsDirBlocked(Map(MapNum).Tile(x, y).DirBlock, DirectionType.Down + 1) Then
                         CanEventMove = False
                         Exit Function
                     End If
@@ -652,7 +652,7 @@ Public Module ServerEvents
                     CanEventMove = False
                 End If
 
-            Case Direction.Left
+            Case DirectionType.Left
 
                 ' Check to make sure not outside of boundries
                 If x > 0 Then
@@ -730,7 +730,7 @@ Public Module ServerEvents
                     End If
 
                     ' Directional blocking
-                    If IsDirBlocked(Map(MapNum).Tile(x, y).DirBlock, Direction.Left + 1) Then
+                    If IsDirBlocked(Map(MapNum).Tile(x, y).DirBlock, DirectionType.Left + 1) Then
                         CanEventMove = False
                         Exit Function
                     End If
@@ -738,7 +738,7 @@ Public Module ServerEvents
                     CanEventMove = False
                 End If
 
-            Case Direction.Right
+            Case DirectionType.Right
 
                 ' Check to make sure not outside of boundries
                 If x < Map(MapNum).MaxX Then
@@ -816,7 +816,7 @@ Public Module ServerEvents
                     End If
 
                     ' Directional blocking
-                    If IsDirBlocked(Map(MapNum).Tile(x, y).DirBlock, Direction.Right + 1) Then
+                    If IsDirBlocked(Map(MapNum).Tile(x, y).DirBlock, DirectionType.Right + 1) Then
                         CanEventMove = False
                         Exit Function
                     End If
@@ -836,7 +836,7 @@ Public Module ServerEvents
 
         If Gettingmap = True Then Exit Sub
 
-        If MapNum <= 0 OrElse MapNum > MAX_MAPS OrElse Dir < Direction.Up OrElse Dir > Direction.Right Then
+        If MapNum <= 0 OrElse MapNum > MAX_MAPS OrElse Dir < DirectionType.Up OrElse Dir > DirectionType.Right Then
             Exit Sub
         End If
 
@@ -885,7 +885,7 @@ Public Module ServerEvents
         ' Check for subscript out of range
         If Gettingmap = True Then Exit Sub
 
-        If MapNum <= 0 OrElse MapNum > MAX_MAPS OrElse Dir < Direction.Up OrElse Dir > Direction.Right Then Exit Sub
+        If MapNum <= 0 OrElse MapNum > MAX_MAPS OrElse Dir < DirectionType.Up OrElse Dir > DirectionType.Right Then Exit Sub
 
         If globalevent = False Then
             If TempPlayer(Index).EventMap.CurrentEvents > 0 Then
@@ -911,7 +911,7 @@ Public Module ServerEvents
         End If
 
         Select Case Dir
-            Case Direction.Up
+            Case DirectionType.Up
                 If globalevent Then
                     TempEventMap(MapNum).Events(eventIndex).Y = TempEventMap(MapNum).Events(eventIndex).Y - 1
                     Buffer.WriteInt32(ServerPackets.SEventMove)
@@ -952,7 +952,7 @@ Public Module ServerEvents
                     Buffer.Dispose()
                 End If
 
-            Case Direction.Down
+            Case DirectionType.Down
                 If globalevent Then
                     TempEventMap(MapNum).Events(eventIndex).Y = TempEventMap(MapNum).Events(eventIndex).Y + 1
                     Buffer.WriteInt32(ServerPackets.SEventMove)
@@ -992,7 +992,7 @@ Public Module ServerEvents
                     End If
                     Buffer.Dispose()
                 End If
-            Case Direction.Left
+            Case DirectionType.Left
                 If globalevent Then
                     TempEventMap(MapNum).Events(eventIndex).X = TempEventMap(MapNum).Events(eventIndex).X - 1
                     Buffer.WriteInt32(ServerPackets.SEventMove)
@@ -1032,7 +1032,7 @@ Public Module ServerEvents
                     End If
                     Buffer.Dispose()
                 End If
-            Case Direction.Right
+            Case DirectionType.Right
                 If globalevent Then
                     TempEventMap(MapNum).Events(eventIndex).X = TempEventMap(MapNum).Events(eventIndex).X + 1
                     Buffer.WriteInt32(ServerPackets.SEventMove)
@@ -1099,28 +1099,28 @@ Public Module ServerEvents
     Function GetNpcDir(x As Integer, y As Integer, x1 As Integer, y1 As Integer) As Integer
         Dim i As Integer, distance As Integer
 
-        i = Direction.Right
+        i = DirectionType.Right
 
         If x - x1 > 0 Then
             If x - x1 > distance Then
-                i = Direction.Right
+                i = DirectionType.Right
                 distance = x - x1
             End If
         ElseIf x - x1 < 0 Then
             If ((x - x1) * -1) > distance Then
-                i = Direction.Left
+                i = DirectionType.Left
                 distance = ((x - x1) * -1)
             End If
         End If
 
         If y - y1 > 0 Then
             If y - y1 > distance Then
-                i = Direction.Down
+                i = DirectionType.Down
                 distance = y - y1
             End If
         ElseIf y - y1 < 0 Then
             If ((y - y1) * -1) > distance Then
-                i = Direction.Up
+                i = DirectionType.Up
                 distance = ((y - y1) * -1)
             End If
         End If
@@ -1159,8 +1159,8 @@ Public Module ServerEvents
                 Case 0
                     ' Up
                     If y1 > y AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Up, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Up
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Up, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Up
                             Exit Function
                             didwalk = True
                         End If
@@ -1168,8 +1168,8 @@ Public Module ServerEvents
 
                     ' Down
                     If y1 < y AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Down, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Down
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Down, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Down
                             Exit Function
                             didwalk = True
                         End If
@@ -1177,8 +1177,8 @@ Public Module ServerEvents
 
                     ' Left
                     If x1 > x AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Left, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Left
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Left, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Left
                             Exit Function
                             didwalk = True
                         End If
@@ -1186,8 +1186,8 @@ Public Module ServerEvents
 
                     ' Right
                     If x1 < x AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Right, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Right
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Right, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Right
                             Exit Function
                             didwalk = True
                         End If
@@ -1196,8 +1196,8 @@ Public Module ServerEvents
                 Case 1
                     ' Right
                     If x1 < x AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Right, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Right
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Right, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Right
                             Exit Function
                             didwalk = True
                         End If
@@ -1205,8 +1205,8 @@ Public Module ServerEvents
 
                     ' Left
                     If x1 > x AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Left, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Left
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Left, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Left
                             Exit Function
                             didwalk = True
                         End If
@@ -1214,8 +1214,8 @@ Public Module ServerEvents
 
                     ' Down
                     If y1 < y AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Down, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Down
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Down, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Down
                             Exit Function
                             didwalk = True
                         End If
@@ -1223,8 +1223,8 @@ Public Module ServerEvents
 
                     ' Up
                     If y1 > y AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Up, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Up
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Up, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Up
                             Exit Function
                             didwalk = True
                         End If
@@ -1233,8 +1233,8 @@ Public Module ServerEvents
                 Case 2
                     ' Down
                     If y1 < y AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Down, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Down
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Down, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Down
                             Exit Function
                             didwalk = True
                         End If
@@ -1242,8 +1242,8 @@ Public Module ServerEvents
 
                     ' Up
                     If y1 > y AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Up, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Up
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Up, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Up
                             Exit Function
                             didwalk = True
                         End If
@@ -1251,8 +1251,8 @@ Public Module ServerEvents
 
                     ' Right
                     If x1 < x AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Right, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Right
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Right, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Right
                             Exit Function
                             didwalk = True
                         End If
@@ -1260,8 +1260,8 @@ Public Module ServerEvents
 
                     ' Left
                     If x1 > x AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Left, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Left
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Left, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Left
                             Exit Function
                             didwalk = True
                         End If
@@ -1270,8 +1270,8 @@ Public Module ServerEvents
                 Case 3
                     ' Left
                     If x1 > x AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Left, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Left
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Left, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Left
                             Exit Function
                             didwalk = True
                         End If
@@ -1279,8 +1279,8 @@ Public Module ServerEvents
 
                     ' Right
                     If x1 < x AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Right, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Right
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Right, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Right
                             Exit Function
                             didwalk = True
                         End If
@@ -1288,8 +1288,8 @@ Public Module ServerEvents
 
                     ' Up
                     If y1 > y AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Up, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Up
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Up, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Up
                             Exit Function
                             didwalk = True
                         End If
@@ -1297,8 +1297,8 @@ Public Module ServerEvents
 
                     ' Down
                     If y1 < y AndAlso Not didwalk Then
-                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Down, False) Then
-                            CanEventMoveTowardsPlayer = Direction.Down
+                        If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Down, False) Then
+                            CanEventMoveTowardsPlayer = DirectionType.Down
                             Exit Function
                             didwalk = True
                         End If
@@ -1480,13 +1480,13 @@ Public Module ServerEvents
 
             'Ok we got a path. Now, lets look at the first step and see what direction we should take.
             If path(1).X > LastX Then
-                CanEventMoveTowardsPlayer = Direction.Right
+                CanEventMoveTowardsPlayer = DirectionType.Right
             ElseIf path(1).Y > LastY Then
-                CanEventMoveTowardsPlayer = Direction.Down
+                CanEventMoveTowardsPlayer = DirectionType.Down
             ElseIf path(1).Y < LastY Then
-                CanEventMoveTowardsPlayer = Direction.Up
+                CanEventMoveTowardsPlayer = DirectionType.Up
             ElseIf path(1).X < LastX Then
-                CanEventMoveTowardsPlayer = Direction.Left
+                CanEventMoveTowardsPlayer = DirectionType.Left
             End If
 
         End If
@@ -1519,8 +1519,8 @@ Public Module ServerEvents
             Case 0
                 ' Up
                 If y1 > y AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Down, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Down
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Down, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Down
                         Exit Function
                         didwalk = True
                     End If
@@ -1528,8 +1528,8 @@ Public Module ServerEvents
 
                 ' Down
                 If y1 < y AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Up, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Up
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Up, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Up
                         Exit Function
                         didwalk = True
                     End If
@@ -1537,8 +1537,8 @@ Public Module ServerEvents
 
                 ' Left
                 If x1 > x AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Right, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Right
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Right, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Right
                         Exit Function
                         didwalk = True
                     End If
@@ -1546,8 +1546,8 @@ Public Module ServerEvents
 
                 ' Right
                 If x1 < x AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Left, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Left
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Left, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Left
                         Exit Function
                         didwalk = True
                     End If
@@ -1556,8 +1556,8 @@ Public Module ServerEvents
             Case 1
                 ' Right
                 If x1 < x AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Left, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Left
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Left, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Left
                         Exit Function
                         didwalk = True
                     End If
@@ -1565,8 +1565,8 @@ Public Module ServerEvents
 
                 ' Left
                 If x1 > x AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Right, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Right
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Right, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Right
                         Exit Function
                         didwalk = True
                     End If
@@ -1574,8 +1574,8 @@ Public Module ServerEvents
 
                 ' Down
                 If y1 < y AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Up, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Up
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Up, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Up
                         Exit Function
                         didwalk = True
                     End If
@@ -1583,8 +1583,8 @@ Public Module ServerEvents
 
                 ' Up
                 If y1 > y AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Down, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Down
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Down, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Down
                         Exit Function
                         didwalk = True
                     End If
@@ -1593,8 +1593,8 @@ Public Module ServerEvents
             Case 2
                 ' Down
                 If y1 < y AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Up, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Up
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Up, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Up
                         Exit Function
                         didwalk = True
                     End If
@@ -1602,8 +1602,8 @@ Public Module ServerEvents
 
                 ' Up
                 If y1 > y AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Down, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Down
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Down, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Down
                         Exit Function
                         didwalk = True
                     End If
@@ -1611,8 +1611,8 @@ Public Module ServerEvents
 
                 ' Right
                 If x1 < x AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Left, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Left
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Left, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Left
                         Exit Function
                         didwalk = True
                     End If
@@ -1620,8 +1620,8 @@ Public Module ServerEvents
 
                 ' Left
                 If x1 > x AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Right, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Right
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Right, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Right
                         Exit Function
                         didwalk = True
                     End If
@@ -1630,8 +1630,8 @@ Public Module ServerEvents
             Case 3
                 ' Left
                 If x1 > x AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Right, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Right
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Right, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Right
                         Exit Function
                         didwalk = True
                     End If
@@ -1639,8 +1639,8 @@ Public Module ServerEvents
 
                 ' Right
                 If x1 < x AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Left, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Left
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Left, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Left
                         Exit Function
                         didwalk = True
                     End If
@@ -1648,8 +1648,8 @@ Public Module ServerEvents
 
                 ' Up
                 If y1 > y AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Down, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Down
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Down, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Down
                         Exit Function
                         didwalk = True
                     End If
@@ -1657,8 +1657,8 @@ Public Module ServerEvents
 
                 ' Down
                 If y1 < y AndAlso Not didwalk Then
-                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, Direction.Up, False) Then
-                        CanEventMoveAwayFromPlayer = Direction.Up
+                    If CanEventMove(playerID, MapNum, x1, y1, eventID, WalkThrough, DirectionType.Up, False) Then
+                        CanEventMoveAwayFromPlayer = DirectionType.Up
                         Exit Function
                         didwalk = True
                     End If
@@ -1683,28 +1683,28 @@ Public Module ServerEvents
         x1 = TempPlayer(playerID).EventMap.EventPages(eventID).X
         y1 = TempPlayer(playerID).EventMap.EventPages(eventID).Y
 
-        i = Direction.Right
+        i = DirectionType.Right
 
         If x - x1 > 0 Then
             If x - x1 > distance Then
-                i = Direction.Right
+                i = DirectionType.Right
                 distance = x - x1
             End If
         ElseIf x - x1 < 0 Then
             If ((x - x1) * -1) > distance Then
-                i = Direction.Left
+                i = DirectionType.Left
                 distance = ((x - x1) * -1)
             End If
         End If
 
         If y - y1 > 0 Then
             If y - y1 > distance Then
-                i = Direction.Down
+                i = DirectionType.Down
                 distance = y - y1
             End If
         ElseIf y - y1 < 0 Then
             If ((y - y1) * -1) > distance Then
-                i = Direction.Up
+                i = DirectionType.Up
                 distance = ((y - y1) * -1)
             End If
         End If
@@ -1727,28 +1727,28 @@ Public Module ServerEvents
         y1 = TempPlayer(playerID).EventMap.EventPages(eventID).Y
 
 
-        i = Direction.Right
+        i = DirectionType.Right
 
         If x - x1 > 0 Then
             If x - x1 > distance Then
-                i = Direction.Left
+                i = DirectionType.Left
                 distance = x - x1
             End If
         ElseIf x - x1 < 0 Then
             If ((x - x1) * -1) > distance Then
-                i = Direction.Right
+                i = DirectionType.Right
                 distance = ((x - x1) * -1)
             End If
         End If
 
         If y - y1 > 0 Then
             If y - y1 > distance Then
-                i = Direction.Up
+                i = DirectionType.Up
                 distance = y - y1
             End If
         ElseIf y - y1 < 0 Then
             If ((y - y1) * -1) > distance Then
-                i = Direction.Down
+                i = DirectionType.Down
                 distance = ((y - y1) * -1)
             End If
         End If
@@ -1821,22 +1821,22 @@ Public Module ServerEvents
         Buffer.Dispose()
 
         Select Case GetPlayerDir(Index)
-            Case Direction.Up
+            Case DirectionType.Up
 
                 If GetPlayerY(Index) = 0 Then Exit Sub
                 x = GetPlayerX(Index)
                 y = GetPlayerY(Index) - 1
-            Case Direction.Down
+            Case DirectionType.Down
 
                 If GetPlayerY(Index) = Map(GetPlayerMap(Index)).MaxY Then Exit Sub
                 x = GetPlayerX(Index)
                 y = GetPlayerY(Index) + 1
-            Case Direction.Left
+            Case DirectionType.Left
 
                 If GetPlayerX(Index) = 0 Then Exit Sub
                 x = GetPlayerX(Index) - 1
                 y = GetPlayerY(Index)
-            Case Direction.Right
+            Case DirectionType.Right
 
                 If GetPlayerX(Index) = Map(GetPlayerMap(Index)).MaxX Then Exit Sub
                 x = GetPlayerX(Index) + 1

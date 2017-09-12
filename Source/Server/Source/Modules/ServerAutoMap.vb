@@ -103,8 +103,8 @@ Module ServerAutoMap
         ReDim Tile(TilePrefab.Count - 1)
         For Prefab = 1 To TilePrefab.Count - 1
 
-            ReDim Tile(Prefab).Layer(0 To MapLayer.Count - 1)
-            For Layer = 1 To MapLayer.Count - 1
+            ReDim Tile(Prefab).Layer(0 To LayerType.Count - 1)
+            For Layer = 1 To LayerType.Count - 1
                 Tile(Prefab).Layer(Layer).Tileset = Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "Tileset"))
                 Tile(Prefab).Layer(Layer).X = Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "X"))
                 Tile(Prefab).Layer(Layer).Y = Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "Y"))
@@ -155,13 +155,13 @@ Module ServerAutoMap
         DetailCount = UBound(Detail) + 1
 
         ReDim Preserve Detail(0 To DetailCount)
-        ReDim Preserve Detail(DetailCount).Tile.Layer(0 To MapLayer.Count - 1)
+        ReDim Preserve Detail(DetailCount).Tile.Layer(0 To LayerType.Count - 1)
 
         Detail(DetailCount).DetailBase = Prefab
         Detail(DetailCount).Tile.Type = TileType
-        Detail(DetailCount).Tile.Layer(MapLayer.Mask2).Tileset = Tileset
-        Detail(DetailCount).Tile.Layer(MapLayer.Mask2).x = X
-        Detail(DetailCount).Tile.Layer(MapLayer.Mask2).y = Y
+        Detail(DetailCount).Tile.Layer(LayerType.Mask2).Tileset = Tileset
+        Detail(DetailCount).Tile.Layer(LayerType.Mask2).x = X
+        Detail(DetailCount).Tile.Layer(LayerType.Mask2).y = Y
     End Sub
 
     ''' <summary>
@@ -197,9 +197,9 @@ Module ServerAutoMap
         TileDest = Map(MapNum).Tile(X, Y)
         TileDest.Type = Tile(Prefab).Type
 
-        ReDim Preserve TileDest.Layer(0 To MapLayer.Count - 1)
+        ReDim Preserve TileDest.Layer(0 To LayerType.Count - 1)
 
-        For i = 1 To MapLayer.Count - 1
+        For i = 1 To LayerType.Count - 1
             If Tile(Prefab).Layer(i).Tileset <> 0 OrElse CleanNextTiles Then
                 TileDest.Layer(i) = Tile(Prefab).Layer(i)
                 If Not HaveDetails(Prefab) Then CleanNextTiles = True
@@ -344,10 +344,10 @@ Module ServerAutoMap
                             NextDir = Random(0, 4)
                         End If
                         Select Case NextDir
-                            Case Direction.Up : y = y - 1
-                            Case Direction.Down : y = y + 1
-                            Case Direction.Left : x = x - 1
-                            Case Direction.Right : x = x + 1
+                            Case DirectionType.Up : y = y - 1
+                            Case DirectionType.Down : y = y + 1
+                            Case DirectionType.Left : x = x - 1
+                            Case DirectionType.Right : x = x + 1
                         End Select
                         If NextDir < 5 Then
                             If x > 0 AndAlso x < .MaxX Then
@@ -430,14 +430,14 @@ Module ServerAutoMap
 
     Sub PaintRiver(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal RiverDir As Byte, ByVal RiverWidth As Integer)
         Dim pX As Integer, pY As Integer
-        If RiverDir = Direction.Down Then
+        If RiverDir = DirectionType.Down Then
             For pX = X - RiverWidth To X + RiverWidth
                 If pX > 0 AndAlso pX < Map(MapNum).MaxX Then
                     AddTile(TilePrefab.River, MapNum, pX, Y)
                 End If
             Next pX
         End If
-        If RiverDir = Direction.Left OrElse RiverDir = Direction.Right Then
+        If RiverDir = DirectionType.Left OrElse RiverDir = DirectionType.Right Then
             For pY = Y - RiverWidth To Y + RiverWidth
                 If pY > 0 AndAlso pY < Map(MapNum).MaxY Then
                     AddTile(TilePrefab.River, MapNum, X, pY)
@@ -486,25 +486,25 @@ SelectMap:
             RiverSteps = 0
             RiverFlowWidth = Random(1, 3)
             Do Until MapOrientation(RiverMap).Tile(RiverX, RiverY) <> TilePrefab.River
-                If RiverDir = Direction.Left Then
+                If RiverDir = DirectionType.Left Then
                     RiverX = RiverX - 1
                     If RiverX < 0 Then
                         RiverX = 0
-                        RiverDir = Direction.Right
+                        RiverDir = DirectionType.Right
                     End If
                 End If
-                If RiverDir = Direction.Down Then
+                If RiverDir = DirectionType.Down Then
                     RiverY = RiverY + 1
                     If RiverY > Map(RiverMap).MaxY Then
                         RiverY = Map(RiverMap).MaxY
                         RiverDir = Random(2, 3)
                     End If
                 End If
-                If RiverDir = Direction.Right Then
+                If RiverDir = DirectionType.Right Then
                     RiverX = RiverX + 1
                     If RiverX > Map(RiverMap).MaxX Then
                         RiverX = Map(RiverMap).MaxX
-                        RiverDir = Direction.Left
+                        RiverDir = DirectionType.Left
                     End If
                 End If
             Loop
@@ -516,20 +516,20 @@ SelectMap:
                 If RiverY > Map(RiverMap).MaxY Then RiverY = Map(RiverMap).MaxY
                 PaintRiver(RiverMap, RiverX, RiverY, RiverDir, RiverFlowWidth)
                 Select Case RiverDir
-                    Case Direction.Left : RiverY = RiverY + Random(-1, 1)
-                    Case Direction.Down : RiverX = RiverX + Random(-1, 1)
-                    Case Direction.Right : RiverY = RiverY + Random(-1, 1)
+                    Case DirectionType.Left : RiverY = RiverY + Random(-1, 1)
+                    Case DirectionType.Down : RiverX = RiverX + Random(-1, 1)
+                    Case DirectionType.Right : RiverY = RiverY + Random(-1, 1)
                 End Select
 
                 If Random(1, 100) < 5 Then 'Change dir
                     RiverDir = Random(1, 3)
                 End If
                 Select Case RiverDir
-                    Case Direction.Left : RiverX = RiverX - 1
-                    Case Direction.Down : RiverY = RiverY + 1
-                    Case Direction.Right : RiverX = RiverX + 1
+                    Case DirectionType.Left : RiverX = RiverX - 1
+                    Case DirectionType.Down : RiverY = RiverY + 1
+                    Case DirectionType.Right : RiverX = RiverX + 1
                 End Select
-                If RiverDir = Direction.Down Then
+                If RiverDir = DirectionType.Down Then
                     If MapOrientation(Map(RiverMap).Down).Prefab = MapPrefab.Common Then
                         If RiverY > Map(RiverMap).MaxY Then
                             RiverMap = Map(RiverMap).Down
@@ -542,7 +542,7 @@ SelectMap:
                         End If
                     End If
                 End If
-                If RiverDir = Direction.Left Then
+                If RiverDir = DirectionType.Left Then
                     If MapOrientation(Map(RiverMap).Left).Prefab = MapPrefab.Common Then
                         If RiverX < 0 Then
                             'MapCache_Create RiverMap
@@ -556,7 +556,7 @@ SelectMap:
                         End If
                     End If
                 End If
-                If RiverDir = Direction.Right Then
+                If RiverDir = DirectionType.Right Then
                     If MapOrientation(Map(RiverMap).Right).Prefab = MapPrefab.Common Then
                         If RiverX > Map(RiverMap).MaxX Then
                             'MapCache_Create RiverMap
@@ -1062,31 +1062,31 @@ Important:
 ChangeDir:
                 Dir = Random(0, 3)
                 'Avoid invert direction
-                If (OldDir = Direction.Up AndAlso Dir = Direction.Down) OrElse (OldDir = Direction.Down AndAlso Dir = Direction.Up) OrElse (OldDir = Direction.Right AndAlso Dir = Direction.Left) OrElse (OldDir = Direction.Left AndAlso Dir = Direction.Right) Then GoTo ChangeDir
+                If (OldDir = DirectionType.Up AndAlso Dir = DirectionType.Down) OrElse (OldDir = DirectionType.Down AndAlso Dir = DirectionType.Up) OrElse (OldDir = DirectionType.Right AndAlso Dir = DirectionType.Left) OrElse (OldDir = DirectionType.Left AndAlso Dir = DirectionType.Right) Then GoTo ChangeDir
             End If
             Select Case Dir
-                Case Direction.Up
+                Case DirectionType.Up
                     BrushX = 1
                     BrushY = 0
                     Y = Y - 1
                     X = X + Random(0, 2) - 1
                     If X <= 1 Then X = 1
                     If X >= Map(MapNum).MaxX - 1 Then X = Map(MapNum).MaxX - 1
-                Case Direction.Down
+                Case DirectionType.Down
                     BrushX = 1
                     BrushY = 0
                     Y = Y + 1
                     X = X + Random(0, 2) - 1
                     If X <= 1 Then X = 1
                     If X >= Map(MapNum).MaxX - 1 Then X = Map(MapNum).MaxX - 1
-                Case Direction.Left
+                Case DirectionType.Left
                     BrushX = 0
                     BrushY = 1
                     Y = Y + Random(0, 2) - 1
                     X = X - 1
                     If Y <= 1 Then Y = 1
                     If Y >= Map(MapNum).MaxY - 1 Then Y = Map(MapNum).MaxY - 1
-                Case Direction.Right
+                Case DirectionType.Right
                     BrushX = 0
                     BrushY = 1
                     Y = Y + Random(0, 2) - 1
@@ -1154,8 +1154,8 @@ ChangeDir:
     Function CheckPath(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal Dir As Byte) As Boolean
         Dim SizeX As Integer, SizeY As Integer
         Select Case Dir
-            Case Direction.Up, Direction.Down : SizeX = 1
-            Case Direction.Left, Direction.Right : SizeY = 1
+            Case DirectionType.Up, DirectionType.Down : SizeX = 1
+            Case DirectionType.Left, DirectionType.Right : SizeY = 1
         End Select
 
         CheckPath = True
@@ -1230,29 +1230,29 @@ ChangeDir:
                 If StartX(i) < Map(MapNum).MaxX / 2 Then
                     If StartY(i) < Map(MapNum).MaxY / 2 Then
                         If Random(1, 2) = 1 Then
-                            Dir = Direction.Left
+                            Dir = DirectionType.Left
                         Else
-                            Dir = Direction.Up
+                            Dir = DirectionType.Up
                         End If
                     Else
                         If Random(1, 2) = 1 Then
-                            Dir = Direction.Left
+                            Dir = DirectionType.Left
                         Else
-                            Dir = Direction.Down
+                            Dir = DirectionType.Down
                         End If
                     End If
                 Else
                     If StartY(i) < Map(MapNum).MaxY / 2 Then
                         If Random(1, 2) = 1 Then
-                            Dir = Direction.Right
+                            Dir = DirectionType.Right
                         Else
-                            Dir = Direction.Up
+                            Dir = DirectionType.Up
                         End If
                     Else
                         If Random(1, 2) = 1 Then
-                            Dir = Direction.Right
+                            Dir = DirectionType.Right
                         Else
-                            Dir = Direction.Down
+                            Dir = DirectionType.Down
                         End If
                     End If
                 End If

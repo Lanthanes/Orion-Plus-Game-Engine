@@ -24,14 +24,14 @@
 
         Classes(Max_Classes).Name = "New Class"
 
-        ReDim Classes(Max_Classes).Stat(0 To Stats.Count - 1)
+        ReDim Classes(Max_Classes).Stat(0 To StatType.Count - 1)
 
-        ReDim Classes(Max_Classes).Vital(0 To Vitals.Count - 1)
+        ReDim Classes(Max_Classes).Vital(0 To VitalType.Count - 1)
 
         ReDim Classes(Max_Classes).MaleSprite(1)
         ReDim Classes(Max_Classes).FemaleSprite(1)
 
-        For i = 1 To Stats.Count - 1
+        For i = 1 To StatType.Count - 1
             Classes(Max_Classes).Stat(i) = 1
         Next
 
@@ -195,37 +195,37 @@
     Private Sub NumStrength_ValueChanged(sender As Object, e As EventArgs) Handles nudStrength.Click
         If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
-        Classes(EditorIndex).Stat(Stats.Strength) = nudStrength.Value
+        Classes(EditorIndex).Stat(StatType.Strength) = nudStrength.Value
     End Sub
 
     Private Sub NumLuck_ValueChanged(sender As Object, e As EventArgs) Handles nudLuck.Click
         If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
-        Classes(EditorIndex).Stat(Stats.Luck) = nudLuck.Value
+        Classes(EditorIndex).Stat(StatType.Luck) = nudLuck.Value
     End Sub
 
     Private Sub NumEndurance_ValueChanged(sender As Object, e As EventArgs) Handles nudEndurance.Click
         If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
-        Classes(EditorIndex).Stat(Stats.Endurance) = nudEndurance.Value
+        Classes(EditorIndex).Stat(StatType.Endurance) = nudEndurance.Value
     End Sub
 
     Private Sub NumIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nudIntelligence.Click
         If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
-        Classes(EditorIndex).Stat(Stats.Intelligence) = nudIntelligence.Value
+        Classes(EditorIndex).Stat(StatType.Intelligence) = nudIntelligence.Value
     End Sub
 
     Private Sub NumVitality_ValueChanged(sender As Object, e As EventArgs) Handles nudVitality.Click
         If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
-        Classes(EditorIndex).Stat(Stats.Vitality) = nudVitality.Value
+        Classes(EditorIndex).Stat(StatType.Vitality) = nudVitality.Value
     End Sub
 
     Private Sub NumSpirit_ValueChanged(sender As Object, e As EventArgs) Handles nudSpirit.Click
         If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
-        Classes(EditorIndex).Stat(Stats.Spirit) = nudSpirit.Value
+        Classes(EditorIndex).Stat(StatType.Spirit) = nudSpirit.Value
     End Sub
 
     Private Sub NumBaseExp_ValueChanged(sender As Object, e As EventArgs) Handles nudBaseExp.Click

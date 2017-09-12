@@ -22,7 +22,7 @@ Public Module ClientWeather
         Dim i As Integer, x As Integer
 
         If CurrentWeather > 0 Then
-            If CurrentWeather = Weather.Rain OrElse CurrentWeather = Weather.Storm Then
+            If CurrentWeather = WeatherType.Rain OrElse CurrentWeather = WeatherType.Storm Then
                 PlayWeatherSound("Rain.ogg", True)
             End If
             x = Rand(1, 101 - CurrentWeatherIntensity)
@@ -50,7 +50,7 @@ Public Module ClientWeather
         Else
             StopWeatherSound()
         End If
-        If CurrentWeather = Weather.Storm Then
+        If CurrentWeather = WeatherType.Storm Then
             x = Rand(1, 400 - CurrentWeatherIntensity)
             If x = 1 Then
                 'Draw Thunder
@@ -94,7 +94,7 @@ Public Module ClientWeather
 
         For i = 1 To MAX_WEATHER_PARTICLES
             If WeatherParticle(i).InUse Then
-                If WeatherParticle(i).type = Weather.Storm Then
+                If WeatherParticle(i).type = WeatherType.Storm Then
                     SpriteLeft = 0
                 Else
                     SpriteLeft = WeatherParticle(i).type - 1
