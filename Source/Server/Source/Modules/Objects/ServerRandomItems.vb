@@ -46,8 +46,8 @@
         Dim Prefix As String = ""
 
         ' Check to see if we're out of range, or if the item isn't random.
-        If itemnum < 1 Or itemnum > MAX_ITEMS Then Exit Sub
-        If index < 1 Or index > MAX_PLAYERS Then Exit Sub
+        If itemnum < 1 OrElse itemnum > MAX_ITEMS Then Exit Sub
+        If index < 1 OrElse index > MAX_PLAYERS Then Exit Sub
         If Item(itemnum).Randomize = 0 Then Exit Sub
 
         ' See what rarity we get
@@ -56,15 +56,15 @@
             Rarity = RarityType.RARITY_EPIC
             TempAmount = 0.5
             Prefix = "Epic "
-        ElseIf TempNum >= 80 And TempNum < 95 Then
+        ElseIf TempNum >= 80 AndAlso TempNum < 95 Then
             Rarity = RarityType.RARITY_RARE
             TempAmount = 0.35
             Prefix = "Rare "
-        ElseIf TempNum >= 60 And TempNum < 80 Then
+        ElseIf TempNum >= 60 AndAlso TempNum < 80 Then
             Rarity = RarityType.RARITY_UNCOMMON
             TempAmount = 0.2
             Prefix = "Unrare "
-        ElseIf TempNum >= 20 And TempNum < 60 Then
+        ElseIf TempNum >= 20 AndAlso TempNum < 60 Then
             Rarity = RarityType.RARITY_COMMON
             TempAmount = 0
         Else
@@ -83,9 +83,9 @@
 
         ' set the Bonus StatAmount
         StatAmount = ItemLevel * TempAmount
-        If StatAmount < 4 And Rarity = RarityType.RARITY_EPIC Then StatAmount = 4
-        If StatAmount < 3 And Rarity = RarityType.RARITY_RARE Then StatAmount = 3
-        If StatAmount < 2 And Rarity = RarityType.RARITY_UNCOMMON Then StatAmount = 2
+        If StatAmount < 4 AndAlso Rarity = RarityType.RARITY_EPIC Then StatAmount = 4
+        If StatAmount < 3 AndAlso Rarity = RarityType.RARITY_RARE Then StatAmount = 3
+        If StatAmount < 2 AndAlso Rarity = RarityType.RARITY_UNCOMMON Then StatAmount = 2
 
         ' Give out the item based off of the randomtype
         Select Case RandomType

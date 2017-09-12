@@ -94,7 +94,7 @@ Namespace Global.Orion
                     Exit Select
 
                 Case Else
-                    If evt.KeyCode = Keys.V And evt.Modifiers = Keys.Control Then
+                    If evt.KeyCode = Keys.V AndAlso evt.Modifiers = Keys.Control Then
                         CurrentMessage = CurrentMessage + Clipboard.GetText
                     End If
 

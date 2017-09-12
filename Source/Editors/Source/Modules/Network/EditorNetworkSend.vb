@@ -181,7 +181,7 @@ Module EditorNetworkSend
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(EditorPackets.EditorSaveMap)
-        Buffer.WriteBytes(Compression.CompressBytes(data))
+        Buffer.WriteBlock(Compression.CompressBytes(data))
 
         Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()

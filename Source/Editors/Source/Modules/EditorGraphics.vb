@@ -218,7 +218,7 @@ Module EditorGraphics
     Public Sub LoadTexture(ByVal Index As Integer, ByVal TexType As Byte)
 
         If TexType = 1 Then 'tilesets
-            If Index <= 0 Or Index > NumTileSets Then Exit Sub
+            If Index <= 0 OrElse Index > NumTileSets Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             TileSetTexture(Index) = New Texture(Application.StartupPath & GFX_PATH & "tilesets\" & Index & GFX_EXT)
@@ -233,7 +233,7 @@ Module EditorGraphics
             End With
 
         ElseIf TexType = 2 Then 'characters
-            If Index <= 0 Or Index > NumCharacters Then Exit Sub
+            If Index <= 0 OrElse Index > NumCharacters Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             CharacterGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "characters\" & Index & GFX_EXT)
@@ -248,7 +248,7 @@ Module EditorGraphics
             End With
 
         ElseIf TexType = 3 Then 'paperdoll
-            If Index <= 0 Or Index > NumPaperdolls Then Exit Sub
+            If Index <= 0 OrElse Index > NumPaperdolls Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             PaperDollGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Paperdolls\" & Index & GFX_EXT)
@@ -263,7 +263,7 @@ Module EditorGraphics
             End With
 
         ElseIf TexType = 4 Then 'items
-            If Index <= 0 Or Index > NumItems Then Exit Sub
+            If Index <= 0 OrElse Index > NumItems Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             ItemsGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "items\" & Index & GFX_EXT)
@@ -278,7 +278,7 @@ Module EditorGraphics
             End With
 
         ElseIf TexType = 5 Then 'resources
-            If Index <= 0 Or Index > NumResources Then Exit Sub
+            If Index <= 0 OrElse Index > NumResources Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             ResourcesGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "resources\" & Index & GFX_EXT)
@@ -293,7 +293,7 @@ Module EditorGraphics
             End With
 
         ElseIf TexType = 6 Then 'animations
-            If Index <= 0 Or Index > NumAnimations Then Exit Sub
+            If Index <= 0 OrElse Index > NumAnimations Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             AnimationsGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Animations\" & Index & GFX_EXT)
@@ -308,7 +308,7 @@ Module EditorGraphics
             End With
 
         ElseIf TexType = 7 Then 'faces
-            If Index <= 0 Or Index > NumFaces Then Exit Sub
+            If Index <= 0 OrElse Index > NumFaces Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             FacesGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Faces\" & Index & GFX_EXT)
@@ -323,7 +323,7 @@ Module EditorGraphics
             End With
 
         ElseIf TexType = 8 Then 'fogs
-            If Index <= 0 Or Index > NumFogs Then Exit Sub
+            If Index <= 0 OrElse Index > NumFogs Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             FogGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Fogs\" & Index & GFX_EXT)
@@ -338,7 +338,7 @@ Module EditorGraphics
             End With
 
         ElseIf TexType = 9 Then 'skill icons
-            If Index <= 0 Or Index > NumSkillIcons Then Exit Sub
+            If Index <= 0 OrElse Index > NumSkillIcons Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             SkillIconsGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "SkillIcons\" & Index & GFX_EXT)
@@ -352,7 +352,7 @@ Module EditorGraphics
                 .TextureTimer = GetTickCount() + 100000
             End With
         ElseIf TexType = 10 Then 'furniture
-            If Index <= 0 Or Index > NumFurniture Then Exit Sub
+            If Index <= 0 OrElse Index > NumFurniture Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             FurnitureGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Furniture\" & Index & GFX_EXT)
@@ -366,7 +366,7 @@ Module EditorGraphics
                 .TextureTimer = GetTickCount() + 100000
             End With
         ElseIf TexType = 11 Then 'projectiles
-            If Index <= 0 Or Index > NumProjectiles Then Exit Sub
+            If Index <= 0 OrElse Index > NumProjectiles Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             ProjectileGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Projectiles\" & Index & GFX_EXT)
@@ -428,19 +428,15 @@ Module EditorGraphics
     End Sub
 
     Public Function IsDirBlocked(ByRef blockvar As Byte, ByRef Dir As Byte) As Boolean
-        If Not blockvar And (2 ^ Dir) Then
-            IsDirBlocked = False
-        Else
-            IsDirBlocked = True
-        End If
+        Return Not (Not blockvar AndAlso (2 ^ Dir))
     End Function
 
     Public Function ConvertMapX(ByVal X As Integer) As Integer
-        ConvertMapX = X - (TileView.left * PIC_X) - Camera.Left
+        ConvertMapX = X - (TileView.Left * PIC_X) - Camera.Left
     End Function
 
     Public Function ConvertMapY(ByVal Y As Integer) As Integer
-        ConvertMapY = Y - (TileView.top * PIC_Y) - Camera.Top
+        ConvertMapY = Y - (TileView.Top * PIC_Y) - Camera.Top
     End Function
 
     Public Sub DrawNpc(ByVal MapNpcNum As Integer)
@@ -454,12 +450,12 @@ Module EditorGraphics
 
         If MapNpc(MapNpcNum).Num = 0 Then Exit Sub ' no npc set
 
-        If MapNpc(MapNpcNum).X < TileView.left Or MapNpc(MapNpcNum).X > TileView.right Then Exit Sub
-        If MapNpc(MapNpcNum).Y < TileView.top Or MapNpc(MapNpcNum).Y > TileView.bottom Then Exit Sub
+        If MapNpc(MapNpcNum).X < TileView.Left OrElse MapNpc(MapNpcNum).X > TileView.Right Then Exit Sub
+        If MapNpc(MapNpcNum).Y < TileView.Top OrElse MapNpc(MapNpcNum).Y > TileView.Bottom Then Exit Sub
 
         Sprite = Npc(MapNpc(MapNpcNum).Num).Sprite
 
-        If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
+        If Sprite < 1 OrElse Sprite > NumCharacters Then Exit Sub
 
         attackspeed = 1000
 
@@ -526,7 +522,7 @@ Module EditorGraphics
     End Sub
 
     Public Sub DrawResource(ByVal Resource As Integer, ByVal dx As Integer, ByVal dy As Integer, ByVal rec As Rectangle)
-        If Resource < 1 Or Resource > NumResources Then Exit Sub
+        If Resource < 1 OrElse Resource > NumResources Then Exit Sub
         Dim X As Integer
         Dim Y As Integer
         Dim width As Integer
@@ -537,7 +533,7 @@ Module EditorGraphics
         width = (rec.Right - rec.Left)
         height = (rec.Bottom - rec.Top)
 
-        If rec.Width < 0 Or rec.Height < 0 Then Exit Sub
+        If rec.Width < 0 OrElse rec.Height < 0 Then Exit Sub
 
         If ResourcesGFXInfo(Resource).IsLoaded = False Then
             LoadTexture(Resource, 5)
@@ -562,7 +558,7 @@ Module EditorGraphics
         If GettingMap Then Exit Sub
         If MapData = False Then Exit Sub
 
-        If MapResource(Resource_num).X > Map.MaxX Or MapResource(Resource_num).Y > Map.MaxY Then Exit Sub
+        If MapResource(Resource_num).X > Map.MaxX OrElse MapResource(Resource_num).Y > Map.MaxY Then Exit Sub
         ' Get the Resource type
         Resource_master = Map.Tile(MapResource(Resource_num).X, MapResource(Resource_num).Y).Data1
 
@@ -602,7 +598,7 @@ Module EditorGraphics
         Dim x As Integer, y As Integer
         PicNum = Item(MapItem(itemnum).Num).Pic
 
-        If PicNum < 1 Or PicNum > NumItems Then Exit Sub
+        If PicNum < 1 OrElse PicNum > NumItems Then Exit Sub
 
         If ItemsGFXInfo(PicNum).IsLoaded = False Then
             LoadTexture(PicNum, 4)
@@ -614,8 +610,8 @@ Module EditorGraphics
         End With
 
         With MapItem(itemnum)
-            If .X < TileView.left Or .X > TileView.right Then Exit Sub
-            If .Y < TileView.top Or .Y > TileView.bottom Then Exit Sub
+            If .X < TileView.Left OrElse .X > TileView.Right Then Exit Sub
+            If .Y < TileView.Top OrElse .Y > TileView.Bottom Then Exit Sub
         End With
 
         If ItemsGFXInfo(PicNum).width > 32 Then ' has more than 1 frame
@@ -639,7 +635,7 @@ Module EditorGraphics
         Dim height As Integer
         On Error Resume Next
 
-        If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
+        If Sprite < 1 OrElse Sprite > NumCharacters Then Exit Sub
 
         If CharacterGFXInfo(Sprite).IsLoaded = False Then
             LoadTexture(Sprite, 2)
@@ -668,7 +664,7 @@ Module EditorGraphics
         With Map.Tile(X, Y)
             For i = MapLayer.Ground To MapLayer.Mask2
                 ' skip tile if tileset isn't set
-                If .Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets Then
+                If .Layer(i).Tileset > 0 AndAlso .Layer(i).Tileset <= NumTileSets Then
                     If TileSetTextureInfo(.Layer(i).Tileset).IsLoaded = False Then
                         LoadTexture(.Layer(i).Tileset, 1)
                     End If
@@ -711,7 +707,7 @@ Module EditorGraphics
         With Map.Tile(X, Y)
             For i = MapLayer.Fringe To MapLayer.Fringe2
                 ' skip tile if tileset isn't set
-                If .Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets Then
+                If .Layer(i).Tileset > 0 AndAlso .Layer(i).Tileset <= NumTileSets Then
                     If TileSetTextureInfo(.Layer(i).Tileset).IsLoaded = False Then
                         LoadTexture(.Layer(i).Tileset, 1)
                     End If
@@ -839,10 +835,10 @@ Module EditorGraphics
     Public Sub UpdateCamera()
 
         With TileView
-            .top = EditorViewY
-            .bottom = Map.MaxY
-            .left = EditorViewX
-            .right = Map.MaxX
+            .Top = EditorViewY
+            .Bottom = Map.MaxY
+            .Left = EditorViewX
+            .Right = Map.MaxX
         End With
 
         With Camera
@@ -957,11 +953,11 @@ Module EditorGraphics
         '    EditorAnim_DrawAnim()
         'End If
 
-        If InMapEditor And MapData = True Then
+        If InMapEditor AndAlso MapData = True Then
             ' blit lower tiles
             If NumTileSets > 0 Then
-                For X = TileView.left To TileView.right + 1
-                    For Y = TileView.top To TileView.bottom + 1
+                For X = TileView.Left To TileView.Right + 1
+                    For Y = TileView.Top To TileView.Bottom + 1
                         If IsValidMapPoint(X, Y) Then
                             DrawMapTile(X, Y)
                         End If
@@ -970,7 +966,7 @@ Module EditorGraphics
             End If
 
             ' events
-            If Map.CurrentEvents > 0 And Map.CurrentEvents <= Map.EventCount Then
+            If Map.CurrentEvents > 0 AndAlso Map.CurrentEvents <= Map.EventCount Then
 
                 For I = 1 To Map.CurrentEvents
                     If Map.MapEvents(I).Position = 0 Then
@@ -991,8 +987,8 @@ Module EditorGraphics
             End If
 
             'Draw sum d00rs.
-            For X = TileView.left To TileView.right
-                For Y = TileView.top To TileView.bottom
+            For X = TileView.Left To TileView.Right
+                For Y = TileView.Top To TileView.Bottom
 
                     If IsValidMapPoint(X, Y) Then
                         If Map.Tile(X, Y).Type = TileType.Door Then
@@ -1016,7 +1012,7 @@ Module EditorGraphics
                     Next
 
                     ' events
-                    If Map.CurrentEvents > 0 And Map.CurrentEvents <= Map.EventCount Then
+                    If Map.CurrentEvents > 0 AndAlso Map.CurrentEvents <= Map.EventCount Then
 
                         For I = 1 To Map.CurrentEvents
                             If Map.MapEvents(I).Position = 1 Then
@@ -1044,7 +1040,7 @@ Module EditorGraphics
             Next
 
             'events
-            If Map.CurrentEvents > 0 And Map.CurrentEvents <= Map.EventCount Then
+            If Map.CurrentEvents > 0 AndAlso Map.CurrentEvents <= Map.EventCount Then
 
                 For I = 1 To Map.CurrentEvents
                     If Map.MapEvents(I).Position = 2 Then
@@ -1055,8 +1051,8 @@ Module EditorGraphics
 
             ' blit out upper tiles
             If NumTileSets > 0 Then
-                For X = TileView.left To TileView.right + 1
-                    For Y = TileView.top To TileView.bottom + 1
+                For X = TileView.Left To TileView.Right + 1
+                    For Y = TileView.Top To TileView.Bottom + 1
                         If IsValidMapPoint(X, Y) Then
                             DrawMapFringeTile(X, Y)
                         End If
@@ -1074,8 +1070,8 @@ Module EditorGraphics
             End If
 
             If SelectedTab = 4 Then
-                For X = TileView.left To TileView.right
-                    For Y = TileView.top To TileView.bottom
+                For X = TileView.Left To TileView.Right
+                    For Y = TileView.Top To TileView.Bottom
                         If IsValidMapPoint(X, Y) Then
                             DrawDirections(X, Y)
                         End If
@@ -1109,7 +1105,7 @@ Module EditorGraphics
                 DrawTileOutline()
             End If
 
-            If InMapEditor And SelectedTab = 5 Then
+            If InMapEditor AndAlso SelectedTab = 5 Then
                 DrawEvents()
                 EditorEvent_DrawGraphic()
             End If
@@ -1171,7 +1167,7 @@ Module EditorGraphics
 
     Public Sub DrawTileOutline()
         Dim rec As Rectangle, tileset As Integer
-        If SelectedTab = 4 Or HideCursor = True Then Exit Sub
+        If SelectedTab = 4 OrElse HideCursor = True Then Exit Sub
 
         With rec
             .Y = 0
@@ -1183,7 +1179,7 @@ Module EditorGraphics
         tileset = FrmEditor_MapEditor.cmbTileSets.SelectedIndex + 1
 
         ' exit out if doesn't exist
-        If tileset <= 0 Or tileset > NumTileSets Then Exit Sub
+        If tileset <= 0 OrElse tileset > NumTileSets Then Exit Sub
 
         Dim rec2 As New RectangleShape
         rec2.OutlineColor = New Color(Color.Blue)
@@ -1202,7 +1198,7 @@ Module EditorGraphics
                 .TextureTimer = GetTickCount() + 100000
             End With
 
-            If EditorTileWidth = 1 And EditorTileHeight = 1 Then
+            If EditorTileWidth = 1 AndAlso EditorTileHeight = 1 Then
                 RenderSprite(TileSetSprite(FrmEditor_MapEditor.cmbTileSets.SelectedIndex + 1), GameWindow, ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y), EditorTileSelStart.X * PIC_X, EditorTileSelStart.Y * PIC_Y, rec.Width, rec.Height)
                 rec2.Size = New Vector2f(rec.Width, rec.Height)
             Else
@@ -1226,9 +1222,9 @@ Module EditorGraphics
 
         Dim rec As New RectangleShape
 
-        For x = TileView.left To TileView.right ' - 1
+        For x = TileView.Left To TileView.Right ' - 1
 
-            For y = TileView.top To TileView.bottom ' - 1
+            For y = TileView.Top To TileView.Bottom ' - 1
 
                 If IsValidMapPoint(x, y) Then
 
@@ -1274,7 +1270,7 @@ Module EditorGraphics
         tileset = FrmEditor_MapEditor.cmbTileSets.SelectedIndex + 1
 
         ' exit out if doesn't exist
-        If tileset <= 0 Or tileset > NumTileSets Then Exit Sub
+        If tileset <= 0 OrElse tileset > NumTileSets Then Exit Sub
 
         Dim rec2 As New RectangleShape With {
             .OutlineColor = New Color(Color.Red),
@@ -1387,7 +1383,7 @@ Module EditorGraphics
         Dim itemnum As Integer
         itemnum = Item(FrmEditor_MapEditor.scrlMapItem.Value).Pic
 
-        If itemnum < 1 Or itemnum > NumItems Then
+        If itemnum < 1 OrElse itemnum > NumItems Then
             FrmEditor_MapEditor.picMapItem.BackgroundImage = Nothing
             Exit Sub
         End If
@@ -1403,7 +1399,7 @@ Module EditorGraphics
 
         itemnum = Item(FrmEditor_MapEditor.scrlMapKey.Value).Pic
 
-        If itemnum < 1 Or itemnum > NumItems Then
+        If itemnum < 1 OrElse itemnum > NumItems Then
             FrmEditor_MapEditor.picMapKey.BackgroundImage = Nothing
             Exit Sub
         End If
@@ -1418,7 +1414,7 @@ Module EditorGraphics
         Dim itemnum As Integer
         itemnum = frmEditor_Item.nudPic.Value
 
-        If itemnum < 1 Or itemnum > NumItems Then
+        If itemnum < 1 OrElse itemnum > NumItems Then
             frmEditor_Item.picItem.BackgroundImage = Nothing
             Exit Sub
         End If
@@ -1434,7 +1430,7 @@ Module EditorGraphics
 
         Sprite = frmEditor_Item.nudPaperdoll.Value
 
-        If Sprite < 1 Or Sprite > NumPaperdolls Then
+        If Sprite < 1 OrElse Sprite > NumPaperdolls Then
             frmEditor_Item.picPaperdoll.BackgroundImage = Nothing
             Exit Sub
         End If
@@ -1450,7 +1446,7 @@ Module EditorGraphics
         Dim dRECT As Rectangle
         Furniturenum = frmEditor_Item.nudFurniture.Value
 
-        If Furniturenum < 1 Or Furniturenum > NumFurniture Then
+        If Furniturenum < 1 OrElse Furniturenum > NumFurniture Then
             EditorItem_Furniture.Clear(ToSFMLColor(frmEditor_Item.picFurniture.BackColor))
             EditorItem_Furniture.Display()
             Exit Sub
@@ -1515,7 +1511,7 @@ Module EditorGraphics
 
         Sprite = FrmEditor_Npc.nudSprite.Value
 
-        If Sprite < 1 Or Sprite > NumCharacters Then
+        If Sprite < 1 OrElse Sprite > NumCharacters Then
             FrmEditor_Npc.picSprite.BackgroundImage = Nothing
             Exit Sub
         End If
@@ -1533,7 +1529,7 @@ Module EditorGraphics
         ' normal sprite
         Sprite = FrmEditor_Resource.nudNormalPic.Value
 
-        If Sprite < 1 Or Sprite > NumResources Then
+        If Sprite < 1 OrElse Sprite > NumResources Then
             FrmEditor_Resource.picNormalpic.BackgroundImage = Nothing
         Else
             If FileExist(Application.StartupPath & GFX_PATH & "resources\" & Sprite & GFX_EXT) Then
@@ -1544,7 +1540,7 @@ Module EditorGraphics
         ' exhausted sprite
         Sprite = FrmEditor_Resource.nudExhaustedPic.Value
 
-        If Sprite < 1 Or Sprite > NumResources Then
+        If Sprite < 1 OrElse Sprite > NumResources Then
             FrmEditor_Resource.picExhaustedPic.BackgroundImage = Nothing
         Else
             If FileExist(Application.StartupPath & GFX_PATH & "resources\" & Sprite & GFX_EXT) Then
@@ -1559,7 +1555,7 @@ Module EditorGraphics
         Dim dRECT As Rectangle
         iconnum = frmEditor_Skill.nudIcon.Value
 
-        If iconnum < 1 Or iconnum > NumSkillIcons Then
+        If iconnum < 1 OrElse iconnum > NumSkillIcons Then
             EditorSkill_Icon.Clear(ToSFMLColor(frmEditor_Skill.picSprite.BackColor))
             EditorSkill_Icon.Display()
             Exit Sub
@@ -1602,7 +1598,7 @@ Module EditorGraphics
 
         Animationnum = FrmEditor_Animation.nudSprite0.Value
 
-        If Animationnum < 1 Or Animationnum > NumAnimations Then
+        If Animationnum < 1 OrElse Animationnum > NumAnimations Then
             EditorAnimation_Anim1.Clear(ToSFMLColor(FrmEditor_Animation.picSprite0.BackColor))
             EditorAnimation_Anim1.Display()
         Else
@@ -1663,7 +1659,7 @@ Module EditorGraphics
 
         Animationnum = FrmEditor_Animation.nudSprite1.Value
 
-        If Animationnum < 1 Or Animationnum > NumAnimations Then
+        If Animationnum < 1 OrElse Animationnum > NumAnimations Then
             EditorAnimation_Anim2.Clear(ToSFMLColor(FrmEditor_Animation.picSprite1.BackColor))
             EditorAnimation_Anim2.Display()
         Else

@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports ASFW
 Imports ASFW.IO
+Imports ASFW.IO.FileIO
 
 Public Module ServerQuest
 #Region "Constants"
@@ -134,7 +135,7 @@ Public Module ServerQuest
             writer.WriteInt32(Quest(QuestNum).Task(I).TaskType)
         Next
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadQuests()
@@ -155,7 +156,7 @@ Public Module ServerQuest
         FileName = Path.Combine(Application.StartupPath, "data", "quests", String.Format("quest{0}.dat", QuestNum))
 
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(FileName, reader)
+        BinaryFile.Load(FileName, reader)
 
         Quest(QuestNum).Name = reader.ReadString()
         Quest(QuestNum).QuestLog = reader.ReadString()
@@ -284,13 +285,8 @@ Public Module ServerQuest
 
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SQuestEditor)
-<<<<<<< HEAD
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
-=======
-        SendDataTo(Index, Buffer.ToArray)
-        Buffer.Dispose
->>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
     End Sub
 
     Sub Packet_SaveQuest(ByVal Index As Integer, ByRef data() As Byte)
@@ -300,7 +296,7 @@ Public Module ServerQuest
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
 
         QuestNum = Buffer.ReadInt32
-        If QuestNum < 0 Or QuestNum > MAX_QUESTS Then Exit Sub
+        If QuestNum < 0 OrElse QuestNum > MAX_QUESTS Then Exit Sub
 
         ' Update the Quest
         Quest(QuestNum).Name = Buffer.ReadString
@@ -350,7 +346,7 @@ Public Module ServerQuest
             Quest(QuestNum).Task(I).TaskType = Buffer.ReadInt32
         Next
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
         ' Save it
         SendQuests(Index) ' editor
@@ -381,7 +377,7 @@ Public Module ServerQuest
 
             PlayerMsg(Index, Trim$(Quest(QuestNum).Name) & " has been canceled!", ColorType.BrightRed)
 
-            If GetPlayerAccess(Index) > 0 And QuestNum = 1 Then
+            If GetPlayerAccess(Index) > 0 AndAlso QuestNum = 1 Then
                 For I = 1 To MAX_QUESTS
                     Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(I).Status = QuestStatus.NotStarted '2
                     Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(I).ActualTask = 1
@@ -426,7 +422,7 @@ Public Module ServerQuest
     End Sub
 
     Sub SendUpdateQuestToAll(ByVal QuestNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SUpdateQuest)
@@ -474,17 +470,12 @@ Public Module ServerQuest
             Buffer.WriteInt32(Quest(QuestNum).Task(I).TaskType)
         Next
 
-<<<<<<< HEAD
         SendDataToAll(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
-=======
-        SendDataToAll(Buffer.ToArray)
-        Buffer.Dispose
->>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
     End Sub
 
     Sub SendUpdateQuestTo(ByVal Index As Integer, ByVal QuestNum As Integer)
-        Dim Buffer as ByteStream, I As Integer
+        Dim Buffer As ByteStream, I As Integer
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SUpdateQuest)
@@ -532,18 +523,13 @@ Public Module ServerQuest
             Buffer.WriteInt32(Quest(QuestNum).Task(I).TaskType)
         Next
 
-<<<<<<< HEAD
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
-=======
-        SendDataTo(Index, Buffer.ToArray)
-        Buffer.Dispose
->>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
     End Sub
 
     Public Sub SendPlayerQuests(ByVal Index As Integer)
         Dim I As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPlayerQuests)
@@ -554,18 +540,13 @@ Public Module ServerQuest
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(I).CurrentCount)
         Next
 
-<<<<<<< HEAD
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
-=======
-        SendDataTo(Index, Buffer.ToArray)
-        Buffer.Dispose
->>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
 
     End Sub
 
     Public Sub SendPlayerQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPlayerQuest)
@@ -575,18 +556,13 @@ Public Module ServerQuest
         Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).ActualTask)
         Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).CurrentCount)
 
-<<<<<<< HEAD
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()
-=======
-        SendDataTo(Index, Buffer.ToArray)
-        Buffer.Dispose
->>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
     End Sub
 
     'sends a message to the client that is shown on the screen
     Public Sub QuestMessage(ByVal Index As Integer, ByVal QuestNum As Integer, ByVal message As String, ByVal QuestNumForStart As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SQuestMessage)
@@ -596,7 +572,7 @@ Public Module ServerQuest
         Buffer.WriteInt32(QuestNumForStart)
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 #End Region
@@ -616,15 +592,15 @@ Public Module ServerQuest
 
     Public Function CanStartQuest(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
         CanStartQuest = False
-        If QuestNum < 1 Or QuestNum > MAX_QUESTS Then Exit Function
+        If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
         If QuestInProgress(Index, QuestNum) Then Exit Function
 
         'Check if player has the quest 0 (not started) or 3 (completed but it can be started again)
-        If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.NotStarted Or Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.Repeatable Then
+        If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.NotStarted OrElse Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.Repeatable Then
             For i = 1 To Quest(QuestNum).ReqCount
                 'Check if item is needed
                 If Quest(QuestNum).Requirement(i) = 1 Then
-                    If Quest(QuestNum).RequirementIndex(i) > 0 And Quest(QuestNum).RequirementIndex(i) <= MAX_ITEMS Then
+                    If Quest(QuestNum).RequirementIndex(i) > 0 AndAlso Quest(QuestNum).RequirementIndex(i) <= MAX_ITEMS Then
                         If HasItem(Index, Quest(QuestNum).RequirementIndex(i)) = 0 Then
                             PlayerMsg(Index, "You need " & Item(Quest(QuestNum).Requirement(2)).Name & " to take this quest!", ColorType.Yellow)
                             Exit Function
@@ -634,8 +610,8 @@ Public Module ServerQuest
 
                 'Check if previous quest is needed
                 If Quest(QuestNum).Requirement(i) = 2 Then
-                    If Quest(QuestNum).RequirementIndex(i) > 0 And Quest(QuestNum).RequirementIndex(i) <= MAX_QUESTS Then
-                        If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(Quest(QuestNum).Requirement(2)).Status = QuestStatus.NotStarted Or Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(Quest(QuestNum).Requirement(2)).Status = QuestStatus.Started Then
+                    If Quest(QuestNum).RequirementIndex(i) > 0 AndAlso Quest(QuestNum).RequirementIndex(i) <= MAX_QUESTS Then
+                        If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(Quest(QuestNum).Requirement(2)).Status = QuestStatus.NotStarted OrElse Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(Quest(QuestNum).Requirement(2)).Status = QuestStatus.Started Then
                             PlayerMsg(Index, "You need to complete the " & Trim$(Quest(Quest(QuestNum).Requirement(2)).Name) & " quest in order to take this quest!", ColorType.Yellow)
                             Exit Function
                         End If
@@ -665,7 +641,7 @@ Public Module ServerQuest
     'Tells if the quest is in progress or not
     Public Function QuestInProgress(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
         QuestInProgress = False
-        If QuestNum < 1 Or QuestNum > MAX_QUESTS Then Exit Function
+        If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
         If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatus.Started Then 'Status=1 means started
             QuestInProgress = True
@@ -674,9 +650,9 @@ Public Module ServerQuest
 
     Public Function QuestCompleted(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
         QuestCompleted = False
-        If QuestNum < 1 Or QuestNum > MAX_QUESTS Then Exit Function
+        If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
-        If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = 2 Or Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = 3 Then
+        If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = 2 OrElse Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = 3 Then
             QuestCompleted = True
         End If
     End Function
@@ -760,7 +736,7 @@ Public Module ServerQuest
                 End If
 
             Case QuestType.Talk 'Interact with X npc.
-                If TargetIndex = Quest(QuestNum).Task(ActualTask).NPC And Quest(QuestNum).Task(ActualTask).Amount = 0 Then
+                If TargetIndex = Quest(QuestNum).Task(ActualTask).NPC AndAlso Quest(QuestNum).Task(ActualTask).Amount = 0 Then
                     QuestMessage(Index, QuestNum, Quest(QuestNum).Task(ActualTask).Speech, 0)
                     If CanEndQuest(Index, QuestNum) Then
                         EndQuest(Index, QuestNum)

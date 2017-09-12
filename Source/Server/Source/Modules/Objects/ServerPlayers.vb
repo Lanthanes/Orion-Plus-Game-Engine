@@ -28,16 +28,16 @@ Module ServerPlayers
             Select Case GetPlayerDir(Attacker)
                 Case Direction.Up
 
-                    If Not ((GetPlayerY(Victim) + 1 = GetPlayerY(Attacker)) And (GetPlayerX(Victim) = GetPlayerX(Attacker))) Then Exit Function
+                    If Not ((GetPlayerY(Victim) + 1 = GetPlayerY(Attacker)) AndAlso (GetPlayerX(Victim) = GetPlayerX(Attacker))) Then Exit Function
                 Case Direction.Down
 
-                    If Not ((GetPlayerY(Victim) - 1 = GetPlayerY(Attacker)) And (GetPlayerX(Victim) = GetPlayerX(Attacker))) Then Exit Function
+                    If Not ((GetPlayerY(Victim) - 1 = GetPlayerY(Attacker)) AndAlso (GetPlayerX(Victim) = GetPlayerX(Attacker))) Then Exit Function
                 Case Direction.Left
 
-                    If Not ((GetPlayerY(Victim) = GetPlayerY(Attacker)) And (GetPlayerX(Victim) + 1 = GetPlayerX(Attacker))) Then Exit Function
+                    If Not ((GetPlayerY(Victim) = GetPlayerY(Attacker)) AndAlso (GetPlayerX(Victim) + 1 = GetPlayerX(Attacker))) Then Exit Function
                 Case Direction.Right
 
-                    If Not ((GetPlayerY(Victim) = GetPlayerY(Attacker)) And (GetPlayerX(Victim) - 1 = GetPlayerX(Attacker))) Then Exit Function
+                    If Not ((GetPlayerY(Victim) = GetPlayerY(Attacker)) AndAlso (GetPlayerX(Victim) - 1 = GetPlayerX(Attacker))) Then Exit Function
                 Case Else
                     Exit Function
             End Select
@@ -130,7 +130,7 @@ Module ServerPlayers
         GetPlayerDamage = 0
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False Or Index <= 0 Or Index > MAX_PLAYERS Then
+        If IsPlaying(Index) = False OrElse Index <= 0 OrElse Index > MAX_PLAYERS Then
             Exit Function
         End If
 
@@ -148,7 +148,7 @@ Module ServerPlayers
         GetPlayerProtection = 0
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False Or Index <= 0 Or Index > MAX_PLAYERS Then
+        If IsPlaying(Index) = False OrElse Index <= 0 OrElse Index > MAX_PLAYERS Then
             Exit Function
         End If
 
@@ -183,7 +183,7 @@ Module ServerPlayers
 
         If npcnum = 0 Then
             ' Check for subscript out of range
-            If IsPlaying(Attacker) = False Or IsPlaying(Victim) = False Or Damage < 0 Then
+            If IsPlaying(Attacker) = False OrElse IsPlaying(Victim) = False OrElse Damage < 0 Then
                 Exit Sub
             End If
 
@@ -199,7 +199,7 @@ Module ServerPlayers
             Buffer.WriteInt32(ServerPackets.SAttack)
             Buffer.WriteInt32(Attacker)
             SendDataToMapBut(Attacker, GetPlayerMap(Attacker), Buffer.Data, Buffer.Head)
-            Buffer.Dispose
+            Buffer.Dispose()
 
             If Damage >= GetPlayerVital(Victim, Vitals.HP) Then
 
@@ -266,7 +266,7 @@ Module ServerPlayers
             TempPlayer(Attacker).AttackTimer = GetTimeMs()
         Else ' npc to player
             ' Check for subscript out of range
-            If IsPlaying(Victim) = False Or Damage < 0 Then Exit Sub
+            If IsPlaying(Victim) = False OrElse Damage < 0 Then Exit Sub
 
             mapnum = GetPlayerMap(Victim)
 
@@ -275,7 +275,7 @@ Module ServerPlayers
             Buffer.WriteInt32(ServerPackets.SNpcAttack)
             Buffer.WriteInt32(Attacker)
             SendDataToMap(mapnum, Buffer.Data, Buffer.Head)
-            Buffer.Dispose
+            Buffer.Dispose()
 
             If Damage >= GetPlayerVital(Victim, Vitals.HP) Then
 
@@ -332,7 +332,7 @@ Module ServerPlayers
         Dim attackspeed As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(Attacker) = False Or MapNpcNum <= 0 Or MapNpcNum > MAX_MAP_NPCS Then
+        If IsPlaying(Attacker) = False OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS Then
             Exit Function
         End If
 
@@ -359,11 +359,11 @@ Module ServerPlayers
                 attackspeed = 1000
             End If
 
-            If NpcNum > 0 And GetTimeMs() > TempPlayer(Attacker).AttackTimer + attackspeed Then
+            If NpcNum > 0 AndAlso GetTimeMs() > TempPlayer(Attacker).AttackTimer + attackspeed Then
 
                 ' exit out early
                 If IsSkill Then
-                    If Npc(NpcNum).Behaviour <> NpcBehavior.Friendly And Npc(NpcNum).Behaviour <> NpcBehavior.ShopKeeper Then
+                    If Npc(NpcNum).Behaviour <> NpcBehavior.Friendly AndAlso Npc(NpcNum).Behaviour <> NpcBehavior.ShopKeeper Then
                         CanPlayerAttackNpc = True
                         Exit Function
                     End If
@@ -387,14 +387,14 @@ Module ServerPlayers
 
                 If atkX = MapNpc(MapNum).Npc(MapNpcNum).X Then
                     If atkY = MapNpc(MapNum).Npc(MapNpcNum).Y Then
-                        If Npc(NpcNum).Behaviour <> NpcBehavior.Friendly And Npc(NpcNum).Behaviour <> NpcBehavior.ShopKeeper And Npc(NpcNum).Behaviour <> NpcBehavior.Quest Then
+                        If Npc(NpcNum).Behaviour <> NpcBehavior.Friendly AndAlso Npc(NpcNum).Behaviour <> NpcBehavior.ShopKeeper AndAlso Npc(NpcNum).Behaviour <> NpcBehavior.Quest Then
                             CanPlayerAttackNpc = True
                         Else
                             If Npc(NpcNum).Behaviour = NpcBehavior.Quest Then
                                 If QuestCompleted(Attacker, Npc(NpcNum).QuestNum) Then
                                     PlayerMsg(Attacker, Trim$(Npc(NpcNum).Name) & ": " & Trim$(Npc(NpcNum).AttackSay), ColorType.Yellow)
                                     Exit Function
-                                ElseIf Not CanStartQuest(Attacker, Npc(NpcNum).QuestNum) And Not QuestInProgress(Attacker, Npc(NpcNum).QuestNum) Then
+                                ElseIf Not CanStartQuest(Attacker, Npc(NpcNum).QuestNum) AndAlso Not QuestInProgress(Attacker, Npc(NpcNum).QuestNum) Then
                                     CheckTasks(Attacker, QuestType.Talk, NpcNum)
                                     CheckTasks(Attacker, QuestType.Give, NpcNum)
                                     CheckTasks(Attacker, QuestType.Fetch, NpcNum)
@@ -408,7 +408,7 @@ Module ServerPlayers
                                     ShowQuest(Attacker, Npc(NpcNum).QuestNum)
                                     Exit Function
                                 End If
-                            ElseIf Npc(NpcNum).Behaviour = NpcBehavior.Friendly Or Npc(NpcNum).Behaviour = NpcBehavior.ShopKeeper Then
+                            ElseIf Npc(NpcNum).Behaviour = NpcBehavior.Friendly OrElse Npc(NpcNum).Behaviour = NpcBehavior.ShopKeeper Then
                                 CheckTasks(Attacker, QuestType.Talk, NpcNum)
                                 CheckTasks(Attacker, QuestType.Give, NpcNum)
                                 CheckTasks(Attacker, QuestType.Fetch, NpcNum)
@@ -436,7 +436,7 @@ Module ServerPlayers
 
     Sub PlayerAttackNpc(ByVal Attacker As Integer, ByVal MapNpcNum As Integer, ByVal Damage As Integer)
         ' Check for subscript out of range
-        If IsPlaying(Attacker) = False Or MapNpcNum <= 0 Or MapNpcNum > MAX_MAP_NPCS Or Damage < 0 Then Exit Sub
+        If IsPlaying(Attacker) = False OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Damage < 0 Then Exit Sub
 
         Dim MapNum = GetPlayerMap(Attacker)
         Dim NpcNum = MapNpc(MapNum).Npc(MapNpcNum).Num
@@ -621,7 +621,7 @@ Module ServerPlayers
 
     Sub PlayerAttackPlayer(ByVal Attacker As Integer, ByVal Victim As Integer, ByVal Damage As Integer)
         ' Check for subscript out of range
-        If IsPlaying(Attacker) = False Or IsPlaying(Victim) = False Or Damage <= 0 Then
+        If IsPlaying(Attacker) = False OrElse IsPlaying(Victim) = False OrElse Damage <= 0 Then
             Exit Sub
         End If
 
@@ -724,7 +724,7 @@ Module ServerPlayers
 
     Public Function IsPlayerDead(ByVal Index As Integer)
         IsPlayerDead = False
-        If Index < 0 Or Index > MAX_PLAYERS Or Not TempPlayer(Index).InGame Then Exit Function
+        If Index < 0 OrElse Index > MAX_PLAYERS OrElse Not TempPlayer(Index).InGame Then Exit Function
         If GetPlayerVital(Index, Vitals.HP) <= 0 Then IsPlayerDead = True
     End Function
 
@@ -980,11 +980,7 @@ Module ServerPlayers
     End Sub
 
     Public Function IsDirBlocked(ByRef Blockvar As Byte, ByRef Dir As Byte) As Boolean
-        If Not Blockvar And (2 ^ Dir) Then
-            IsDirBlocked = False
-        Else
-            IsDirBlocked = True
-        End If
+        Return Not (Not Blockvar AndAlso (2 ^ Dir))
     End Function
 
     Function GetPlayerVital(ByVal Index As Integer, ByVal Vital As Vitals) As Integer
@@ -1014,7 +1010,7 @@ Module ServerPlayers
     End Function
 
     Sub SetPlayerMap(ByVal Index As Integer, ByVal MapNum As Integer)
-        If MapNum > 0 And MapNum <= MAX_CACHED_MAPS Then
+        If MapNum > 0 AndAlso MapNum <= MAX_CACHED_MAPS Then
             Player(Index).Character(TempPlayer(Index).CurChar).Map = MapNum
         End If
     End Sub
@@ -1096,7 +1092,7 @@ Module ServerPlayers
             JoinGame(Index)
             Dim text = String.Format("{0} | {1} has began playing {2}.", GetPlayerLogin(Index), GetPlayerName(Index), Options.GameName)
             Addlog(text, PLAYER_LOG)
-            TextAdd(text)
+            Console.WriteLine(text)
         End If
     End Sub
 
@@ -1111,7 +1107,7 @@ Module ServerPlayers
         Buffer.WriteInt32(Index)
         SendDataToMapBut(Index, MapNum, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
 
@@ -1123,9 +1119,9 @@ Module ServerPlayers
         Dim i As Integer
         Dim Buffer As ByteStream
 
-        'If (MapNum And INSTANCED_MAP_MASK) > 0 Then
+        'If (MapNum AndAlso INSTANCED_MAP_MASK) > 0 Then
         If Map(MapNum).Instanced = 1 Then
-            MapNum = CreateInstance(MapNum And MAP_NUMBER_MASK)
+            MapNum = CreateInstance(MapNum AndAlso MAP_NUMBER_MASK)
             If MapNum = -1 Then
                 'Couldn't create instanced map!
                 MapNum = GetPlayerMap(Index)
@@ -1145,7 +1141,7 @@ Module ServerPlayers
         End If
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False Or MapNum <= 0 Or MapNum > MAX_CACHED_MAPS Then Exit Sub
+        If IsPlaying(Index) = False OrElse MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS Then Exit Sub
 
         ' Check if you are out of bounds
         If X > Map(MapNum).MaxX Then X = Map(MapNum).MaxX
@@ -1251,7 +1247,7 @@ Module ServerPlayers
         'Debug.Print("Server-PlayerMove")
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False Or Dir < Direction.Up Or Dir > Direction.Right Or Movement < 1 Or Movement > 2 Then
+        If IsPlaying(Index) = False OrElse Dir < Direction.Up OrElse Dir > Direction.Right OrElse Movement < 1 OrElse Movement > 2 Then
             Exit Sub
         End If
 
@@ -1271,7 +1267,7 @@ Module ServerPlayers
                             If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) - 1).Type <> TileType.Resource Then
 
                                 ' Check to see if the tile is a key and if it is check if its opened
-                                If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) - 1).Type <> TileType.Key Or (Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) - 1).Type = TileType.Key And TempTile(GetPlayerMap(Index)).DoorOpen(GetPlayerX(Index), GetPlayerY(Index) - 1) = True) Then
+                                If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) - 1).Type <> TileType.Key OrElse (Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) - 1).Type = TileType.Key AndAlso TempTile(GetPlayerMap(Index)).DoorOpen(GetPlayerX(Index), GetPlayerY(Index) - 1) = True) Then
                                     SetPlayerY(Index, GetPlayerY(Index) - 1)
                                     SendPlayerMove(Index, Movement)
                                     Moved = True
@@ -1279,7 +1275,7 @@ Module ServerPlayers
 
                                 'check for event
                                 For i = 1 To TempPlayer(Index).EventMap.CurrentEvents
-                                    If TempPlayer(Index).EventMap.EventPages(i).X = GetPlayerX(Index) And TempPlayer(Index).EventMap.EventPages(i).Y = GetPlayerY(Index) - 1 Then
+                                    If TempPlayer(Index).EventMap.EventPages(i).X = GetPlayerX(Index) AndAlso TempPlayer(Index).EventMap.EventPages(i).Y = GetPlayerY(Index) - 1 Then
                                         If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 Then
                                             'PlayerMsg(Index, "OnTouch event", ColorType.Red)
                                             'Process this event, it is on-touch and everything checks out.
@@ -1325,7 +1321,7 @@ Module ServerPlayers
                             If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) + 1).Type <> TileType.Resource Then
 
                                 ' Check to see if the tile is a key and if it is check if its opened
-                                If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) + 1).Type <> TileType.Key Or (Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) + 1).Type = TileType.Key And TempTile(GetPlayerMap(Index)).DoorOpen(GetPlayerX(Index), GetPlayerY(Index) + 1) = True) Then
+                                If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) + 1).Type <> TileType.Key OrElse (Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index), GetPlayerY(Index) + 1).Type = TileType.Key AndAlso TempTile(GetPlayerMap(Index)).DoorOpen(GetPlayerX(Index), GetPlayerY(Index) + 1) = True) Then
                                     SetPlayerY(Index, GetPlayerY(Index) + 1)
                                     SendPlayerMove(Index, Movement)
                                     Moved = True
@@ -1333,7 +1329,7 @@ Module ServerPlayers
 
                                 'check for event
                                 For i = 1 To TempPlayer(Index).EventMap.CurrentEvents
-                                    If TempPlayer(Index).EventMap.EventPages(i).X = GetPlayerX(Index) And TempPlayer(Index).EventMap.EventPages(i).Y = GetPlayerY(Index) + 1 Then
+                                    If TempPlayer(Index).EventMap.EventPages(i).X = GetPlayerX(Index) AndAlso TempPlayer(Index).EventMap.EventPages(i).Y = GetPlayerY(Index) + 1 Then
                                         If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 Then
                                             'PlayerMsg(Index, "OnTouch event", ColorType.Red)
                                             'Process this event, it is on-touch and everything checks out.
@@ -1377,7 +1373,7 @@ Module ServerPlayers
                             If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) - 1, GetPlayerY(Index)).Type <> TileType.Resource Then
 
                                 ' Check to see if the tile is a key and if it is check if its opened
-                                If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) - 1, GetPlayerY(Index)).Type <> TileType.Key Or (Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) - 1, GetPlayerY(Index)).Type = TileType.Key And TempTile(GetPlayerMap(Index)).DoorOpen(GetPlayerX(Index) - 1, GetPlayerY(Index)) = True) Then
+                                If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) - 1, GetPlayerY(Index)).Type <> TileType.Key OrElse (Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) - 1, GetPlayerY(Index)).Type = TileType.Key AndAlso TempTile(GetPlayerMap(Index)).DoorOpen(GetPlayerX(Index) - 1, GetPlayerY(Index)) = True) Then
                                     SetPlayerX(Index, GetPlayerX(Index) - 1)
                                     SendPlayerMove(Index, Movement)
                                     Moved = True
@@ -1385,7 +1381,7 @@ Module ServerPlayers
 
                                 'check for event
                                 For i = 1 To TempPlayer(Index).EventMap.CurrentEvents
-                                    If TempPlayer(Index).EventMap.EventPages(i).X = GetPlayerX(Index) - 1 And TempPlayer(Index).EventMap.EventPages(i).Y = GetPlayerY(Index) Then
+                                    If TempPlayer(Index).EventMap.EventPages(i).X = GetPlayerX(Index) - 1 AndAlso TempPlayer(Index).EventMap.EventPages(i).Y = GetPlayerY(Index) Then
                                         If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 Then
                                             'PlayerMsg(Index, "OnTouch event", ColorType.Red)
                                             'Process this event, it is on-touch and everything checks out.
@@ -1430,7 +1426,7 @@ Module ServerPlayers
                             If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) + 1, GetPlayerY(Index)).Type <> TileType.Resource Then
 
                                 ' Check to see if the tile is a key and if it is check if its opened
-                                If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) + 1, GetPlayerY(Index)).Type <> TileType.Key Or (Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) + 1, GetPlayerY(Index)).Type = TileType.Key And TempTile(GetPlayerMap(Index)).DoorOpen(GetPlayerX(Index) + 1, GetPlayerY(Index)) = True) Then
+                                If Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) + 1, GetPlayerY(Index)).Type <> TileType.Key OrElse (Map(GetPlayerMap(Index)).Tile(GetPlayerX(Index) + 1, GetPlayerY(Index)).Type = TileType.Key AndAlso TempTile(GetPlayerMap(Index)).DoorOpen(GetPlayerX(Index) + 1, GetPlayerY(Index)) = True) Then
                                     SetPlayerX(Index, GetPlayerX(Index) + 1)
                                     SendPlayerMove(Index, Movement)
                                     Moved = True
@@ -1438,7 +1434,7 @@ Module ServerPlayers
 
                                 'check for event
                                 For i = 1 To TempPlayer(Index).EventMap.CurrentEvents
-                                    If TempPlayer(Index).EventMap.EventPages(i).X = GetPlayerX(Index) And TempPlayer(Index).EventMap.EventPages(i).Y = GetPlayerY(Index) Then
+                                    If TempPlayer(Index).EventMap.EventPages(i).X = GetPlayerX(Index) AndAlso TempPlayer(Index).EventMap.EventPages(i).Y = GetPlayerY(Index) Then
                                         If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 Then
                                             'PlayerMsg(Index, "OnTouch event", ColorType.Red)
                                             'Process this event, it is on-touch and everything checks out.
@@ -1479,7 +1475,7 @@ Module ServerPlayers
                 x = .Data2
                 y = .Data3
 
-                'If (MapNum And INSTANCED_MAP_MASK) > 0 Then
+                'If (MapNum AndAlso INSTANCED_MAP_MASK) > 0 Then
                 If Map(MapNum).Instanced = 1 Then
                     If TempPlayer(Index).InParty Then
                         PartyWarp(Index, MapNum, x, y)
@@ -1520,7 +1516,7 @@ Module ServerPlayers
                 x = .Data1
                 y = .Data2
 
-                If Map(GetPlayerMap(Index)).Tile(x, y).Type = TileType.Key And TempTile(GetPlayerMap(Index)).DoorOpen(x, y) = False Then
+                If Map(GetPlayerMap(Index)).Tile(x, y).Type = TileType.Key AndAlso TempTile(GetPlayerMap(Index)).DoorOpen(x, y) = False Then
                     TempTile(GetPlayerMap(Index)).DoorOpen(x, y) = True
                     TempTile(GetPlayerMap(Index)).DoorTimer = GetTimeMs()
                     SendMapKey(Index, x, y, 1)
@@ -1602,7 +1598,7 @@ Module ServerPlayers
                     Buffer.WriteInt32(ServerPackets.SBuyHouse)
                     Buffer.WriteInt32(.Data1)
                     Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
-                    Buffer.Dispose
+                    Buffer.Dispose()
                     TempPlayer(Index).BuyHouseIndex = .Data1
                 End If
             End If
@@ -1629,7 +1625,7 @@ Module ServerPlayers
         End If
 
         ' They tried to hack
-        If Moved = False Or (ExpectingWarp And Not DidWarp) Then
+        If Moved = False OrElse (ExpectingWarp AndAlso Not DidWarp) Then
             PlayerWarp(Index, GetPlayerMap(Index), GetPlayerX(Index), GetPlayerY(Index))
         End If
 
@@ -1640,9 +1636,9 @@ Module ServerPlayers
             If TempPlayer(Index).EventMap.CurrentEvents > 0 Then
                 For i = 1 To TempPlayer(Index).EventMap.CurrentEvents
                     If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Globals = 1 Then
-                        If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).X = x And Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Y = y And Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 And TempPlayer(Index).EventMap.EventPages(i).Visible = 1 Then begineventprocessing = True
+                        If Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).X = x AndAlso Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Y = y AndAlso Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 AndAlso TempPlayer(Index).EventMap.EventPages(i).Visible = 1 Then begineventprocessing = True
                     Else
-                        If TempPlayer(Index).EventMap.EventPages(i).X = x And TempPlayer(Index).EventMap.EventPages(i).Y = y And Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 And TempPlayer(Index).EventMap.EventPages(i).Visible = 1 Then begineventprocessing = True
+                        If TempPlayer(Index).EventMap.EventPages(i).X = x AndAlso TempPlayer(Index).EventMap.EventPages(i).Y = y AndAlso Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).Trigger = 1 AndAlso TempPlayer(Index).EventMap.EventPages(i).Visible = 1 Then begineventprocessing = True
                     End If
                     begineventprocessing = False
                     If begineventprocessing = True Then
@@ -1673,14 +1669,14 @@ Module ServerPlayers
         Dim i As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False Or ItemNum <= 0 Or ItemNum > MAX_ITEMS Then
+        If IsPlaying(Index) = False OrElse ItemNum <= 0 OrElse ItemNum > MAX_ITEMS Then
             Exit Function
         End If
 
         For i = 1 To MAX_INV
             ' Check to see if the player has the item
             If GetPlayerInvItemNum(Index, i) = ItemNum Then
-                If Item(ItemNum).Type = ItemType.Currency Or Item(ItemNum).Stackable = 1 Then
+                If Item(ItemNum).Type = ItemType.Currency OrElse Item(ItemNum).Stackable = 1 Then
                     HasItem = GetPlayerInvItemValue(Index, i)
                 Else
                     HasItem = 1
@@ -1695,7 +1691,7 @@ Module ServerPlayers
         Dim i As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False Or ItemNum <= 0 Or ItemNum > MAX_ITEMS Then
+        If IsPlaying(Index) = False OrElse ItemNum <= 0 OrElse ItemNum > MAX_ITEMS Then
             Exit Function
         End If
 
@@ -1750,7 +1746,7 @@ Module ServerPlayers
                                 itemnum = MapItem(MapNum, i).Num
 
                                 If Item(itemnum).Randomize <> 0 Then
-                                    If Trim(MapItem(MapNum, i).RandData.Prefix) <> "" Or Trim(MapItem(MapNum, i).RandData.Suffix) <> "" Then
+                                    If Trim(MapItem(MapNum, i).RandData.Prefix) <> "" OrElse Trim(MapItem(MapNum, i).RandData.Suffix) <> "" Then
                                         Player(Index).Character(TempPlayer(Index).CurChar).RandInv(n).Prefix = MapItem(MapNum, i).RandData.Prefix
                                         Player(Index).Character(TempPlayer(Index).CurChar).RandInv(n).Suffix = MapItem(MapNum, i).RandData.Suffix
                                         Player(Index).Character(TempPlayer(Index).CurChar).RandInv(n).Rarity = MapItem(MapNum, i).RandData.Rarity
@@ -1766,7 +1762,7 @@ Module ServerPlayers
 
                                 SetPlayerInvItemNum(Index, n, MapItem(MapNum, i).Num)
 
-                                If Item(GetPlayerInvItemNum(Index, n)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(Index, n)).Stackable = 1 Then
+                                If Item(GetPlayerInvItemNum(Index, n)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(Index, n)).Stackable = 1 Then
                                     SetPlayerInvItemValue(Index, n, GetPlayerInvItemValue(Index, n) + MapItem(MapNum, i).Value)
                                     Msg = MapItem(MapNum, i).Value & " " & Trim$(Item(GetPlayerInvItemNum(Index, n)).Name)
                                 Else
@@ -1809,11 +1805,11 @@ Module ServerPlayers
         Dim i As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False Or ItemNum <= 0 Or ItemNum > MAX_ITEMS Then
+        If IsPlaying(Index) = False OrElse ItemNum <= 0 OrElse ItemNum > MAX_ITEMS Then
             Exit Function
         End If
 
-        If Item(ItemNum).Type = ItemType.Currency Or Item(ItemNum).Stackable = 1 Then
+        If Item(ItemNum).Type = ItemType.Currency OrElse Item(ItemNum).Stackable = 1 Then
             ' If currency then check to see if they already have an instance of the item and add it to that
             For i = 1 To MAX_INV
                 If GetPlayerInvItemNum(Index, i) = ItemNum Then
@@ -1839,7 +1835,7 @@ Module ServerPlayers
         TakeInvItem = False
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False Or ItemNum <= 0 Or ItemNum > MAX_ITEMS Then
+        If IsPlaying(Index) = False OrElse ItemNum <= 0 OrElse ItemNum > MAX_ITEMS Then
             Exit Function
         End If
 
@@ -1847,7 +1843,7 @@ Module ServerPlayers
 
             ' Check to see if the player has the item
             If GetPlayerInvItemNum(Index, i) = ItemNum Then
-                If Item(ItemNum).Type = ItemType.Currency Or Item(ItemNum).Stackable = 1 Then
+                If Item(ItemNum).Type = ItemType.Currency OrElse Item(ItemNum).Stackable = 1 Then
 
                     ' Is what we are trying to take away more then what they have?  If so just set it to zero
                     If ItemVal >= GetPlayerInvItemValue(Index, i) Then
@@ -1877,7 +1873,7 @@ Module ServerPlayers
         Dim i As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False Or ItemNum <= 0 Or ItemNum > MAX_ITEMS Then
+        If IsPlaying(Index) = False OrElse ItemNum <= 0 OrElse ItemNum > MAX_ITEMS Then
             GiveInvItem = False
             Exit Function
         End If
@@ -1901,12 +1897,12 @@ Module ServerPlayers
         Dim i As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False Or InvNum <= 0 Or InvNum > MAX_INV Then
+        If IsPlaying(Index) = False OrElse InvNum <= 0 OrElse InvNum > MAX_INV Then
             Exit Sub
         End If
 
         ' check the player isn't doing something
-        If TempPlayer(Index).InBank Or TempPlayer(Index).InShop Or TempPlayer(Index).InTrade > 0 Then Exit Sub
+        If TempPlayer(Index).InBank OrElse TempPlayer(Index).InShop OrElse TempPlayer(Index).InTrade > 0 Then Exit Sub
 
         If (GetPlayerInvItemNum(Index, InvNum) > 0) Then
             If (GetPlayerInvItemNum(Index, InvNum) <= MAX_ITEMS) Then
@@ -1917,7 +1913,7 @@ Module ServerPlayers
                     MapItem(GetPlayerMap(Index), i).X = GetPlayerX(Index)
                     MapItem(GetPlayerMap(Index), i).Y = GetPlayerY(Index)
 
-                    If Item(GetPlayerInvItemNum(Index, InvNum)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(Index, InvNum)).Stackable = 1 Then
+                    If Item(GetPlayerInvItemNum(Index, InvNum)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(Index, InvNum)).Stackable = 1 Then
 
                         ' Check if its more then they have and if so drop it all
                         If Amount >= GetPlayerInvItemValue(Index, InvNum) Then
@@ -1958,11 +1954,11 @@ Module ServerPlayers
         TakeInvSlot = False
 
         ' Check for subscript out of range
-        If IsPlaying(Index) = False Or InvSlot <= 0 Or InvSlot > MAX_ITEMS Then Exit Function
+        If IsPlaying(Index) = False OrElse InvSlot <= 0 OrElse InvSlot > MAX_ITEMS Then Exit Function
 
         itemNum = GetPlayerInvItemNum(Index, InvSlot)
 
-        If Item(itemNum).Type = ItemType.Currency Or Item(itemNum).Stackable = 1 Then
+        If Item(itemNum).Type = ItemType.Currency OrElse Item(itemNum).Stackable = 1 Then
 
             ' Is what we are trying to take away more then what they have?  If so just set it to zero
             If ItemVal >= GetPlayerInvItemValue(Index, InvSlot) Then
@@ -1987,9 +1983,9 @@ Module ServerPlayers
         Dim m As Integer, tempdata(Stats.Count + 3) As Long, tempstr(2) As String
 
         ' Prevent hacking
-        If InvNum < 1 Or InvNum > MAX_ITEMS Then Exit Sub
+        If InvNum < 1 OrElse InvNum > MAX_ITEMS Then Exit Sub
 
-        If (GetPlayerInvItemNum(Index, InvNum) > 0) And (GetPlayerInvItemNum(Index, InvNum) <= MAX_ITEMS) Then
+        If (GetPlayerInvItemNum(Index, InvNum) > 0) AndAlso (GetPlayerInvItemNum(Index, InvNum) <= MAX_ITEMS) Then
             InvItemNum = GetPlayerInvItemNum(Index, InvNum)
 
             n = Item(InvItemNum).Data2
@@ -2013,7 +2009,7 @@ Module ServerPlayers
                     End If
 
                     ' Make sure they are the right class
-                    If Not Item(InvItemNum).ClassReq = GetPlayerClass(Index) And Not Item(InvItemNum).ClassReq = 0 Then
+                    If Not Item(InvItemNum).ClassReq = GetPlayerClass(Index) AndAlso Not Item(InvItemNum).ClassReq = 0 Then
                         PlayerMsg(Index, "You do not meet the class requirements to equip this item.", ColorType.BrightRed)
                         Exit Sub
                     End If
@@ -2429,7 +2425,7 @@ Module ServerPlayers
                     End If
 
                     ' Make sure they are the right class
-                    If Not Item(InvItemNum).ClassReq = GetPlayerClass(Index) And Not Item(InvItemNum).ClassReq = 0 Then
+                    If Not Item(InvItemNum).ClassReq = GetPlayerClass(Index) AndAlso Not Item(InvItemNum).ClassReq = 0 Then
                         PlayerMsg(Index, "You do not meet the class requirements to use this item.", ColorType.BrightRed)
                         Exit Sub
                     End If
@@ -2507,7 +2503,7 @@ Module ServerPlayers
                     End If
 
                     ' Make sure they are the right class
-                    If Not Item(InvItemNum).ClassReq = GetPlayerClass(Index) And Not Item(InvItemNum).ClassReq = 0 Then
+                    If Not Item(InvItemNum).ClassReq = GetPlayerClass(Index) AndAlso Not Item(InvItemNum).ClassReq = 0 Then
                         PlayerMsg(Index, "You do not meet the class requirements to use this item.", ColorType.BrightRed)
                         Exit Sub
                     End If
@@ -2582,7 +2578,7 @@ Module ServerPlayers
                     Next
 
                     ' Make sure they are the right class
-                    If Not Item(InvItemNum).ClassReq = GetPlayerClass(Index) And Not Item(InvItemNum).ClassReq = 0 Then
+                    If Not Item(InvItemNum).ClassReq = GetPlayerClass(Index) AndAlso Not Item(InvItemNum).ClassReq = 0 Then
                         PlayerMsg(Index, "You do not meet the class requirements to use this item.", ColorType.BrightRed)
                         Exit Sub
                     End If
@@ -2593,7 +2589,7 @@ Module ServerPlayers
                     If n > 0 Then
 
                         ' Make sure they are the right class
-                        If Skill(n).ClassReq = GetPlayerClass(Index) Or Skill(n).ClassReq = 0 Then
+                        If Skill(n).ClassReq = GetPlayerClass(Index) OrElse Skill(n).ClassReq = 0 Then
                             ' Make sure they are the right level
                             i = Skill(n).LevelReq
 
@@ -2659,14 +2655,14 @@ Module ServerPlayers
         Dim NewStats(0 To Stats.Count - 1) As Integer
         Dim OldStats(0 To Stats.Count - 1) As Integer
 
-        If OldSlot = 0 Or NewSlot = 0 Then Exit Sub
+        If OldSlot = 0 OrElse NewSlot = 0 Then Exit Sub
 
         OldNum = GetPlayerInvItemNum(Index, OldSlot)
         OldValue = GetPlayerInvItemValue(Index, OldSlot)
         NewNum = GetPlayerInvItemNum(Index, NewSlot)
         NewValue = GetPlayerInvItemValue(Index, NewSlot)
 
-        If OldNum = NewNum And Item(NewNum).Stackable = 1 Then ' same item, if we can stack it, lets do that :P
+        If OldNum = NewNum AndAlso Item(NewNum).Stackable = 1 Then ' same item, if we can stack it, lets do that :P
             SetPlayerInvItemNum(Index, NewSlot, NewNum)
             SetPlayerInvItemValue(Index, NewSlot, OldValue + NewValue)
             SetPlayerInvItemNum(Index, OldSlot, 0)
@@ -2771,7 +2767,7 @@ Module ServerPlayers
     Sub PlayerUnequipItem(ByVal Index As Integer, ByVal EqSlot As Integer)
         Dim i As Integer, m As Integer, itemnum As Integer
 
-        If EqSlot <= 0 Or EqSlot > EquipmentType.Count - 1 Then Exit Sub ' exit out early if error'd
+        If EqSlot <= 0 OrElse EqSlot > EquipmentType.Count - 1 Then Exit Sub ' exit out early if error'd
 
         If FindOpenInvSlot(Index, GetPlayerEquipment(Index, EqSlot)) > 0 Then
             itemnum = GetPlayerEquipment(Index, EqSlot)
@@ -2925,7 +2921,7 @@ Module ServerPlayers
             ' Send a global message that he/she left
             GlobalMsg(String.Format("{0} has left {1}!", GetPlayerName(Index), Options.GameName))
 
-            TextAdd(String.Format("{0} has left {1}!", GetPlayerName(Index), Options.GameName))
+            Console.WriteLine(String.Format("{0} has left {1}!", GetPlayerName(Index), Options.GameName))
 
 
             TempPlayer(Index) = Nothing
@@ -3004,7 +3000,7 @@ Module ServerPlayers
         Dim i As Integer
 
         ' Prevent subscript out of range
-        If IsPlaying(Index) = False Or Index <= 0 Or Index > MAX_PLAYERS Then
+        If IsPlaying(Index) = False OrElse Index <= 0 OrElse Index > MAX_PLAYERS Then
             GetPlayerVitalRegen = 0
             Exit Function
         End If
@@ -3088,7 +3084,7 @@ Module ServerPlayers
 
     Public Function GetPlayerSkillSlot(ByVal Index As Integer, ByVal SkillId As Integer) As Integer
         GetPlayerSkillSlot = -1
-        If Index < 0 Or Index > MAX_PLAYERS Then Exit Function
+        If Index < 0 OrElse Index > MAX_PLAYERS Then Exit Function
         Dim data = Player(Index).Character(TempPlayer(Index).CurChar).Skill.Where(Function(x) x = SkillId).ToArray()
         If data.Length > 0 Then
             GetPlayerSkillSlot = data.Single()
@@ -3128,12 +3124,12 @@ Module ServerPlayers
         Dim Target As Integer
 
         ' Prevent subscript out of range
-        If Skillslot <= 0 Or Skillslot > MAX_PLAYER_SKILLS Then Exit Sub
+        If Skillslot <= 0 OrElse Skillslot > MAX_PLAYER_SKILLS Then Exit Sub
 
         skillnum = GetPlayerSkill(Index, Skillslot)
         MapNum = GetPlayerMap(Index)
 
-        If skillnum <= 0 Or skillnum > MAX_SKILLS Then Exit Sub
+        If skillnum <= 0 OrElse skillnum > MAX_SKILLS Then Exit Sub
 
         ' Make sure player has the skill
         If Not HasSkill(Index, skillnum) Then Exit Sub
@@ -3219,7 +3215,7 @@ Module ServerPlayers
                         PlayerMsg(Index, "Target not in range.", ColorType.BrightRed)
                     Else
                         ' go through skill types
-                        If Skill(skillnum).Type <> SkillType.DamageHp And Skill(skillnum).Type <> SkillType.DamageMp Then
+                        If Skill(skillnum).Type <> SkillType.DamageHp AndAlso Skill(skillnum).Type <> SkillType.DamageMp Then
                             HasBuffered = True
                         Else
                             If CanPlayerAttackPlayer(Index, Target, True) Then
@@ -3234,7 +3230,7 @@ Module ServerPlayers
                         HasBuffered = False
                     Else
                         ' go through skill types
-                        If Skill(skillnum).Type <> SkillType.DamageHp And Skill(skillnum).Type <> SkillType.DamageMp Then
+                        If Skill(skillnum).Type <> SkillType.DamageHp AndAlso Skill(skillnum).Type <> SkillType.DamageMp Then
                             HasBuffered = True
                         Else
                             If CanPlayerAttackNpc(Index, Target, True) Then
@@ -3260,7 +3256,7 @@ Module ServerPlayers
     Sub GiveBankItem(ByVal Index As Integer, ByVal InvSlot As Integer, ByVal Amount As Integer)
         Dim BankSlot As Integer, itemnum As Integer
 
-        If InvSlot < 0 Or InvSlot > MAX_INV Then Exit Sub
+        If InvSlot < 0 OrElse InvSlot > MAX_INV Then Exit Sub
 
         If GetPlayerInvItemValue(Index, InvSlot) < 0 Then Exit Sub
         If GetPlayerInvItemValue(Index, InvSlot) < Amount Then Exit Sub
@@ -3269,7 +3265,7 @@ Module ServerPlayers
         itemnum = GetPlayerInvItemNum(Index, InvSlot)
 
         If BankSlot > 0 Then
-            If Item(GetPlayerInvItemNum(Index, InvSlot)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(Index, InvSlot)).Stackable = 1 Then
+            If Item(GetPlayerInvItemNum(Index, InvSlot)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(Index, InvSlot)).Stackable = 1 Then
                 If GetPlayerBankItemNum(Index, BankSlot) = GetPlayerInvItemNum(Index, InvSlot) Then
                     SetPlayerBankItemValue(Index, BankSlot, GetPlayerBankItemValue(Index, BankSlot) + Amount)
                     TakeInvItem(Index, GetPlayerInvItemNum(Index, InvSlot), Amount)
@@ -3279,7 +3275,7 @@ Module ServerPlayers
                     TakeInvItem(Index, GetPlayerInvItemNum(Index, InvSlot), Amount)
                 End If
             Else
-                If GetPlayerBankItemNum(Index, BankSlot) = GetPlayerInvItemNum(Index, InvSlot) And Item(itemnum).Randomize = 0 Then
+                If GetPlayerBankItemNum(Index, BankSlot) = GetPlayerInvItemNum(Index, InvSlot) AndAlso Item(itemnum).Randomize = 0 Then
                     SetPlayerBankItemValue(Index, BankSlot, GetPlayerBankItemValue(Index, BankSlot) + 1)
                     TakeInvItem(Index, GetPlayerInvItemNum(Index, InvSlot), 0)
                 Else
@@ -3327,9 +3323,9 @@ Module ServerPlayers
         Dim i As Integer
 
         If Not IsPlaying(Index) Then Exit Function
-        If ItemNum <= 0 Or ItemNum > MAX_ITEMS Then Exit Function
+        If ItemNum <= 0 OrElse ItemNum > MAX_ITEMS Then Exit Function
 
-        If Item(ItemNum).Type = ItemType.Currency Or Item(ItemNum).Stackable = 1 Then
+        If Item(ItemNum).Type = ItemType.Currency OrElse Item(ItemNum).Stackable = 1 Then
             For i = 1 To MAX_BANK
                 If GetPlayerBankItemNum(Index, i) = ItemNum Then
                     FindOpenBankSlot = i
@@ -3350,7 +3346,7 @@ Module ServerPlayers
     Sub TakeBankItem(ByVal Index As Integer, ByVal BankSlot As Integer, ByVal Amount As Integer)
         Dim invSlot
 
-        If BankSlot < 0 Or BankSlot > MAX_BANK Then Exit Sub
+        If BankSlot < 0 OrElse BankSlot > MAX_BANK Then Exit Sub
 
         If GetPlayerBankItemValue(Index, BankSlot) < 0 Then Exit Sub
 
@@ -3359,7 +3355,7 @@ Module ServerPlayers
         invSlot = FindOpenInvSlot(Index, GetPlayerBankItemNum(Index, BankSlot))
 
         If invSlot > 0 Then
-            If Item(GetPlayerBankItemNum(Index, BankSlot)).Type = ItemType.Currency Or Item(GetPlayerBankItemNum(Index, BankSlot)).Stackable = 1 Then
+            If Item(GetPlayerBankItemNum(Index, BankSlot)).Type = ItemType.Currency OrElse Item(GetPlayerBankItemNum(Index, BankSlot)).Stackable = 1 Then
                 GiveInvItem(Index, GetPlayerBankItemNum(Index, BankSlot), Amount)
                 SetPlayerBankItemValue(Index, BankSlot, GetPlayerBankItemValue(Index, BankSlot) - Amount)
                 If GetPlayerBankItemValue(Index, BankSlot) <= 0 Then
@@ -3367,7 +3363,7 @@ Module ServerPlayers
                     SetPlayerBankItemValue(Index, BankSlot, 0)
                 End If
             Else
-                If GetPlayerBankItemNum(Index, BankSlot) = GetPlayerInvItemNum(Index, invSlot) And Item(GetPlayerBankItemNum(Index, BankSlot)).Randomize = 0 Then
+                If GetPlayerBankItemNum(Index, BankSlot) = GetPlayerInvItemNum(Index, invSlot) AndAlso Item(GetPlayerBankItemNum(Index, BankSlot)).Randomize = 0 Then
                     If GetPlayerBankItemValue(Index, BankSlot) > 1 Then
                         GiveInvItem(Index, GetPlayerBankItemNum(Index, BankSlot), 0)
                         SetPlayerBankItemValue(Index, BankSlot, GetPlayerBankItemValue(Index, BankSlot) - 1)
@@ -3405,7 +3401,7 @@ Module ServerPlayers
         Dim NewRarity As Integer, OldRarity As Integer, NewPrefix As String, OldPrefix As String, NewSuffix As String
         Dim OldSuffix As String, NewSpeed As Integer, OldSpeed As Integer, NewDamage As Integer, OldDamage As Integer
 
-        If OldSlot = 0 Or NewSlot = 0 Then Exit Sub
+        If OldSlot = 0 OrElse NewSlot = 0 Then Exit Sub
 
         OldNum = GetPlayerBankItemNum(Index, OldSlot)
         OldValue = GetPlayerBankItemValue(Index, OldSlot)

@@ -3,18 +3,9 @@ Imports System.Threading
 Imports Orion
 
 Module ServerConsole
-    Public Delegate Sub HandleConsoleCommand(ByVal line As String, ByVal command As String, ByVal parts As String())
-
     Private threadConsole As Thread
-    Private consoleRunning As Boolean
-    Private commandHandlers As ConcurrentDictionary(Of String, ConcurrentStack(Of HandleConsoleCommand))
-    Private globalCommandHandlers As ConcurrentStack(Of HandleConsoleCommand)
 
     Sub Main()
-        commandHandlers = New ConcurrentDictionary(Of String, ConcurrentStack(Of HandleConsoleCommand))
-        globalCommandHandlers = New ConcurrentStack(Of HandleConsoleCommand)
-
-        ' Spawn a thread for the console
         threadConsole = New Thread(New ThreadStart(AddressOf ConsoleThread))
         threadConsole.Start()
 
@@ -23,184 +14,100 @@ Module ServerConsole
     End Sub
 
     Private Sub ConsoleThread()
-        Dim line As String
+        Dim line As String, parts As String()
 
-        consoleRunning = True
-        While (consoleRunning)
+        Console.WriteLine("Initializing Console Loop")
+
+        While (True)
             line = Console.ReadLine()
 
-            If (String.IsNullOrWhiteSpace(line)) Then
-                consoleRunning = False
-                Exit While
-            Else
-                ParseCommand(line)
-            End If
+            parts = line.Split(" ") : If (parts.Length < 1) Then Continue While
+
+            Select Case parts(0).Trim().ToLower()
+                Case "/help"
+#Region " Body "
+                    Console.WriteLine("/help, Shows this message.")
+                    Console.WriteLine("/exit, Closes down the server.")
+                    Console.WriteLine("/setadmin, Sets player access level, use with '/setadmin playername powerlvl' powerlevel goes from 0 for player, to 4 to creator.")
+                    Console.WriteLine("/kick, Kicks user from server, use with '/kick playername'")
+                    Console.WriteLine("/ban, Bans user from server, use with '/ban playername'")
+#End Region
+                Case "/exit"
+#Region " Body "
+                    DestroyServer()
+#End Region
+                Case "/setadmin"
+                    If parts.Length < 3 Then Continue While
+#Region " Body "
+                    Dim Name As String = parts(1)
+                    Dim PIndex As Integer = FindPlayer(Name)
+                    Dim Power As Integer : Integer.TryParse(parts(2), Power)
+
+                    If Not PIndex > 0 Then
+                        Console.WriteLine("Player name is empty or invalid. [Name not found]")
+                    Else
+                        Select Case Power
+                            Case 0
+                                SetPlayerAccess(PIndex, Power)
+                                SendPlayerData(PIndex)
+                                PlayerMsg(PIndex, "Your PowerLevel has been set to Player Rank!", ColorType.BrightCyan)
+                                Console.WriteLine("Successfully set the power level to " & Power & " for player " & Name)
+                            Case 1
+                                SetPlayerAccess(PIndex, Power)
+                                SendPlayerData(PIndex)
+                                PlayerMsg(PIndex, "Your PowerLevel has been set to Monitor Rank!", ColorType.BrightCyan)
+                                Console.WriteLine("Successfully set the power level to " & Power & " for player " & Name)
+                            Case 2
+                                SetPlayerAccess(PIndex, Power)
+                                SendPlayerData(PIndex)
+                                PlayerMsg(PIndex, "Your PowerLevel has been set to Mapper Rank!", ColorType.BrightCyan)
+                                Console.WriteLine("Successfully set the power level to " & Power & " for player " & Name)
+                            Case 3
+                                SetPlayerAccess(PIndex, Power)
+                                SendPlayerData(PIndex)
+                                PlayerMsg(PIndex, "Your PowerLevel has been set to Developer Rank!", ColorType.BrightCyan)
+                                Console.WriteLine("Successfully set the power level to " & Power & " for player " & Name)
+                            Case 4
+                                SetPlayerAccess(PIndex, Power)
+                                SendPlayerData(PIndex)
+                                PlayerMsg(PIndex, "Your PowerLevel has been set to Creator Rank!", ColorType.BrightCyan)
+                                Console.WriteLine("Successfully set the power level to " & Power & " for player " & Name)
+                            Case Else
+                                Console.WriteLine("Failed to set the power level to " & Power & " for player " & Name)
+                        End Select
+                    End If
+#End Region
+                Case "/kick"
+                    If parts.Length < 2 Then Continue While
+#Region " Body "
+                    Dim Name As String = parts(1)
+                    Dim PIndex As Integer = FindPlayer(Name)
+                    If Not PIndex > 0 Then
+                        Console.WriteLine("Player name is empty or invalid. [Name not found]")
+                    Else
+                        AlertMsg(PIndex, "You have been kicked by the server owner!")
+                        LeftGame(PIndex)
+                    End If
+#End Region
+                Case "/ban"
+                    If parts.Length < 2 Then Continue While
+#Region " Body "
+                    Dim Name As String = parts(1)
+                    Dim PIndex As Integer = FindPlayer(Name)
+                    If Not PIndex > 0 Then : Console.WriteLine("Player name is empty or invalid. [Name not found]")
+                    Else : ServerBanIndex(PIndex) : End If
+#End Region
+                Case "/timespeed"
+                    If parts.Length < 2 Then Exit Sub
+#Region " Body "
+                    Dim speed As Double
+                    Double.TryParse(parts(1), speed)
+                    Time.Instance.GameSpeed = speed
+                    Console.WriteLine("Set GameSpeed to " & Time.Instance.GameSpeed & " secs per seconds")
+#End Region
+                Case "" : Continue While
+                Case Else : Console.WriteLine("Invalid Command. If you are unsure of the functions type '/help'.")
+            End Select
         End While
     End Sub
-
-    Private Sub ParseCommand(ByVal line As String)
-        Dim parts As String() = line.Split(" ")
-
-        ' This is just a double check, but if there are no parts to the command just skip
-        If (parts.Length < 1) Then
-            Return
-        End If
-
-        Dim command As String = parts(0)
-        If (String.IsNullOrWhiteSpace(command)) Then
-            Return
-        End If
-
-        'check for non existant commands
-        If Not CmdExists(command) Then
-            Return
-        End If
-
-        FireEvent(globalCommandHandlers, line, command, parts)
-        FireEvent(GetCommandHandlers(command), line, command, parts)
-    End Sub
-
-    Private Function CmdExists(Cmd As String) As Boolean
-        If LCase(Cmd) <> ("/help") And Cmd <> ("/exit") And Cmd <> ("/setadmin") And Cmd <> ("/kick") And Cmd <> ("/ban") Then
-            Return False
-        End If
-
-        Return True
-    End Function
-
-    Private Sub FireEvent(ByRef handlers As ConcurrentStack(Of HandleConsoleCommand), ByVal line As String, ByVal command As String, ByVal parts As String())
-        For Each handler As HandleConsoleCommand In handlers
-            handler.Invoke(line, command, parts)
-        Next
-    End Sub
-
-    Private Function GetCommandHandlers(ByVal command As String) As ConcurrentStack(Of HandleConsoleCommand)
-        Return commandHandlers.GetOrAdd(command, New ConcurrentStack(Of HandleConsoleCommand))
-    End Function
-
-    Public Sub AddGlobalHandler(ByRef handler As HandleConsoleCommand)
-        globalCommandHandlers.Push(handler)
-    End Sub
-
-    Public Sub ClearGlobalHandlers(ByRef handler As HandleConsoleCommand)
-        globalCommandHandlers.Clear()
-    End Sub
-
-    Public Sub AddCommandHandler(ByVal command As String, ByRef handler As HandleConsoleCommand)
-        GetCommandHandlers(command).Push(handler)
-    End Sub
-
-    Public Sub ClearCommandHandlers(ByVal command As String)
-        GetCommandHandlers(command).Clear()
-    End Sub
-
-#Region "Commands"
-    Sub HandleCommandHelp(ByVal Line As String, ByVal Command As String, ByVal Parts As String())
-        TextAdd("/help, Shows this message.")
-        TextAdd("/exit, Closes down the server.")
-        TextAdd("/setadmin, Sets player access level, use with '/setadmin playername powerlvl' powerlevel goes from 0 for player, to 4 to creator.")
-        TextAdd("/kick, Kicks user from server, use with '/kick playername'")
-        TextAdd("/ban, Bans user from server, use with '/ban playername'")
-    End Sub
-
-    Sub HandleCommandExit(ByVal Line As String, ByVal Command As String, ByVal Parts As String())
-        DestroyServer()
-    End Sub
-
-    Sub HandleCommandSetPower(ByVal Line As String, ByVal Command As String, ByVal Parts As String())
-        Dim Name As String, Power As Integer
-
-        If Parts.Length < 3 Then Exit Sub
-
-        Name = Parts(1)
-        Integer.TryParse(Parts(2), Power)
-
-        If Not FindPlayer(Name) > 0 Then Exit Sub
-
-        Select Case Power
-            Case 0
-                SetPlayerAccess(FindPlayer(Name), Power)
-                SendPlayerData(FindPlayer(Name))
-                PlayerMsg(FindPlayer(Name), "Your PowerLevel has been set to Player Rank!", ColorType.BrightCyan)
-                TextAdd("Successfully set the power level to " & Power & " for player " & Name)
-            Case 1
-                SetPlayerAccess(FindPlayer(Name), Power)
-                SendPlayerData(FindPlayer(Name))
-                PlayerMsg(FindPlayer(Name), "Your PowerLevel has been set to Monitor Rank!", ColorType.BrightCyan)
-                TextAdd("Successfully set the power level to " & Power & " for player " & Name)
-            Case 2
-                SetPlayerAccess(FindPlayer(Name), Power)
-                SendPlayerData(FindPlayer(Name))
-                PlayerMsg(FindPlayer(Name), "Your PowerLevel has been set to Mapper Rank!", ColorType.BrightCyan)
-                TextAdd("Successfully set the power level to " & Power & " for player " & Name)
-            Case 3
-                SetPlayerAccess(FindPlayer(Name), Power)
-                SendPlayerData(FindPlayer(Name))
-                PlayerMsg(FindPlayer(Name), "Your PowerLevel has been set to Developer Rank!", ColorType.BrightCyan)
-                TextAdd("Successfully set the power level to " & Power & " for player " & Name)
-            Case 4
-                SetPlayerAccess(FindPlayer(Name), Power)
-                SendPlayerData(FindPlayer(Name))
-                PlayerMsg(FindPlayer(Name), "Your PowerLevel has been set to Creator Rank!", ColorType.BrightCyan)
-                TextAdd("Successfully set the power level to " & Power & " for player " & Name)
-            Case Else
-                TextAdd("Failed to set the power level to " & Power & " for player " & Name)
-        End Select
-
-    End Sub
-
-    Sub HandleCommandKick(ByVal Line As String, ByVal Command As String, ByVal Parts As String())
-        Dim Name As String
-
-        Try
-            If Parts.Length < 1 Then Exit Sub
-
-            Name = Parts(1)
-
-            If Not FindPlayer(Name) > 0 Then Exit Sub
-
-            AlertMsg(FindPlayer(Name), "You have been kicked by the server owner!")
-            LeftGame(FindPlayer(Name))
-        Catch ex As Exception
-            TextAdd("You need to supply a name!")
-        End Try
-
-    End Sub
-
-    Sub HandleCommandBan(ByVal Line As String, ByVal Command As String, ByVal Parts As String())
-        Dim Name As String
-
-        Try
-            If Parts.Length < 1 Then Exit Sub
-
-            Name = Parts(1)
-
-            If Not FindPlayer(Name) > 0 Then Exit Sub
-
-            ServerBanIndex(FindPlayer(Name))
-        Catch ex As Exception
-            TextAdd("You need to supply a name!")
-        End Try
-
-
-    End Sub
-
-    Sub HandleCommandTimeSpeed(ByVal Line As String, ByVal Command As String, ByVal Parts As String())
-        Dim speed As Double
-
-        Try
-            If Parts.Length < 1 Then Exit Sub
-
-            speed = Val(Parts(1))
-
-            Time.Instance.GameSpeed = speed
-
-            TextAdd("Set GameSpeed to " & Time.Instance.GameSpeed & " secs per seconds")
-        Catch ex As Exception
-            TextAdd("Not a valid value!")
-        End Try
-
-    End Sub
-#End Region
-
 End Module

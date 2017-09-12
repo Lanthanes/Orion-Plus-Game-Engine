@@ -17,7 +17,7 @@ Module ClientSound
     Public MaxVolume As Single
 
     Sub PlayMusic(ByVal FileName As String)
-        If Options.Music = 0 Or Not FileExist(Application.StartupPath & MUSIC_PATH & FileName) Then Exit Sub
+        If Options.Music = 0 OrElse Not FileExist(Application.StartupPath & MUSIC_PATH & FileName) Then Exit Sub
         If FileName = CurMusic Then Exit Sub
 
         If MusicPlayer Is Nothing Then
@@ -51,7 +51,7 @@ Module ClientSound
     End Sub
 
     Sub PlayPreview(ByVal FileName As String)
-        If Options.Music = 0 Or Not FileExist(Application.StartupPath & MUSIC_PATH & FileName) Then Exit Sub
+        If Options.Music = 0 OrElse Not FileExist(Application.StartupPath & MUSIC_PATH & FileName) Then Exit Sub
 
         If PreviewPlayer Is Nothing Then
             Try
@@ -84,7 +84,7 @@ Module ClientSound
     End Sub
 
     Sub PlaySound(ByVal FileName As String, Optional Looped As Boolean = False)
-        If Options.Sound = 0 Or Not FileExist(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
+        If Options.Sound = 0 OrElse Not FileExist(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
 
         Dim buffer As SoundBuffer
         If SoundPlayer Is Nothing Then
@@ -119,7 +119,7 @@ Module ClientSound
     End Sub
 
     Sub PlayExtraSound(ByVal FileName As String, Optional Looped As Boolean = False)
-        If Options.Sound = 0 Or Not FileExist(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
+        If Options.Sound = 0 OrElse Not FileExist(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
 
         Dim buffer As SoundBuffer
         If ExtraSoundPlayer Is Nothing Then
@@ -166,7 +166,7 @@ Module ClientSound
         Dim tmpmusic As String
         If MusicPlayer Is Nothing Then Exit Sub
 
-        If MusicPlayer.Volume() = 0 Or MusicPlayer.Volume() < 3 Then
+        If MusicPlayer.Volume() = 0 OrElse MusicPlayer.Volume() < 3 Then
             FadeOutSwitch = False
             If CurMusic = "" Then
                 StopMusic()

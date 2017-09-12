@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports ASFW
 Imports ASFW.IO
+Imports ASFW.IO.FileIO
 
 Public Module ServerCrafting
 #Region "Globals"
@@ -68,7 +69,7 @@ Public Module ServerCrafting
 
         writer.WriteByte(Recipe(RecipeNum).CreateTime)
 
-        FileHandler.BinaryFile.Save(filename, writer)
+        BinaryFile.Save(filename, writer)
     End Sub
 
     Sub LoadRecipes()
@@ -89,7 +90,7 @@ Public Module ServerCrafting
 
         filename = Path.Combine(Application.StartupPath, "data", "recipes", String.Format("recipe{0}.dat", RecipeNum))
         Dim reader As New ByteStream()
-        FileHandler.BinaryFile.Load(filename, reader)
+        BinaryFile.Load(filename, reader)
 
         Recipe(RecipeNum).Name = reader.ReadString()
         Recipe(RecipeNum).RecipeType = reader.ReadByte()
@@ -130,7 +131,7 @@ Public Module ServerCrafting
 #Region "Incoming Packets"
     Sub Packet_RequestRecipes(ByVal Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CRequestRecipes", PACKET_LOG)
-        TextAdd("Recieved CMSG: CRequestRecipes")
+        Console.WriteLine("Recieved CMSG: CRequestRecipes")
 
         SendRecipes(Index)
     End Sub
@@ -144,9 +145,9 @@ Public Module ServerCrafting
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SRecipeEditor", PACKET_LOG)
-        TextAdd("Sent SMSG: SRecipeEditor")
+        Console.WriteLine("Sent SMSG: SRecipeEditor")
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
@@ -157,7 +158,7 @@ Public Module ServerCrafting
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
         Dim Buffer As New ByteStream(data)
         Addlog("Recieved EMSG: SaveRecipe", PACKET_LOG)
-        TextAdd("Recieved EMSG: SaveRecipe")
+        Console.WriteLine("Recieved EMSG: SaveRecipe")
 
         'recipe index
         n = Buffer.ReadInt32
@@ -181,13 +182,13 @@ Public Module ServerCrafting
         'send to all
         SendUpdateRecipeToAll(n)
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
     Sub Packet_CloseCraft(ByVal Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CCloseCraft", PACKET_LOG)
-        TextAdd("Recieved CMSG: CCloseCraft")
+        Console.WriteLine("Recieved CMSG: CCloseCraft")
 
         TempPlayer(Index).IsCrafting = False
     End Sub
@@ -196,14 +197,14 @@ Public Module ServerCrafting
         Dim recipeindex As Integer, amount As Integer
         Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CStartCraft", PACKET_LOG)
-        TextAdd("Recieved CMSG: CStartCraft")
+        Console.WriteLine("Recieved CMSG: CStartCraft")
 
         recipeindex = Buffer.ReadInt32
         amount = Buffer.ReadInt32
 
         If TempPlayer(Index).IsCrafting = False Then Exit Sub
 
-        If recipeindex = 0 Or amount = 0 Then Exit Sub
+        If recipeindex = 0 OrElse amount = 0 Then Exit Sub
 
         If Not CheckLearnedRecipe(Index, recipeindex) Then Exit Sub
 
@@ -230,13 +231,13 @@ Public Module ServerCrafting
     End Sub
 
     Sub SendUpdateRecipeTo(ByVal Index As Integer, ByVal RecipeNum As Integer)
-        Dim Buffer as ByteStream, i As Integer
+        Dim Buffer As ByteStream, i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateRecipe)
         Buffer.WriteInt32(RecipeNum)
 
         Addlog("Sent SMSG: SUpdateRecipe", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateRecipe")
+        Console.WriteLine("Sent SMSG: SUpdateRecipe")
 
         Buffer.WriteString(Trim$(Recipe(RecipeNum).Name))
         Buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
@@ -252,17 +253,17 @@ Public Module ServerCrafting
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendUpdateRecipeToAll(ByVal RecipeNum As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateRecipe)
         Buffer.WriteInt32(RecipeNum)
 
         Addlog("Sent SMSG: SUpdateRecipe To All", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateRecipe To All")
+        Console.WriteLine("Sent SMSG: SUpdateRecipe To All")
 
         Buffer.WriteString(Trim$(Recipe(RecipeNum).Name))
         Buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
@@ -278,17 +279,17 @@ Public Module ServerCrafting
 
         SendDataToAll(Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendPlayerRecipes(ByVal Index As Integer)
         Dim i As Integer
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SSendPlayerRecipe)
 
         Addlog("Sent SMSG: SSendPlayerRecipe", PACKET_LOG)
-        TextAdd("Sent SMSG: SSendPlayerRecipe")
+        Console.WriteLine("Sent SMSG: SSendPlayerRecipe")
 
         For i = 1 To MAX_RECIPE
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RecipeLearned(i))
@@ -296,29 +297,29 @@ Public Module ServerCrafting
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendOpenCraft(ByVal Index As Integer)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SOpenCraft)
 
         Addlog("Sent SMSG: SOpenCraft", PACKET_LOG)
-        TextAdd("Sent SMSG: SOpenCraft")
+        Console.WriteLine("Sent SMSG: SOpenCraft")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SendCraftUpdate(ByVal Index As Integer, ByVal done As Byte)
-        Dim Buffer as ByteStream
+        Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateCraft)
 
         Addlog("Sent SMSG: SUpdateCraft", PACKET_LOG)
-        TextAdd("Sent SMSG: SUpdateCraft")
+        Console.WriteLine("Sent SMSG: SUpdateCraft")
 
         Buffer.WriteInt32(done)
 

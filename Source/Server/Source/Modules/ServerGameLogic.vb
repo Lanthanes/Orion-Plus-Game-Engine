@@ -7,7 +7,7 @@ Module ServerGameLogic
         n = 0
 
         For i = 1 To GetPlayersOnline()
-            If IsPlaying(i) And GetPlayerMap(i) = MapNum Then
+            If IsPlaying(i) AndAlso GetPlayerMap(i) = MapNum Then
                 n = n + 1
             End If
         Next
@@ -30,7 +30,7 @@ Module ServerGameLogic
         GetNpcMaxVital = 0
 
         ' Prevent subscript out of range
-        If NpcNum <= 0 Or NpcNum > MAX_NPCS Then Exit Function
+        If NpcNum <= 0 OrElse NpcNum > MAX_NPCS Then Exit Function
 
         Select Case Vital
             Case Vitals.HP
@@ -65,7 +65,7 @@ Module ServerGameLogic
         Dim i As Integer
 
         ' Check for subscript out of range
-        If itemNum < 1 Or itemNum > MAX_ITEMS Or MapNum <= 0 Or MapNum > MAX_CACHED_MAPS Then Exit Sub
+        If itemNum < 1 OrElse itemNum > MAX_ITEMS OrElse MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS Then Exit Sub
 
         ' Find open map item slot
         i = FindOpenMapItemSlot(MapNum)
@@ -80,12 +80,12 @@ Module ServerGameLogic
         Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
-        If MapItemSlot <= 0 Or MapItemSlot > MAX_MAP_ITEMS Or itemNum < 0 Or itemNum > MAX_ITEMS Or MapNum <= 0 Or MapNum > MAX_CACHED_MAPS Then Exit Sub
+        If MapItemSlot <= 0 OrElse MapItemSlot > MAX_MAP_ITEMS OrElse itemNum < 0 OrElse itemNum > MAX_ITEMS OrElse MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS Then Exit Sub
 
         i = MapItemSlot
 
         If i <> 0 Then
-            If itemNum >= 0 And itemNum <= MAX_ITEMS Then
+            If itemNum >= 0 AndAlso itemNum <= MAX_ITEMS Then
                 MapItem(MapNum, i).Num = itemNum
                 MapItem(MapNum, i).Value = ItemVal
                 MapItem(MapNum, i).X = x
@@ -99,7 +99,7 @@ Module ServerGameLogic
                 Buffer.WriteInt32(y)
 
                 Addlog("Sent SMSG: SSpawnItem MapItemSlot", PACKET_LOG)
-                TextAdd("Sent SMSG: SSpawnItem MapItemSlot")
+                Console.WriteLine("Sent SMSG: SSpawnItem MapItemSlot")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             End If
@@ -114,7 +114,7 @@ Module ServerGameLogic
         FindOpenMapItemSlot = 0
 
         ' Check for subscript out of range
-        If MapNum <= 0 Or MapNum > MAX_CACHED_MAPS Then Exit Function
+        If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS Then Exit Function
 
         For i = 1 To MAX_MAP_ITEMS
             If MapItem(MapNum, i).Num = 0 Then
@@ -139,7 +139,7 @@ Module ServerGameLogic
         Dim y As Integer
 
         ' Check for subscript out of range
-        If MapNum <= 0 Or MapNum > MAX_CACHED_MAPS Then Exit Sub
+        If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS Then Exit Sub
 
         ' Spawn what we have
         For x = 0 To Map(MapNum).MaxX
@@ -148,7 +148,7 @@ Module ServerGameLogic
                 If (Map(MapNum).Tile(x, y).Type = TileType.Item) Then
 
                     ' Check to see if its a currency and if they set the value to 0 set it to 1 automatically
-                    If Item(Map(MapNum).Tile(x, y).Data1).Type = ItemType.Currency Or Item(Map(MapNum).Tile(x, y).Data1).Stackable = 1 Then
+                    If Item(Map(MapNum).Tile(x, y).Data1).Type = ItemType.Currency OrElse Item(Map(MapNum).Tile(x, y).Data1).Stackable = 1 Then
                         If Map(MapNum).Tile(x, y).Data2 <= 0 Then
                             SpawnItem(Map(MapNum).Tile(x, y).Data1, 1, MapNum, x, y)
                         Else
@@ -172,12 +172,12 @@ Module ServerGameLogic
         Dim Spawned As Boolean
 
         ' Check for subscript out of range
-        If MapNpcNum <= 0 Or MapNpcNum > MAX_MAP_NPCS Or MapNum <= 0 Or MapNum > MAX_CACHED_MAPS Then Exit Sub
+        If MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS Then Exit Sub
 
         NpcNum = Map(MapNum).Npc(MapNpcNum)
 
         If NpcNum > 0 Then
-            If Not Npc(NpcNum).SpawnTime = Time.Instance.TimeOfDay And Not Npc(NpcNum).SpawnTime = 4 Then Exit Sub
+            If Not Npc(NpcNum).SpawnTime = Time.Instance.TimeOfDay AndAlso Not Npc(NpcNum).SpawnTime = 4 Then Exit Sub
 
             MapNpc(MapNum).Npc(MapNpcNum).Num = NpcNum
             MapNpc(MapNum).Npc(MapNpcNum).Target = 0
@@ -246,7 +246,7 @@ Module ServerGameLogic
                 Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Dir)
 
                 Addlog("Recieved SMSG: SSpawnNpc", PACKET_LOG)
-                TextAdd("Recieved SMSG: SSpawnNpc")
+                Console.WriteLine("Recieved SMSG: SSpawnNpc")
 
                 For i = 1 To Vitals.Count - 1
                     Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Vital(i))
@@ -316,7 +316,7 @@ Module ServerGameLogic
         Dim y As Integer
 
         ' Check for subscript out of range
-        If MapNum <= 0 Or MapNum > MAX_CACHED_MAPS Or MapNpcNum <= 0 Or MapNpcNum > MAX_MAP_NPCS Or Dir < Direction.Up Or Dir > Direction.Right Then
+        If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Dir < Direction.Up OrElse Dir > Direction.Right Then
             Exit Function
         End If
 
@@ -332,7 +332,7 @@ Module ServerGameLogic
                     n = Map(MapNum).Tile(x, y - 1).Type
 
                     ' Check to make sure that the tile is walkable
-                    If n <> TileType.None And n <> TileType.Item And n <> TileType.NpcSpawn Then
+                    If n <> TileType.None AndAlso n <> TileType.Item AndAlso n <> TileType.NpcSpawn Then
                         CanNpcMove = False
                         Exit Function
                     End If
@@ -340,7 +340,7 @@ Module ServerGameLogic
                     ' Check to make sure that there is not a player in the way
                     For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y - 1) Then
+                            If (GetPlayerMap(i) = MapNum) AndAlso (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X) AndAlso (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y - 1) Then
                                 CanNpcMove = False
                                 Exit Function
                             End If
@@ -349,7 +349,7 @@ Module ServerGameLogic
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (i <> MapNpcNum) And (MapNpc(MapNum).Npc(i).Num > 0) And (MapNpc(MapNum).Npc(i).X = MapNpc(MapNum).Npc(MapNpcNum).X) And (MapNpc(MapNum).Npc(i).Y = MapNpc(MapNum).Npc(MapNpcNum).Y - 1) Then
+                        If (i <> MapNpcNum) AndAlso (MapNpc(MapNum).Npc(i).Num > 0) AndAlso (MapNpc(MapNum).Npc(i).X = MapNpc(MapNum).Npc(MapNpcNum).X) AndAlso (MapNpc(MapNum).Npc(i).Y = MapNpc(MapNum).Npc(MapNpcNum).Y - 1) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -365,7 +365,7 @@ Module ServerGameLogic
                     n = Map(MapNum).Tile(x, y + 1).Type
 
                     ' Check to make sure that the tile is walkable
-                    If n <> TileType.None And n <> TileType.Item And n <> TileType.NpcSpawn Then
+                    If n <> TileType.None AndAlso n <> TileType.Item AndAlso n <> TileType.NpcSpawn Then
                         CanNpcMove = False
                         Exit Function
                     End If
@@ -373,7 +373,7 @@ Module ServerGameLogic
                     ' Check to make sure that there is not a player in the way
                     For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y + 1) Then
+                            If (GetPlayerMap(i) = MapNum) AndAlso (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X) AndAlso (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y + 1) Then
                                 CanNpcMove = False
                                 Exit Function
                             End If
@@ -382,7 +382,7 @@ Module ServerGameLogic
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (i <> MapNpcNum) And (MapNpc(MapNum).Npc(i).Num > 0) And (MapNpc(MapNum).Npc(i).X = MapNpc(MapNum).Npc(MapNpcNum).X) And (MapNpc(MapNum).Npc(i).Y = MapNpc(MapNum).Npc(MapNpcNum).Y + 1) Then
+                        If (i <> MapNpcNum) AndAlso (MapNpc(MapNum).Npc(i).Num > 0) AndAlso (MapNpc(MapNum).Npc(i).X = MapNpc(MapNum).Npc(MapNpcNum).X) AndAlso (MapNpc(MapNum).Npc(i).Y = MapNpc(MapNum).Npc(MapNpcNum).Y + 1) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -398,7 +398,7 @@ Module ServerGameLogic
                     n = Map(MapNum).Tile(x - 1, y).Type
 
                     ' Check to make sure that the tile is walkable
-                    If n <> TileType.None And n <> TileType.Item And n <> TileType.NpcSpawn Then
+                    If n <> TileType.None AndAlso n <> TileType.Item AndAlso n <> TileType.NpcSpawn Then
                         CanNpcMove = False
                         Exit Function
                     End If
@@ -406,7 +406,7 @@ Module ServerGameLogic
                     ' Check to make sure that there is not a player in the way
                     For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X - 1) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
+                            If (GetPlayerMap(i) = MapNum) AndAlso (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X - 1) AndAlso (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
                                 CanNpcMove = False
                                 Exit Function
                             End If
@@ -415,7 +415,7 @@ Module ServerGameLogic
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (i <> MapNpcNum) And (MapNpc(MapNum).Npc(i).Num > 0) And (MapNpc(MapNum).Npc(i).X = MapNpc(MapNum).Npc(MapNpcNum).X - 1) And (MapNpc(MapNum).Npc(i).Y = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
+                        If (i <> MapNpcNum) AndAlso (MapNpc(MapNum).Npc(i).Num > 0) AndAlso (MapNpc(MapNum).Npc(i).X = MapNpc(MapNum).Npc(MapNpcNum).X - 1) AndAlso (MapNpc(MapNum).Npc(i).Y = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -431,7 +431,7 @@ Module ServerGameLogic
                     n = Map(MapNum).Tile(x + 1, y).Type
 
                     ' Check to make sure that the tile is walkable
-                    If n <> TileType.None And n <> TileType.Item And n <> TileType.NpcSpawn Then
+                    If n <> TileType.None AndAlso n <> TileType.Item AndAlso n <> TileType.NpcSpawn Then
                         CanNpcMove = False
                         Exit Function
                     End If
@@ -439,7 +439,7 @@ Module ServerGameLogic
                     ' Check to make sure that there is not a player in the way
                     For i = 1 To GetPlayersOnline()
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = MapNum) And (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X + 1) And (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
+                            If (GetPlayerMap(i) = MapNum) AndAlso (GetPlayerX(i) = MapNpc(MapNum).Npc(MapNpcNum).X + 1) AndAlso (GetPlayerY(i) = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
                                 CanNpcMove = False
                                 Exit Function
                             End If
@@ -448,7 +448,7 @@ Module ServerGameLogic
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (i <> MapNpcNum) And (MapNpc(MapNum).Npc(i).Num > 0) And (MapNpc(MapNum).Npc(i).X = MapNpc(MapNum).Npc(MapNpcNum).X + 1) And (MapNpc(MapNum).Npc(i).Y = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
+                        If (i <> MapNpcNum) AndAlso (MapNpc(MapNum).Npc(i).Num > 0) AndAlso (MapNpc(MapNum).Npc(i).X = MapNpc(MapNum).Npc(MapNpcNum).X + 1) AndAlso (MapNpc(MapNum).Npc(i).Y = MapNpc(MapNum).Npc(MapNpcNum).Y) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -467,7 +467,7 @@ Module ServerGameLogic
         Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
-        If MapNum <= 0 Or MapNum > MAX_CACHED_MAPS Or MapNpcNum <= 0 Or MapNpcNum > MAX_MAP_NPCS Or Dir < Direction.Up Or Dir > Direction.Right Or Movement < 1 Or Movement > 2 Then
+        If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Dir < Direction.Up OrElse Dir > Direction.Right OrElse Movement < 1 OrElse Movement > 2 Then
             Exit Sub
         End If
 
@@ -485,7 +485,7 @@ Module ServerGameLogic
                 Buffer.WriteInt32(Movement)
 
                 Addlog("Sent SMSG: SNpcMove Up", PACKET_LOG)
-                TextAdd("Sent SMSG: SNpcMove Up")
+                Console.WriteLine("Sent SMSG: SNpcMove Up")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             Case Direction.Down
@@ -499,7 +499,7 @@ Module ServerGameLogic
                 Buffer.WriteInt32(Movement)
 
                 Addlog("Sent SMSG: SNpcMove Down", PACKET_LOG)
-                TextAdd("Sent SMSG: SNpcMove Down")
+                Console.WriteLine("Sent SMSG: SNpcMove Down")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             Case Direction.Left
@@ -513,7 +513,7 @@ Module ServerGameLogic
                 Buffer.WriteInt32(Movement)
 
                 Addlog("Sent SMSG: SNpcMove Left", PACKET_LOG)
-                TextAdd("Sent SMSG: SNpcMove Left")
+                Console.WriteLine("Sent SMSG: SNpcMove Left")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
             Case Direction.Right
@@ -527,19 +527,19 @@ Module ServerGameLogic
                 Buffer.WriteInt32(Movement)
 
                 Addlog("Sent SMSG: SNpcMove Right", PACKET_LOG)
-                TextAdd("Sent SMSG: SNpcMove Right")
+                Console.WriteLine("Sent SMSG: SNpcMove Right")
 
                 SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
         End Select
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub NpcDir(ByVal MapNum As Integer, ByVal MapNpcNum As Integer, ByVal Dir As Integer)
         Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
-        If MapNum <= 0 Or MapNum > MAX_CACHED_MAPS Or MapNpcNum <= 0 Or MapNpcNum > MAX_MAP_NPCS Or Dir < Direction.Up Or Dir > Direction.Right Then
+        If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Dir < Direction.Up OrElse Dir > Direction.Right Then
             Exit Sub
         End If
 
@@ -550,11 +550,11 @@ Module ServerGameLogic
         Buffer.WriteInt32(Dir)
 
         Addlog("Sent SMSG: SNpcDir", PACKET_LOG)
-        TextAdd("Sent SMSG: SNpcDir")
+        Console.WriteLine("Sent SMSG: SNpcDir")
 
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 
     Sub SpawnAllMapNpcs()
@@ -582,7 +582,7 @@ Module ServerGameLogic
         Buffer.WriteInt32(ServerPackets.SMapNpcData)
 
         Addlog("Sent SMSG: SMapNpcData", PACKET_LOG)
-        TextAdd("Sent SMSG: SMapNpcData")
+        Console.WriteLine("Sent SMSG: SMapNpcData")
 
         For i = 1 To MAX_MAP_NPCS
             Buffer.WriteInt32(MapNpc(MapNum).Npc(i).Num)

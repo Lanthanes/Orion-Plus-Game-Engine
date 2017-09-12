@@ -198,7 +198,7 @@ Module ServerGeneral
         InitNetwork()
 
         ' Init all the player sockets
-        SetStatus("Initializing player array...")
+        Console.WriteLine("Initializing player array...")
 
         For x = 1 To MAX_PLAYERS
             ClearPlayer(x)
@@ -207,9 +207,9 @@ Module ServerGeneral
         ' Serves as a constructor
         ClearGameData()
         LoadGameData()
-        SetStatus("Spawning map items...")
+        Console.WriteLine("Spawning map items...")
         SpawnAllMapsItems()
-        SetStatus("Spawning map npcs...")
+        Console.WriteLine("Spawning map npcs...")
         SpawnAllMapNpcs()
 
         ' Check if the master charlist file exists for checking duplicate names, and if it doesnt make it
@@ -235,9 +235,9 @@ Module ServerGeneral
 
         Console.WriteLine("")
 
-        SetStatus("Initialization complete. Server loaded in " & time2 - time1 & "ms.")
+        Console.WriteLine("Initialization complete. Server loaded in " & time2 - time1 & "ms.")
         Console.WriteLine("")
-        SetStatus("Use /help for the available commands.")
+        Console.WriteLine("Use /help for the available commands.")
 
         MyIPAddress = GetIP()
 
@@ -246,13 +246,6 @@ Module ServerGeneral
         ' reset shutdown value
         isShuttingDown = False
 
-        'init the console msg
-        AddCommandHandler("/help", AddressOf HandleCommandHelp)
-        AddCommandHandler("/exit", AddressOf HandleCommandExit)
-        AddCommandHandler("/setadmin", AddressOf HandleCommandSetPower)
-        AddCommandHandler("/kick", AddressOf HandleCommandKick)
-        AddCommandHandler("/ban", AddressOf HandleCommandBan)
-        AddCommandHandler("/timespeed", AddressOf HandleCommandTimeSpeed)
 
         ' Start listener now that everything is loaded
         Socket.StartListening(Options.Port, 5, 1)
@@ -285,120 +278,69 @@ Module ServerGeneral
     End Sub
 
     Sub DestroyServer()
-        Dim i As Integer
-
-        ServerOnline = False
-        SetStatus("Saving players online...")
+        Socket.StopListening()
+        Console.WriteLine("Saving players online...")
         SaveAllPlayersOnline()
 
-        SetStatus("Unloading sockets...")
-        For i = 1 To MAX_PLAYERS
+        Console.WriteLine("Unloading players...")
+        For i As Integer = 1 To MAX_PLAYERS
             SendLeftGame(i)
             LeftGame(i)
         Next
 
         DestroyNetwork()
-
         ClearGameData()
-        ServerDestroyed = True
-        Application.Exit()
-    End Sub
 
-    Sub SetStatus(ByVal Status As String)
-        TextAdd(Status)
+#If DEBUG Then
+        Application.Exit()
+        Application.ExitThread()
+        Process.GetCurrentProcess.Kill()
+#Else
+        Environment.Exit(0)
+#End If
     End Sub
 
     Public Sub ClearGameData()
-        SetStatus("Clearing temp tile fields...")
-        ClearTempTiles()
-        SetStatus("Clearing Maps...")
-        ClearMaps()
-        SetStatus("Clearing Map Items...")
-        ClearMapItems()
-        SetStatus("Clearing Map Npc's...")
-        ClearAllMapNpcs()
-        SetStatus("Clearing Npc's...")
-        ClearNpcs()
-        SetStatus("Clearing Resources...")
-        ClearResources()
-        SetStatus("Clearing Items...")
-        ClearItems()
-        SetStatus("Clearing Shops...")
-        ClearShops()
-        SetStatus("Clearing Skills...")
-        ClearSkills()
-        SetStatus("Clearing Animations...")
-        ClearAnimations()
-        'quests
-        SetStatus("Clearing Quests...")
-        ClearQuests()
-
-        'projectiles
-        SetStatus("Clearing map projectiles...")
-        ClearMapProjectiles()
-        SetStatus("Clearing projectiles...")
-        ClearProjectiles()
-
-        'recipes
-        ClearRecipes()
-
-        'pets
-        SetStatus("Clearing pets...")
-        ClearPets()
+        Console.WriteLine("Clearing temp tile fields...") : ClearTempTiles()
+        Console.WriteLine("Clearing Maps...") : ClearMaps()
+        Console.WriteLine("Clearing Map Items...") : ClearMapItems()
+        Console.WriteLine("Clearing Map Npc's...") : ClearAllMapNpcs()
+        Console.WriteLine("Clearing Npc's...") : ClearNpcs()
+        Console.WriteLine("Clearing Resources...") : ClearResources()
+        Console.WriteLine("Clearing Items...") : ClearItems()
+        Console.WriteLine("Clearing Shops...") : ClearShops()
+        Console.WriteLine("Clearing Skills...") : ClearSkills()
+        Console.WriteLine("Clearing Animations...") : ClearAnimations()
+        Console.WriteLine("Clearing Quests...") : ClearQuests()
+        Console.WriteLine("Clearing map projectiles...") : ClearMapProjectiles()
+        Console.WriteLine("Clearing projectiles...") : ClearProjectiles()
+        Console.WriteLine("Clearing Recipes...") : ClearRecipes()
+        Console.WriteLine("Clearing pets...") : ClearPets()
     End Sub
 
     Private Sub LoadGameData()
-        SetStatus("Loading Classes...")
-        LoadClasses()
-        SetStatus("Loading Maps...")
-        LoadMaps()
-        SetStatus("Loading Items...")
-        LoadItems()
-        SetStatus("Loading Npc's...")
-        LoadNpcs()
-        SetStatus("Loading Resources...")
-        LoadResources()
-        SetStatus("Loading Shops...")
-        LoadShops()
-        SetStatus("Loading Skills...")
-        LoadSkills()
-        SetStatus("Loading Animations...")
-        LoadAnimations()
-        'quests
-        SetStatus("Loading Quests...")
-        LoadQuests()
-        'Housing
-        SetStatus("Loading House Configurations...")
-        LoadHouses()
-        'switches
-        SetStatus("Loading Switches...")
-        LoadSwitches()
-        'variables
-        SetStatus("Loading Variables...")
-        LoadVariables()
-        'Events
-        SetStatus("Spawning global events...")
-        SpawnAllMapGlobalEvents()
-
-        'projectiles
-        SetStatus("Loading projectiles...")
-        LoadProjectiles()
-
-        'recipes
-        LoadRecipes()
-
-        'pets
-        LoadPets()
-    End Sub
-
-    Sub TextAdd(ByVal Msg As String)
-        Console.WriteLine(Msg)
+        Console.WriteLine("Loading Classes...") : LoadClasses()
+        Console.WriteLine("Loading Maps...") : LoadMaps()
+        Console.WriteLine("Loading Items...") : LoadItems()
+        Console.WriteLine("Loading Npc's...") : LoadNpcs()
+        Console.WriteLine("Loading Resources...") : LoadResources()
+        Console.WriteLine("Loading Shops...") : LoadShops()
+        Console.WriteLine("Loading Skills...") : LoadSkills()
+        Console.WriteLine("Loading Animations...") : LoadAnimations()
+        Console.WriteLine("Loading Quests...") : LoadQuests()
+        Console.WriteLine("Loading House Configurations...") : LoadHouses()
+        Console.WriteLine("Loading Switches...") : LoadSwitches()
+        Console.WriteLine("Loading Variables...") : LoadVariables()
+        Console.WriteLine("Spawning global events...") : SpawnAllMapGlobalEvents()
+        Console.WriteLine("Loading projectiles...") : LoadProjectiles()
+        Console.WriteLine("Loading Recipes...") : LoadRecipes()
+        Console.WriteLine("Loading Pets...") : LoadPets()
     End Sub
 
     ' Used for checking validity of names
     Function IsNameLegal(ByVal sInput As Integer) As Boolean
 
-        If (sInput >= 65 And sInput <= 90) Or (sInput >= 97 And sInput <= 122) Or (sInput = 95) Or (sInput = 32) Or (sInput >= 48 And sInput <= 57) Then
+        If (sInput >= 65 AndAlso sInput <= 90) OrElse (sInput >= 97 AndAlso sInput <= 122) OrElse (sInput = 95) OrElse (sInput = 32) OrElse (sInput >= 48 AndAlso sInput <= 57) Then
             Return True
         Else
             Return False
@@ -412,23 +354,6 @@ Module ServerGeneral
 
     Public Sub DoEvents()
         Application.DoEvents()
-    End Sub
-
-    Public Sub HandleShutdown()
-
-        If Secs <= 0 Then Secs = 30
-        If Secs Mod 5 = 0 Or Secs <= 5 Then
-            GlobalMsg(String.Format("Server Shutdown in {0} seconds.", Secs))
-            TextAdd(String.Format("Automated Server Shutdown in {0} seconds.", Secs))
-        End If
-
-        Secs = Secs - 1
-
-        If Secs <= 0 Then
-            GlobalMsg("Server Shutdown.")
-            DestroyServer()
-        End If
-
     End Sub
 
     Public Sub CheckDir(ByVal DirPath As String)

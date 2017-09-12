@@ -684,7 +684,7 @@ Module ClientGraphics
     Public Sub LoadTexture(ByVal Index As Integer, ByVal TexType As Byte)
 
         If TexType = 1 Then 'tilesets
-            If Index < 0 Or Index > NumTileSets Then Exit Sub
+            If Index < 0 OrElse Index > NumTileSets Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             TileSetTexture(Index) = New Texture(Application.StartupPath & GFX_PATH & "tilesets\" & Index & GFX_EXT)
@@ -699,7 +699,7 @@ Module ClientGraphics
             End With
 
         ElseIf TexType = 2 Then 'characters
-            If Index < 0 Or Index > NumCharacters Then Exit Sub
+            If Index < 0 OrElse Index > NumCharacters Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             CharacterGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "characters\" & Index & GFX_EXT)
@@ -714,7 +714,7 @@ Module ClientGraphics
             End With
 
         ElseIf TexType = 3 Then 'paperdoll
-            If Index < 0 Or Index > NumPaperdolls Then Exit Sub
+            If Index < 0 OrElse Index > NumPaperdolls Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             PaperDollGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Paperdolls\" & Index & GFX_EXT)
@@ -729,7 +729,7 @@ Module ClientGraphics
             End With
 
         ElseIf TexType = 4 Then 'items
-            If Index <= 0 Or Index > NumItems Then Exit Sub
+            If Index <= 0 OrElse Index > NumItems Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             ItemsGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "items\" & Index & GFX_EXT)
@@ -744,7 +744,7 @@ Module ClientGraphics
             End With
 
         ElseIf TexType = 5 Then 'resources
-            If Index < 0 Or Index > NumResources Then Exit Sub
+            If Index < 0 OrElse Index > NumResources Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             ResourcesGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "resources\" & Index & GFX_EXT)
@@ -759,7 +759,7 @@ Module ClientGraphics
             End With
 
         ElseIf TexType = 6 Then 'animations
-            If Index <= 0 Or Index > NumAnimations Then Exit Sub
+            If Index <= 0 OrElse Index > NumAnimations Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             AnimationsGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Animations\" & Index & GFX_EXT)
@@ -774,7 +774,7 @@ Module ClientGraphics
             End With
 
         ElseIf TexType = 7 Then 'faces
-            If Index < 0 Or Index > NumFaces Then Exit Sub
+            If Index < 0 OrElse Index > NumFaces Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             FacesGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Faces\" & Index & GFX_EXT)
@@ -789,7 +789,7 @@ Module ClientGraphics
             End With
 
         ElseIf TexType = 8 Then 'fogs
-            If Index < 0 Or Index > NumFogs Then Exit Sub
+            If Index < 0 OrElse Index > NumFogs Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             FogGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Fogs\" & Index & GFX_EXT)
@@ -804,7 +804,7 @@ Module ClientGraphics
             End With
 
         ElseIf TexType = 9 Then 'skill icons
-            If Index <= 0 Or Index > NumSkillIcons Then Exit Sub
+            If Index <= 0 OrElse Index > NumSkillIcons Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             SkillIconsGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "SkillIcons\" & Index & GFX_EXT)
@@ -819,7 +819,7 @@ Module ClientGraphics
             End With
 
         ElseIf TexType = 10 Then 'furniture
-            If Index < 0 Or Index > NumFurniture Then Exit Sub
+            If Index < 0 OrElse Index > NumFurniture Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             FurnitureGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Furniture\" & Index & GFX_EXT)
@@ -834,7 +834,7 @@ Module ClientGraphics
             End With
 
         ElseIf TexType = 11 Then 'projectiles
-            If Index < 0 Or Index > NumProjectiles Then Exit Sub
+            If Index < 0 OrElse Index > NumProjectiles Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             ProjectileGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Projectiles\" & Index & GFX_EXT)
@@ -849,7 +849,7 @@ Module ClientGraphics
             End With
 
         ElseIf TexType = 12 Then 'emotes
-            If Index < 0 Or Index > NumEmotes Then Exit Sub
+            If Index < 0 OrElse Index > NumEmotes Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             EmotesGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Emotes\" & Index & GFX_EXT)
@@ -864,7 +864,7 @@ Module ClientGraphics
             End With
 
         ElseIf TexType = 13 Then 'Panoramas
-            If Index < 0 Or Index > NumPanorama Then Exit Sub
+            If Index < 0 OrElse Index > NumPanorama Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             PanoramasGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Panoramas\" & Index & GFX_EXT)
@@ -878,7 +878,7 @@ Module ClientGraphics
                 .TextureTimer = GetTickCount() + 100000
             End With
         ElseIf TexType = 14 Then 'Parallax
-            If Index < 0 Or Index > NumParallax Then Exit Sub
+            If Index < 0 OrElse Index > NumParallax Then Exit Sub
 
             'Load texture first, dont care about memory streams (just use the filename)
             ParallaxGFX(Index) = New Texture(Application.StartupPath & GFX_PATH & "Parallax\" & Index & GFX_EXT)
@@ -901,7 +901,7 @@ Module ClientGraphics
         Dim X As Integer, y As Integer, Anim As Integer
         'Dim width As Integer, height As Integer
 
-        If Sprite < 1 Or Sprite > NumEmotes Then Exit Sub
+        If Sprite < 1 OrElse Sprite > NumEmotes Then Exit Sub
 
         If EmotesGFXInfo(Sprite).IsLoaded = False Then
             LoadTexture(Sprite, 12)
@@ -1031,11 +1031,11 @@ Module ClientGraphics
     End Sub
 
     Public Function ConvertMapX(ByVal X As Integer) As Integer
-        ConvertMapX = X - (TileView.left * PIC_X) - Camera.Left
+        ConvertMapX = X - (TileView.Left * PIC_X) - Camera.Left
     End Function
 
     Public Function ConvertMapY(ByVal Y As Integer) As Integer
-        ConvertMapY = Y - (TileView.top * PIC_Y) - Camera.Top
+        ConvertMapY = Y - (TileView.Top * PIC_Y) - Camera.Top
     End Function
 
     Public Sub DrawPlayer(ByVal Index As Integer)
@@ -1048,7 +1048,7 @@ Module ClientGraphics
 
         AttackSprite = 0
 
-        If Spritenum < 1 Or Spritenum > NumCharacters Then Exit Sub
+        If Spritenum < 1 OrElse Spritenum > NumCharacters Then Exit Sub
 
         ' speed from weapon
         If GetPlayerEquipment(Index, EquipmentType.Weapon) > 0 Then
@@ -1163,7 +1163,7 @@ Module ClientGraphics
         Dim X As Integer, Y As Integer
         Dim width As Integer, height As Integer
 
-        If Sprite < 1 Or Sprite > NumPaperdolls Then Exit Sub
+        If Sprite < 1 OrElse Sprite > NumPaperdolls Then Exit Sub
 
         If PaperDollGFXInfo(Sprite).IsLoaded = False Then
             LoadTexture(Sprite, 3)
@@ -1201,12 +1201,12 @@ Module ClientGraphics
 
         If MapNpc(MapNpcNum).Num = 0 Then Exit Sub ' no npc set
 
-        If MapNpc(MapNpcNum).X < TileView.left Or MapNpc(MapNpcNum).X > TileView.right Then Exit Sub
-        If MapNpc(MapNpcNum).Y < TileView.top Or MapNpc(MapNpcNum).Y > TileView.bottom Then Exit Sub
+        If MapNpc(MapNpcNum).X < TileView.Left OrElse MapNpc(MapNpcNum).X > TileView.Right Then Exit Sub
+        If MapNpc(MapNpcNum).Y < TileView.Top OrElse MapNpc(MapNpcNum).Y > TileView.Bottom Then Exit Sub
 
         Sprite = Npc(MapNpc(MapNpcNum).Num).Sprite
 
-        If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
+        If Sprite < 1 OrElse Sprite > NumCharacters Then Exit Sub
 
         attackspeed = 1000
 
@@ -1283,7 +1283,7 @@ Module ClientGraphics
     End Sub
 
     Public Sub DrawResource(ByVal Resource As Integer, ByVal dx As Integer, ByVal dy As Integer, ByVal rec As Rectangle)
-        If Resource < 1 Or Resource > NumResources Then Exit Sub
+        If Resource < 1 OrElse Resource > NumResources Then Exit Sub
         Dim X As Integer
         Dim Y As Integer
         Dim width As Integer
@@ -1294,7 +1294,7 @@ Module ClientGraphics
         width = (rec.Right - rec.Left)
         height = (rec.Bottom - rec.Top)
 
-        If rec.Width < 0 Or rec.Height < 0 Then Exit Sub
+        If rec.Width < 0 OrElse rec.Height < 0 Then Exit Sub
 
         If ResourcesGFXInfo(Resource).IsLoaded = False Then
             LoadTexture(Resource, 5)
@@ -1320,7 +1320,7 @@ Module ClientGraphics
         If GettingMap Then Exit Sub
         If MapData = False Then Exit Sub
 
-        If MapResource(Resource_num).X > Map.MaxX Or MapResource(Resource_num).Y > Map.MaxY Then Exit Sub
+        If MapResource(Resource_num).X > Map.MaxX OrElse MapResource(Resource_num).Y > Map.MaxY Then Exit Sub
 
         ' Get the Resource type
         Resource_master = Map.Tile(MapResource(Resource_num).X, MapResource(Resource_num).Y).Data1
@@ -1361,7 +1361,7 @@ Module ClientGraphics
         Dim x As Integer, y As Integer
         PicNum = Item(MapItem(itemnum).Num).Pic
 
-        If PicNum < 1 Or PicNum > NumItems Then Exit Sub
+        If PicNum < 1 OrElse PicNum > NumItems Then Exit Sub
 
         If ItemsGFXInfo(PicNum).IsLoaded = False Then
             LoadTexture(PicNum, 4)
@@ -1373,8 +1373,8 @@ Module ClientGraphics
         End With
 
         With MapItem(itemnum)
-            If .X < TileView.left Or .X > TileView.right Then Exit Sub
-            If .Y < TileView.top Or .Y > TileView.bottom Then Exit Sub
+            If .X < TileView.Left OrElse .X > TileView.Right Then Exit Sub
+            If .Y < TileView.Top OrElse .Y > TileView.Bottom Then Exit Sub
         End With
 
         If ItemsGFXInfo(PicNum).Width > 32 Then ' has more than 1 frame
@@ -1399,7 +1399,7 @@ Module ClientGraphics
         Dim height As Integer
         'On Error Resume Next
 
-        If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
+        If Sprite < 1 OrElse Sprite > NumCharacters Then Exit Sub
 
         If CharacterGFXInfo(Sprite).IsLoaded = False Then
             LoadTexture(Sprite, 2)
@@ -1430,8 +1430,8 @@ Module ClientGraphics
         Dim y As Integer
 
         With Blood(Index)
-            If .X < TileView.left Or .X > TileView.right Then Exit Sub
-            If .Y < TileView.top Or .Y > TileView.bottom Then Exit Sub
+            If .X < TileView.Left OrElse .X > TileView.Right Then Exit Sub
+            If .Y < TileView.Top OrElse .Y > TileView.Bottom Then Exit Sub
 
             ' check if we should be seeing it
             If .Timer + 20000 < GetTickCount() Then Exit Sub
@@ -1460,7 +1460,7 @@ Module ClientGraphics
         For i = MapLayer.Ground To MapLayer.Mask2
             If Map.Tile(X, Y).Layer Is Nothing Then Exit Sub
             ' skip tile if tileset isn't set
-            If Map.Tile(X, Y).Layer(i).Tileset > 0 And Map.Tile(X, Y).Layer(i).Tileset <= NumTileSets Then
+            If Map.Tile(X, Y).Layer(i).Tileset > 0 AndAlso Map.Tile(X, Y).Layer(i).Tileset <= NumTileSets Then
                 If TileSetTextureInfo(Map.Tile(X, Y).Layer(i).Tileset).IsLoaded = False Then
                     LoadTexture(Map.Tile(X, Y).Layer(i).Tileset, 1)
                 End If
@@ -1502,7 +1502,7 @@ Module ClientGraphics
         For i = MapLayer.Fringe To MapLayer.Fringe2
             If Map.Tile(X, Y).Layer Is Nothing Then Exit Sub
             ' skip tile if tileset isn't set
-            If Map.Tile(X, Y).Layer(i).Tileset > 0 And Map.Tile(X, Y).Layer(i).Tileset <= NumTileSets Then
+            If Map.Tile(X, Y).Layer(i).Tileset > 0 AndAlso Map.Tile(X, Y).Layer(i).Tileset <= NumTileSets Then
                 If TileSetTextureInfo(Map.Tile(X, Y).Layer(i).Tileset).IsLoaded = False Then
                     LoadTexture(Map.Tile(X, Y).Layer(i).Tileset, 1)
                 End If
@@ -1609,10 +1609,10 @@ Module ClientGraphics
         End If
 
         With TileView
-            .top = StartY
-            .bottom = EndY
-            .left = StartX
-            .right = EndX
+            .Top = StartY
+            .Bottom = EndY
+            .Left = StartX
+            .Right = EndX
         End With
 
         With Camera
@@ -1831,8 +1831,8 @@ Module ClientGraphics
         ' blit lower tiles
         If NumTileSets > 0 Then
 
-            For X = TileView.left To TileView.right + 1
-                For Y = TileView.top To TileView.bottom + 1
+            For X = TileView.Left To TileView.Right + 1
+                For Y = TileView.Top To TileView.Bottom + 1
                     If IsValidMapPoint(X, Y) Then
                         DrawMapTile(X, Y)
                     End If
@@ -1854,7 +1854,7 @@ Module ClientGraphics
         End If
 
         ' events
-        If Map.CurrentEvents > 0 And Map.CurrentEvents <= Map.EventCount Then
+        If Map.CurrentEvents > 0 AndAlso Map.CurrentEvents <= Map.EventCount Then
 
             For I = 1 To Map.CurrentEvents
                 If Map.MapEvents(I).Position = 0 Then
@@ -1880,8 +1880,8 @@ Module ClientGraphics
         'Draw sum d00rs.
         If GettingMap Then Exit Sub
 
-        For X = TileView.left To TileView.right
-            For Y = TileView.top To TileView.bottom
+        For X = TileView.Left To TileView.Right
+            For Y = TileView.Top To TileView.Bottom
                 If IsValidMapPoint(X, Y) Then
                     If Map.Tile Is Nothing Then Exit Sub
                     If Map.Tile(X, Y).Type = TileType.Door Then
@@ -1906,7 +1906,7 @@ Module ClientGraphics
             If NumCharacters > 0 Then
                 ' Players
                 For I = 1 To TotalOnline 'MAX_PLAYERS
-                    If IsPlaying(I) And GetPlayerMap(I) = GetPlayerMap(MyIndex) Then
+                    If IsPlaying(I) AndAlso GetPlayerMap(I) = GetPlayerMap(MyIndex) Then
                         If Player(I).Y = Y Then
                             DrawPlayer(I)
                         End If
@@ -1926,7 +1926,7 @@ Module ClientGraphics
                 Next
 
                 ' events
-                If Map.CurrentEvents > 0 And Map.CurrentEvents <= Map.EventCount Then
+                If Map.CurrentEvents > 0 AndAlso Map.CurrentEvents <= Map.EventCount Then
                     For I = 1 To Map.CurrentEvents
                         If Map.MapEvents(I).Position = 1 Then
                             If Y = Map.MapEvents(I).Y Then
@@ -1950,8 +1950,8 @@ Module ClientGraphics
                 For I = 1 To TotalOnline 'MAX_PLAYERS
                     If IsPlaying(I) Then
                         If Player(I).Map = Player(MyIndex).Map Then
-                            If CurX = Player(I).X And CurY = Player(I).Y Then
-                                If myTargetType = TargetType.Player And myTarget = I Then
+                            If CurX = Player(I).X AndAlso CurY = Player(I).Y Then
+                                If myTargetType = TargetType.Player AndAlso myTarget = I Then
                                     ' dont render lol
                                 Else
                                     DrawHover(Player(I).X * 32 - 16, Player(I).Y * 32 + Player(I).YOffset)
@@ -1996,7 +1996,7 @@ Module ClientGraphics
         End If
 
         'events
-        If Map.CurrentEvents > 0 And Map.CurrentEvents <= Map.EventCount Then
+        If Map.CurrentEvents > 0 AndAlso Map.CurrentEvents <= Map.EventCount Then
             For I = 1 To Map.CurrentEvents
                 If Map.MapEvents(I).Position = 2 Then
                     DrawEvent(I)
@@ -2067,7 +2067,7 @@ Module ClientGraphics
 
         ' draw player names
         For I = 1 To TotalOnline 'MAX_PLAYERS
-            If IsPlaying(I) And GetPlayerMap(I) = GetPlayerMap(MyIndex) Then
+            If IsPlaying(I) AndAlso GetPlayerMap(I) = GetPlayerMap(MyIndex) Then
                 DrawPlayerName(I)
                 If PetAlive(I) Then
                     DrawPlayerPetName(I)
@@ -2112,7 +2112,7 @@ Module ClientGraphics
             DrawMapAttributes()
         End If
 
-        If InMapEditor And frmEditor_MapEditor.tabpages.SelectedTab Is frmEditor_MapEditor.tpEvents Then
+        If InMapEditor AndAlso frmEditor_MapEditor.tabpages.SelectedTab Is frmEditor_MapEditor.tpEvents Then
             DrawEvents()
             EditorEvent_DrawGraphic()
         End If
@@ -2137,7 +2137,7 @@ Module ClientGraphics
     Public Sub DrawPanorama(ByVal Index As Integer)
         If Map.Moral = MapMoral.Indoors Then Exit Sub
 
-        If Index < 1 Or Index > NumParallax Then Exit Sub
+        If Index < 1 OrElse Index > NumParallax Then Exit Sub
 
         If PanoramasGFXInfo(Index).IsLoaded = False Then
             LoadTexture(Index, 13)
@@ -2162,7 +2162,7 @@ Module ClientGraphics
 
         If Map.Moral = MapMoral.Indoors Then Exit Sub
 
-        If Index < 1 Or Index > NumParallax Then Exit Sub
+        If Index < 1 OrElse Index > NumParallax Then Exit Sub
 
         If ParallaxGFXInfo(Index).IsLoaded = False Then
             LoadTexture(Index, 14)
@@ -2208,7 +2208,7 @@ Module ClientGraphics
                 .TextureTimer = GetTickCount() + 100000
             End With
 
-            If EditorTileWidth = 1 And EditorTileHeight = 1 Then
+            If EditorTileWidth = 1 AndAlso EditorTileHeight = 1 Then
                 RenderSprite(TileSetSprite(frmEditor_MapEditor.cmbTileSets.SelectedIndex + 1), GameWindow, ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y), EditorTileSelStart.X * PIC_X, EditorTileSelStart.Y * PIC_Y, rec.Width, rec.Height)
 
                 rec2.Size = New Vector2f(rec.Width, rec.Height)
@@ -2260,13 +2260,13 @@ Module ClientGraphics
             For i = 1 To MAX_MAP_NPCS
                 If Map.Npc Is Nothing Then Exit Sub
                 If Map.Npc(i) > 0 Then
-                    If Npc(MapNpc(i).Num).Behaviour = NpcBehavior.AttackOnSight Or Npc(MapNpc(i).Num).Behaviour = NpcBehavior.AttackWhenAttacked Or Npc(MapNpc(i).Num).Behaviour = NpcBehavior.Guard Then
+                    If Npc(MapNpc(i).Num).Behaviour = NpcBehavior.AttackOnSight OrElse Npc(MapNpc(i).Num).Behaviour = NpcBehavior.AttackWhenAttacked OrElse Npc(MapNpc(i).Num).Behaviour = NpcBehavior.Guard Then
                         ' lock to npc
                         tmpX = MapNpc(i).X * PIC_X + MapNpc(i).XOffset
                         tmpY = MapNpc(i).Y * PIC_Y + MapNpc(i).YOffset + 35
                         If MapNpc(i).Vital(Vitals.HP) > 0 Then
                             ' calculate the width to fill
-                            barWidth = ((MapNpc(i).Vital(Vitals.HP) / (Npc(MapNpc(i).Num).HP) * 32))
+                            barWidth = ((MapNpc(i).Vital(Vitals.HP) / (Npc(MapNpc(i).Num).Hp) * 32))
                             ' draw bars
                             rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
                             Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
@@ -2292,7 +2292,7 @@ Module ClientGraphics
 
         If PetAlive(MyIndex) Then
             ' draw own health bar
-            If Player(MyIndex).Pet.Health > 0 And Player(MyIndex).Pet.Health <= Player(MyIndex).Pet.MaxHp Then
+            If Player(MyIndex).Pet.Health > 0 AndAlso Player(MyIndex).Pet.Health <= Player(MyIndex).Pet.MaxHp Then
                 ' lock to Player
                 tmpX = Player(MyIndex).Pet.X * PIC_X + Player(MyIndex).Pet.XOffset
                 tmpY = Player(MyIndex).Pet.Y * PIC_X + Player(MyIndex).Pet.YOffset + 35
@@ -2389,7 +2389,7 @@ Module ClientGraphics
 
         Sprite = Animation(AnimInstance(Index).Animation).Sprite(Layer)
 
-        If Sprite < 1 Or Sprite > NumAnimations Then Exit Sub
+        If Sprite < 1 OrElse Sprite > NumAnimations Then Exit Sub
 
         If AnimationsGFXInfo(Sprite).IsLoaded = False Then
             LoadTexture(Sprite, 6)
@@ -2447,7 +2447,7 @@ Module ClientGraphics
                 ' quick save the index
                 lockindex = AnimInstance(Index).lockindex
                 ' check if is ingame
-                If IsPlaying(lockindex) And PetAlive(lockindex) = True Then
+                If IsPlaying(lockindex) AndAlso PetAlive(lockindex) = True Then
                     ' check if on same map
                     If GetPlayerMap(lockindex) = GetPlayerMap(MyIndex) Then
                         ' is on map, is playing, set x & y
@@ -2486,7 +2486,7 @@ Module ClientGraphics
             X = 0
         End If
 
-        If sRECT.Width < 0 Or sRECT.Height < 0 Then Exit Sub
+        If sRECT.Width < 0 OrElse sRECT.Height < 0 Then Exit Sub
 
         RenderSprite(AnimationsSprite(Sprite), GameWindow, X, Y, sRECT.X, sRECT.Y, sRECT.Width, sRECT.Height)
 
@@ -2515,8 +2515,8 @@ Module ClientGraphics
 
         Dim rec As New RectangleShape
 
-        For x = TileView.left To TileView.right ' - 1
-            For y = TileView.top To TileView.bottom ' - 1
+        For x = TileView.Left To TileView.Right ' - 1
+            For y = TileView.Top To TileView.Bottom ' - 1
                 If IsValidMapPoint(x, y) Then
                     rec.OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.White)
                     rec.OutlineThickness = 0.6
@@ -2931,7 +2931,7 @@ Module ClientGraphics
 
         itemnum = GetPlayerInvItemNum(MyIndex, DragInvSlotNum)
 
-        If itemnum > 0 And itemnum <= MAX_ITEMS Then
+        If itemnum > 0 AndAlso itemnum <= MAX_ITEMS Then
 
             itempic = Item(itemnum).Pic
             If itempic = 0 Then Exit Sub
@@ -2970,7 +2970,7 @@ Module ClientGraphics
         For i = 1 To MAX_INV
             itemnum = GetPlayerInvItemNum(MyIndex, i)
 
-            If itemnum > 0 And itemnum <= MAX_ITEMS Then
+            If itemnum > 0 AndAlso itemnum <= MAX_ITEMS Then
                 itempic = Item(itemnum).Pic
                 If itempic = 0 Then GoTo NextLoop
 
@@ -2992,7 +2992,7 @@ Module ClientGraphics
                     Next
                 End If
 
-                If itempic > 0 And itempic <= NumItems Then
+                If itempic > 0 AndAlso itempic <= NumItems Then
                     If ItemsGFXInfo(itempic).Width <= 64 Then ' more than 1 frame is handled by anim sub
 
                         With rec
@@ -3022,7 +3022,7 @@ Module ClientGraphics
                             ' Draw currency but with k, m, b etc. using a convertion function
                             If CLng(Amount) < 1000000 Then
                                 colour = SFML.Graphics.Color.White
-                            ElseIf CLng(Amount) > 1000000 And CLng(Amount) < 10000000 Then
+                            ElseIf CLng(Amount) > 1000000 AndAlso CLng(Amount) < 10000000 Then
                                 colour = SFML.Graphics.Color.Yellow
                             ElseIf CLng(Amount) > 10000000 Then
                                 colour = SFML.Graphics.Color.Green
@@ -3061,7 +3061,7 @@ NextLoop:
                 If MapItem(i).Num > 0 Then
                     itempic = Item(MapItem(i).Num).Pic
 
-                    If itempic < 1 Or itempic > NumItems Then Exit Sub
+                    If itempic < 1 OrElse itempic > NumItems Then Exit Sub
                     MaxFrames = (ItemsGFXInfo(itempic).Width / 2) / 32 ' Work out how many frames there are. /2 because of inventory icons as well as ingame
 
                     If MapItem(i).Frame < MaxFrames - 1 Then
@@ -3076,9 +3076,9 @@ NextLoop:
         For i = 1 To MAX_INV
             itemnum = GetPlayerInvItemNum(MyIndex, i)
 
-            If itemnum > 0 And itemnum <= MAX_ITEMS Then
+            If itemnum > 0 AndAlso itemnum <= MAX_ITEMS Then
                 itempic = Item(itemnum).Pic
-                If itempic > 0 And itempic <= NumItems Then
+                If itempic > 0 AndAlso itempic <= NumItems Then
                     If ItemsGFXInfo(itempic).Width > 64 Then
 
                         MaxFrames = (ItemsGFXInfo(itempic).Width / 2) / 32 ' Work out how many frames there are. /2 because of inventory icons as well as ingame
@@ -3138,7 +3138,7 @@ NextLoop:
 
         skillnum = DragSkillSlotNum
 
-        If skillnum > 0 And skillnum <= MAX_SKILLS Then
+        If skillnum > 0 AndAlso skillnum <= MAX_SKILLS Then
 
             skillpic = Skill(skillnum).Icon
             If skillpic = 0 Then Exit Sub
@@ -3169,7 +3169,7 @@ NextLoop:
         Dim rec As Rectangle, rec_pos As Rectangle
         Dim colour As SFML.Graphics.Color
 
-        If Not InGame Or pnlShopVisible = False Then Exit Sub
+        If Not InGame OrElse pnlShopVisible = False Then Exit Sub
 
         'first render panel
         RenderSprite(ShopPanelSprite, GameWindow, ShopWindowX, ShopWindowY, 0, 0, ShopPanelGFXInfo.Width, ShopPanelGFXInfo.Height)
@@ -3194,24 +3194,24 @@ NextLoop:
         DrawText(ShopWindowX + 10, ShopWindowY + 25, "to the shop!", SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 15)
 
         'render buy button
-        If CurMouseX > ShopWindowX + ShopButtonBuyX And CurMouseX < ShopWindowX + ShopButtonBuyX + ButtonGFXInfo.Width And
-             CurMouseY > ShopWindowY + ShopButtonBuyY And CurMouseY < ShopWindowY + ShopButtonBuyY + ButtonGFXInfo.Height Then
+        If CurMouseX > ShopWindowX + ShopButtonBuyX AndAlso CurMouseX < ShopWindowX + ShopButtonBuyX + ButtonGFXInfo.Width And
+             CurMouseY > ShopWindowY + ShopButtonBuyY AndAlso CurMouseY < ShopWindowY + ShopButtonBuyY + ButtonGFXInfo.Height Then
             DrawButton("Buy Item", ShopWindowX + ShopButtonBuyX, ShopWindowY + ShopButtonBuyY, 1)
         Else
             DrawButton("Buy Item", ShopWindowX + ShopButtonBuyX, ShopWindowY + ShopButtonBuyY, 0)
         End If
 
         'render sell button
-        If CurMouseX > ShopWindowX + ShopButtonSellX And CurMouseX < ShopWindowX + ShopButtonSellX + ButtonGFXInfo.Width And
-             CurMouseY > ShopWindowY + ShopButtonSellY And CurMouseY < ShopWindowY + ShopButtonSellY + ButtonGFXInfo.Height Then
+        If CurMouseX > ShopWindowX + ShopButtonSellX AndAlso CurMouseX < ShopWindowX + ShopButtonSellX + ButtonGFXInfo.Width And
+             CurMouseY > ShopWindowY + ShopButtonSellY AndAlso CurMouseY < ShopWindowY + ShopButtonSellY + ButtonGFXInfo.Height Then
             DrawButton("Sell Item", ShopWindowX + ShopButtonSellX, ShopWindowY + ShopButtonSellY, 1)
         Else
             DrawButton("Sell Item", ShopWindowX + ShopButtonSellX, ShopWindowY + ShopButtonSellY, 0)
         End If
 
         'render close button
-        If CurMouseX > ShopWindowX + ShopButtonCloseX And CurMouseX < ShopWindowX + ShopButtonCloseX + ButtonGFXInfo.Width And
-             CurMouseY > ShopWindowY + ShopButtonCloseY And CurMouseY < ShopWindowY + ShopButtonCloseY + ButtonGFXInfo.Height Then
+        If CurMouseX > ShopWindowX + ShopButtonCloseX AndAlso CurMouseX < ShopWindowX + ShopButtonCloseX + ButtonGFXInfo.Width And
+             CurMouseY > ShopWindowY + ShopButtonCloseY AndAlso CurMouseY < ShopWindowY + ShopButtonCloseY + ButtonGFXInfo.Height Then
             DrawButton("Close Shop", ShopWindowX + ShopButtonCloseX, ShopWindowY + ShopButtonCloseY, 1)
         Else
             DrawButton("Close Shop", ShopWindowX + ShopButtonCloseX, ShopWindowY + ShopButtonCloseY, 0)
@@ -3219,9 +3219,9 @@ NextLoop:
 
         For i = 1 To MAX_TRADES
             itemnum = Shop(InShop).TradeItem(i).Item
-            If itemnum > 0 And itemnum <= MAX_ITEMS Then
+            If itemnum > 0 AndAlso itemnum <= MAX_ITEMS Then
                 itempic = Item(itemnum).Pic
-                If itempic > 0 And itempic <= NumItems Then
+                If itempic > 0 AndAlso itempic <= NumItems Then
 
                     If ItemsGFXInfo(itempic).IsLoaded = False Then
                         LoadTexture(itempic, 4)
@@ -3257,7 +3257,7 @@ NextLoop:
                         ' Draw currency but with k, m, b etc. using a convertion function
                         If CLng(Amount) < 1000000 Then
                             colour = SFML.Graphics.Color.White
-                        ElseIf CLng(Amount) > 1000000 And CLng(Amount) < 10000000 Then
+                        ElseIf CLng(Amount) > 1000000 AndAlso CLng(Amount) < 10000000 Then
                             colour = SFML.Graphics.Color.Yellow
                         ElseIf CLng(Amount) > 10000000 Then
                             colour = SFML.Graphics.Color.Green
@@ -3288,7 +3288,7 @@ NextLoop:
 
         For i = 1 To MAX_BANK
             itemnum = GetBankItemNum(i)
-            If itemnum > 0 And itemnum <= MAX_ITEMS Then
+            If itemnum > 0 AndAlso itemnum <= MAX_ITEMS Then
 
                 Sprite = Item(itemnum).Pic
 
@@ -3327,7 +3327,7 @@ NextLoop:
                     ' Draw currency but with k, m, b etc. using a convertion function
                     If CLng(Amount) < 1000000 Then
                         colour = SFML.Graphics.Color.White
-                    ElseIf CLng(Amount) > 1000000 And CLng(Amount) < 10000000 Then
+                    ElseIf CLng(Amount) > 1000000 AndAlso CLng(Amount) < 10000000 Then
                         colour = SFML.Graphics.Color.Yellow
                     ElseIf CLng(Amount) > 10000000 Then
                         colour = SFML.Graphics.Color.Green
@@ -3349,7 +3349,7 @@ NextLoop:
         itemnum = GetBankItemNum(DragBankSlotNum)
         Sprite = Item(GetBankItemNum(DragBankSlotNum)).Pic
 
-        If itemnum > 0 And itemnum <= MAX_ITEMS Then
+        If itemnum > 0 AndAlso itemnum <= MAX_ITEMS Then
 
             If ItemsGFXInfo(Sprite).IsLoaded = False Then
                 LoadTexture(Sprite, 4)
@@ -3395,10 +3395,10 @@ NextLoop:
             ' blt your own offer
             itemnum = GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).Num)
 
-            If itemnum > 0 And itemnum <= MAX_ITEMS Then
+            If itemnum > 0 AndAlso itemnum <= MAX_ITEMS Then
                 itempic = Item(itemnum).Pic
 
-                If itempic > 0 And itempic <= NumItems Then
+                If itempic > 0 AndAlso itempic <= NumItems Then
 
                     If ItemsGFXInfo(itempic).IsLoaded = False Then
                         LoadTexture(itempic, 4)
@@ -3433,7 +3433,7 @@ NextLoop:
                         ' Draw currency but with k, m, b etc. using a convertion function
                         If Amount < 1000000 Then
                             colour = SFML.Graphics.Color.White
-                        ElseIf Amount > 1000000 And CLng(Amount) < 10000000 Then
+                        ElseIf Amount > 1000000 AndAlso CLng(Amount) < 10000000 Then
                             colour = SFML.Graphics.Color.Yellow
                         ElseIf Amount > 10000000 Then
                             colour = SFML.Graphics.Color.Green
@@ -3452,10 +3452,10 @@ NextLoop:
             ' blt their offer
             itemnum = TradeTheirOffer(i).Num
             'itemnum = GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).Num)
-            If itemnum > 0 And itemnum <= MAX_ITEMS Then
+            If itemnum > 0 AndAlso itemnum <= MAX_ITEMS Then
                 itempic = Item(itemnum).Pic
 
-                If itempic > 0 And itempic <= NumItems Then
+                If itempic > 0 AndAlso itempic <= NumItems Then
                     If ItemsGFXInfo(itempic).IsLoaded = False Then
                         LoadTexture(itempic, 4)
                     End If
@@ -3489,7 +3489,7 @@ NextLoop:
                         ' Draw currency but with k, m, b etc. using a convertion function
                         If Amount < 1000000 Then
                             colour = SFML.Graphics.Color.White
-                        ElseIf Amount > 1000000 And CLng(Amount) < 10000000 Then
+                        ElseIf Amount > 1000000 AndAlso CLng(Amount) < 10000000 Then
                             colour = SFML.Graphics.Color.Yellow
                         ElseIf Amount > 10000000 Then
                             colour = SFML.Graphics.Color.Green
@@ -3523,10 +3523,10 @@ NextLoop:
         For i = 1 To MAX_PLAYER_SKILLS
             skillnum = PlayerSkills(i)
 
-            If skillnum > 0 And skillnum <= MAX_SKILLS Then
+            If skillnum > 0 AndAlso skillnum <= MAX_SKILLS Then
                 skillicon = Skill(skillnum).Icon
 
-                If skillicon > 0 And skillicon <= NumSkillIcons Then
+                If skillicon > 0 AndAlso skillicon <= NumSkillIcons Then
 
                     If SkillIconsGFXInfo(skillicon).IsLoaded = False Then
                         LoadTexture(skillicon, 9)
@@ -3643,7 +3643,7 @@ NextLoop:
             y = y + 15
         Next
 
-        If ShiftDown Or VbKeyShift = True Then
+        If ShiftDown OrElse VbKeyShift = True Then
             'info
             DrawText(Xoffset - DescriptionGFXInfo.Width + 10, Yoffset + 56, ItemDescInfo, SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
 
@@ -3838,7 +3838,7 @@ NextLoop:
         Dim itemnum As Integer
         itemnum = Item(frmEditor_MapEditor.scrlMapItem.Value).Pic
 
-        If itemnum < 1 Or itemnum > NumItems Then
+        If itemnum < 1 OrElse itemnum > NumItems Then
             frmEditor_MapEditor.picMapItem.BackgroundImage = Nothing
             Exit Sub
         End If
@@ -3854,7 +3854,7 @@ NextLoop:
 
         itemnum = Item(frmEditor_MapEditor.scrlMapKey.Value).Pic
 
-        If itemnum < 1 Or itemnum > NumItems Then
+        If itemnum < 1 OrElse itemnum > NumItems Then
             frmEditor_MapEditor.picMapKey.BackgroundImage = Nothing
             Exit Sub
         End If
@@ -3877,7 +3877,7 @@ NextLoop:
         tileset = frmEditor_MapEditor.cmbTileSets.SelectedIndex + 1
 
         ' exit out if doesn't exist
-        If tileset <= 0 Or tileset > NumTileSets Then Exit Sub
+        If tileset <= 0 OrElse tileset > NumTileSets Then Exit Sub
 
         Dim rec2 As New RectangleShape With {
             .OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Red),

@@ -143,13 +143,7 @@ Module ClientGeneral
     End Sub
 
     Public Function IsLoginLegal(ByVal Username As String, ByVal Password As String) As Boolean
-
-        If Len(Trim$(Username)) >= 3 AndAlso Len(Trim$(Password)) >= 3 Then
-            IsLoginLegal = True
-        Else
-            IsLoginLegal = False
-        End If
-
+        Return Len(Trim$(Username)) >= 3 AndAlso Len(Trim$(Password)) >= 3
     End Function
 
     Public Function IsStringLegal(ByVal sInput As String) As Boolean
@@ -158,7 +152,7 @@ Module ClientGeneral
         ' Prevent high ascii chars
         For i = 1 To Len(sInput)
 
-            If (Asc(Mid$(sInput, i, 1))) < 32 Or Asc(Mid$(sInput, i, 1)) > 126 Then
+            If (Asc(Mid$(sInput, i, 1))) < 32 OrElse Asc(Mid$(sInput, i, 1)) > 126 Then
                 MsgBox(Strings.Get("mainmenu", "stringlegal"), vbOKOnly, GAME_NAME)
                 IsStringLegal = False
                 Exit Function
@@ -249,7 +243,7 @@ Module ClientGeneral
         SetStatus(Strings.Get("mainmenu", "connectserver", i))
 
         ' Wait until connected or a few seconds have passed and report the server being down
-        Do While (Not Socket.IsConnected()) And (GetTickCount() <= until)
+        Do While (Not Socket.IsConnected()) AndAlso (GetTickCount() <= until)
             DoEvents()
             Thread.Sleep(10)
         Loop

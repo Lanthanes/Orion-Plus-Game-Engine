@@ -428,7 +428,7 @@
 
             DialogType = DIALOGUE_TYPE_QUEST
 
-            If QuestNumForStart > 0 And QuestNumForStart <= MAX_QUESTS Then
+            If QuestNumForStart > 0 AndAlso QuestNumForStart <= MAX_QUESTS Then
                 QuestAcceptTag = QuestNumForStart
             End If
 
@@ -443,11 +443,11 @@
         End If
 
         If UpdateDialog = True Then
-            If DialogType = DIALOGUE_TYPE_BUYHOME Or DialogType = DIALOGUE_TYPE_VISIT Then 'house offer & visit
+            If DialogType = DIALOGUE_TYPE_BUYHOME OrElse DialogType = DIALOGUE_TYPE_VISIT Then 'house offer & visit
                 DialogButton1Text = "Accept"
                 DialogButton2Text = "Decline"
                 DialogPanelVisible = True
-            ElseIf DialogType = DIALOGUE_TYPE_PARTY Or DialogType = DIALOGUE_TYPE_TRADE Then
+            ElseIf DialogType = DIALOGUE_TYPE_PARTY OrElse DialogType = DIALOGUE_TYPE_TRADE Then
                 DialogButton1Text = "Accept"
                 DialogButton2Text = "Decline"
                 DialogPanelVisible = True

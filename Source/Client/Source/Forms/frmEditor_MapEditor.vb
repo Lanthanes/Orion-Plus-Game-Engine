@@ -130,7 +130,7 @@ Public Class frmEditor_MapEditor
     End Sub
 
     Private Sub ScrlMapItem_Scroll(ByVal sender As Object, ByVal e As EventArgs) Handles scrlMapItem.ValueChanged
-        If Item(scrlMapItem.Value).Type = ItemType.Currency Or Item(scrlMapItem.Value).Stackable = 1 Then
+        If Item(scrlMapItem.Value).Type = ItemType.Currency OrElse Item(scrlMapItem.Value).Stackable = 1 Then
             scrlMapItemValue.Enabled = True
         Else
             scrlMapItemValue.Value = 1
@@ -757,7 +757,7 @@ Public Class frmEditor_MapEditor
         If Not IsInBounds() Then Exit Sub
         If Button = MouseButtons.Left Then
             If tabpages.SelectedTab Is tpTiles Then
-                If EditorTileWidth = 1 And EditorTileHeight = 1 Then 'single tile
+                If EditorTileWidth = 1 AndAlso EditorTileHeight = 1 Then 'single tile
 
                     MapEditorSetTile(CurX, CurY, CurLayer, False, cmbAutoTile.SelectedIndex)
                 Else ' multi tile!
@@ -884,8 +884,8 @@ Public Class frmEditor_MapEditor
                 Y = Y - ((Y \ PIC_Y) * PIC_Y)
                 ' see if it hits an arrow
                 For i = 1 To 4
-                    If X >= DirArrowX(i) And X <= DirArrowX(i) + 8 Then
-                        If Y >= DirArrowY(i) And Y <= DirArrowY(i) + 8 Then
+                    If X >= DirArrowX(i) AndAlso X <= DirArrowX(i) + 8 Then
+                        If Y >= DirArrowY(i) AndAlso Y <= DirArrowY(i) + 8 Then
                             ' flip the value.
                             SetDirBlock(Map.Tile(CurX, CurY).DirBlock, (i), Not IsDirBlocked(Map.Tile(CurX, CurY).DirBlock, (i)))
                             Exit Sub
@@ -985,8 +985,8 @@ Public Class frmEditor_MapEditor
             For Y = CurY To CurY + EditorTileHeight - 1
                 x2 = 0 ' re-set x count every y loop
                 For X = CurX To CurX + EditorTileWidth - 1
-                    If X >= 0 And X <= Map.MaxX Then
-                        If Y >= 0 And Y <= Map.MaxY Then
+                    If X >= 0 AndAlso X <= Map.MaxX Then
+                        If Y >= 0 AndAlso Y <= Map.MaxY Then
                             With Map.Tile(X, Y)
                                 .Layer(CurLayer).X = EditorTileX + x2
                                 .Layer(CurLayer).Y = EditorTileY + y2

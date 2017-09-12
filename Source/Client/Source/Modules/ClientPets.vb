@@ -365,8 +365,8 @@ Module ClientPets
 
             ' Check if completed walking over to the next tile
             If Player(Index).Pet.Moving > 0 Then
-                If Player(Index).Pet.Dir = Direction.Right Or Player(Index).Pet.Dir = Direction.Down Then
-                    If (Player(Index).Pet.XOffset >= 0) And (Player(Index).Pet.YOffset >= 0) Then
+                If Player(Index).Pet.Dir = Direction.Right OrElse Player(Index).Pet.Dir = Direction.Down Then
+                    If (Player(Index).Pet.XOffset >= 0) AndAlso (Player(Index).Pet.YOffset >= 0) Then
                         Player(Index).Pet.Moving = 0
                         If Player(Index).Pet.Steps = 1 Then
                             Player(Index).Pet.Steps = 2
@@ -375,7 +375,7 @@ Module ClientPets
                         End If
                     End If
                 Else
-                    If (Player(Index).Pet.XOffset <= 0) And (Player(Index).Pet.YOffset <= 0) Then
+                    If (Player(Index).Pet.XOffset <= 0) AndAlso (Player(Index).Pet.YOffset <= 0) Then
                         Player(Index).Pet.Moving = 0
                         If Player(Index).Pet.Steps = 1 Then
                             Player(Index).Pet.Steps = 2
@@ -413,7 +413,7 @@ Module ClientPets
 
         Sprite = Pet(Player(Index).Pet.Num).Sprite
 
-        If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
+        If Sprite < 1 OrElse Sprite > NumCharacters Then Exit Sub
 
         attackspeed = 1000
 
@@ -518,7 +518,7 @@ Module ClientPets
         Name = Trim$(GetPlayerName(Index)) & "'s " & Trim$(Pet(Player(Index).Pet.Num).Name)
         ' calc pos
         TextX = ConvertMapX(Player(Index).Pet.X * PIC_X) + Player(Index).Pet.XOffset + (PIC_X \ 2) - GetTextWidth(Name) / 2
-        If Pet(Player(Index).Pet.Num).Sprite < 1 Or Pet(Player(Index).Pet.Num).Sprite > NumCharacters Then
+        If Pet(Player(Index).Pet.Num).Sprite < 1 OrElse Pet(Player(Index).Pet.Num).Sprite > NumCharacters Then
             TextY = ConvertMapY(Player(Index).Pet.Y * PIC_Y) + Player(Index).Pet.YOffset - 16
         Else
             ' Determine location for text
@@ -655,8 +655,8 @@ Module ClientPets
                 .Right = .Left + PIC_X
             End With
 
-            If X >= tempRec.Left And X <= tempRec.Right Then
-                If Y >= tempRec.Top And Y <= tempRec.Bottom Then
+            If X >= tempRec.Left AndAlso X <= tempRec.Right Then
+                If Y >= tempRec.Top AndAlso Y <= tempRec.Bottom Then
                     IsPetBarSlot = i
                     Exit Function
                 End If

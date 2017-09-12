@@ -1456,7 +1456,7 @@ Partial Class FrmEditor_Events
         Me.cmbPlayervarCompare.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cmbPlayervarCompare.ForeColor = System.Drawing.Color.Gainsboro
         Me.cmbPlayervarCompare.FormattingEnabled = True
-        Me.cmbPlayervarCompare.Items.AddRange(New Object() {"Equal To", "Great Than Or Equal To", "Less Than or Equal To", "Greater Than", "Less Than", "Does Not Equal"})
+        Me.cmbPlayervarCompare.Items.AddRange(New Object() {"Equal To", "Great Than OrElse Equal To", "Less Than or Equal To", "Greater Than", "Less Than", "Does Not Equal"})
         Me.cmbPlayervarCompare.Location = New System.Drawing.Point(223, 17)
         Me.cmbPlayervarCompare.Name = "cmbPlayervarCompare"
         Me.cmbPlayervarCompare.Size = New System.Drawing.Size(89, 21)
@@ -5248,7 +5248,7 @@ Partial Class FrmEditor_Events
         Me.cmbCondition_LevelCompare.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cmbCondition_LevelCompare.ForeColor = System.Drawing.Color.Gainsboro
         Me.cmbCondition_LevelCompare.FormattingEnabled = True
-        Me.cmbCondition_LevelCompare.Items.AddRange(New Object() {"Equal To", "Great Than Or Equal To", "Less Than or Equal To", "Greater Than", "Less Than", "Does Not Equal"})
+        Me.cmbCondition_LevelCompare.Items.AddRange(New Object() {"Equal To", "Great Than OrElse Equal To", "Less Than or Equal To", "Greater Than", "Less Than", "Does Not Equal"})
         Me.cmbCondition_LevelCompare.Location = New System.Drawing.Point(107, 156)
         Me.cmbCondition_LevelCompare.Name = "cmbCondition_LevelCompare"
         Me.cmbCondition_LevelCompare.Size = New System.Drawing.Size(156, 21)
@@ -5454,7 +5454,7 @@ Partial Class FrmEditor_Events
         Me.cmbCondition_PlayerVarCompare.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cmbCondition_PlayerVarCompare.ForeColor = System.Drawing.Color.Gainsboro
         Me.cmbCondition_PlayerVarCompare.FormattingEnabled = True
-        Me.cmbCondition_PlayerVarCompare.Items.AddRange(New Object() {"Equal To", "Great Than Or Equal To", "Less Than or Equal To", "Greater Than", "Less Than", "Does Not Equal"})
+        Me.cmbCondition_PlayerVarCompare.Items.AddRange(New Object() {"Equal To", "Great Than OrElse Equal To", "Less Than or Equal To", "Greater Than", "Less Than", "Does Not Equal"})
         Me.cmbCondition_PlayerVarCompare.Location = New System.Drawing.Point(236, 21)
         Me.cmbCondition_PlayerVarCompare.Name = "cmbCondition_PlayerVarCompare"
         Me.cmbCondition_PlayerVarCompare.Size = New System.Drawing.Size(88, 21)

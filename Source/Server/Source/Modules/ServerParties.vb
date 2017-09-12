@@ -27,7 +27,7 @@ Module ServerParties
         Buffer.WriteInt32(ServerPackets.SPartyInvite)
 
         Addlog("Sent SMSG: SPartyInvite", PACKET_LOG)
-        TextAdd("Sent SMSG: SPartyInvite")
+        Console.WriteLine("Sent SMSG: SPartyInvite")
 
         Buffer.WriteString(Trim$(Player(Target).Character(TempPlayer(Target).CurChar).Name))
 
@@ -40,7 +40,7 @@ Module ServerParties
         Buffer.WriteInt32(ServerPackets.SPartyUpdate)
 
         Addlog("Sent SMSG: SPartyUpdate", PACKET_LOG)
-        TextAdd("Sent SMSG: SPartyUpdate")
+        Console.WriteLine("Sent SMSG: SPartyUpdate")
 
         Buffer.WriteInt32(1)
         Buffer.WriteInt32(Party(PartyNum).Leader)
@@ -59,7 +59,7 @@ Module ServerParties
         Buffer.WriteInt32(ServerPackets.SPartyUpdate)
 
         Addlog("Sent SMSG: SPartyUpdate To Players", PACKET_LOG)
-        TextAdd("Sent SMSG: SPartyUpdate To Players")
+        Console.WriteLine("Sent SMSG: SPartyUpdate To Players")
 
         ' check if we're in a party
         partyNum = TempPlayer(Index).InParty
@@ -88,7 +88,7 @@ Module ServerParties
         Buffer.WriteInt32(Index)
 
         Addlog("Sent SMSG: SPartyVitals", PACKET_LOG)
-        TextAdd("Sent SMSG: SPartyVitals")
+        Console.WriteLine("Sent SMSG: SPartyVitals")
 
         For i = 1 To Vitals.Count - 1
             Buffer.WriteInt32(GetPlayerMaxVital(Index, i))
@@ -106,7 +106,7 @@ Module ServerParties
         Dim Buffer As New ByteStream(data)
 
         Addlog("Recieved CMSG: CRequestParty", PACKET_LOG)
-        TextAdd("Recieved CMSG: CRequestParty")
+        Console.WriteLine("Recieved CMSG: CRequestParty")
 
         n = FindPlayer(Buffer.ReadString)
         Buffer.Dispose()
@@ -117,7 +117,7 @@ Module ServerParties
         If TempPlayer(Index).TargetType <> TargetType.Player Then Exit Sub
 
         ' make sure they're connected and on the same map
-        If Not Socket.IsConnected(TempPlayer(Index).Target) Or Not IsPlaying(TempPlayer(Index).Target) Then Exit Sub
+        If Not Socket.IsConnected(TempPlayer(Index).Target) OrElse Not IsPlaying(TempPlayer(Index).Target) Then Exit Sub
         If GetPlayerMap(TempPlayer(Index).Target) <> GetPlayerMap(Index) Then Exit Sub
 
         ' init the request
@@ -126,21 +126,21 @@ Module ServerParties
 
     Public Sub Packet_AcceptParty(ByVal Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CAcceptParty", PACKET_LOG)
-        TextAdd("Recieved CMSG: CAcceptParty")
+        Console.WriteLine("Recieved CMSG: CAcceptParty")
 
         Party_InviteAccept(TempPlayer(Index).PartyInvite, Index)
     End Sub
 
     Public Sub Packet_DeclineParty(ByVal Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CDeclineParty", PACKET_LOG)
-        TextAdd("Recieved CMSG: CDeclineParty")
+        Console.WriteLine("Recieved CMSG: CDeclineParty")
 
         Party_InviteDecline(TempPlayer(Index).PartyInvite, Index)
     End Sub
 
     Public Sub Packet_LeaveParty(ByVal Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CLeaveParty", PACKET_LOG)
-        TextAdd("Recieved CMSG: CLeaveParty")
+        Console.WriteLine("Recieved CMSG: CLeaveParty")
 
         Party_PlayerLeave(Index)
     End Sub
@@ -148,7 +148,7 @@ Module ServerParties
     Public Sub Packet_PartyChatMsg(ByVal Index As Integer, ByRef data() As Byte)
         Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CPartyChatMsg", PACKET_LOG)
-        TextAdd("Recieved CMSG: CPartyChatMsg")
+        Console.WriteLine("Recieved CMSG: CPartyChatMsg")
 
         PartyMsg(Index, Buffer.ReadString)
 
@@ -180,7 +180,7 @@ Module ServerParties
             ' exist?
             If Party(PartyNum).Member(i) > 0 Then
                 ' make sure they're logged on
-                If Socket.IsConnected(Party(PartyNum).Member(i)) And IsPlaying(Party(PartyNum).Member(i)) Then
+                If Socket.IsConnected(Party(PartyNum).Member(i)) AndAlso IsPlaying(Party(PartyNum).Member(i)) Then
                     PlayerMsg(Party(PartyNum).Member(i), Msg, ColorType.BrightBlue)
                 End If
             End If
@@ -216,7 +216,7 @@ Module ServerParties
                 If Party(PartyNum).Leader = Index Then
                     ' set next person down as leader
                     For i = 1 To MAX_PARTY_MEMBERS
-                        If Party(PartyNum).Member(i) > 0 And Party(PartyNum).Member(i) <> Index Then
+                        If Party(PartyNum).Member(i) > 0 AndAlso Party(PartyNum).Member(i) <> Index Then
                             Party(PartyNum).Leader = Party(PartyNum).Member(i)
                             PartyMsg(PartyNum, String.Format("{0} is now the party leader.", GetPlayerName(i)))
                             Exit For
@@ -254,10 +254,10 @@ Module ServerParties
         Dim PartyNum As Integer, i As Integer
 
         ' check if the person is a valid target
-        If Not Socket.IsConnected(Target) Or Not IsPlaying(Target) Then Exit Sub
+        If Not Socket.IsConnected(Target) OrElse Not IsPlaying(Target) Then Exit Sub
 
         ' make sure they're not busy
-        If TempPlayer(Target).PartyInvite > 0 Or TempPlayer(Target).TradeRequest > 0 Then
+        If TempPlayer(Target).PartyInvite > 0 OrElse TempPlayer(Target).TradeRequest > 0 Then
             ' they've already got a request for trade/party
             PlayerMsg(Index, "This player is busy.", ColorType.BrightRed)
             ' exit out early
@@ -427,7 +427,7 @@ Module ServerParties
         For i = 1 To MAX_PARTY_MEMBERS
             tmpIndex = Party(PartyNum).Member(i)
             If tmpIndex > 0 Then
-                If Socket.IsConnected(tmpIndex) And IsPlaying(tmpIndex) Then
+                If Socket.IsConnected(tmpIndex) AndAlso IsPlaying(tmpIndex) Then
                     If GetPlayerMap(tmpIndex) <> MapNum Then
                         LoseMemberCount = LoseMemberCount + 1
                     End If
@@ -445,7 +445,7 @@ Module ServerParties
             ' existing member?
             If tmpIndex > 0 Then
                 ' playing?
-                If Socket.IsConnected(tmpIndex) And IsPlaying(tmpIndex) Then
+                If Socket.IsConnected(tmpIndex) AndAlso IsPlaying(tmpIndex) Then
                     If GetPlayerMap(tmpIndex) = MapNum Then
                         ' give them their share
                         GivePlayerEXP(tmpIndex, expShare)
@@ -477,12 +477,12 @@ Module ServerParties
     End Sub
 
     Public Function IsPlayerInParty(ByVal Index As Integer) As Boolean
-        If Index < 0 Or Index > MAX_PLAYERS Or Not TempPlayer(Index).InGame Then Exit Function
+        If Index < 0 OrElse Index > MAX_PLAYERS OrElse Not TempPlayer(Index).InGame Then Exit Function
         If TempPlayer(Index).InParty > 0 Then IsPlayerInParty = True
     End Function
 
     Public Function GetPlayerParty(ByVal Index As Integer) As Integer
-        If Index < 0 Or Index > MAX_PLAYERS Or Not TempPlayer(Index).InGame Then Exit Function
+        If Index < 0 OrElse Index > MAX_PLAYERS OrElse Not TempPlayer(Index).InGame Then Exit Function
         GetPlayerParty = TempPlayer(Index).InParty
     End Function
 

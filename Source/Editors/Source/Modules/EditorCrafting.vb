@@ -165,7 +165,7 @@ Public Module EditorCrafting
         For i = 1 To MAX_INGREDIENT
             With Recipe(EditorIndex).Ingredients(i)
                 ' if none, show as none
-                If .ItemNum <= 0 And .Value = 0 Then
+                If .ItemNum <= 0 AndAlso .Value = 0 Then
                     frmEditor_Recipe.lstIngredients.Items.Add("Empty")
                 Else
                     frmEditor_Recipe.lstIngredients.Items.Add(Trim$(Item(.ItemNum).Name) & " X " & .Value)

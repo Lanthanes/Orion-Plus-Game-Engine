@@ -20,14 +20,14 @@
     Private Sub NudBaseMap_ValueChanged(sender As Object, e As EventArgs) Handles nudBaseMap.Click
         If EditorIndex <= 0 Then Exit Sub
 
-        If nudBaseMap.Value < 1 Or nudBaseMap.Value > MAX_MAPS Then Exit Sub
+        If nudBaseMap.Value < 1 OrElse nudBaseMap.Value > MAX_MAPS Then Exit Sub
         House(EditorIndex).BaseMap = nudBaseMap.Value
     End Sub
 
     Private Sub NudX_ValueChanged(sender As Object, e As EventArgs) Handles nudX.Click
         If EditorIndex <= 0 Then Exit Sub
 
-        If nudX.Value < 0 Or nudX.Value > 255 Then Exit Sub
+        If nudX.Value < 0 OrElse nudX.Value > 255 Then Exit Sub
         House(EditorIndex).X = nudX.Value
 
     End Sub
@@ -35,7 +35,7 @@
     Private Sub NudY_ValueChanged(sender As Object, e As EventArgs) Handles nudY.Click
         If EditorIndex <= 0 Then Exit Sub
 
-        If nudY.Value < 0 Or nudY.Value > 255 Then Exit Sub
+        If nudY.Value < 0 OrElse nudY.Value > 255 Then Exit Sub
         House(EditorIndex).Y = nudY.Value
 
     End Sub

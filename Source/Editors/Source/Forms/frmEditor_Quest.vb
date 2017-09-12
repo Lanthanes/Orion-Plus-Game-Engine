@@ -24,7 +24,7 @@
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
         Dim tmpIndex As Integer
 
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         tmpIndex = lstIndex.SelectedIndex
         Quest(EditorIndex).Name = Trim$(txtName.Text)
@@ -34,7 +34,7 @@
     End Sub
 
     Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         If Len(Trim$(txtName.Text)) = 0 Then
             MsgBox("Name required.")
@@ -48,49 +48,49 @@
     End Sub
 
     Private Sub TxtStartText_TextChanged(sender As Object, e As EventArgs) Handles txtStartText.TextChanged
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         Quest(EditorIndex).Chat(1) = Trim$(txtStartText.Text)
     End Sub
 
     Private Sub TxtProgressText_TextChanged(sender As Object, e As EventArgs) Handles txtProgressText.TextChanged
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         Quest(EditorIndex).Chat(2) = Trim$(txtProgressText.Text)
     End Sub
 
     Private Sub TxtEndText_TextChanged(sender As Object, e As EventArgs) Handles txtEndText.TextChanged
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         Quest(EditorIndex).Chat(3) = Trim$(txtEndText.Text)
     End Sub
 
     Private Sub CmbStartItem_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbStartItem.SelectedIndexChanged
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         Quest(EditorIndex).QuestGiveItem = cmbStartItem.SelectedIndex
     End Sub
 
     Private Sub CmbEndItem_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbEndItem.SelectedIndexChanged
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         Quest(EditorIndex).QuestRemoveItem = cmbEndItem.SelectedIndex
     End Sub
 
     Private Sub NudGiveAmount_ValueChanged(sender As Object, e As EventArgs) Handles nudGiveAmount.ValueChanged
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         Quest(EditorIndex).QuestGiveItemValue = cmbEndItem.SelectedIndex
     End Sub
 
     Private Sub NudTakeAmount_ValueChanged(sender As Object, e As EventArgs) Handles nudTakeAmount.ValueChanged
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         Quest(EditorIndex).QuestRemoveItemValue = nudTakeAmount.Value
     End Sub
 
     Private Sub ChkRepeat_CheckedChanged(sender As Object, e As EventArgs) Handles chkRepeat.CheckedChanged
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         If chkRepeat.Checked = True Then
             Quest(EditorIndex).Repeat = 1
@@ -100,7 +100,7 @@
     End Sub
 
     Private Sub ChkQuestCancel_CheckedChanged(sender As Object, e As EventArgs) Handles chkQuestCancel.CheckedChanged
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         If chkQuestCancel.Checked = True Then
             Quest(EditorIndex).Cancelable = 1
@@ -112,13 +112,13 @@
 #Region "Rewards"
 
     Private Sub NudExpReward_ValueChanged(sender As Object, e As EventArgs) Handles nudExpReward.ValueChanged
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         Quest(EditorIndex).RewardExp = nudExpReward.Value
     End Sub
 
     Private Sub BtnAddReward_Click(sender As Object, e As EventArgs) Handles btnAddReward.Click
-        If EditorIndex <= 0 Or EditorIndex > MAX_QUESTS Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
         Quest(EditorIndex).RewardCount = Quest(EditorIndex).RewardCount + 1
 

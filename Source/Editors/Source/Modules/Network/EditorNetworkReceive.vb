@@ -181,7 +181,7 @@ Module EditorNetworkReceive
     Private Sub Packet_MapData(ByRef Data() As Byte)
         Dim X As Integer, Y As Integer, i As Integer
         Dim MusicFile As String
-        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data, 4, Data.Length))
+        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
 
         MapData = False
 
@@ -739,7 +739,7 @@ Module EditorNetworkReceive
 
     Private Sub Packet_GameData(ByRef Data() As Byte)
         Dim n As Integer, i As Integer, z As Integer, x As Integer, a As Integer, b As Integer
-        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data, 4, Data.Length))
+        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
 
         '\\\Read Class Data\\\
 

@@ -184,7 +184,7 @@ Module ServerAutoMap
     ''' <param name="Prefab"></param>
     ''' <returns></returns>
     Function HaveDetails(ByVal Prefab As TilePrefab) As Boolean
-        HaveDetails = Not (Prefab = TilePrefab.Water Or Prefab = TilePrefab.River)
+        HaveDetails = Not (Prefab = TilePrefab.Water OrElse Prefab = TilePrefab.River)
     End Function
 
     Sub AddTile(ByVal Prefab As TilePrefab, ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer)
@@ -200,13 +200,13 @@ Module ServerAutoMap
         ReDim Preserve TileDest.Layer(0 To MapLayer.Count - 1)
 
         For i = 1 To MapLayer.Count - 1
-            If Tile(Prefab).Layer(i).Tileset <> 0 Or CleanNextTiles Then
+            If Tile(Prefab).Layer(i).Tileset <> 0 OrElse CleanNextTiles Then
                 TileDest.Layer(i) = Tile(Prefab).Layer(i)
                 If Not HaveDetails(Prefab) Then CleanNextTiles = True
             End If
         Next i
 
-        If Prefab = TilePrefab.Grass Or Prefab = TilePrefab.Sand Then
+        If Prefab = TilePrefab.Grass OrElse Prefab = TilePrefab.Sand Then
             If DetailsChecked = True Then
                 If Random(1, DetailFreq) = 1 Then
                     Dim DetailNum As Integer
@@ -234,13 +234,13 @@ Module ServerAutoMap
     End Sub
 
     Function CanPlaceResource(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer) As Boolean
-        If MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Grass Or MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Overgrass Or (MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Mountain And Not Map(MapNum).Tile(X, Y).Type = TileType.Blocked) Then
+        If MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Grass OrElse MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Overgrass OrElse (MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Mountain AndAlso Not Map(MapNum).Tile(X, Y).Type = TileType.Blocked) Then
             CanPlaceResource = True
         End If
     End Function
 
     Function CanPlaceOvergrass(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer) As Boolean
-        If MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Grass Or (MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Mountain And Not Map(MapNum).Tile(X, Y).Type = TileType.Blocked) Then
+        If MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Grass OrElse (MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Mountain AndAlso Not Map(MapNum).Tile(X, Y).Type = TileType.Blocked) Then
             CanPlaceOvergrass = True
         End If
     End Function
@@ -250,7 +250,7 @@ Module ServerAutoMap
 
         For x = 1 To Map(MapNum).MaxX - 1
             For y = 1 To Map(MapNum).MaxY - 1
-                If CanPlaceResource(MapNum, x, y) And CanPlaceResource(MapNum, x - 1, y) And CanPlaceResource(MapNum, x + 1, y) And CanPlaceResource(MapNum, x, y - 1) And CanPlaceResource(MapNum, x, y + 1) Then
+                If CanPlaceResource(MapNum, x, y) AndAlso CanPlaceResource(MapNum, x - 1, y) AndAlso CanPlaceResource(MapNum, x + 1, y) AndAlso CanPlaceResource(MapNum, x, y - 1) AndAlso CanPlaceResource(MapNum, x, y + 1) Then
                     Dim ResourceNum As Integer
 
                     If Random(1, ResourceFreq) = 1 Then
@@ -268,7 +268,7 @@ Module ServerAutoMap
         Dim TotalMaps As Integer
         Dim tick As Integer
 
-        TextAdd("Working...")
+        Console.WriteLine("Working...")
         DoEvents()
         tick = GetTimeMs()
         TotalMaps = Size * Size
@@ -279,7 +279,7 @@ Module ServerAutoMap
         Next i
 
         tick = GetTimeMs() - tick
-        TextAdd("Done and cached resources in " & CDbl(tick / 1000) & "s")
+        Console.WriteLine("Done and cached resources in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
 
@@ -288,7 +288,7 @@ Module ServerAutoMap
         Dim TotalMaps As Integer
         Dim tick As Integer
 
-        TextAdd("Working...")
+        Console.WriteLine("Working...")
         DoEvents()
         tick = GetTimeMs()
         TotalMaps = Size * Size
@@ -298,7 +298,7 @@ Module ServerAutoMap
         Next i
 
         tick = GetTimeMs() - tick
-        TextAdd("Done overgrasses in " & CDbl(tick / 1000) & "s")
+        Console.WriteLine("Done overgrasses in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
 
@@ -337,7 +337,7 @@ Module ServerAutoMap
                     y = StartY
                     TotalWalk = 1
                     NextDir = 0
-                    Do While NextDir <> 5 And TotalWalk < 15
+                    Do While NextDir <> 5 AndAlso TotalWalk < 15
                         If FoundBorder Then
                             NextDir = Random(0, 5)
                         Else
@@ -350,8 +350,8 @@ Module ServerAutoMap
                             Case Direction.Right : x = x + 1
                         End Select
                         If NextDir < 5 Then
-                            If x > 0 And x < .MaxX Then
-                                If y > 0 And y < .MaxY Then
+                            If x > 0 AndAlso x < .MaxX Then
+                                If y > 0 AndAlso y < .MaxY Then
                                     If CanPlaceOvergrass(MapNum, x, y) Then
                                         BrushSize = Random(0, 2)
                                         PaintOvergrass(MapNum, x, y, BrushSize, BrushSize)
@@ -385,8 +385,8 @@ Module ServerAutoMap
 
         For pX = X - BrushSizeX To X + BrushSizeX
             For pY = Y - BrushSizeY To Y + BrushSizeY
-                If pX >= 0 And pX <= Map(MapNum).MaxX Then
-                    If pY >= 0 And pY <= Map(MapNum).MaxY Then
+                If pX >= 0 AndAlso pX <= Map(MapNum).MaxX Then
+                    If pY >= 0 AndAlso pY <= Map(MapNum).MaxY Then
                         If MapOrientation(MapNum).Tile(pX, pY) <> TilePrefab.Overgrass Then
                             If CanPlaceOvergrass(MapNum, pX, pY) Then
                                 If Random(1, 100) >= 50 Then
@@ -404,8 +404,8 @@ Module ServerAutoMap
         Dim pX As Integer, pY As Integer
         For pX = X - BrushSizeX To X + BrushSizeX
             For pY = Y - BrushSizeY To Y + BrushSizeY
-                If pX >= 0 And pX <= Map(MapNum).MaxX Then
-                    If pY >= 0 And pY <= Map(MapNum).MaxY Then
+                If pX >= 0 AndAlso pX <= Map(MapNum).MaxX Then
+                    If pY >= 0 AndAlso pY <= Map(MapNum).MaxY Then
                         If MapOrientation(MapNum).Tile(pX, pY) <> Prefab Then
                             Dim CanPaint As Boolean
                             CanPaint = True
@@ -432,14 +432,14 @@ Module ServerAutoMap
         Dim pX As Integer, pY As Integer
         If RiverDir = Direction.Down Then
             For pX = X - RiverWidth To X + RiverWidth
-                If pX > 0 And pX < Map(MapNum).MaxX Then
+                If pX > 0 AndAlso pX < Map(MapNum).MaxX Then
                     AddTile(TilePrefab.River, MapNum, pX, Y)
                 End If
             Next pX
         End If
-        If RiverDir = Direction.Left Or RiverDir = Direction.Right Then
+        If RiverDir = Direction.Left OrElse RiverDir = Direction.Right Then
             For pY = Y - RiverWidth To Y + RiverWidth
-                If pY > 0 And pY < Map(MapNum).MaxY Then
+                If pY > 0 AndAlso pY < Map(MapNum).MaxY Then
                     AddTile(TilePrefab.River, MapNum, X, pY)
                 End If
             Next pY
@@ -461,7 +461,7 @@ Module ServerAutoMap
         Dim RiverSteps As Integer
         Dim tick As Integer
 
-        TextAdd("Working...")
+        Console.WriteLine("Working...")
         DoEvents()
         tick = GetTimeMs()
         RiverBorder = 4
@@ -575,20 +575,20 @@ SelectMap:
         Loop
 
         tick = GetTimeMs() - tick
-        TextAdd("Done " & TotalRivers & " rivers in " & CDbl(tick / 1000) & "s")
+        Console.WriteLine("Done " & TotalRivers & " rivers in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
 
     Sub PlaceMountain(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal MountainPrefab As MountainTile)
         Dim OldX As Integer, OldY As Integer
 
-        OldX = Tile(TilePrefab.Mountain).Layer(2).x
-        OldY = Tile(TilePrefab.Mountain).Layer(2).y
-        Tile(TilePrefab.Mountain).Layer(2).x = OldX + (MountainPrefab Mod 3)
-        Tile(TilePrefab.Mountain).Layer(2).y = OldY + (Int(MountainPrefab / 3))
+        OldX = Tile(TilePrefab.Mountain).Layer(2).X
+        OldY = Tile(TilePrefab.Mountain).Layer(2).Y
+        Tile(TilePrefab.Mountain).Layer(2).X = OldX + (MountainPrefab Mod 3)
+        Tile(TilePrefab.Mountain).Layer(2).Y = OldY + (Int(MountainPrefab / 3))
         AddTile(TilePrefab.Mountain, MapNum, X, Y)
-        Tile(TilePrefab.Mountain).Layer(2).x = OldX
-        Tile(TilePrefab.Mountain).Layer(2).y = OldY
+        Tile(TilePrefab.Mountain).Layer(2).X = OldX
+        Tile(TilePrefab.Mountain).Layer(2).Y = OldY
     End Sub
 
 
@@ -596,8 +596,8 @@ SelectMap:
         Dim pX As Integer, pY As Integer
         For pX = X - Int(Width / 2) To X + Int(Width / 2)
             For pY = Y - Int(Height / 2) To Y + Int(Height / 2)
-                If pX > MountainBorder And pX < Map(MapNum).MaxX - MountainBorder Then
-                    If pY > MountainBorder And pY < Map(MapNum).MaxY - MountainBorder Then
+                If pX > MountainBorder AndAlso pX < Map(MapNum).MaxX - MountainBorder Then
+                    If pY > MountainBorder AndAlso pY < Map(MapNum).MaxY - MountainBorder Then
                         MapOrientation(MapNum).Tile(pX, pY) = TilePrefab.Mountain
                     End If
                 End If
@@ -675,7 +675,7 @@ Retry:
                         MountainPrefab = GetMountainPrefab(MapNum, x, y)
                         'Exceptions
                         If Not MapOrientation(MapNum).Tile(x, y - 1) <> TilePrefab.Mountain Then
-                            If ((GetMountainPrefab(MapNum, x - 1, y) = MountainTile.MiddleFoot Or GetMountainPrefab(MapNum, x - 1, y) = MountainTile.LeftFoot) Or (GetMountainPrefab(MapNum, x - 1, y) = MountainTile.LeftBody Or GetMountainPrefab(MapNum, x - 1, y) = MountainTile.MiddleBody)) And Not (MountainPrefab = MountainTile.MiddleBody Or MountainPrefab = MountainTile.MiddleFoot Or MountainPrefab = MountainTile.RightBody Or MountainPrefab = MountainTile.RightFoot) Then
+                            If ((GetMountainPrefab(MapNum, x - 1, y) = MountainTile.MiddleFoot OrElse GetMountainPrefab(MapNum, x - 1, y) = MountainTile.LeftFoot) OrElse (GetMountainPrefab(MapNum, x - 1, y) = MountainTile.LeftBody OrElse GetMountainPrefab(MapNum, x - 1, y) = MountainTile.MiddleBody)) AndAlso Not (MountainPrefab = MountainTile.MiddleBody OrElse MountainPrefab = MountainTile.MiddleFoot OrElse MountainPrefab = MountainTile.RightBody OrElse MountainPrefab = MountainTile.RightFoot) Then
                                 MountainPrefab = MountainTile.MidLeftBorder
                             End If
                             If GetMountainPrefab(MapNum, x, y + 1) = MountainTile.LeftFoot Then
@@ -686,7 +686,7 @@ Retry:
                                 MountainPrefab = MountainTile.BottomLeftBorder
                                 GoTo Important
                             End If
-                            If ((GetMountainPrefab(MapNum, x + 1, y) = MountainTile.MiddleFoot Or GetMountainPrefab(MapNum, x + 1, y) = MountainTile.RightFoot) Or (GetMountainPrefab(MapNum, x + 1, y) = MountainTile.RightBody Or GetMountainPrefab(MapNum, x + 1, y) = MountainTile.MiddleBody)) And Not (MountainPrefab = MountainTile.MiddleBody Or MountainPrefab = MountainTile.MiddleFoot Or MountainPrefab = MountainTile.LeftBody Or MountainPrefab = MountainTile.LeftFoot) Then
+                            If ((GetMountainPrefab(MapNum, x + 1, y) = MountainTile.MiddleFoot OrElse GetMountainPrefab(MapNum, x + 1, y) = MountainTile.RightFoot) OrElse (GetMountainPrefab(MapNum, x + 1, y) = MountainTile.RightBody OrElse GetMountainPrefab(MapNum, x + 1, y) = MountainTile.MiddleBody)) AndAlso Not (MountainPrefab = MountainTile.MiddleBody OrElse MountainPrefab = MountainTile.MiddleFoot OrElse MountainPrefab = MountainTile.LeftBody OrElse MountainPrefab = MountainTile.LeftFoot) Then
                                 MountainPrefab = MountainTile.MidRightBorder
                             End If
                             If GetMountainPrefab(MapNum, x, y + 1) = MountainTile.RightFoot Then
@@ -722,7 +722,7 @@ Important:
             If MapOrientation(MapNum).Tile(X, Y - 1) = TilePrefab.Mountain Then
                 'Its not the top
                 If Y + 3 < Map(MapNum).MaxY Then
-                    If MapOrientation(MapNum).Tile(X, Y + 3) <> TilePrefab.Mountain And MapOrientation(MapNum).Tile(X, Y + 2) = TilePrefab.Mountain Then
+                    If MapOrientation(MapNum).Tile(X, Y + 3) <> TilePrefab.Mountain AndAlso MapOrientation(MapNum).Tile(X, Y + 2) = TilePrefab.Mountain Then
                         'Inferior
                         Select Case VerticalPos
                             Case 0 : MountainPrefab = MountainTile.BottomLeftBorder
@@ -730,7 +730,7 @@ Important:
                             Case 2 : MountainPrefab = MountainTile.BottomRightBorder
                         End Select
                     Else
-                        If MapOrientation(MapNum).Tile(X, Y + 2) <> TilePrefab.Mountain And MapOrientation(MapNum).Tile(X, Y + 1) = TilePrefab.Mountain Then
+                        If MapOrientation(MapNum).Tile(X, Y + 2) <> TilePrefab.Mountain AndAlso MapOrientation(MapNum).Tile(X, Y + 1) = TilePrefab.Mountain Then
                             'Body
                             Select Case VerticalPos
                                 Case 0 : MountainPrefab = MountainTile.LeftBody
@@ -774,10 +774,10 @@ Important:
         ValidMountainPosition = True
         For pX = X - Int(Width / 2) To X + Int(Width / 2)
             For pY = Y - Int(Height / 2) To Y + Int(Height / 2)
-                If pX < 1 Or pX > Map(MapNum).MaxX - 1 Then ValidMountainPosition = False
-                If pY < 1 Or pY >= Map(MapNum).MaxY - 3 Then ValidMountainPosition = False
+                If pX < 1 OrElse pX > Map(MapNum).MaxX - 1 Then ValidMountainPosition = False
+                If pY < 1 OrElse pY >= Map(MapNum).MaxY - 3 Then ValidMountainPosition = False
                 If ValidMountainPosition Then
-                    If MapOrientation(MapNum).Tile(pX, pY) <> TilePrefab.Grass And MapOrientation(MapNum).Tile(pX, pY) <> TilePrefab.Overgrass And MapOrientation(MapNum).Tile(pX, pY) <> TilePrefab.Mountain Then ValidMountainPosition = False
+                    If MapOrientation(MapNum).Tile(pX, pY) <> TilePrefab.Grass AndAlso MapOrientation(MapNum).Tile(pX, pY) <> TilePrefab.Overgrass AndAlso MapOrientation(MapNum).Tile(pX, pY) <> TilePrefab.Mountain Then ValidMountainPosition = False
                 End If
             Next pY
         Next pX
@@ -788,7 +788,7 @@ Important:
         Dim TotalMaps As Integer
         Dim tick As Integer
         Dim MapCount As Integer
-        TextAdd("Working...")
+        Console.WriteLine("Working...")
         DoEvents()
         tick = GetTimeMs()
         TotalMaps = Size * Size
@@ -800,7 +800,7 @@ Important:
             End If
         Next i
         tick = GetTimeMs() - tick
-        TextAdd("Done mountains in " & (MapCount) & " maps in " & CDbl(tick / 1000) & "s")
+        Console.WriteLine("Done mountains in " & (MapCount) & " maps in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
 
@@ -842,7 +842,7 @@ Important:
                         Exit For
                     Else
                         For x = TileX To TileEndX
-                            If x < TileX + SandBorder Or y < TileEndY + SandBorder Then
+                            If x < TileX + SandBorder OrElse y < TileEndY + SandBorder Then
                                 AddTile(TilePrefab.Sand, MapNum, x, y)
                             Else
                                 AddTile(TilePrefab.Grass, MapNum, x, y)
@@ -891,7 +891,7 @@ Important:
                     If y <> TileStartY Then TileX = TileX + Random(0, 2)
                     If TileX > .MaxX Then TileX = .MaxX
                     For x = TileX To TileEndX Step -1
-                        If x > TileX - SandBorder Or y < TileY + SandBorder Then
+                        If x > TileX - SandBorder OrElse y < TileY + SandBorder Then
                             AddTile(TilePrefab.Sand, MapNum, x, y)
                         Else
                             AddTile(TilePrefab.Grass, MapNum, x, y)
@@ -983,7 +983,7 @@ Important:
                         Exit For
                     Else
                         For x = TileX To TileEndX
-                            If x < TileX + SandBorder Or y > TileEndY - SandBorder Then
+                            If x < TileX + SandBorder OrElse y > TileEndY - SandBorder Then
                                 AddTile(TilePrefab.Sand, MapNum, x, y)
                             Else
                                 AddTile(TilePrefab.Grass, MapNum, x, y)
@@ -1032,7 +1032,7 @@ Important:
                 For x = TileStartX To TileEndX
                     If x <> TileStartX Then TileY = TileY - Random(0, 1)
                     For y = TileY To TileEndY Step -1
-                        If y > TileY - SandBorder Or x > TileEndX - SandBorder Then
+                        If y > TileY - SandBorder OrElse x > TileEndX - SandBorder Then
                             AddTile(TilePrefab.Sand, MapNum, x, y)
                         Else
                             AddTile(TilePrefab.Grass, MapNum, x, y)
@@ -1062,7 +1062,7 @@ Important:
 ChangeDir:
                 Dir = Random(0, 3)
                 'Avoid invert direction
-                If (OldDir = Direction.Up And Dir = Direction.Down) Or (OldDir = Direction.Down And Dir = Direction.Up) Or (OldDir = Direction.Right And Dir = Direction.Left) Or (OldDir = Direction.Left And Dir = Direction.Right) Then GoTo ChangeDir
+                If (OldDir = Direction.Up AndAlso Dir = Direction.Down) OrElse (OldDir = Direction.Down AndAlso Dir = Direction.Up) OrElse (OldDir = Direction.Right AndAlso Dir = Direction.Left) OrElse (OldDir = Direction.Left AndAlso Dir = Direction.Right) Then GoTo ChangeDir
             End If
             Select Case Dir
                 Case Direction.Up
@@ -1163,9 +1163,9 @@ ChangeDir:
         Dim pX As Integer, pY As Integer
         For pX = X - SizeX To X + SizeX
             For pY = Y - SizeY To Y + SizeY
-                If pX >= 0 And pX <= Map(MapNum).MaxX Then
-                    If pY >= 0 And pY <= Map(MapNum).MaxY Then
-                        If MapOrientation(MapNum).Tile(pX, pY) <> TilePrefab.Grass And MapOrientation(MapNum).Tile(pX, pY) <> TilePrefab.Passing Then
+                If pX >= 0 AndAlso pX <= Map(MapNum).MaxX Then
+                    If pY >= 0 AndAlso pY <= Map(MapNum).MaxY Then
+                        If MapOrientation(MapNum).Tile(pX, pY) <> TilePrefab.Grass AndAlso MapOrientation(MapNum).Tile(pX, pY) <> TilePrefab.Passing Then
                             CheckPath = False
                             Exit Function
                         End If
@@ -1179,8 +1179,8 @@ ChangeDir:
         Dim pX As Integer, pY As Integer
         For pX = X - 10 To X + 10
             For pY = Y - 10 To Y + 10
-                If pX >= 0 And pX <= Map(MapNum).MaxX Then
-                    If pY >= 0 And pY <= Map(MapNum).MaxY Then
+                If pX >= 0 AndAlso pX <= Map(MapNum).MaxX Then
+                    If pY >= 0 AndAlso pY <= Map(MapNum).MaxY Then
                         If MapOrientation(MapNum).Tile(pX, pY) = TilePrefab.Passing Then
                             SearchForPreviousPaths = True
                             Exit Function
@@ -1200,17 +1200,17 @@ ChangeDir:
         Dim Tries As Integer
         Dim tick As Integer
 
-        TextAdd("Working...")
+        Console.WriteLine("Working...")
         DoEvents()
         tick = GetTimeMs()
 
         MaxTries = 30
         TotalPaths = Random(Map(MapNum).MaxX / 20, Map(MapNum).MaxX / 10)
 
-        Do While LocationCount < TotalPaths And Tries < MaxTries
+        Do While LocationCount < TotalPaths AndAlso Tries < MaxTries
             x = Random(1, Map(MapNum).MaxX - 1)
             y = Random(1, Map(MapNum).MaxY - 1)
-            If MapOrientation(MapNum).Tile(x, y) = TilePrefab.Grass And MapOrientation(MapNum).Tile(x + 1, y) = TilePrefab.Grass And MapOrientation(MapNum).Tile(x, y + 1) = TilePrefab.Grass And MapOrientation(MapNum).Tile(x + 1, y + 1) = TilePrefab.Grass Then
+            If MapOrientation(MapNum).Tile(x, y) = TilePrefab.Grass AndAlso MapOrientation(MapNum).Tile(x + 1, y) = TilePrefab.Grass AndAlso MapOrientation(MapNum).Tile(x, y + 1) = TilePrefab.Grass AndAlso MapOrientation(MapNum).Tile(x + 1, y + 1) = TilePrefab.Grass Then
                 If Not SearchForPreviousPaths(MapNum, x, y) Then
                     PaintTile(TilePrefab.Passing, MapNum, x, y, 1, 1, , TilePrefab.Grass)
                     LocationCount = LocationCount + 1
@@ -1261,7 +1261,7 @@ ChangeDir:
         End If
 
         tick = GetTimeMs() - tick
-        TextAdd("Done " & TotalPaths & " paths in " & CDbl(tick / 1000) & "s")
+        Console.WriteLine("Done " & TotalPaths & " paths in " & CDbl(tick / 1000) & "s")
         DoEvents()
     End Sub
 
@@ -1333,13 +1333,13 @@ ChangeDir:
             If mapnum = MapStart Then
                 Prefab = MapPrefab.UpLeftQuarter
             End If
-            If mapnum > MapStart And mapnum < MapStart - 1 + Size Then
+            If mapnum > MapStart AndAlso mapnum < MapStart - 1 + Size Then
                 Prefab = MapPrefab.UpBorder
             End If
             If mapnum = MapStart - 1 + Size Then
                 Prefab = MapPrefab.UpRightQuarter
             End If
-            If mapnum > MapStart - 1 + Size And mapnum <= MapStart - 1 + TotalMaps - Size Then
+            If mapnum > MapStart - 1 + Size AndAlso mapnum <= MapStart - 1 + TotalMaps - Size Then
                 If (mapnum - MapStart + 1) Mod Size = 1 Then
                     Prefab = MapPrefab.LeftBorder
                 Else
@@ -1366,7 +1366,7 @@ ChangeDir:
         Next mapnum
 
         tick = GetTimeMs() - tick
-        TextAdd("Done " & TotalMaps & " maps models in " & CDbl(tick / 1000) & "s")
+        Console.WriteLine("Done " & TotalMaps & " maps models in " & CDbl(tick / 1000) & "s")
         DoEvents()
 
         If PathsChecked = True Then MakePaths(MapStart, Size)
@@ -1376,7 +1376,7 @@ ChangeDir:
         If ResourcesChecked = True Then MakeResources(MapStart, Size)
 
         tick = GetTimeMs()
-        TextAdd("Working...")
+        Console.WriteLine("Working...")
         DoEvents()
 
         For mapnum = MapStart To MapStart + TotalMaps - 1
@@ -1387,8 +1387,8 @@ ChangeDir:
         tick = GetTimeMs() - tick
         StartTick = GetTimeMs() - StartTick
 
-        TextAdd("Cached all maps in " & CDbl(tick / 1000) & "s (" & ((tick / StartTick) * 100) & "%)")
-        TextAdd("Done " & TotalMaps & " maps in " & CDbl(StartTick / 1000) & "s")
+        Console.WriteLine("Cached all maps in " & CDbl(tick / 1000) & "s (" & ((tick / StartTick) * 100) & "%)")
+        Console.WriteLine("Done " & TotalMaps & " maps in " & CDbl(StartTick / 1000) & "s")
 
     End Sub
 

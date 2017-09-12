@@ -300,11 +300,11 @@ Public Module EditorAutoTiles
 
         ' exit out early
 
-        If X < 0 Or X > Map.MaxX Or Y < 0 Or Y > Map.MaxY Then Exit Sub
+        If X < 0 OrElse X > Map.MaxX OrElse Y < 0 OrElse Y > Map.MaxY Then Exit Sub
 
         With Map.Tile(X, Y)
             ' check if the tile can be rendered
-            If .Layer(layerNum).Tileset <= 0 Or .Layer(layerNum).Tileset > NumTileSets Then
+            If .Layer(layerNum).Tileset <= 0 OrElse .Layer(layerNum).Tileset > NumTileSets Then
                 Autotile(X, Y).Layer(layerNum).renderState = RENDER_STATE_NONE
                 Exit Sub
             End If
@@ -321,7 +321,7 @@ Public Module EditorAutoTiles
                 End If
             End If
             ' check if it needs to be rendered as an autotile
-            If .Layer(layerNum).AutoTile = AUTOTILE_NONE Or .Layer(layerNum).AutoTile = AUTOTILE_FAKE Then
+            If .Layer(layerNum).AutoTile = AUTOTILE_NONE OrElse .Layer(layerNum).AutoTile = AUTOTILE_FAKE Then
                 'ReDim Autotile(X, Y).Layer(0 To MapLayer.Count - 1)
                 ' default to... default
                 Autotile(X, Y).Layer(layerNum).renderState = RENDER_STATE_NORMAL
@@ -402,15 +402,15 @@ Public Module EditorAutoTiles
         ' West
         If CheckTileMatch(layerNum, X, Y, X - 1, Y) Then tmpTile(3) = True
         ' Calculate Situation - Inner
-        If Not tmpTile(2) And Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(2) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
         ' Horizontal
-        If Not tmpTile(2) And tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If Not tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_HORIZONTAL
         ' Vertical
-        If tmpTile(2) And Not tmpTile(3) Then situation = AUTO_VERTICAL
+        If tmpTile(2) AndAlso Not tmpTile(3) Then situation = AUTO_VERTICAL
         ' Outer
-        If Not tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AUTO_OUTER
+        If Not tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_OUTER
         ' Fill
-        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
         ' Actually place the subtile
         Select Case situation
             Case AUTO_INNER
@@ -439,15 +439,15 @@ Public Module EditorAutoTiles
         ' East
         If CheckTileMatch(layerNum, X, Y, X + 1, Y) Then tmpTile(3) = True
         ' Calculate Situation - Inner
-        If Not tmpTile(1) And Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
         ' Horizontal
-        If Not tmpTile(1) And tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AUTO_HORIZONTAL
         ' Vertical
-        If tmpTile(1) And Not tmpTile(3) Then situation = AUTO_VERTICAL
+        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_VERTICAL
         ' Outer
-        If tmpTile(1) And Not tmpTile(2) And tmpTile(3) Then situation = AUTO_OUTER
+        If tmpTile(1) AndAlso Not tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_OUTER
         ' Fill
-        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
         ' Actually place the subtile
         Select Case situation
             Case AUTO_INNER
@@ -476,15 +476,15 @@ Public Module EditorAutoTiles
         ' South
         If CheckTileMatch(layerNum, X, Y, X, Y + 1) Then tmpTile(3) = True
         ' Calculate Situation - Inner
-        If Not tmpTile(1) And Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
         ' Horizontal
-        If tmpTile(1) And Not tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_HORIZONTAL
         ' Vertical
-        If Not tmpTile(1) And tmpTile(3) Then situation = AUTO_VERTICAL
+        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AUTO_VERTICAL
         ' Outer
-        If tmpTile(1) And Not tmpTile(2) And tmpTile(3) Then situation = AUTO_OUTER
+        If tmpTile(1) AndAlso Not tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_OUTER
         ' Fill
-        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
         ' Actually place the subtile
         Select Case situation
             Case AUTO_INNER
@@ -513,15 +513,15 @@ Public Module EditorAutoTiles
         ' East
         If CheckTileMatch(layerNum, X, Y, X + 1, Y) Then tmpTile(3) = True
         ' Calculate Situation - Inner
-        If Not tmpTile(1) And Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
         ' Horizontal
-        If Not tmpTile(1) And tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AUTO_HORIZONTAL
         ' Vertical
-        If tmpTile(1) And Not tmpTile(3) Then situation = AUTO_VERTICAL
+        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_VERTICAL
         ' Outer
-        If tmpTile(1) And Not tmpTile(2) And tmpTile(3) Then situation = AUTO_OUTER
+        If tmpTile(1) AndAlso Not tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_OUTER
         ' Fill
-        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
         ' Actually place the subtile
         Select Case situation
             Case AUTO_INNER
@@ -617,13 +617,13 @@ Public Module EditorAutoTiles
         If CheckTileMatch(layerNum, X, Y, X - 1, Y) Then tmpTile(3) = True
         situation = AUTO_FILL
         ' Calculate Situation - Horizontal
-        If Not tmpTile(2) And tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If Not tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_HORIZONTAL
         ' Vertical
-        If tmpTile(2) And Not tmpTile(3) Then situation = AUTO_VERTICAL
+        If tmpTile(2) AndAlso Not tmpTile(3) Then situation = AUTO_VERTICAL
         ' Fill
-        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
         ' Inner
-        If Not tmpTile(2) And Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(2) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
         ' Actually place the subtile
         Select Case situation
             Case AUTO_INNER
@@ -651,13 +651,13 @@ Public Module EditorAutoTiles
         If CheckTileMatch(layerNum, X, Y, X + 1, Y) Then tmpTile(3) = True
         situation = AUTO_FILL
         ' Calculate Situation - Horizontal
-        If Not tmpTile(1) And tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AUTO_HORIZONTAL
         ' Vertical
-        If tmpTile(1) And Not tmpTile(3) Then situation = AUTO_VERTICAL
+        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_VERTICAL
         ' Fill
-        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
         ' Inner
-        If Not tmpTile(1) And Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
         ' Actually place the subtile
         Select Case situation
             Case AUTO_INNER
@@ -685,13 +685,13 @@ Public Module EditorAutoTiles
         If CheckTileMatch(layerNum, X, Y, X, Y + 1) Then tmpTile(3) = True
         situation = AUTO_FILL
         ' Calculate Situation - Horizontal
-        If tmpTile(1) And Not tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_HORIZONTAL
         ' Vertical
-        If Not tmpTile(1) And tmpTile(3) Then situation = AUTO_VERTICAL
+        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AUTO_VERTICAL
         ' Fill
-        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
         ' Inner
-        If Not tmpTile(1) And Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
         ' Actually place the subtile
         Select Case situation
             Case AUTO_INNER
@@ -719,13 +719,13 @@ Public Module EditorAutoTiles
         If CheckTileMatch(layerNum, X, Y, X + 1, Y) Then tmpTile(3) = True
         situation = AUTO_FILL
         ' Calculate Situation -  Horizontal
-        If Not tmpTile(1) And tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AUTO_HORIZONTAL
         ' Vertical
-        If tmpTile(1) And Not tmpTile(3) Then situation = AUTO_VERTICAL
+        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_VERTICAL
         ' Fill
-        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
         ' Inner
-        If Not tmpTile(1) And Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
         ' Actually place the subtile
         Select Case situation
             Case AUTO_INNER
@@ -747,7 +747,7 @@ Public Module EditorAutoTiles
         If layerNum > MapLayer.Count - 1 Then exTile = True : layerNum = layerNum - (MapLayer.Count - 1)
         CheckTileMatch = True
         ' if it's off the map then set it as autotile and exit out early
-        If X2 < 0 Or X2 > Map.MaxX Or Y2 < 0 Or Y2 > Map.MaxY Then
+        If X2 < 0 OrElse X2 > Map.MaxX OrElse Y2 < 0 OrElse Y2 > Map.MaxY Then
             CheckTileMatch = True
             Exit Function
         End If

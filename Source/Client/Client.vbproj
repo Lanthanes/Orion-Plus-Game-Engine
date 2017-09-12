@@ -71,21 +71,14 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-<<<<<<< HEAD
-    <Reference Include="ASFW, Version=1.0.6462.3622, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CS-ASFW.0.9.9.6\lib\ASFW.dll</HintPath>
-=======
-    <Reference Include="ASFW, Version=1.0.6459.32965, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\CS-ASFW.0.9.9\lib\ASFW.dll</HintPath>
->>>>>>> parent of 674a5cb... Final BugFix/Optimization Before Network Swap
+    <Reference Include="ASFW, Version=1.0.6463.1050, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-ASFW.0.9.9.8\lib\ASFW.dll</HintPath>
     </Reference>
     <Reference Include="DarkUI">
       <HintPath>..\Editors\DarkUI.dll</HintPath>
     </Reference>
-    <Reference Include="SFML.Net, Version=2.1.6258.18947, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\SFML.Net.dll</HintPath>
+    <Reference Include="SFML.Portable, Version=2.1.6462.39755, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SFML-Portable-2.1.1.3.0\lib\SFML.Portable.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -161,7 +154,6 @@
     <Compile Include="Source\Modules\ClientProjectiles.vb" />
     <Compile Include="Source\Modules\ClientQuest.vb" />
     <Compile Include="Source\Modules\ClientSound.vb" />
-    <Compile Include="Source\Modules\ClientTCP.vb" />
     <Compile Include="Source\Modules\ClientConstants.vb" />
     <Compile Include="Source\Modules\ClientDataBase.vb" />
     <Compile Include="Source\Modules\ClientTime.vb" />

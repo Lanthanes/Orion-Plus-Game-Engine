@@ -2,24 +2,15 @@
 Imports ASFW
 
 Module BufferUtility
-    Public Sub CombineBufferAndData(ByRef Buffer As ByteStream, ByRef data As Byte())
-        If Buffer.Head + data.Length >= Buffer.Data.Length Then
-            ReDim Preserve Buffer.Data(Buffer.Head + data.Length)
-        End If
-
-        System.Buffer.BlockCopy(data, 0, Buffer.Data, Buffer.Head, data.Length)
-        Buffer.Head += data.Length
-    End Sub
-    Public Function ReadUnicodeString(ByRef Buffer As ByteStream) As String
-        Dim data As Byte() = Buffer.ReadBytes()
+    Public Function ReadUnicodeString(ByVal data As Byte()) As String
         If data Is Nothing OrElse data.Length = 0 Then Return "Null"
         Return Conv_String(Encoding.ASCII.GetString(data, 0, data.Length))
     End Function
 
-    Public Sub WriteUnicodeString(ByRef Buffer As ByteStream, ByVal Input As String)
-        If Input = vbNullString Then Exit Sub
-        Buffer.WriteBytes(Encoding.ASCII.GetBytes(Conv_Uni(Input)))
-    End Sub
+    Public Function WriteUnicodeString(ByVal Input As String)
+        If Input = vbNullString Then Return New Byte()
+        Return Encoding.ASCII.GetBytes(Conv_Uni(Input))
+    End Function
 
     Public Function Conv_String(ByVal message As String) As String
         Conv_String = ""
@@ -44,7 +35,7 @@ Module BufferUtility
         Dim i As Integer
         Conv_Uni = ""
 
-        If inx = vbNullString Or inx = "" Then
+        If inx = vbNullString OrElse inx = "" Then
             Conv_Uni = "I miss this."
             Return Conv_Uni
             Exit Function
@@ -113,7 +104,7 @@ Public Class ByteBuffer
             buffUpdated = False
         End If
         Dim ret As String = Encoding.ASCII.GetString(readBuff, readpos, Len)
-        If Peek And Buff.Count > readpos Then
+        If Peek AndAlso Buff.Count > readpos Then
             If ret.Length > 0 Then
                 readpos += Len
             End If
@@ -127,7 +118,7 @@ Public Class ByteBuffer
                 buffUpdated = False
             End If
             Dim ret As Byte = readBuff(readpos)
-            If Peek And Buff.Count > readpos Then
+            If Peek AndAlso Buff.Count > readpos Then
                 readpos += 1
             End If
             Return ret
@@ -151,7 +142,7 @@ Public Class ByteBuffer
                 buffUpdated = False
             End If
             Dim ret As Short = BitConverter.ToInt16(readBuff, readpos)
-            If peek And Buff.Count > readpos Then
+            If peek AndAlso Buff.Count > readpos Then
                 readpos += 2
             End If
             Return ret
@@ -167,7 +158,7 @@ Public Class ByteBuffer
                 buffUpdated = False
             End If
             Dim ret As Integer = BitConverter.ToInt32(readBuff, readpos)
-            If peek And Buff.Count > readpos Then
+            If peek AndAlso Buff.Count > readpos Then
                 readpos += 4
             End If
             Return ret
@@ -187,7 +178,7 @@ Public Class ByteBuffer
 
             Dim ret As String = Encoding.ASCII.GetString(readBuff, readpos, Len)
 
-            If Peek And Buff.Count > readpos Then
+            If Peek AndAlso Buff.Count > readpos Then
                 If ret.Length > 0 Then
                     readpos += Len
                 End If
@@ -237,7 +228,7 @@ Public Class ByteBuffer
         Dim i As Integer
         Conv_Uni = ""
 
-        If inx = vbNullString Or inx = "" Then
+        If inx = vbNullString OrElse inx = "" Then
             Conv_Uni = "I miss this."
             Return Conv_Uni
             Exit Function

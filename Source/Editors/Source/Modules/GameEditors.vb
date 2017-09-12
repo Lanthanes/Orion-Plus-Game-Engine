@@ -19,7 +19,7 @@
                 Next
             End If
 
-            If Trim$(Animation(EditorIndex).Sound) = "None" Or Trim$(Animation(EditorIndex).Sound) = "" Then
+            If Trim$(Animation(EditorIndex).Sound) = "None" OrElse Trim$(Animation(EditorIndex).Sound) = "" Then
                 FrmEditor_Animation.cmbSound.SelectedIndex = 0
             Else
                 For i = 1 To FrmEditor_Animation.cmbSound.Items.Count
@@ -310,8 +310,8 @@
         If Not IsInBounds() Then Exit Sub
         If Button = MouseButtons.Left Then
             If SelectedTab = 1 Then
-                ' (EditorTileSelEnd.X - EditorTileSelStart.X) = 1 And (EditorTileSelEnd.Y - EditorTileSelStart.Y) = 1 Then 'single tile
-                If EditorTileWidth = 1 And EditorTileHeight = 1 Then
+                ' (EditorTileSelEnd.X - EditorTileSelStart.X) = 1 AndAlso (EditorTileSelEnd.Y - EditorTileSelStart.Y) = 1 Then 'single tile
+                If EditorTileWidth = 1 AndAlso EditorTileHeight = 1 Then
 
                     MapEditorSetTile(CurX, CurY, CurLayer, False, FrmEditor_MapEditor.cmbAutoTile.SelectedIndex)
                 Else ' multi tile!
@@ -437,8 +437,8 @@
                 Y = Y - ((Y \ PIC_Y) * PIC_Y)
                 ' see if it hits an arrow
                 For i = 1 To 4
-                    If X >= DirArrowX(i) And X <= DirArrowX(i) + 8 Then
-                        If Y >= DirArrowY(i) And Y <= DirArrowY(i) + 8 Then
+                    If X >= DirArrowX(i) AndAlso X <= DirArrowX(i) + 8 Then
+                        If Y >= DirArrowY(i) AndAlso Y <= DirArrowY(i) + 8 Then
                             ' flip the value.
                             SetDirBlock(Map.Tile(CurX, CurY).DirBlock, (i), Not IsDirBlocked(Map.Tile(CurX, CurY).DirBlock, (i)))
                             Exit Sub
@@ -446,7 +446,7 @@
                     End If
                 Next
             ElseIf SelectedTab = 5 Then
-                If frmEditor_Events.Visible = False Then
+                If FrmEditor_Events.Visible = False Then
                     AddEvent(CurX, CurY)
                 End If
             End If
@@ -531,8 +531,8 @@
             For Y = CurY To CurY + EditorTileHeight - 1
                 x2 = 0 ' re-set x count every y loop
                 For X = CurX To CurX + EditorTileWidth - 1
-                    If X >= 0 And X <= Map.MaxX Then
-                        If Y >= 0 And Y <= Map.MaxY Then
+                    If X >= 0 AndAlso X <= Map.MaxX Then
+                        If Y >= 0 AndAlso Y <= Map.MaxY Then
                             With Map.Tile(X, Y)
                                 .Layer(CurLayer).X = EditorTileX + x2
                                 .Layer(CurLayer).Y = EditorTileY + y2
@@ -792,7 +792,7 @@
 
             If frmEditor_Item.cmbType.SelectedIndex = ItemType.Furniture Then
                 frmEditor_Item.fraFurniture.Visible = True
-                If Item(EditorIndex).Data2 > 0 And Item(EditorIndex).Data2 <= NumFurniture Then
+                If Item(EditorIndex).Data2 > 0 AndAlso Item(EditorIndex).Data2 <= NumFurniture Then
                     frmEditor_Item.nudFurniture.Value = Item(EditorIndex).Data2
                 Else
                     frmEditor_Item.nudFurniture.Value = 1
@@ -912,7 +912,7 @@
             .txtName.Text = Trim$(Npc(EditorIndex).Name)
             .txtAttackSay.Text = Trim$(Npc(EditorIndex).AttackSay)
 
-            If Npc(EditorIndex).Sprite < 0 Or Npc(EditorIndex).Sprite > .nudSprite.Maximum Then Npc(EditorIndex).Sprite = 0
+            If Npc(EditorIndex).Sprite < 0 OrElse Npc(EditorIndex).Sprite > .nudSprite.Maximum Then Npc(EditorIndex).Sprite = 0
             .nudSprite.Value = Npc(EditorIndex).Sprite
             .nudSpawnSecs.Value = Npc(EditorIndex).SpawnSecs
             .cmbBehaviour.SelectedIndex = Npc(EditorIndex).Behaviour
@@ -1118,12 +1118,12 @@
             ' set values
             .txtName.Text = Trim$(Skill(EditorIndex).Name)
             .cmbType.SelectedIndex = Skill(EditorIndex).Type
-            .nudMp.Value = Skill(EditorIndex).MPCost
+            .nudMp.Value = Skill(EditorIndex).MpCost
             .nudLevel.Value = Skill(EditorIndex).LevelReq
             .cmbAccessReq.SelectedIndex = Skill(EditorIndex).AccessReq
             .cmbClass.SelectedIndex = Skill(EditorIndex).ClassReq
             .nudCast.Value = Skill(EditorIndex).CastTime
-            .nudCool.Value = Skill(EditorIndex).CDTime
+            .nudCool.Value = Skill(EditorIndex).CdTime
             .nudIcon.Value = Skill(EditorIndex).Icon
             .nudMap.Value = Skill(EditorIndex).Map
             .nudX.Value = Skill(EditorIndex).X
@@ -1234,7 +1234,7 @@
         For i = 1 To MAX_TRADES
             With Shop(EditorIndex).TradeItem(i)
                 ' if none, show as none
-                If .Item = 0 And .CostItem = 0 Then
+                If .Item = 0 AndAlso .CostItem = 0 Then
                     FrmEditor_Shop.lstTradeItem.Items.Add("Empty Trade Slot")
                 Else
                     FrmEditor_Shop.lstTradeItem.Items.Add(i & ": " & .ItemValue & "x " & Trim$(Item(.Item).Name) & " for " & .CostValue & "x " & Trim$(Item(.CostItem).Name))
@@ -1279,23 +1279,23 @@
     Public Sub ClassesEditorOk()
         SendSaveClasses()
 
-        frmEditor_Classes.Visible = False
+        FrmEditor_Classes.Visible = False
         Editor = 0
     End Sub
 
     Public Sub ClassesEditorCancel()
         SendRequestClasses()
-        frmEditor_Classes.Visible = False
+        FrmEditor_Classes.Visible = False
         Editor = 0
     End Sub
 
     Public Sub ClassEditorInit()
         Dim i As Integer
 
-        frmEditor_Classes.lstIndex.Items.Clear()
+        FrmEditor_Classes.lstIndex.Items.Clear()
 
         For i = 1 To Max_Classes
-            frmEditor_Classes.lstIndex.Items.Add(Trim(Classes(i).Name))
+            FrmEditor_Classes.lstIndex.Items.Add(Trim(Classes(i).Name))
         Next
 
         Editor = EDITOR_CLASSES
@@ -1305,22 +1305,22 @@
 
         FrmEditor_Classes.cmbItems.Items.Clear()
 
-        frmEditor_Classes.cmbItems.Items.Add("None")
+        FrmEditor_Classes.cmbItems.Items.Add("None")
         For i = 1 To MAX_ITEMS
-            frmEditor_Classes.cmbItems.Items.Add(Trim(Item(i).Name))
+            FrmEditor_Classes.cmbItems.Items.Add(Trim(Item(i).Name))
         Next
 
-        frmEditor_Classes.lstIndex.SelectedIndex = 0
+        FrmEditor_Classes.lstIndex.SelectedIndex = 0
 
-        frmEditor_Classes.Visible = True
+        FrmEditor_Classes.Visible = True
     End Sub
 
     Public Sub LoadClass()
         Dim i As Integer
 
-        If EditorIndex <= 0 Or EditorIndex > Max_Classes Then Exit Sub
+        If EditorIndex <= 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
-        frmEditor_Classes.txtName.Text = Classes(EditorIndex).Name
+        FrmEditor_Classes.txtName.Text = Classes(EditorIndex).Name
         frmEditor_Classes.txtDescription.Text = Classes(EditorIndex).Desc
 
         frmEditor_Classes.cmbMaleSprite.Items.Clear()

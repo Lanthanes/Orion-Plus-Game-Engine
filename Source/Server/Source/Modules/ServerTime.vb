@@ -36,10 +36,10 @@ Public Module ServerTime
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: SClock", PACKET_LOG)
-        TextAdd("Sent SMSG: SClock")
+        Console.WriteLine("Sent SMSG: SClock")
 
         Addlog(" Player: " & GetPlayerName(Index) & " : " & " GameSpeed: " & Time.Instance.GameSpeed & " Instance Time Ticks: " & Time.Instance.Time.Ticks, PLAYER_LOG)
-        TextAdd(" Player: " & GetPlayerName(Index) & " : " & " GameSpeed: " & Time.Instance.GameSpeed & " Instance Time Ticks: " & Time.Instance.Time.Ticks)
+        Console.WriteLine(" Player: " & GetPlayerName(Index) & " : " & " GameSpeed: " & Time.Instance.GameSpeed & " Instance Time Ticks: " & Time.Instance.Time.Ticks)
 
         Buffer.Dispose()
     End Sub
@@ -62,10 +62,10 @@ Public Module ServerTime
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
         Addlog("Sent SMSG: STime", PACKET_LOG)
-        TextAdd("Sent SMSG: STime")
+        Console.WriteLine("Sent SMSG: STime")
 
         Addlog(" Player: " & GetPlayerName(Index) & " : " & " Time Of Day: " & Time.Instance.TimeOfDay, PLAYER_LOG)
-        TextAdd(" Player: " & GetPlayerName(Index) & " : " & " Time Of Day: " & Time.Instance.TimeOfDay)
+        Console.WriteLine(" Player: " & GetPlayerName(Index) & " : " & " Time Of Day: " & Time.Instance.TimeOfDay)
 
         Buffer.Dispose()
     End Sub
