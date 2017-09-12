@@ -3,7 +3,7 @@ Imports ASFW
 
 Module ServerPlayers
 #Region "PlayerCombat"
-    Function CanPlayerAttackPlayer(ByVal Attacker As Integer, ByVal Victim As Integer, Optional ByVal IsSkill As Boolean = False) As Boolean
+    Function CanPlayerAttackPlayer(Attacker As Integer, Victim As Integer, Optional IsSkill As Boolean = False) As Boolean
 
         If Not IsSkill Then
             ' Check attack timer
@@ -81,7 +81,7 @@ Module ServerPlayers
         CanPlayerAttackPlayer = True
     End Function
 
-    Function CanPlayerBlockHit(ByVal Index As Integer) As Boolean
+    Function CanPlayerBlockHit(Index As Integer) As Boolean
         Dim i As Integer
         Dim n As Integer
         Dim ShieldSlot As Integer
@@ -104,7 +104,7 @@ Module ServerPlayers
 
     End Function
 
-    Function CanPlayerCriticalHit(ByVal Index As Integer) As Boolean
+    Function CanPlayerCriticalHit(Index As Integer) As Boolean
         On Error Resume Next
         Dim i As Integer
         Dim n As Integer
@@ -124,7 +124,7 @@ Module ServerPlayers
 
     End Function
 
-    Function GetPlayerDamage(ByVal Index As Integer) As Integer
+    Function GetPlayerDamage(Index As Integer) As Integer
         Dim weaponNum As Integer
 
         GetPlayerDamage = 0
@@ -143,7 +143,7 @@ Module ServerPlayers
 
     End Function
 
-    Function GetPlayerProtection(ByVal Index As Integer) As Integer
+    Function GetPlayerProtection(Index As Integer) As Integer
         Dim Armor As Integer, Helm As Integer, Shoes As Integer, Gloves As Integer
         GetPlayerProtection = 0
 
@@ -176,7 +176,7 @@ Module ServerPlayers
 
     End Function
 
-    Sub AttackPlayer(ByVal Attacker As Integer, ByVal Victim As Integer, ByVal Damage As Integer, Optional ByVal skillnum As Integer = 0, Optional ByVal npcnum As Byte = 0)
+    Sub AttackPlayer(Attacker As Integer, Victim As Integer, Damage As Integer, Optional skillnum As Integer = 0, Optional npcnum As Byte = 0)
         Dim exp As Integer, mapnum As Integer
         Dim n As Integer
         Dim Buffer As ByteStream
@@ -311,7 +311,7 @@ Module ServerPlayers
 
     End Sub
 
-    Friend Sub StunPlayer(ByVal Index As Integer, ByVal skillnum As Integer)
+    Friend Sub StunPlayer(Index As Integer, skillnum As Integer)
         ' check if it's a stunning skill
         If Skill(skillnum).StunDuration > 0 Then
             ' set the values on index
@@ -324,7 +324,7 @@ Module ServerPlayers
         End If
     End Sub
 
-    Function CanPlayerAttackNpc(ByVal Attacker As Integer, ByVal MapNpcNum As Integer, Optional ByVal IsSkill As Boolean = False) As Boolean
+    Function CanPlayerAttackNpc(Attacker As Integer, MapNpcNum As Integer, Optional IsSkill As Boolean = False) As Boolean
         Dim MapNum As Integer
         Dim NpcNum As Integer
         Dim atkX As Integer
@@ -425,7 +425,7 @@ Module ServerPlayers
 
     End Function
 
-    Friend Sub StunNPC(ByVal Index As Integer, ByVal MapNum As Integer, ByVal skillnum As Integer)
+    Friend Sub StunNPC(Index As Integer, MapNum As Integer, skillnum As Integer)
         ' check if it's a stunning skill
         If Skill(skillnum).StunDuration > 0 Then
             ' set the values on index
@@ -434,7 +434,7 @@ Module ServerPlayers
         End If
     End Sub
 
-    Sub PlayerAttackNpc(ByVal Attacker As Integer, ByVal MapNpcNum As Integer, ByVal Damage As Integer)
+    Sub PlayerAttackNpc(Attacker As Integer, MapNpcNum As Integer, Damage As Integer)
         ' Check for subscript out of range
         If IsPlaying(Attacker) = False OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Damage < 0 Then Exit Sub
 
@@ -489,7 +489,7 @@ Module ServerPlayers
     End Sub
 
 
-    Function IsInRange(ByVal range As Integer, ByVal x1 As Integer, ByVal y1 As Integer, ByVal x2 As Integer, ByVal y2 As Integer) As Boolean
+    Function IsInRange(range As Integer, x1 As Integer, y1 As Integer, x2 As Integer, y2 As Integer) As Boolean
         Dim nVal As Integer
         IsInRange = False
         nVal = Math.Sqrt((x1 - x2) ^ 2 + (y1 - y2) ^ 2)
@@ -497,7 +497,7 @@ Module ServerPlayers
     End Function
 
 
-    Friend Sub SpellPlayer_Effect(ByVal Vital As Byte, ByVal increment As Boolean, ByVal Index As Integer, ByVal Damage As Integer, ByVal Skillnum As Integer)
+    Friend Sub SpellPlayer_Effect(Vital As Byte, increment As Boolean, Index As Integer, Damage As Integer, Skillnum As Integer)
         Dim sSymbol As String
         Dim Colour As Integer
 
@@ -534,7 +534,7 @@ Module ServerPlayers
 
     End Sub
 
-    Friend Function CanPlayerDodge(ByVal Index As Integer) As Boolean
+    Friend Function CanPlayerDodge(Index As Integer) As Boolean
         Dim rate As Long, rndNum As Long
 
         CanPlayerDodge = False
@@ -548,7 +548,7 @@ Module ServerPlayers
 
     End Function
 
-    Friend Function CanPlayerParry(ByVal Index As Integer) As Boolean
+    Friend Function CanPlayerParry(Index As Integer) As Boolean
         Dim rate As Integer, rndNum As Integer
 
         CanPlayerParry = False
@@ -562,7 +562,7 @@ Module ServerPlayers
 
     End Function
 
-    Friend Sub TryPlayerAttackPlayer(ByVal Attacker As Integer, ByVal Victim As Integer)
+    Friend Sub TryPlayerAttackPlayer(Attacker As Integer, Victim As Integer)
         Dim MapNum As Integer
         Dim Damage As Integer, i As Integer, armor As Integer
 
@@ -619,7 +619,7 @@ Module ServerPlayers
 
     End Sub
 
-    Sub PlayerAttackPlayer(ByVal Attacker As Integer, ByVal Victim As Integer, ByVal Damage As Integer)
+    Sub PlayerAttackPlayer(Attacker As Integer, Victim As Integer, Damage As Integer)
         ' Check for subscript out of range
         If IsPlaying(Attacker) = False OrElse IsPlaying(Victim) = False OrElse Damage <= 0 Then
             Exit Sub
@@ -662,7 +662,7 @@ Module ServerPlayers
         End If
     End Sub
 
-    Friend Sub TryPlayerAttackNpc(ByVal Index As Integer, ByVal mapnpcnum As Integer)
+    Friend Sub TryPlayerAttackNpc(Index As Integer, mapnpcnum As Integer)
 
         Dim npcnum As Integer
 
@@ -722,7 +722,7 @@ Module ServerPlayers
 
     End Sub
 
-    Friend Function IsPlayerDead(ByVal Index As Integer)
+    Friend Function IsPlayerDead(Index As Integer)
         IsPlayerDead = False
         If Index < 0 OrElse Index > MAX_PLAYERS OrElse Not TempPlayer(Index).InGame Then Exit Function
         If GetPlayerVital(Index, VitalType.HP) <= 0 Then IsPlayerDead = True
@@ -730,7 +730,7 @@ Module ServerPlayers
 
 
 
-    Friend Sub HandlePlayerKillPlayer(ByVal Attacker As Integer, ByVal Victim As Integer)
+    Friend Sub HandlePlayerKillPlayer(Attacker As Integer, Victim As Integer)
         ' Notify everyone that our player has bit the dust.
         GlobalMsg(String.Format("{0} has been killed by {1}!", GetPlayerName(Victim), GetPlayerName(Attacker)))
 
@@ -754,7 +754,7 @@ Module ServerPlayers
         CheckTasks(Attacker, QuestType.Kill, 0)
     End Sub
 
-    Friend Sub HandlePlayerKillNpc(ByVal MapNum As Integer, ByVal Index As Integer, ByVal MapNpcNum As Integer)
+    Friend Sub HandlePlayerKillNpc(MapNum As Integer, Index As Integer, MapNpcNum As Integer)
         ' Set our attacker's target to nothing.
         SendTarget(Index, 0, TargetType.None)
 
@@ -783,7 +783,7 @@ Module ServerPlayers
         Next
     End Sub
 
-    Friend Sub HandlePlayerKilledPK(ByVal Attacker As Integer, ByVal Victim As Integer)
+    Friend Sub HandlePlayerKilledPK(Attacker As Integer, Victim As Integer)
         ' TODO: Redo this method, it is horrendous.
         Dim z As Integer, eqcount As Integer, invcount, j As Integer
         If GetPlayerPK(Victim) = 0 Then
@@ -854,25 +854,25 @@ Module ServerPlayers
 #End Region
 
 #Region "Data"
-    Function GetPlayerLogin(ByVal Index As Integer) As String
+    Function GetPlayerLogin(Index As Integer) As String
         GetPlayerLogin = Trim$(Player(Index).Login)
     End Function
 
-    Function GetPlayerName(ByVal Index As Integer) As String
+    Function GetPlayerName(Index As Integer) As String
         GetPlayerName = ""
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerName = Player(Index).Character(TempPlayer(Index).CurChar).Name.Trim()
     End Function
 
-    Sub SetPlayerAccess(ByVal Index As Integer, ByVal Access As Integer)
+    Sub SetPlayerAccess(Index As Integer, Access As Integer)
         Player(Index).Access = Access
     End Sub
 
-    Sub SetPlayerSprite(ByVal Index As Integer, ByVal Sprite As Integer)
+    Sub SetPlayerSprite(Index As Integer, Sprite As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Sprite = Sprite
     End Sub
 
-    Function GetPlayerMaxVital(ByVal Index As Integer, ByVal Vital As VitalType) As Integer
+    Function GetPlayerMaxVital(Index As Integer, Vital As VitalType) As Integer
 
         GetPlayerMaxVital = 0
 
@@ -889,7 +889,7 @@ Module ServerPlayers
 
     End Function
 
-    Friend Function GetPlayerStat(ByVal Index As Integer, ByVal Stat As StatType) As Integer
+    Friend Function GetPlayerStat(Index As Integer, Stat As StatType) As Integer
         Dim x As Integer, i As Integer
 
         GetPlayerStat = 0
@@ -909,64 +909,64 @@ Module ServerPlayers
         GetPlayerStat = x
     End Function
 
-    Function GetPlayerAccess(ByVal Index As Integer) As Integer
+    Function GetPlayerAccess(Index As Integer) As Integer
         GetPlayerAccess = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerAccess = Player(Index).Access
     End Function
 
-    Function GetPlayerMap(ByVal Index As Integer) As Integer
+    Function GetPlayerMap(Index As Integer) As Integer
         GetPlayerMap = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerMap = Player(Index).Character(TempPlayer(Index).CurChar).Map
     End Function
 
-    Function GetPlayerX(ByVal Index As Integer) As Integer
+    Function GetPlayerX(Index As Integer) As Integer
         GetPlayerX = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerX = Player(Index).Character(TempPlayer(Index).CurChar).X
     End Function
 
-    Function GetPlayerY(ByVal Index As Integer) As Integer
+    Function GetPlayerY(Index As Integer) As Integer
         GetPlayerY = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerY = Player(Index).Character(TempPlayer(Index).CurChar).Y
     End Function
 
-    Function GetPlayerDir(ByVal Index As Integer) As Integer
+    Function GetPlayerDir(Index As Integer) As Integer
         GetPlayerDir = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerDir = Player(Index).Character(TempPlayer(Index).CurChar).Dir
     End Function
 
-    Function GetPlayerSprite(ByVal Index As Integer) As Integer
+    Function GetPlayerSprite(Index As Integer) As Integer
         GetPlayerSprite = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerSprite = Player(Index).Character(TempPlayer(Index).CurChar).Sprite
     End Function
 
-    Function GetPlayerPK(ByVal Index As Integer) As Integer
+    Function GetPlayerPK(Index As Integer) As Integer
         GetPlayerPK = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerPK = Player(Index).Character(TempPlayer(Index).CurChar).Pk
     End Function
 
-    Function GetPlayerEquipment(ByVal Index As Integer, ByVal EquipmentSlot As EquipmentType) As Byte
+    Function GetPlayerEquipment(Index As Integer, EquipmentSlot As EquipmentType) As Byte
         GetPlayerEquipment = 0
         If Index > MAX_PLAYERS Then Exit Function
         If EquipmentSlot = 0 Then Exit Function
         GetPlayerEquipment = Player(Index).Character(TempPlayer(Index).CurChar).Equipment(EquipmentSlot)
     End Function
 
-    Sub SetPlayerEquipment(ByVal Index As Integer, ByVal InvNum As Integer, ByVal EquipmentSlot As EquipmentType)
+    Sub SetPlayerEquipment(Index As Integer, InvNum As Integer, EquipmentSlot As EquipmentType)
         Player(Index).Character(TempPlayer(Index).CurChar).Equipment(EquipmentSlot) = InvNum
     End Sub
 
-    Sub SetPlayerDir(ByVal Index As Integer, ByVal Dir As Integer)
+    Sub SetPlayerDir(Index As Integer, Dir As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Dir = Dir
     End Sub
 
-    Sub SetPlayerVital(ByVal Index As Integer, ByVal Vital As VitalType, ByVal Value As Integer)
+    Sub SetPlayerVital(Index As Integer, Vital As VitalType, Value As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Vital(Vital) = Value
 
         If GetPlayerVital(Index, Vital) > GetPlayerMaxVital(Index, Vital) Then
@@ -983,72 +983,72 @@ Module ServerPlayers
         Return Not (Not Blockvar AndAlso (2 ^ Dir))
     End Function
 
-    Function GetPlayerVital(ByVal Index As Integer, ByVal Vital As VitalType) As Integer
+    Function GetPlayerVital(Index As Integer, Vital As VitalType) As Integer
         GetPlayerVital = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerVital = Player(Index).Character(TempPlayer(Index).CurChar).Vital(Vital)
     End Function
 
-    Function GetPlayerLevel(ByVal Index As Integer) As Integer
+    Function GetPlayerLevel(Index As Integer) As Integer
         GetPlayerLevel = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerLevel = Player(Index).Character(TempPlayer(Index).CurChar).Level
     End Function
 
-    Function GetPlayerPOINTS(ByVal Index As Integer) As Integer
+    Function GetPlayerPOINTS(Index As Integer) As Integer
         GetPlayerPOINTS = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerPOINTS = Player(Index).Character(TempPlayer(Index).CurChar).Points
     End Function
 
-    Function GetPlayerNextLevel(ByVal Index As Integer) As Integer
+    Function GetPlayerNextLevel(Index As Integer) As Integer
         GetPlayerNextLevel = ((GetPlayerLevel(Index) + 1) * (GetPlayerStat(Index, StatType.Strength) + GetPlayerStat(Index, StatType.Endurance) + GetPlayerStat(Index, StatType.Intelligence) + GetPlayerStat(Index, StatType.Spirit) + GetPlayerPOINTS(Index)) + StatPtsPerLvl) * Classes(GetPlayerClass(Index)).BaseExp '25
     End Function
 
-    Function GetPlayerExp(ByVal Index As Integer) As Integer
+    Function GetPlayerExp(Index As Integer) As Integer
         GetPlayerExp = Player(Index).Character(TempPlayer(Index).CurChar).Exp
     End Function
 
-    Sub SetPlayerMap(ByVal Index As Integer, ByVal MapNum As Integer)
+    Sub SetPlayerMap(Index As Integer, MapNum As Integer)
         If MapNum > 0 AndAlso MapNum <= MAX_CACHED_MAPS Then
             Player(Index).Character(TempPlayer(Index).CurChar).Map = MapNum
         End If
     End Sub
 
-    Sub SetPlayerX(ByVal Index As Integer, ByVal X As Integer)
+    Sub SetPlayerX(Index As Integer, X As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).X = X
     End Sub
 
-    Sub SetPlayerY(ByVal Index As Integer, ByVal Y As Integer)
+    Sub SetPlayerY(Index As Integer, Y As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Y = Y
     End Sub
 
-    Sub SetPlayerExp(ByVal Index As Integer, ByVal Exp As Integer)
+    Sub SetPlayerExp(Index As Integer, Exp As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Exp = Exp
     End Sub
 
-    Friend Function GetPlayerRawStat(ByVal Index As Integer, ByVal Stat As StatType) As Integer
+    Friend Function GetPlayerRawStat(Index As Integer, Stat As StatType) As Integer
         GetPlayerRawStat = 0
         If Index > MAX_PLAYERS Then Exit Function
 
         GetPlayerRawStat = Player(Index).Character(TempPlayer(Index).CurChar).Stat(Stat)
     End Function
 
-    Friend Sub SetPlayerStat(ByVal Index As Integer, ByVal Stat As StatType, ByVal Value As Integer)
+    Friend Sub SetPlayerStat(Index As Integer, Stat As StatType, Value As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Stat(Stat) = Value
     End Sub
 
-    Sub SetPlayerLevel(ByVal Index As Integer, ByVal Level As Integer)
+    Sub SetPlayerLevel(Index As Integer, Level As Integer)
 
         If Level > MAX_LEVELS Then Exit Sub
         Player(Index).Character(TempPlayer(Index).CurChar).Level = Level
     End Sub
 
-    Sub SetPlayerPOINTS(ByVal Index As Integer, ByVal Points As Integer)
+    Sub SetPlayerPOINTS(Index As Integer, Points As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Points = Points
     End Sub
 
-    Sub CheckPlayerLevelUp(ByVal Index As Integer)
+    Sub CheckPlayerLevelUp(Index As Integer)
         Dim expRollover As Integer
         Dim level_count As Integer
 
@@ -1075,11 +1075,11 @@ Module ServerPlayers
         End If
     End Sub
 
-    Function GetPlayerClass(ByVal Index As Integer) As Integer
+    Function GetPlayerClass(Index As Integer) As Integer
         GetPlayerClass = Player(Index).Character(TempPlayer(Index).CurChar).Classes
     End Function
 
-    Sub SetPlayerPK(ByVal Index As Integer, ByVal PK As Integer)
+    Sub SetPlayerPK(Index As Integer, PK As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Pk = PK
     End Sub
 
@@ -1087,7 +1087,7 @@ Module ServerPlayers
 #End Region
 
 #Region "Incoming Packets"
-    Friend Sub HandleUseChar(ByVal Index As Integer)
+    Friend Sub HandleUseChar(Index As Integer)
         If Not IsPlaying(Index) Then
             JoinGame(Index)
             Dim text = String.Format("{0} | {1} has began playing {2}.", GetPlayerLogin(Index), GetPlayerName(Index), Options.GameName)
@@ -1100,7 +1100,7 @@ Module ServerPlayers
 #End Region
 
 #Region "Outgoing Packets"
-    Sub SendLeaveMap(ByVal Index As Integer, ByVal MapNum As Integer)
+    Sub SendLeaveMap(Index As Integer, MapNum As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SLeftMap)
@@ -1114,7 +1114,7 @@ Module ServerPlayers
 #End Region
 
 #Region "Movement"
-    Sub PlayerWarp(ByVal Index As Integer, ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, Optional HouseTeleport As Boolean = False)
+    Sub PlayerWarp(Index As Integer, MapNum As Integer, X As Integer, Y As Integer, Optional HouseTeleport As Boolean = False)
         Dim OldMap As Integer
         Dim i As Integer
         Dim Buffer As ByteStream
@@ -1237,7 +1237,7 @@ Module ServerPlayers
 
     End Sub
 
-    Sub PlayerMove(ByVal Index As Integer, ByVal Dir As Integer, ByVal Movement As Integer, ExpectingWarp As Boolean)
+    Sub PlayerMove(Index As Integer, Dir As Integer, Movement As Integer, ExpectingWarp As Boolean)
         Dim MapNum As Integer, Buffer As ByteStream
         Dim x As Integer, y As Integer, begineventprocessing As Boolean
         Dim Moved As Boolean, DidWarp As Boolean
@@ -1665,7 +1665,7 @@ Module ServerPlayers
 
 #Region "Inventory"
 
-    Function HasItem(ByVal Index As Integer, ByVal ItemNum As Integer) As Integer
+    Function HasItem(Index As Integer, ItemNum As Integer) As Integer
         Dim i As Integer
 
         ' Check for subscript out of range
@@ -1687,7 +1687,7 @@ Module ServerPlayers
 
     End Function
 
-    Function FindItemSlot(ByVal Index As Integer, ByVal ItemNum As Integer) As Integer
+    Function FindItemSlot(Index As Integer, ItemNum As Integer) As Integer
         Dim i As Integer
 
         ' Check for subscript out of range
@@ -1705,7 +1705,7 @@ Module ServerPlayers
 
     End Function
 
-    Function GetPlayerInvItemNum(ByVal Index As Integer, ByVal InvSlot As Integer) As Integer
+    Function GetPlayerInvItemNum(Index As Integer, InvSlot As Integer) As Integer
         GetPlayerInvItemNum = 0
         If Index > MAX_PLAYERS Then Exit Function
         If InvSlot = 0 Then Exit Function
@@ -1713,13 +1713,13 @@ Module ServerPlayers
         GetPlayerInvItemNum = Player(Index).Character(TempPlayer(Index).CurChar).Inv(InvSlot).Num
     End Function
 
-    Function GetPlayerInvItemValue(ByVal Index As Integer, ByVal InvSlot As Integer) As Integer
+    Function GetPlayerInvItemValue(Index As Integer, InvSlot As Integer) As Integer
         GetPlayerInvItemValue = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerInvItemValue = Player(Index).Character(TempPlayer(Index).CurChar).Inv(InvSlot).Value
     End Function
 
-    Sub PlayerMapGetItem(ByVal Index As Integer)
+    Sub PlayerMapGetItem(Index As Integer)
         Dim i As Integer, itemnum As Integer
         Dim n As Integer
         Dim MapNum As Integer
@@ -1793,15 +1793,15 @@ Module ServerPlayers
         Next
     End Sub
 
-    Sub SetPlayerInvItemValue(ByVal Index As Integer, ByVal InvSlot As Integer, ByVal ItemValue As Integer)
+    Sub SetPlayerInvItemValue(Index As Integer, InvSlot As Integer, ItemValue As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Inv(InvSlot).Value = ItemValue
     End Sub
 
-    Sub SetPlayerInvItemNum(ByVal Index As Integer, ByVal invSlot As Integer, ByVal itemNum As Integer)
+    Sub SetPlayerInvItemNum(Index As Integer, invSlot As Integer, itemNum As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Inv(invSlot).Num = itemNum
     End Sub
 
-    Function FindOpenInvSlot(ByVal Index As Integer, ByVal ItemNum As Integer) As Integer
+    Function FindOpenInvSlot(Index As Integer, ItemNum As Integer) As Integer
         Dim i As Integer
 
         ' Check for subscript out of range
@@ -1829,7 +1829,7 @@ Module ServerPlayers
 
     End Function
 
-    Function TakeInvItem(ByVal Index As Integer, ByVal ItemNum As Integer, ByVal ItemVal As Integer) As Boolean
+    Function TakeInvItem(Index As Integer, ItemNum As Integer, ItemVal As Integer) As Boolean
         Dim i As Integer
 
         TakeInvItem = False
@@ -1869,7 +1869,7 @@ Module ServerPlayers
 
     End Function
 
-    Function GiveInvItem(ByVal Index As Integer, ByVal ItemNum As Integer, ByVal ItemVal As Integer, Optional ByVal SendUpdate As Boolean = True) As Boolean
+    Function GiveInvItem(Index As Integer, ItemNum As Integer, ItemVal As Integer, Optional SendUpdate As Boolean = True) As Boolean
         Dim i As Integer
 
         ' Check for subscript out of range
@@ -1893,7 +1893,7 @@ Module ServerPlayers
 
     End Function
 
-    Sub PlayerMapDropItem(ByVal Index As Integer, ByVal InvNum As Integer, ByVal Amount As Integer)
+    Sub PlayerMapDropItem(Index As Integer, InvNum As Integer, Amount As Integer)
         Dim i As Integer
 
         ' Check for subscript out of range
@@ -1948,7 +1948,7 @@ Module ServerPlayers
 
     End Sub
 
-    Function TakeInvSlot(ByVal Index As Integer, ByVal InvSlot As Integer, ByVal ItemVal As Integer) As Boolean
+    Function TakeInvSlot(Index As Integer, InvSlot As Integer, ItemVal As Integer) As Boolean
         Dim itemNum
 
         TakeInvSlot = False
@@ -1978,7 +1978,7 @@ Module ServerPlayers
 
     End Function
 
-    Friend Sub UseItem(ByVal Index As Integer, ByVal InvNum As Integer)
+    Friend Sub UseItem(Index As Integer, InvNum As Integer)
         Dim InvItemNum As Integer, i As Integer, n As Integer, x As Integer, y As Integer, tempitem As Integer
         Dim m As Integer, tempdata(StatType.Count + 3) As Long, tempstr(2) As String
 
@@ -2647,7 +2647,7 @@ Module ServerPlayers
         End If
     End Sub
 
-    Sub PlayerSwitchInvSlots(ByVal Index As Integer, ByVal OldSlot As Integer, ByVal NewSlot As Integer)
+    Sub PlayerSwitchInvSlots(Index As Integer, OldSlot As Integer, NewSlot As Integer)
         Dim OldNum As Integer, OldValue As Integer, OldRarity As Integer, OldPrefix As String
         Dim OldSuffix As String, OldSpeed As Integer, OldDamage As Integer
         Dim NewNum As Integer, NewValue As Integer, NewRarity As Integer, NewPrefix As String
@@ -2725,7 +2725,7 @@ Module ServerPlayers
 #End Region
 
 #Region "Equipment"
-    Sub CheckEquippedItems(ByVal Index As Integer)
+    Sub CheckEquippedItems(Index As Integer)
         Dim itemNum As Integer
         Dim i As Integer
 
@@ -2764,7 +2764,7 @@ Module ServerPlayers
 
     End Sub
 
-    Sub PlayerUnequipItem(ByVal Index As Integer, ByVal EqSlot As Integer)
+    Sub PlayerUnequipItem(Index As Integer, EqSlot As Integer)
         Dim i As Integer, m As Integer, itemnum As Integer
 
         If EqSlot <= 0 OrElse EqSlot > EquipmentType.Count - 1 Then Exit Sub ' exit out early if error'd
@@ -2807,7 +2807,7 @@ Module ServerPlayers
 #End Region
 
 #Region "Misc"
-    Sub JoinGame(ByVal Index As Integer)
+    Sub JoinGame(Index As Integer)
         Dim i As Integer
 
         ' Set the flag so we know the person is in the game
@@ -2869,7 +2869,7 @@ Module ServerPlayers
         UpdateCaption()
     End Sub
 
-    Sub LeftGame(ByVal Index As Integer)
+    Sub LeftGame(Index As Integer)
         Dim i As Integer
         Dim tradeTarget As Integer
 
@@ -2937,7 +2937,7 @@ Module ServerPlayers
         UpdateCaption()
     End Sub
 
-    Friend Sub KillPlayer(ByVal Index As Integer)
+    Friend Sub KillPlayer(Index As Integer)
         Dim exp As Integer
 
         ' Calculate exp to give attacker
@@ -2956,7 +2956,7 @@ Module ServerPlayers
         OnDeath(Index)
     End Sub
 
-    Sub OnDeath(ByVal Index As Integer)
+    Sub OnDeath(Index As Integer)
         'Dim i As Integer
 
         ' Set HP to nothing
@@ -2996,7 +2996,7 @@ Module ServerPlayers
 
     End Sub
 
-    Function GetPlayerVitalRegen(ByVal Index As Integer, ByVal Vital As VitalType) As Integer
+    Function GetPlayerVitalRegen(Index As Integer, Vital As VitalType) As Integer
         Dim i As Integer
 
         ' Prevent subscript out of range
@@ -3018,7 +3018,7 @@ Module ServerPlayers
         GetPlayerVitalRegen = i
     End Function
 
-    Friend Sub HandleNpcKillExperience(ByVal Index As Integer, ByVal NpcNum As Integer)
+    Friend Sub HandleNpcKillExperience(Index As Integer, NpcNum As Integer)
         ' Get the experience we'll have to hand out. If it's negative, just ignore this method.
         Dim Experience = Npc(NpcNum).Exp
         If Experience <= 0 Then Exit Sub
@@ -3031,7 +3031,7 @@ Module ServerPlayers
         End If
     End Sub
 
-    Friend Sub HandlePlayerKillExperience(ByVal Attacker As Integer, ByVal Victim As Integer)
+    Friend Sub HandlePlayerKillExperience(Attacker As Integer, Victim As Integer)
         ' Calculate exp to give attacker
         Dim exp = (GetPlayerExp(Victim) \ 10)
 
@@ -3061,7 +3061,7 @@ Module ServerPlayers
 #End Region
 
 #Region "Skills"
-    Function FindOpenSkillSlot(ByVal Index As Integer) As Integer
+    Function FindOpenSkillSlot(Index As Integer) As Integer
         Dim i As Integer
 
         For i = 1 To MAX_PLAYER_SKILLS
@@ -3075,14 +3075,14 @@ Module ServerPlayers
 
     End Function
 
-    Function GetPlayerSkill(ByVal Index As Integer, ByVal Skillslot As Integer) As Integer
+    Function GetPlayerSkill(Index As Integer, Skillslot As Integer) As Integer
         GetPlayerSkill = 0
         If Index > MAX_PLAYERS Then Exit Function
 
         GetPlayerSkill = Player(Index).Character(TempPlayer(Index).CurChar).Skill(Skillslot)
     End Function
 
-    Friend Function GetPlayerSkillSlot(ByVal Index As Integer, ByVal SkillId As Integer) As Integer
+    Friend Function GetPlayerSkillSlot(Index As Integer, SkillId As Integer) As Integer
         GetPlayerSkillSlot = -1
         If Index < 0 OrElse Index > MAX_PLAYERS Then Exit Function
         Dim data = Player(Index).Character(TempPlayer(Index).CurChar).Skill.Where(Function(x) x = SkillId).ToArray()
@@ -3091,7 +3091,7 @@ Module ServerPlayers
         End If
     End Function
 
-    Function HasSkill(ByVal Index As Integer, ByVal Skillnum As Integer) As Boolean
+    Function HasSkill(Index As Integer, Skillnum As Integer) As Boolean
         Dim i As Integer
 
         For i = 1 To MAX_PLAYER_SKILLS
@@ -3105,11 +3105,11 @@ Module ServerPlayers
 
     End Function
 
-    Sub SetPlayerSkill(ByVal Index As Integer, ByVal Skillslot As Integer, ByVal Skillnum As Integer)
+    Sub SetPlayerSkill(Index As Integer, Skillslot As Integer, Skillnum As Integer)
         Player(Index).Character(TempPlayer(Index).CurChar).Skill(Skillslot) = Skillnum
     End Sub
 
-    Friend Sub BufferSkill(ByVal Index As Integer, ByVal Skillslot As Integer)
+    Friend Sub BufferSkill(Index As Integer, Skillslot As Integer)
         Dim skillnum As Integer
         Dim MPCost As Integer
         Dim LevelReq As Integer
@@ -3253,7 +3253,7 @@ Module ServerPlayers
 #End Region
 
 #Region "Bank"
-    Sub GiveBankItem(ByVal Index As Integer, ByVal InvSlot As Integer, ByVal Amount As Integer)
+    Sub GiveBankItem(Index As Integer, InvSlot As Integer, Amount As Integer)
         Dim BankSlot As Integer, itemnum As Integer
 
         If InvSlot < 0 OrElse InvSlot > MAX_INV Then Exit Sub
@@ -3303,23 +3303,23 @@ Module ServerPlayers
 
     End Sub
 
-    Function GetPlayerBankItemNum(ByVal Index As Integer, ByVal BankSlot As Byte) As Integer
+    Function GetPlayerBankItemNum(Index As Integer, BankSlot As Byte) As Integer
         GetPlayerBankItemNum = Bank(Index).Item(BankSlot).Num
     End Function
 
-    Sub SetPlayerBankItemNum(ByVal Index As Integer, ByVal BankSlot As Byte, ByVal ItemNum As Integer)
+    Sub SetPlayerBankItemNum(Index As Integer, BankSlot As Byte, ItemNum As Integer)
         Bank(Index).Item(BankSlot).Num = ItemNum
     End Sub
 
-    Function GetPlayerBankItemValue(ByVal Index As Integer, ByVal BankSlot As Byte) As Integer
+    Function GetPlayerBankItemValue(Index As Integer, BankSlot As Byte) As Integer
         GetPlayerBankItemValue = Bank(Index).Item(BankSlot).Value
     End Function
 
-    Sub SetPlayerBankItemValue(ByVal Index As Integer, ByVal BankSlot As Byte, ByVal ItemValue As Integer)
+    Sub SetPlayerBankItemValue(Index As Integer, BankSlot As Byte, ItemValue As Integer)
         Bank(Index).Item(BankSlot).Value = ItemValue
     End Sub
 
-    Function FindOpenBankSlot(ByVal Index As Integer, ByVal ItemNum As Integer) As Byte
+    Function FindOpenBankSlot(Index As Integer, ItemNum As Integer) As Byte
         Dim i As Integer
 
         If Not IsPlaying(Index) Then Exit Function
@@ -3343,7 +3343,7 @@ Module ServerPlayers
 
     End Function
 
-    Sub TakeBankItem(ByVal Index As Integer, ByVal BankSlot As Integer, ByVal Amount As Integer)
+    Sub TakeBankItem(Index As Integer, BankSlot As Integer, Amount As Integer)
         Dim invSlot
 
         If BankSlot < 0 OrElse BankSlot > MAX_BANK Then Exit Sub
@@ -3395,7 +3395,7 @@ Module ServerPlayers
 
     End Sub
 
-    Sub PlayerSwitchBankSlots(ByVal Index As Integer, ByVal OldSlot As Integer, ByVal NewSlot As Integer)
+    Sub PlayerSwitchBankSlots(Index As Integer, OldSlot As Integer, NewSlot As Integer)
         Dim OldNum As Integer, OldValue As Integer, NewNum As Integer, NewValue As Integer
         Dim i As Integer, NewStats() As Integer, OldStats() As Integer
         Dim NewRarity As Integer, OldRarity As Integer, NewPrefix As String, OldPrefix As String, NewSuffix As String

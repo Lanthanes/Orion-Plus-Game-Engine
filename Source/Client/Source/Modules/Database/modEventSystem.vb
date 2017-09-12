@@ -809,7 +809,7 @@ nextevent:
 
     End Sub
 
-    Friend Sub DrawEvent(ByVal Id As Integer) ' draw on map, outside the editor
+    Friend Sub DrawEvent(Id As Integer) ' draw on map, outside the editor
         Dim X As Integer, Y As Integer, Width As Integer, Height As Integer, sRect As Rectangle, Anim As Integer, spritetop As Integer
 
         If Map.MapEvents(Id).Visible = 0 Then Exit Sub
@@ -983,7 +983,7 @@ nextevent:
 
 #Region "Misc"
 
-    Sub ProcessEventMovement(ByVal Id As Integer)
+    Sub ProcessEventMovement(Id As Integer)
 
         If Id > Map.EventCount Then Exit Sub
         If Id > Map.MapEvents.Length Then Exit Sub
@@ -1029,7 +1029,7 @@ nextevent:
 
     End Sub
 
-    Friend Function GetColorString(ByVal Color As Integer)
+    Friend Function GetColorString(Color As Integer)
 
         Select Case Color
             Case 0

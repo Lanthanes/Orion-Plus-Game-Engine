@@ -2,7 +2,7 @@
 Imports Orion
 
 Module ServerGeneral
-    Friend Declare Function GetQueueStatus Lib "user32" (ByVal fuFlags As Integer) As Integer
+    Friend Declare Function GetQueueStatus Lib "user32" (fuFlags As Integer) As Integer
     Friend ServerDestroyed As Boolean
     Friend MyIPAddress As String
     Friend myStopWatch As New Stopwatch()
@@ -180,7 +180,7 @@ Module ServerGeneral
         vbQuote = Chr(34) ' "
 
         ' load options, set if they dont exist
-        If Not FileExist(Path.Combine(Application.StartupPath, "Data", "Config.xml")) Then
+        If Not File.Exists(Path.Combine(Application.StartupPath, "Data", "Config.xml")) Then
 
             Options.GameName = "Orion+"
             Options.Port = 7001
@@ -213,7 +213,7 @@ Module ServerGeneral
         SpawnAllMapNpcs()
 
         ' Check if the master charlist file exists for checking duplicate names, and if it doesnt make it
-        If Not FileExist("data\accounts\charlist.txt") Then
+        If Not File.Exists("data\accounts\charlist.txt") Then
             F = FreeFile()
         End If
 
@@ -338,7 +338,7 @@ Module ServerGeneral
     End Sub
 
     ' Used for checking validity of names
-    Function IsNameLegal(ByVal sInput As Integer) As Boolean
+    Function IsNameLegal(sInput As Integer) As Boolean
 
         If (sInput >= 65 AndAlso sInput <= 90) OrElse (sInput >= 97 AndAlso sInput <= 122) OrElse (sInput = 95) OrElse (sInput = 32) OrElse (sInput >= 48 AndAlso sInput <= 57) Then
             Return True
@@ -348,23 +348,11 @@ Module ServerGeneral
 
     End Function
 
-    Function FileExist(ByVal file_path) As Boolean
-        FileExist = IO.File.Exists(file_path)
-    End Function
-
-    Friend Sub DoEvents()
-        Application.DoEvents()
+    Friend Sub CheckDir(path As String)
+        If Not Directory.Exists(path) Then Directory.CreateDirectory(path)
     End Sub
 
-    Friend Sub CheckDir(ByVal DirPath As String)
-
-        If Not IO.Directory.Exists(DirPath) Then
-            IO.Directory.CreateDirectory(DirPath)
-        End If
-
-    End Sub
-
-    Sub ErrorHandler(ByVal sender As Object, ByVal args As UnhandledExceptionEventArgs)
+    Sub ErrorHandler(sender As Object, args As UnhandledExceptionEventArgs)
         Dim e As Exception = DirectCast(args.ExceptionObject, Exception)
         Dim myFilePath As String = Path.Combine(Application.StartupPath, "data", "logs", "ErrorLog.log")
 

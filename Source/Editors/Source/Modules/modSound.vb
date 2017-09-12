@@ -1,4 +1,5 @@
-﻿Imports SFML.Audio
+﻿Imports System.IO
+Imports SFML.Audio
 
 Module modSound
     'Music + Sound Players
@@ -14,8 +15,8 @@ Module modSound
     Friend CurMusic As String
     Friend MaxVolume As Single
 
-    Sub PlayMusic(ByVal FileName As String)
-        If Not Options.Music = 1 OrElse Not FileExist(Application.StartupPath & MUSIC_PATH & FileName) Then Exit Sub
+    Sub PlayMusic(FileName As String)
+        If Not Options.Music = 1 OrElse Not File.Exists(Application.StartupPath & MUSIC_PATH & FileName) Then Exit Sub
         If FileName = CurMusic Then Exit Sub
 
         If MusicPlayer Is Nothing Then
@@ -48,8 +49,8 @@ Module modSound
         CurMusic = ""
     End Sub
 
-    Sub PlayPreview(ByVal FileName As String)
-        If Not Options.Music = 1 OrElse Not FileExist(Application.StartupPath & MUSIC_PATH & FileName) Then Exit Sub
+    Sub PlayPreview(FileName As String)
+        If Not Options.Music = 1 OrElse Not File.Exists(Application.StartupPath & MUSIC_PATH & FileName) Then Exit Sub
 
         If PreviewPlayer Is Nothing Then
             Try
@@ -81,8 +82,8 @@ Module modSound
         PreviewPlayer = Nothing
     End Sub
 
-    Sub PlaySound(ByVal FileName As String, Optional Looped As Boolean = False)
-        If Not Options.Sound = 1 OrElse Not FileExist(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
+    Sub PlaySound(FileName As String, Optional Looped As Boolean = False)
+        If Not Options.Sound = 1 OrElse Not File.Exists(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
 
         Dim buffer As SoundBuffer
         If SoundPlayer Is Nothing Then
@@ -116,8 +117,8 @@ Module modSound
         SoundPlayer = Nothing
     End Sub
 
-    Sub PlayExtraSound(ByVal FileName As String, Optional Looped As Boolean = False)
-        If Not Options.Sound = 1 OrElse Not FileExist(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
+    Sub PlayExtraSound(FileName As String, Optional Looped As Boolean = False)
+        If Not Options.Sound = 1 OrElse Not File.Exists(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
         'If FileName = CurExtraSound Then Exit Sub
 
         Dim buffer As SoundBuffer

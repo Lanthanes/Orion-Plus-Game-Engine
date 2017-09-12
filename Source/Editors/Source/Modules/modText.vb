@@ -15,7 +15,7 @@ Module modText
     ' Game text buffer
     Friend MyText As String = ""
 
-    Friend Sub DrawText(ByVal X As Integer, ByVal y As Integer, ByVal text As String, ByVal color As Color, ByVal BackColor As Color, ByRef target As RenderWindow, Optional TextSize As Byte = FONT_SIZE)
+    Friend Sub DrawText(X As Integer, y As Integer, text As String, color As Color, BackColor As Color, ByRef target As RenderWindow, Optional TextSize As Byte = FONT_SIZE)
         Dim mystring As Text = New Text(text, SFMLGameFont)
         mystring.CharacterSize = TextSize
 
@@ -38,7 +38,7 @@ Module modText
 
     End Sub
 
-    Friend Sub DrawNPCName(ByVal MapNpcNum As Integer)
+    Friend Sub DrawNPCName(MapNpcNum As Integer)
         Dim TextX As Integer
         Dim TextY As Integer
         Dim color As Color, backcolor As Color
@@ -69,7 +69,7 @@ Module modText
         DrawText(TextX, TextY, Trim$(Npc(npcNum).Name), color, backcolor, GameWindow)
     End Sub
 
-    Friend Sub DrawEventName(ByVal Index As Integer)
+    Friend Sub DrawEventName(Index As Integer)
         Dim TextX As Integer
         Dim TextY As Integer
         Dim color As Color, backcolor As Color
@@ -170,7 +170,7 @@ Module modText
 
     End Sub
 
-    Friend Function GetTextWidth(ByVal text As String, Optional textsize As Byte = FONT_SIZE) As Integer
+    Friend Function GetTextWidth(text As String, Optional textsize As Byte = FONT_SIZE) As Integer
         Dim mystring As Text = New Text(text, SFMLGameFont)
         Dim textBounds As FloatRect
         mystring.CharacterSize = textsize
@@ -178,7 +178,7 @@ Module modText
         Return textBounds.Width
     End Function
 
-    Friend Function GetSFMLColor(ByVal Color As Byte) As Color
+    Friend Function GetSFMLColor(Color As Byte) As Color
         Select Case Color
             Case ColorType.Black
                 Return SFML.Graphics.Color.Black
@@ -297,7 +297,7 @@ Module modText
 
     End Function
 
-    'Friend Function KeyPressed(ByVal e As KeyEventArgs) As String
+    'Friend Function KeyPressed(e As KeyEventArgs) As String
 
     '    Dim keyValue As String = ""
 

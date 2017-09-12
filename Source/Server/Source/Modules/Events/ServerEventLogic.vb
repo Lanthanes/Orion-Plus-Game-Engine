@@ -132,7 +132,7 @@ Friend Module ServerEventLogic
     End Sub
 
     Friend Sub SpawnNewEvents()
-        Dim Buffer As ByteStream, pageID As Integer, id As Integer, compare As Integer, i As Integer, MapNum As Integer
+        Dim pageID As Integer, id As Integer, compare As Integer, i As Integer, MapNum As Integer
         Dim n As Integer, x As Integer, z As Integer, spawnevent As Boolean, p As Integer
 
         'That was only removing events... now we gotta worry about spawning them again, luckily, it is almost the same exact thing, but backwards!
@@ -311,7 +311,7 @@ Friend Module ServerEventLogic
                                 If spawnevent Then TempEventMap(MapNum).Events(id).Active = z : TempEventMap(MapNum).Events(id).Position = Map(MapNum).Events(id).Pages(z).Position
                             End If
 
-                            Buffer = New ByteStream(4)
+                            Dim Buffer = New ByteStream(4)
                             Buffer.WriteInt32(ServerPackets.SSpawnEvent)
                             Buffer.WriteInt32(id)
                             With TempPlayer(i).EventMap.EventPages(x)
@@ -728,7 +728,7 @@ Friend Module ServerEventLogic
                     Next
                 End If
             End If
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
@@ -1125,7 +1125,7 @@ Friend Module ServerEventLogic
                     Next
                 End If
             End If
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
@@ -2228,7 +2228,7 @@ Friend Module ServerEventLogic
                             End If
                         End If
                     End If
-                    DoEvents()
+                    Application.DoEvents()
                 Next i
             Next j
 
@@ -2321,7 +2321,7 @@ Friend Module ServerEventLogic
             path(tim).Y = LastY
 
             'Now we loop back and decrease tim, and look for the next square with lower value
-            DoEvents()
+            Application.DoEvents()
         Loop
 
         'Ok we got a path. Now, lets look at the first step and see what direction we should take.
@@ -2341,7 +2341,7 @@ Friend Module ServerEventLogic
         Dim i As Integer
 
         For i = 0 To MAX_MAPS
-            DoEvents()
+            Application.DoEvents()
             SpawnGlobalEvents(i)
         Next
 
@@ -2409,7 +2409,6 @@ Friend Module ServerEventLogic
 
     Friend Sub SpawnMapEventsFor(Index As Integer, MapNum As Integer)
         Dim i As Integer, z As Integer, spawncurrentevent As Boolean, p As Integer, compare As Integer
-        Dim Buffer As New ByteStream(4)
 
         TempPlayer(Index).EventMap.CurrentEvents = 0
         ReDim TempPlayer(Index).EventMap.EventPages(0)
@@ -2577,14 +2576,14 @@ Friend Module ServerEventLogic
                                 .FixedDir = Map(MapNum).Events(i).Pages(z).DirFix
                                 .QuestNum = Map(MapNum).Events(i).Pages(z).QuestNum
                             End With
-                            GoTo nextevent
+                            Exit For
                         End If
                     End With
                 Next
             End If
-nextevent:
         Next
 
+        Dim buffer As ByteStream
         If TempPlayer(Index).EventMap.CurrentEvents > 0 Then
             For i = 1 To TempPlayer(Index).EventMap.CurrentEvents
                 Buffer = New ByteStream(4)

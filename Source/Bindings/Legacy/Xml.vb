@@ -12,7 +12,7 @@ Friend Class XmlClass
             Return m_Root
         End Get
 
-        Set(ByVal value As String)
+        Set(value As String)
             m_Root = value
         End Set
 
@@ -23,7 +23,7 @@ Friend Class XmlClass
             Return m_Filename
         End Get
 
-        Set(ByVal value As String)
+        Set(value As String)
             m_Filename = value
         End Set
 
@@ -45,7 +45,7 @@ Friend Class XmlClass
 
     End Sub
 
-    Friend Sub WriteString(ByVal Selection As String, ByVal Name As String, ByVal Value As String)
+    Friend Sub WriteString(Selection As String, Name As String, Value As String)
         'Dim xmlDoc As New XmlDocument()
 
         'Check if xml filename is here.
@@ -85,7 +85,7 @@ Friend Class XmlClass
         'xmlDoc = Nothing
     End Sub
 
-    Friend Function ReadString(ByVal Selection As String, ByVal Name As String, Optional ByVal DefaultValue As String = "") As String
+    Friend Function ReadString(Selection As String, Name As String, Optional DefaultValue As String = "") As String
         'Dim xmlDoc As New XmlDocument()
 
         If Not File.Exists(Me.Filename) Then
@@ -109,7 +109,7 @@ Friend Class XmlClass
         End If
     End Function
 
-    Friend Sub RemoveNode(ByVal Selection As String, ByVal Name As String)
+    Friend Sub RemoveNode(Selection As String, Name As String)
         'Dim xmlDoc As New XmlDocument()
 
         'Remove xml node

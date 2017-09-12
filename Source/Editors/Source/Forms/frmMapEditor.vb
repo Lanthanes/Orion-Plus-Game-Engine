@@ -4,7 +4,7 @@ Friend Class frmMapEditor
 
 #Region "Form Code"
 
-    Private Sub FrmEditor_Map_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Shown
+    Private Sub FrmEditor_Map_Load(sender As Object, e As EventArgs) Handles MyBase.Shown
         cmbTileSets.SelectedIndex = 0
         pnlAttributes.BringToFront()
         pnlAttributes.Visible = False
@@ -49,31 +49,31 @@ Friend Class frmMapEditor
         MapEditorCancel()
     End Sub
 
-    Private Sub PicBackSelect_MouseDown(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picBackSelect.MouseDown
+    Private Sub PicBackSelect_MouseDown(sender As Object, e As MouseEventArgs) Handles picBackSelect.MouseDown
         MapEditorChooseTile(e.Button, e.X, e.Y)
     End Sub
 
-    Private Sub PicBackSelect_MouseMove(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picBackSelect.MouseMove
+    Private Sub PicBackSelect_MouseMove(sender As Object, e As MouseEventArgs) Handles picBackSelect.MouseMove
         MapEditorDrag(e.Button, e.X, e.Y)
     End Sub
 
-    Private Overloads Sub PicBackSelect_Paint(ByVal sender As Object, ByVal e As PaintEventArgs) Handles picBackSelect.Paint
+    Private Overloads Sub PicBackSelect_Paint(sender As Object, e As PaintEventArgs) Handles picBackSelect.Paint
         'Overrides the paint sub
     End Sub
 
-    Private Overloads Sub PnlBack_Paint(ByVal sender As Object, ByVal e As PaintEventArgs) Handles pnlBack.Paint
+    Private Overloads Sub PnlBack_Paint(sender As Object, e As PaintEventArgs) Handles pnlBack.Paint
         'Overrides the paint sub
     End Sub
 
-    Private Overloads Sub PnlBack2_Paint(ByVal sender As Object, ByVal e As PaintEventArgs) Handles pnlBack2.Paint
+    Private Overloads Sub PnlBack2_Paint(sender As Object, e As PaintEventArgs) Handles pnlBack2.Paint
         'Overrides the paint sub
     End Sub
 
-    Private Sub ScrlPictureY_Scroll(ByVal sender As Object, ByVal e As EventArgs) Handles scrlPictureY.ValueChanged
+    Private Sub ScrlPictureY_Scroll(sender As Object, e As EventArgs) Handles scrlPictureY.ValueChanged
         MapEditorTileScroll()
     End Sub
 
-    Private Sub ScrlPictureX_Scroll(ByVal sender As Object, ByVal e As EventArgs) Handles scrlPictureX.ValueChanged
+    Private Sub ScrlPictureX_Scroll(sender As Object, e As EventArgs) Handles scrlPictureX.ValueChanged
         MapEditorTileScroll()
     End Sub
 
@@ -197,18 +197,18 @@ Friend Class frmMapEditor
 #End Region
 
 #Region "PicScreen"
-    Private Sub Picscreen_MouseDown(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picScreen.MouseDown
+    Private Sub Picscreen_MouseDown(sender As Object, e As MouseEventArgs) Handles picScreen.MouseDown
         If e.X > pnlBack2.Width - 32 OrElse e.Y > pnlBack2.Height - 32 Then Exit Sub
         MapEditorMouseDown(e.Button, e.X, e.Y, False)
 
     End Sub
 
-    Private Overloads Sub Picscreen_Paint(ByVal sender As Object, ByVal e As PaintEventArgs) Handles picScreen.Paint
+    Private Overloads Sub Picscreen_Paint(sender As Object, e As PaintEventArgs) Handles picScreen.Paint
         'This is here to make sure that the box dosen't try to re-paint itself... saves time and w/e else
         Exit Sub
     End Sub
 
-    Private Sub Picscreen_MouseMove(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picScreen.MouseMove
+    Private Sub Picscreen_MouseMove(sender As Object, e As MouseEventArgs) Handles picScreen.MouseMove
 
         CurX = TileView.Left + ((e.Location.X + Camera.Left) \ PIC_X)
         CurY = TileView.Top + ((e.Location.Y + Camera.Top) \ PIC_Y)
@@ -223,7 +223,7 @@ Friend Class frmMapEditor
         tslCurXY.Text = "X: " & CurX & " - " & " Y: " & CurY
     End Sub
 
-    Private Sub Picscreen_MouseUp(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picScreen.MouseUp
+    Private Sub Picscreen_MouseUp(sender As Object, e As MouseEventArgs) Handles picScreen.MouseUp
 
         CurX = TileView.Left + ((e.Location.X + Camera.Left) \ PIC_X)
         CurY = TileView.Top + ((e.Location.Y + Camera.Top) \ PIC_Y)
@@ -238,19 +238,19 @@ Friend Class frmMapEditor
         FrmVisualWarp.Visible = True
     End Sub
 
-    Private Sub ScrlMapWarpMap_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) Handles scrlMapWarpMap.Scroll
+    Private Sub ScrlMapWarpMap_Scroll(sender As Object, e As ScrollEventArgs) Handles scrlMapWarpMap.Scroll
         lblMapWarpMap.Text = "Map: " & scrlMapWarpMap.Value
     End Sub
 
-    Private Sub ScrlMapWarpX_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) Handles scrlMapWarpX.Scroll
+    Private Sub ScrlMapWarpX_Scroll(sender As Object, e As ScrollEventArgs) Handles scrlMapWarpX.Scroll
         lblMapWarpX.Text = "X: " & scrlMapWarpX.Value
     End Sub
 
-    Private Sub ScrlMapWarpY_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) Handles scrlMapWarpY.Scroll
+    Private Sub ScrlMapWarpY_Scroll(sender As Object, e As ScrollEventArgs) Handles scrlMapWarpY.Scroll
         lblMapWarpY.Text = "Y: " & scrlMapWarpY.Value
     End Sub
 
-    Private Sub BtnMapWarp_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnMapWarp.Click
+    Private Sub BtnMapWarp_Click(sender As Object, e As EventArgs) Handles btnMapWarp.Click
         EditorWarpMap = scrlMapWarpMap.Value
 
         EditorWarpX = scrlMapWarpX.Value
@@ -259,7 +259,7 @@ Friend Class frmMapEditor
         fraMapWarp.Visible = False
     End Sub
 
-    Private Sub OptWarp_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles optWarp.CheckedChanged
+    Private Sub OptWarp_CheckedChanged(sender As Object, e As EventArgs) Handles optWarp.CheckedChanged
 
         If optWarp.Checked = True Then
             ClearAttributeDialogue()
@@ -269,7 +269,7 @@ Friend Class frmMapEditor
 
     End Sub
 
-    Private Sub ScrlMapItem_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) Handles scrlMapItem.Scroll
+    Private Sub ScrlMapItem_Scroll(sender As Object, e As ScrollEventArgs) Handles scrlMapItem.Scroll
         If Item(scrlMapItem.Value).Type = ItemType.Currency OrElse Item(scrlMapItem.Value).Stackable = 1 Then
             scrlMapItemValue.Enabled = True
         Else
@@ -281,18 +281,18 @@ Friend Class frmMapEditor
         lblMapItem.Text = "Item: " & scrlMapItem.Value & ". " & Trim$(Item(scrlMapItem.Value).Name) & " x" & scrlMapItemValue.Value
     End Sub
 
-    Private Sub ScrlMapItemValue_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) Handles scrlMapItemValue.Scroll
+    Private Sub ScrlMapItemValue_Scroll(sender As Object, e As ScrollEventArgs) Handles scrlMapItemValue.Scroll
         lblMapItem.Text = Trim$(Item(scrlMapItem.Value).Name) & " x" & scrlMapItemValue.Value
     End Sub
 
-    Private Sub BtnMapItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnMapItem.Click
+    Private Sub BtnMapItem_Click(sender As Object, e As EventArgs) Handles btnMapItem.Click
         ItemEditorNum = scrlMapItem.Value
         ItemEditorValue = scrlMapItemValue.Value
         pnlAttributes.Visible = False
         fraMapItem.Visible = False
     End Sub
 
-    Private Sub OptItem_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles optItem.CheckedChanged
+    Private Sub OptItem_CheckedChanged(sender As Object, e As EventArgs) Handles optItem.CheckedChanged
         ClearAttributeDialogue()
         pnlAttributes.Visible = True
         fraMapItem.Visible = True
@@ -303,19 +303,19 @@ Friend Class frmMapEditor
         EditorMap_DrawMapItem()
     End Sub
 
-    Private Sub ScrlMapKey_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) Handles scrlMapKey.Scroll
+    Private Sub ScrlMapKey_Scroll(sender As Object, e As ScrollEventArgs) Handles scrlMapKey.Scroll
         lblMapKey.Text = "Item: " & Trim$(Item(scrlMapKey.Value).Name)
         EditorMap_DrawKey()
     End Sub
 
-    Private Sub BtnMapKey_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnMapKey.Click
+    Private Sub BtnMapKey_Click(sender As Object, e As EventArgs) Handles btnMapKey.Click
         KeyEditorNum = scrlMapKey.Value
         KeyEditorTake = chkMapKey.Checked
         pnlAttributes.Visible = False
         fraMapKey.Visible = False
     End Sub
 
-    Private Sub OptKey_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles optKey.CheckedChanged
+    Private Sub OptKey_CheckedChanged(sender As Object, e As EventArgs) Handles optKey.CheckedChanged
         ClearAttributeDialogue()
         pnlAttributes.Visible = True
         fraMapKey.Visible = True
@@ -327,22 +327,22 @@ Friend Class frmMapEditor
         lblMapKey.Text = "Item: " & Trim$(Item(scrlMapKey.Value).Name)
     End Sub
 
-    Private Sub ScrlKeyX_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) Handles scrlKeyX.Scroll
+    Private Sub ScrlKeyX_Scroll(sender As Object, e As ScrollEventArgs) Handles scrlKeyX.Scroll
         lblKeyX.Text = "X: " & scrlKeyX.Value
     End Sub
 
-    Private Sub ScrlKeyY_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) Handles scrlKeyY.Scroll
+    Private Sub ScrlKeyY_Scroll(sender As Object, e As ScrollEventArgs) Handles scrlKeyY.Scroll
         lblKeyY.Text = "X: " & scrlKeyY.Value
     End Sub
 
-    Private Sub BtnMapKeyOpen_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnMapKeyOpen.Click
+    Private Sub BtnMapKeyOpen_Click(sender As Object, e As EventArgs) Handles btnMapKeyOpen.Click
         KeyOpenEditorX = scrlKeyX.Value
         KeyOpenEditorY = scrlKeyY.Value
         pnlAttributes.Visible = False
         fraKeyOpen.Visible = False
     End Sub
 
-    Private Sub OptKeyOpen_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles optKeyOpen.CheckedChanged
+    Private Sub OptKeyOpen_CheckedChanged(sender As Object, e As EventArgs) Handles optKeyOpen.CheckedChanged
         ClearAttributeDialogue()
         fraKeyOpen.Visible = True
         pnlAttributes.Visible = True
@@ -353,30 +353,30 @@ Friend Class frmMapEditor
         scrlKeyY.Value = 0
     End Sub
 
-    Private Sub BtnResourceOk_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnResourceOk.Click
+    Private Sub BtnResourceOk_Click(sender As Object, e As EventArgs) Handles btnResourceOk.Click
         ResourceEditorNum = scrlResource.Value
         pnlAttributes.Visible = False
         fraResource.Visible = False
     End Sub
 
-    Private Sub ScrlResource_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) Handles scrlResource.Scroll
+    Private Sub ScrlResource_Scroll(sender As Object, e As ScrollEventArgs) Handles scrlResource.Scroll
         lblResource.Text = "Resource: " & Resource(scrlResource.Value).Name
     End Sub
 
-    Private Sub OptResource_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles optResource.CheckedChanged
+    Private Sub OptResource_CheckedChanged(sender As Object, e As EventArgs) Handles optResource.CheckedChanged
         ClearAttributeDialogue()
         pnlAttributes.Visible = True
         fraResource.Visible = True
     End Sub
 
-    Private Sub BtnNpcSpawn_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnNpcSpawn.Click
+    Private Sub BtnNpcSpawn_Click(sender As Object, e As EventArgs) Handles btnNpcSpawn.Click
         SpawnNpcNum = lstNpc.SelectedIndex + 1
         SpawnNpcDir = scrlNpcDir.Value
         pnlAttributes.Visible = False
         fraNpcSpawn.Visible = False
     End Sub
 
-    Private Sub OptNPCSpawn_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles optNpcSpawn.CheckedChanged
+    Private Sub OptNPCSpawn_CheckedChanged(sender As Object, e As EventArgs) Handles optNpcSpawn.CheckedChanged
         Dim n As Integer
 
         lstNpc.Items.Clear()
@@ -397,52 +397,52 @@ Friend Class frmMapEditor
         fraNpcSpawn.Visible = True
     End Sub
 
-    Private Sub BtnShop_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnShop.Click
+    Private Sub BtnShop_Click(sender As Object, e As EventArgs) Handles btnShop.Click
         EditorShop = cmbShop.SelectedIndex
         pnlAttributes.Visible = False
         fraShop.Visible = False
     End Sub
 
-    Private Sub OptShop_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles optShop.CheckedChanged
+    Private Sub OptShop_CheckedChanged(sender As Object, e As EventArgs) Handles optShop.CheckedChanged
         ClearAttributeDialogue()
         pnlAttributes.Visible = True
         fraShop.Visible = True
     End Sub
 
-    Private Sub BtnHeal_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnHeal.Click
+    Private Sub BtnHeal_Click(sender As Object, e As EventArgs) Handles btnHeal.Click
         MapEditorHealType = cmbHeal.SelectedIndex + 1
         MapEditorHealAmount = scrlHeal.Value
         pnlAttributes.Visible = False
         fraHeal.Visible = False
     End Sub
 
-    Private Sub ScrlHeal_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) Handles scrlHeal.Scroll
+    Private Sub ScrlHeal_Scroll(sender As Object, e As ScrollEventArgs) Handles scrlHeal.Scroll
         lblHeal.Text = "Amount: " & scrlHeal.Value
     End Sub
 
-    Private Sub OptHeal_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles optHeal.CheckedChanged
+    Private Sub OptHeal_CheckedChanged(sender As Object, e As EventArgs) Handles optHeal.CheckedChanged
         ClearAttributeDialogue()
         pnlAttributes.Visible = True
         fraHeal.Visible = True
     End Sub
 
-    Private Sub ScrlTrap_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) Handles scrlTrap.Scroll
+    Private Sub ScrlTrap_Scroll(sender As Object, e As ScrollEventArgs) Handles scrlTrap.Scroll
         lblTrap.Text = "Amount: " & scrlTrap.Value
     End Sub
 
-    Private Sub BtnTrap_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnTrap.Click
+    Private Sub BtnTrap_Click(sender As Object, e As EventArgs) Handles btnTrap.Click
         MapEditorHealAmount = scrlTrap.Value
         pnlAttributes.Visible = False
         fraTrap.Visible = False
     End Sub
 
-    Private Sub OptTrap_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles optTrap.CheckedChanged
+    Private Sub OptTrap_CheckedChanged(sender As Object, e As EventArgs) Handles optTrap.CheckedChanged
         ClearAttributeDialogue()
         pnlAttributes.Visible = True
         fraTrap.Visible = True
     End Sub
 
-    Private Sub BtnClearAttribute_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnClearAttribute.Click
+    Private Sub BtnClearAttribute_Click(sender As Object, e As EventArgs) Handles btnClearAttribute.Click
         MapEditorClearAttribs()
     End Sub
 

@@ -1,4 +1,5 @@
-﻿Imports ASFW
+﻿Imports System.IO
+Imports ASFW
 Imports SFML.Graphics
 Imports SFML.Window
 
@@ -108,7 +109,7 @@ Friend Module modHousing
 
     End Sub
 
-    Friend Sub SendBuyHouse(ByVal Accepted As Byte)
+    Friend Sub SendBuyHouse(Accepted As Byte)
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
@@ -119,7 +120,7 @@ Friend Module modHousing
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendInvite(ByVal Name As String)
+    Friend Sub SendInvite(Name As String)
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
@@ -130,7 +131,7 @@ Friend Module modHousing
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendVisit(ByVal Accepted As Byte)
+    Friend Sub SendVisit(Accepted As Byte)
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
@@ -225,7 +226,7 @@ Friend Module modHousing
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "Furniture\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "Furniture\" & i & GFX_EXT)
             NumFurniture = NumFurniture + 1
             i = i + 1
         End While
@@ -233,7 +234,7 @@ Friend Module modHousing
         If NumFurniture = 0 Then Exit Sub
     End Sub
 
-    Friend Sub DrawFurniture(ByVal Index As Integer, Layer As Integer)
+    Friend Sub DrawFurniture(Index As Integer, Layer As Integer)
         Dim i As Integer, ItemNum As Integer
         Dim X As Integer, Y As Integer, Width As Integer, Height As Integer, X1 As Integer, Y1 As Integer
 

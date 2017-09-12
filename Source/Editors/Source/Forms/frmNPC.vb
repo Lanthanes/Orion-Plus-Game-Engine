@@ -11,15 +11,15 @@
         Next
     End Sub
 
-    Private Sub LstIndex_Click(ByVal sender As Object, ByVal e As EventArgs) Handles lstIndex.Click
+    Private Sub LstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
         NpcEditorInit()
     End Sub
 
-    Private Sub BtnSave_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnSave.Click
+    Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         NpcEditorOk()
     End Sub
 
-    Private Sub BtnDelete_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnDelete.Click
+    Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         Dim tmpIndex As Integer
 
         If EditorIndex <= 0 Then Exit Sub
@@ -34,14 +34,14 @@
         NpcEditorInit()
     End Sub
 
-    Private Sub BtnCancel_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnCancel.Click
+    Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         NpcEditorCancel()
     End Sub
 
 #End Region
 
 #Region "Properties"
-    Private Sub TxtName_TextChanged(ByVal sender As Object, ByVal e As EventArgs) Handles txtName.TextChanged
+    Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
         Dim tmpIndex As Integer
 
         If EditorIndex = 0 Then Exit Sub
@@ -53,7 +53,7 @@
         lstIndex.SelectedIndex = tmpIndex
     End Sub
 
-    Private Sub TxtAttackSay_TextChanged(ByVal sender As Object, ByVal e As EventArgs) Handles txtAttackSay.TextChanged
+    Private Sub TxtAttackSay_TextChanged(sender As Object, e As EventArgs) Handles txtAttackSay.TextChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).AttackSay = txtAttackSay.Text
@@ -67,19 +67,19 @@
         EditorNpc_DrawSprite()
     End Sub
 
-    Private Sub NudRange_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudRange.ValueChanged
+    Private Sub NudRange_ValueChanged(sender As Object, e As EventArgs) Handles nudRange.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Range = nudRange.Value
     End Sub
 
-    Private Sub CmbBehavior_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbBehaviour.SelectedIndexChanged
+    Private Sub CmbBehavior_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbBehaviour.SelectedIndexChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Behaviour = cmbBehaviour.SelectedIndex
     End Sub
 
-    Private Sub CmbFaction_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbFaction.SelectedIndexChanged
+    Private Sub CmbFaction_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbFaction.SelectedIndexChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Faction = cmbFaction.SelectedIndex
@@ -91,25 +91,25 @@
         Npc(EditorIndex).Animation = cmbAnimation.SelectedIndex
     End Sub
 
-    Private Sub NudSpawnSecs_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSpawnSecs.ValueChanged
+    Private Sub NudSpawnSecs_ValueChanged(sender As Object, e As EventArgs) Handles nudSpawnSecs.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).SpawnSecs = nudSpawnSecs.Value
     End Sub
 
-    Private Sub NudHp_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudHp.ValueChanged
+    Private Sub NudHp_ValueChanged(sender As Object, e As EventArgs) Handles nudHp.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Hp = nudHp.Value
     End Sub
 
-    Private Sub NudExp_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudExp.ValueChanged
+    Private Sub NudExp_ValueChanged(sender As Object, e As EventArgs) Handles nudExp.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Exp = nudExp.Value
     End Sub
 
-    Private Sub CmbQuest_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbQuest.SelectedIndexChanged
+    Private Sub CmbQuest_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbQuest.SelectedIndexChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).QuestNum = cmbQuest.SelectedIndex
@@ -135,37 +135,37 @@
 #End Region
 
 #Region "Stats"
-    Private Sub NudStrength_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudStrength.ValueChanged
+    Private Sub NudStrength_ValueChanged(sender As Object, e As EventArgs) Handles nudStrength.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Stat(StatType.Strength) = nudStrength.Value
     End Sub
 
-    Private Sub NudEndurance_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudEndurance.ValueChanged
+    Private Sub NudEndurance_ValueChanged(sender As Object, e As EventArgs) Handles nudEndurance.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Stat(StatType.Endurance) = nudEndurance.Value
     End Sub
 
-    Private Sub NudVitality_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudVitality.ValueChanged
+    Private Sub NudVitality_ValueChanged(sender As Object, e As EventArgs) Handles nudVitality.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Stat(StatType.Vitality) = nudVitality.Value
     End Sub
 
-    Private Sub NudLuck_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLuck.ValueChanged
+    Private Sub NudLuck_ValueChanged(sender As Object, e As EventArgs) Handles nudLuck.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Stat(StatType.Luck) = nudLuck.Value
     End Sub
 
-    Private Sub NudIntelligence_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudIntelligence.ValueChanged
+    Private Sub NudIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nudIntelligence.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Stat(StatType.Intelligence) = nudIntelligence.Value
     End Sub
 
-    Private Sub NudSpirit_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSpirit.ValueChanged
+    Private Sub NudSpirit_ValueChanged(sender As Object, e As EventArgs) Handles nudSpirit.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).Stat(StatType.Spirit) = nudSpirit.Value
@@ -183,13 +183,13 @@
         nudChance.Value = Npc(EditorIndex).DropChance(cmbDropSlot.SelectedIndex + 1)
     End Sub
 
-    Private Sub CmbItem_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbItem.SelectedIndexChanged
+    Private Sub CmbItem_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbItem.SelectedIndexChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).DropItem(cmbDropSlot.SelectedIndex + 1) = cmbItem.SelectedIndex
     End Sub
 
-    Private Sub ScrlValue_Scroll(ByVal sender As Object, ByVal e As EventArgs) Handles nudAmount.ValueChanged
+    Private Sub ScrlValue_Scroll(sender As Object, e As EventArgs) Handles nudAmount.ValueChanged
         If EditorIndex <= 0 Then Exit Sub
 
         Npc(EditorIndex).DropItemValue(cmbDropSlot.SelectedIndex + 1) = nudAmount.Value

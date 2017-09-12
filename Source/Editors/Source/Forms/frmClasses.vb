@@ -1,4 +1,6 @@
-﻿Friend Class frmClasses
+﻿Imports System.IO
+
+Friend Class frmClasses
 
 #Region "Frm Controls"
 
@@ -168,13 +170,13 @@
 
     Sub DrawPreview()
 
-        If FileExist(Application.StartupPath & GFX_PATH & "Characters\" & nudMaleSprite.Value & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Characters\" & nudMaleSprite.Value & GFX_EXT) Then
             picMale.Width = Image.FromFile(Application.StartupPath & GFX_PATH & "characters\" & nudMaleSprite.Value & GFX_EXT).Width \ 4
             picMale.Height = Image.FromFile(Application.StartupPath & GFX_PATH & "characters\" & nudMaleSprite.Value & GFX_EXT).Height \ 4
             picMale.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_PATH & "Characters\" & nudMaleSprite.Value & GFX_EXT)
         End If
 
-        If FileExist(Application.StartupPath & GFX_PATH & "Characters\" & nudFemaleSprite.Value & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Characters\" & nudFemaleSprite.Value & GFX_EXT) Then
             picFemale.Width = Image.FromFile(Application.StartupPath & GFX_PATH & "characters\" & nudFemaleSprite.Value & GFX_EXT).Width \ 4
             picFemale.Height = Image.FromFile(Application.StartupPath & GFX_PATH & "characters\" & nudFemaleSprite.Value & GFX_EXT).Height \ 4
             picFemale.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_PATH & "Characters\" & nudFemaleSprite.Value & GFX_EXT)

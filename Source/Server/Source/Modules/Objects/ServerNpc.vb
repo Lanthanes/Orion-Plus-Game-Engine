@@ -417,7 +417,7 @@ Module ServerNpc
         GetNpcSkill = Npc(NpcNum).Skill(skillslot)
     End Function
 
-    Friend Sub BufferNpcSkill(ByVal MapNum As Integer, ByVal MapNpcNum As Integer, ByVal skillslot As Integer)
+    Friend Sub BufferNpcSkill(MapNum As Integer, MapNpcNum As Integer, skillslot As Integer)
         Dim skillnum As Integer
         Dim MPCost As Integer
         Dim SkillCastType As Integer
@@ -602,13 +602,13 @@ Module ServerNpc
 
     End Sub
 
-    Friend Function IsNpcDead(ByVal MapNum As Integer, ByVal MapNpcNum As Integer)
+    Friend Function IsNpcDead(MapNum As Integer, MapNpcNum As Integer)
         IsNpcDead = False
         If MapNum < 0 OrElse MapNum > MAX_MAPS OrElse MapNpcNum < 0 OrElse MapNpcNum > MAX_MAP_NPCS Then Exit Function
         If MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.HP) <= 0 Then IsNpcDead = True
     End Function
 
-    Friend Sub DropNpcItems(ByVal MapNum As Integer, ByVal MapNpcNum As Integer)
+    Friend Sub DropNpcItems(MapNum As Integer, MapNpcNum As Integer)
         Dim NpcNum = MapNpc(MapNum).Npc(MapNpcNum).Num
         Dim tmpitem = Random(1, 5)
         Dim n = Int(Rnd() * Npc(NpcNum).DropChance(tmpitem)) + 1

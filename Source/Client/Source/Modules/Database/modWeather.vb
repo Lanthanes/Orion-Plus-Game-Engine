@@ -1,4 +1,5 @@
-﻿Imports System.Windows.Forms
+﻿Imports System.IO
+Imports System.Windows.Forms
 Imports SFML.Audio
 Imports SFML.Graphics
 Imports SFML.Window
@@ -133,8 +134,8 @@ Friend Module modWeather
 
     End Sub
 
-    Sub PlayWeatherSound(ByVal FileName As String, Optional Looped As Boolean = False)
-        If Not Options.Sound = 1 OrElse Not FileExist(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
+    Sub PlayWeatherSound(FileName As String, Optional Looped As Boolean = False)
+        If Not Options.Sound = 1 OrElse Not File.Exists(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
         If CurWeatherMusic = FileName Then Exit Sub
 
         Dim buffer As SoundBuffer

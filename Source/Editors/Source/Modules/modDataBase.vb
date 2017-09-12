@@ -30,19 +30,11 @@ Module ClientDataBase
 
     End Function
 
-    Friend Sub DoEvents()
-        Application.DoEvents()
-    End Sub
-
     Friend Function GetTickCount()
         Return Environment.TickCount
     End Function
 
-    Friend Function FileExist(ByVal file_path) As Boolean
-        FileExist = IO.File.Exists(file_path)
-    End Function
-
-    Friend Function Rand(ByVal MaxNumber As Integer, Optional ByVal MinNumber As Integer = 0) As Integer
+    Friend Function Rand(MaxNumber As Integer, Optional MinNumber As Integer = 0) As Integer
         If MinNumber > MaxNumber Then
             Dim t As Integer = MinNumber
             MinNumber = MaxNumber
@@ -57,7 +49,7 @@ Module ClientDataBase
         Dim tmp As Bitmap
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "\tilesets\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "\tilesets\" & i & GFX_EXT)
             NumTileSets = NumTileSets + 1
             i = i + 1
         End While
@@ -76,7 +68,7 @@ Module ClientDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "characters\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "characters\" & i & GFX_EXT)
             NumCharacters = NumCharacters + 1
             i = i + 1
         End While
@@ -88,7 +80,7 @@ Module ClientDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "paperdolls\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "paperdolls\" & i & GFX_EXT)
             NumPaperdolls = NumPaperdolls + 1
             i = i + 1
         End While
@@ -100,7 +92,7 @@ Module ClientDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "animations\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "animations\" & i & GFX_EXT)
             NumAnimations = NumAnimations + 1
             i = i + 1
         End While
@@ -112,7 +104,7 @@ Module ClientDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "Items\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "Items\" & i & GFX_EXT)
             NumItems = NumItems + 1
             i = i + 1
         End While
@@ -124,7 +116,7 @@ Module ClientDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "Resources\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "Resources\" & i & GFX_EXT)
             NumResources = NumResources + 1
             i = i + 1
         End While
@@ -136,7 +128,7 @@ Module ClientDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "SkillIcons\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "SkillIcons\" & i & GFX_EXT)
             NumSkillIcons = NumSkillIcons + 1
             i = i + 1
         End While
@@ -148,7 +140,7 @@ Module ClientDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "Faces\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "Faces\" & i & GFX_EXT)
             NumFaces = NumFaces + 1
             i = i + 1
         End While
@@ -160,7 +152,7 @@ Module ClientDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "Fogs\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "Fogs\" & i & GFX_EXT)
             NumFogs = NumFogs + 1
             i = i + 1
         End While
@@ -198,7 +190,7 @@ Module ClientDataBase
 
     End Sub
 
-    Friend Function GetFileContents(ByVal FullPath As String, Optional ByRef ErrInfo As String = "") As String
+    Friend Function GetFileContents(FullPath As String, Optional ByRef ErrInfo As String = "") As String
         Dim strContents As String
         Dim objReader As StreamReader
         strContents = ""
@@ -259,7 +251,7 @@ Module ClientDataBase
 
     End Sub
 
-    Sub ClearMapItem(ByVal Index As Integer)
+    Sub ClearMapItem(Index As Integer)
         MapItem(Index).Frame = 0
         MapItem(Index).Num = 0
         MapItem(Index).Value = 0
@@ -267,7 +259,7 @@ Module ClientDataBase
         MapItem(Index).Y = 0
     End Sub
 
-    Sub ClearMapNpc(ByVal Index As Integer)
+    Sub ClearMapNpc(Index As Integer)
         MapNpc(Index).Attacking = 0
         MapNpc(Index).AttackTimer = 0
         MapNpc(Index).Dir = 0
@@ -295,7 +287,7 @@ Module ClientDataBase
 
     End Sub
 
-    Friend Sub ClearItem(ByVal Index As Integer)
+    Friend Sub ClearItem(Index As Integer)
         Index = Index - 1
         Item(Index) = Nothing
         Item(Index) = New ItemRec
@@ -335,7 +327,7 @@ Module ClientDataBase
         ReDim Resource_Changed(0 To MAX_RESOURCES)
     End Sub
 
-    Sub ClearResource(ByVal Index As Integer)
+    Sub ClearResource(Index As Integer)
         Resource(Index) = Nothing
         Resource(Index) = New ResourceRec
         Resource(Index).Name = ""
@@ -359,7 +351,7 @@ Module ClientDataBase
 
     End Sub
 
-    Sub ClearNpc(ByVal Index As Integer)
+    Sub ClearNpc(Index As Integer)
         Npc(Index) = Nothing
         Npc(Index).Name = ""
         Npc(Index).AttackSay = ""
@@ -371,7 +363,7 @@ Module ClientDataBase
         ReDim Npc(Index).DropChance(5)
     End Sub
 
-    Sub ClearAnimation(ByVal Index As Integer)
+    Sub ClearAnimation(Index As Integer)
         Animation(Index) = Nothing
         Animation(Index) = New AnimationRec
         For x = 0 To 1
@@ -407,13 +399,13 @@ Module ClientDataBase
 
     End Sub
 
-    Sub ClearSkill(ByVal Index As Integer)
+    Sub ClearSkill(Index As Integer)
         Skill(Index) = Nothing
         Skill(Index) = New SkillRec
         Skill(Index).Name = ""
     End Sub
 
-    Sub ClearShop(ByVal Index As Integer)
+    Sub ClearShop(Index As Integer)
         Shop(Index) = Nothing
         Shop(Index) = New ShopRec
         Shop(Index).Name = ""

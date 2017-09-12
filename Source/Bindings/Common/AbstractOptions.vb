@@ -33,7 +33,7 @@ Namespace Global.Orion
             End Get
         End Property
 
-        Default Friend Overloads Property Options(ByVal key As String, Optional defaultValue As Object = Nothing) As Object
+        Default Friend Overloads Property Options(key As String, Optional defaultValue As Object = Nothing) As Object
             Get
                 Return Map(key)
             End Get

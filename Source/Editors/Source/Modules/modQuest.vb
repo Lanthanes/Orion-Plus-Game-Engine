@@ -222,7 +222,7 @@ Friend Module modQuest
 #End Region
 
 #Region "DataBase"
-    Sub ClearQuest(ByVal QuestNum As Integer)
+    Sub ClearQuest(QuestNum As Integer)
         Dim I As Integer
 
         ' clear the Quest
@@ -358,7 +358,7 @@ Friend Module modQuest
 
     End Sub
 
-    Friend Sub SendSaveQuest(ByVal QuestNum As Integer)
+    Friend Sub SendSaveQuest(QuestNum As Integer)
         Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
@@ -433,7 +433,7 @@ Friend Module modQuest
 
     End Sub
 
-    Friend Sub PlayerHandleQuest(ByVal QuestNum As Integer, ByVal Order As Integer)
+    Friend Sub PlayerHandleQuest(QuestNum As Integer, Order As Integer)
         Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
@@ -445,7 +445,7 @@ Friend Module modQuest
         Buffer.Dispose()
     End Sub
 
-    Friend Sub QuestReset(ByVal QuestNum As Integer)
+    Friend Sub QuestReset(QuestNum As Integer)
         Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
@@ -459,7 +459,7 @@ Friend Module modQuest
 
 #Region "Support Functions"
 
-    Friend Function GetQuestNum(ByVal QuestName As String) As Integer
+    Friend Function GetQuestNum(QuestName As String) As Integer
         Dim I As Integer
         GetQuestNum = 0
 
@@ -474,7 +474,7 @@ Friend Module modQuest
 #End Region
 
 #Region "Misc Functions"
-    Friend Sub LoadRequirement(ByVal QuestNum As Integer, ByVal ReqNum As Integer)
+    Friend Sub LoadRequirement(QuestNum As Integer, ReqNum As Integer)
         Dim i As Integer
 
         With frmQuest
@@ -526,7 +526,7 @@ Friend Module modQuest
     End Sub
 
     'Subroutine that load the desired task in the form
-    Friend Sub LoadTask(ByVal QuestNum As Integer, ByVal TaskNum As Integer)
+    Friend Sub LoadTask(QuestNum As Integer, TaskNum As Integer)
         Dim TaskToLoad As TaskRec
         TaskToLoad = Quest(QuestNum).Task(TaskNum)
 

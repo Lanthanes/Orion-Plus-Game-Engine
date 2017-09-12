@@ -3,7 +3,7 @@ Imports System.Windows.Forms
 Imports ASFW
 
 Friend Module modGuiFunctions
-    Friend Sub CheckGuiMove(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CheckGuiMove(X As Integer, Y As Integer)
         Dim eqNum As Integer, InvNum As Integer, skillslot As Integer
         Dim bankitem As Integer, shopslot As Integer, TradeNum As Integer
 
@@ -169,7 +169,7 @@ Friend Module modGuiFunctions
 
     End Sub
 
-    Friend Function CheckGuiClick(ByVal X As Integer, ByVal Y As Integer, ByVal e As MouseEventArgs) As Boolean
+    Friend Function CheckGuiClick(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
         Dim EqNum As Integer, InvNum As Integer
         Dim slotnum As Integer, hotbarslot As Integer
         Dim Buffer As ByteStream
@@ -704,7 +704,7 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Friend Function CheckGuiDoubleClick(ByVal X As Integer, ByVal Y As Integer, ByVal e As MouseEventArgs) As Boolean
+    Friend Function CheckGuiDoubleClick(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
         Dim InvNum As Integer, skillnum As Integer, BankItem As Integer
         Dim Value As Integer, TradeNum As Integer
         Dim multiplier As Double
@@ -834,7 +834,7 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Friend Function CheckGuiMouseUp(ByVal X As Integer, ByVal Y As Integer, ByVal e As MouseEventArgs) As Boolean
+    Friend Function CheckGuiMouseUp(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
         Dim i As Integer, rec_pos As Rectangle, Buffer As ByteStream
         Dim hotbarslot As Integer
 
@@ -972,7 +972,7 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Friend Function CheckGuiMouseDown(ByVal X As Integer, ByVal Y As Integer, ByVal e As MouseEventArgs) As Boolean
+    Friend Function CheckGuiMouseDown(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
         Dim InvNum As Integer, skillnum As Integer, bankNum As Integer, shopItem As Integer
 
         'Inventory
@@ -1114,7 +1114,7 @@ Friend Module modGuiFunctions
     End Function
 
 #Region "Support Functions"
-    Function IsEqItem(ByVal X As Single, ByVal Y As Single) As Integer
+    Function IsEqItem(X As Single, Y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
         IsEqItem = 0
@@ -1142,7 +1142,7 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Function IsInvItem(ByVal X As Single, ByVal Y As Single) As Integer
+    Function IsInvItem(X As Single, Y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
         IsInvItem = 0
@@ -1170,7 +1170,7 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Function IsPlayerSkill(ByVal X As Single, ByVal Y As Single) As Integer
+    Function IsPlayerSkill(X As Single, Y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
 
@@ -1199,7 +1199,7 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Function IsBankItem(ByVal X As Single, ByVal Y As Single) As Integer
+    Function IsBankItem(X As Single, Y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
 
@@ -1226,7 +1226,7 @@ Friend Module modGuiFunctions
         Next
     End Function
 
-    Function IsShopItem(ByVal X As Single, ByVal Y As Single) As Integer
+    Function IsShopItem(X As Single, Y As Single) As Integer
         Dim tempRec As Rectangle
         Dim i As Integer
         IsShopItem = 0
@@ -1251,7 +1251,7 @@ Friend Module modGuiFunctions
         Next
     End Function
 
-    Function IsTradeItem(ByVal X As Single, ByVal Y As Single, ByVal Yours As Boolean) As Integer
+    Function IsTradeItem(X As Single, Y As Single, Yours As Boolean) As Integer
         Dim tempRec As Rect
         Dim i As Integer
         Dim itemnum As Integer
@@ -1295,7 +1295,7 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Function AboveActionPanel(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveActionPanel(X As Single, Y As Single) As Boolean
         AboveActionPanel = False
 
         If X > ActionPanelX AndAlso X < ActionPanelX + ActionPanelGFXInfo.Width Then
@@ -1305,7 +1305,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveHotbar(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveHotbar(X As Single, Y As Single) As Boolean
         AboveHotbar = False
 
         If X > HotbarX AndAlso X < HotbarX + HotBarGFXInfo.Width Then
@@ -1315,7 +1315,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AbovePetbar(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AbovePetbar(X As Single, Y As Single) As Boolean
         AbovePetbar = False
 
         If X > PetbarX AndAlso X < PetbarX + PetbarGFXInfo.Width Then
@@ -1325,7 +1325,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveInvpanel(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveInvpanel(X As Single, Y As Single) As Boolean
         AboveInvpanel = False
 
         If X > InvWindowX AndAlso X < InvWindowX + InvPanelGFXInfo.Width Then
@@ -1335,7 +1335,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveCharpanel(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveCharpanel(X As Single, Y As Single) As Boolean
         AboveCharpanel = False
 
         If X > CharWindowX AndAlso X < CharWindowX + CharPanelGFXInfo.Width Then
@@ -1345,7 +1345,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveSkillpanel(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveSkillpanel(X As Single, Y As Single) As Boolean
         AboveSkillpanel = False
 
         If X > SkillWindowX AndAlso X < SkillWindowX + SkillPanelGFXInfo.Width Then
@@ -1355,7 +1355,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveBankpanel(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveBankpanel(X As Single, Y As Single) As Boolean
         AboveBankpanel = False
 
         If X > BankWindowX AndAlso X < BankWindowX + BankPanelGFXInfo.Width Then
@@ -1365,7 +1365,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveShoppanel(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveShoppanel(X As Single, Y As Single) As Boolean
         AboveShoppanel = False
 
         If X > ShopWindowX AndAlso X < ShopWindowX + ShopPanelGFXInfo.Width Then
@@ -1375,7 +1375,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveTradepanel(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveTradepanel(X As Single, Y As Single) As Boolean
         AboveTradepanel = False
 
         If X > TradeWindowX AndAlso X < TradeWindowX + TradePanelGFXInfo.Width Then
@@ -1385,7 +1385,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveEventChat(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveEventChat(X As Single, Y As Single) As Boolean
         AboveEventChat = False
 
         If X > EventChatX AndAlso X < EventChatX + EventChatGFXInfo.Width Then
@@ -1395,7 +1395,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveChatScrollUp(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveChatScrollUp(X As Single, Y As Single) As Boolean
         AboveChatScrollUp = False
 
         If X > ChatWindowX + ChatWindowGFXInfo.Width - 24 AndAlso X < ChatWindowX + ChatWindowGFXInfo.Width Then
@@ -1405,7 +1405,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveChatScrollDown(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveChatScrollDown(X As Single, Y As Single) As Boolean
         AboveChatScrollDown = False
 
         If X > ChatWindowX + ChatWindowGFXInfo.Width - 24 AndAlso X < ChatWindowX + ChatWindowGFXInfo.Width Then
@@ -1415,7 +1415,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveRClickPanel(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveRClickPanel(X As Single, Y As Single) As Boolean
         AboveRClickPanel = False
 
         If X > RClickX AndAlso X < RClickX + RClickGFXInfo.Width Then
@@ -1425,7 +1425,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveQuestPanel(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveQuestPanel(X As Single, Y As Single) As Boolean
         AboveQuestPanel = False
 
         If X > QuestLogX AndAlso X < QuestLogX + QuestGFXInfo.Width Then
@@ -1435,7 +1435,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveCraftPanel(ByVal X As Single, ByVal Y As Single) As Boolean
+    Function AboveCraftPanel(X As Single, Y As Single) As Boolean
         AboveCraftPanel = False
 
         If X > CraftPanelX AndAlso X < CraftPanelX + CraftGFXInfo.Width Then

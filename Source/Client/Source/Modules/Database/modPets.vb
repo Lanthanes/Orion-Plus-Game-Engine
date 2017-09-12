@@ -80,7 +80,7 @@ Module modPets
 #End Region
 
 #Region "Database"
-    Sub ClearPet(ByVal Index As Integer)
+    Sub ClearPet(Index As Integer)
 
         Pet(Index).Name = ""
 
@@ -102,7 +102,7 @@ Module modPets
 #End Region
 
 #Region "Outgoing Packets"
-    Friend Sub SendPetBehaviour(ByVal Index As Integer)
+    Friend Sub SendPetBehaviour(Index As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSetBehaviour)
@@ -114,7 +114,7 @@ Module modPets
 
     End Sub
 
-    Sub SendTrainPetStat(ByVal StatNum As Byte)
+    Sub SendTrainPetStat(StatNum As Byte)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPetUseStatPoint)
@@ -136,7 +136,7 @@ Module modPets
 
     End Sub
 
-    Sub SendUsePetSkill(ByVal skill As Integer)
+    Sub SendUsePetSkill(skill As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPetSkill)
@@ -338,7 +338,7 @@ Module modPets
 #End Region
 
 #Region "Movement"
-    Sub ProcessPetMovement(ByVal Index As Integer)
+    Sub ProcessPetMovement(Index As Integer)
 
         ' Check if pet is walking, and if so process moving them over
 
@@ -389,7 +389,7 @@ Module modPets
 
     End Sub
 
-    Friend Sub PetMove(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub PetMove(X As Integer, Y As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPetMove)
@@ -405,7 +405,7 @@ Module modPets
 #End Region
 
 #Region "Drawing"
-    Friend Sub DrawPet(ByVal Index As Integer)
+    Friend Sub DrawPet(Index As Integer)
         Dim Anim As Byte, X As Integer, Y As Integer
         Dim Sprite As Integer, spriteleft As Integer
         Dim srcrec As Rectangle
@@ -484,7 +484,7 @@ Module modPets
 
     End Sub
 
-    Friend Sub DrawPlayerPetName(ByVal Index As Integer)
+    Friend Sub DrawPlayerPetName(Index As Integer)
         Dim TextX As Integer
         Dim TextY As Integer
         Dim color As SFML.Graphics.Color, backcolor As SFML.Graphics.Color
@@ -623,7 +623,7 @@ Module modPets
 #End Region
 
 #Region "Misc"
-    Friend Function PetAlive(ByVal index As Integer) As Boolean
+    Friend Function PetAlive(index As Integer) As Boolean
         PetAlive = False
 
         If Player(index).Pet.Alive = 1 Then
@@ -632,7 +632,7 @@ Module modPets
 
     End Function
 
-    Friend Function HasPet(ByVal index As Integer) As Boolean
+    Friend Function HasPet(index As Integer) As Boolean
         HasPet = False
 
         If Player(index).Pet.Num > 0 Then
@@ -640,7 +640,7 @@ Module modPets
         End If
     End Function
 
-    Friend Function IsPetBarSlot(ByVal X As Single, ByVal Y As Single) As Integer
+    Friend Function IsPetBarSlot(X As Single, Y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
 

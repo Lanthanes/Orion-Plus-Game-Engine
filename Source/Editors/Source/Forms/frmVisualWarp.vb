@@ -1,4 +1,6 @@
-﻿Friend Class FrmVisualWarp
+﻿Imports System.IO
+
+Friend Class FrmVisualWarp
     Private Sub LstMaps_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstMaps.SelectedIndexChanged
         DrawMap()
         EditorWarpMap = lstMaps.SelectedIndex + 1
@@ -16,7 +18,7 @@
         Visible = False
     End Sub
 
-    Private Overloads Sub PicPreview_Paint(ByVal sender As Object, ByVal e As PaintEventArgs)
+    Private Overloads Sub PicPreview_Paint(sender As Object, e As PaintEventArgs)
         'This is here to make sure that the box dosen't try to re-paint itself... saves time and w/e else
         Exit Sub
     End Sub
@@ -28,7 +30,7 @@
 
         If lstMaps.SelectedIndex < 0 Then Exit Sub
 
-        If FileExist(Application.StartupPath & "\Data\Cache\Map" & lstMaps.SelectedIndex + 1 & ".png") Then
+        If File.Exists(Application.StartupPath & "\Data\Cache\Map" & lstMaps.SelectedIndex + 1 & ".png") Then
             g = picPreview.CreateGraphics
 
             Dim mapsprite As Bitmap = New Bitmap(Application.StartupPath & "\Data\Cache\Map" & lstMaps.SelectedIndex + 1 & ".png")

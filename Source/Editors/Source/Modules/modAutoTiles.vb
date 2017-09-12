@@ -57,7 +57,7 @@ Friend Module modAutoTiles
     '\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     '   All of this code is for auto tiles and the math behind generating them.
     '\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    Friend Sub PlaceAutotile(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal tileQuarter As Byte, ByVal autoTileLetter As String)
+    Friend Sub PlaceAutotile(layerNum As Integer, X As Integer, Y As Integer, tileQuarter As Byte, autoTileLetter As String)
 
         If layerNum > LayerType.Count - 1 Then
             layerNum = layerNum - (LayerType.Count - 1)
@@ -295,7 +295,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CacheRenderState(ByVal X As Integer, ByVal Y As Integer, ByVal layerNum As Integer)
+    Friend Sub CacheRenderState(X As Integer, Y As Integer, layerNum As Integer)
         Dim quarterNum As Integer
 
         ' exit out early
@@ -338,7 +338,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateAutotile(ByVal X As Integer, ByVal Y As Integer, ByVal layerNum As Integer)
+    Friend Sub CalculateAutotile(X As Integer, Y As Integer, layerNum As Integer)
         ' Right, so we've split the tile block in to an easy to remember
         ' collection of letters. We now need to do the calculations to find
         ' out which little lettered block needs to be rendered. We do this
@@ -390,7 +390,7 @@ Friend Module modAutoTiles
     End Sub
 
     ' Normal autotiling
-    Friend Sub CalculateNW_Normal(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CalculateNW_Normal(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -427,7 +427,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateNE_Normal(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CalculateNE_Normal(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -464,7 +464,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateSW_Normal(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CalculateSW_Normal(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -501,7 +501,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateSE_Normal(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CalculateSE_Normal(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -539,7 +539,7 @@ Friend Module modAutoTiles
     End Sub
 
     ' Waterfall autotiling
-    Friend Sub CalculateNW_Waterfall(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CalculateNW_Waterfall(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile As Boolean
         ' West
 
@@ -555,7 +555,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateNE_Waterfall(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CalculateNE_Waterfall(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile As Boolean
         ' East
 
@@ -571,7 +571,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateSW_Waterfall(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CalculateSW_Waterfall(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile As Boolean
         ' West
 
@@ -587,7 +587,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateSE_Waterfall(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CalculateSE_Waterfall(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile As Boolean
         ' East
 
@@ -604,7 +604,7 @@ Friend Module modAutoTiles
     End Sub
 
     ' Cliff autotiling
-    Friend Sub CalculateNW_Cliff(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CalculateNW_Cliff(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -638,7 +638,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateNE_Cliff(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CalculateNE_Cliff(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -672,7 +672,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateSW_Cliff(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CalculateSW_Cliff(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -706,7 +706,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateSE_Cliff(ByVal layerNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CalculateSE_Cliff(layerNum As Integer, X As Integer, Y As Integer)
         Dim tmpTile(0 To 3) As Boolean
         Dim situation As Byte
 
@@ -740,7 +740,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Function CheckTileMatch(ByVal layerNum As Integer, ByVal X1 As Integer, ByVal Y1 As Integer, ByVal X2 As Integer, ByVal Y2 As Integer) As Boolean
+    Friend Function CheckTileMatch(layerNum As Integer, X1 As Integer, Y1 As Integer, X2 As Integer, Y2 As Integer) As Boolean
         ' we'll exit out early if true
         Dim exTile As Boolean
 
@@ -784,9 +784,8 @@ Friend Module modAutoTiles
         End If
     End Function
 
-    Friend Sub DrawAutoTile(ByVal layerNum As Integer, ByVal destX As Integer, ByVal destY As Integer, ByVal quarterNum As Integer, ByVal X As Integer, ByVal Y As Integer, Optional forceFrame As Integer = 0, Optional strict As Boolean = True, Optional ExLayer As Boolean = False)
+    Friend Sub DrawAutoTile(layerNum As Integer, destX As Integer, destY As Integer, quarterNum As Integer, X As Integer, Y As Integer, Optional forceFrame As Integer = 0, Optional strict As Boolean = True, Optional ExLayer As Boolean = False)
         Dim YOffset As Integer, XOffset As Integer
-        Dim srcrect As New Rectangle(0, 0, 0, 0)
         Dim tmpSprite As Sprite
 
         If GettingMap Then Exit Sub

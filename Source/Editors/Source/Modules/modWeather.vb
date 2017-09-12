@@ -1,4 +1,5 @@
-﻿Imports SFML.Audio
+﻿Imports System.IO
+Imports SFML.Audio
 Imports SFML.Graphics
 Imports SFML.Window
 
@@ -148,8 +149,8 @@ Friend Module modWeather
 
     End Sub
 
-    Sub PlayWeatherSound(ByVal FileName As String, Optional Looped As Boolean = False)
-        If Not Options.Sound = 1 OrElse Not FileExist(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
+    Sub PlayWeatherSound(FileName As String, Optional Looped As Boolean = False)
+        If Not Options.Sound = 1 OrElse Not File.Exists(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
         If CurWeatherMusic = FileName Then Exit Sub
 
         Dim buffer As SoundBuffer
@@ -161,11 +162,7 @@ Friend Module modWeather
 
         buffer = New SoundBuffer(Application.StartupPath & SOUND_PATH & FileName)
         WeatherSoundPlayer.SoundBuffer = buffer
-        If Looped = True Then
-            WeatherSoundPlayer.Loop() = True
-        Else
-            WeatherSoundPlayer.Loop() = False
-        End If
+        WeatherSoundPlayer.Loop() = Looped
         WeatherSoundPlayer.Volume() = MaxVolume
         WeatherSoundPlayer.Play()
 

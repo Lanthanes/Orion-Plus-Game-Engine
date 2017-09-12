@@ -1,14 +1,14 @@
 ﻿Friend Class frmRecipe
 
-    Private Sub BtnSave_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnSave.Click
+    Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         RecipeEditorOk()
     End Sub
 
-    Private Sub BtnCancel_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnCancel.Click
+    Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         RecipeEditorCancel()
     End Sub
 
-    Private Sub BtnDelete_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnDelete.Click
+    Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         Dim tmpIndex As Integer
 
         If EditorIndex = 0 OrElse EditorIndex > MAX_RECIPE Then Exit Sub
@@ -25,7 +25,7 @@
         RecipeEditorInit()
     End Sub
 
-    Private Sub TxtName_TextChanged(ByVal sender As Object, ByVal e As EventArgs) Handles txtName.TextChanged
+    Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
         Dim tmpIndex As Integer
         If EditorIndex = 0 OrElse EditorIndex > MAX_RECIPE Then Exit Sub
         tmpIndex = lstIndex.SelectedIndex
@@ -35,7 +35,7 @@
         lstIndex.SelectedIndex = tmpIndex
     End Sub
 
-    Private Sub LstIndex_Click(ByVal sender As Object, ByVal e As EventArgs) Handles lstIndex.Click
+    Private Sub LstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
         If EditorIndex = 0 OrElse EditorIndex > MAX_RECIPE Then Exit Sub
         RecipeEditorInit()
     End Sub

@@ -3,7 +3,7 @@ Imports ASFW
 Imports ASFW.IO
 
 Module modNetworkSend
-    Friend Sub SendEditorLogin(ByVal Name As String, ByVal Password As String)
+    Friend Sub SendEditorLogin(Name As String, Password As String)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.EditorLogin)
@@ -195,7 +195,7 @@ Module modNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendSaveItem(ByVal itemNum As Integer)
+    Sub SendSaveItem(itemNum As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveItem)
@@ -283,7 +283,7 @@ Module modNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendSaveResource(ByVal ResourceNum As Integer)
+    Friend Sub SendSaveResource(ResourceNum As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveResource)
@@ -316,7 +316,7 @@ Module modNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendSaveNpc(ByVal NpcNum As Integer)
+    Friend Sub SendSaveNpc(NpcNum As Integer)
         Dim Buffer As New ByteStream(4), i As Integer
 
         Buffer.WriteInt32(EditorPackets.SaveNpc)
@@ -381,7 +381,7 @@ Module modNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendSaveSkill(ByVal skillnum As Integer)
+    Friend Sub SendSaveSkill(skillnum As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveSkill)
@@ -429,7 +429,7 @@ Module modNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendSaveShop(ByVal shopnum As Integer)
+    Friend Sub SendSaveShop(shopnum As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveShop)
@@ -459,7 +459,7 @@ Module modNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendSaveAnimation(ByVal Animationnum As Integer)
+    Friend Sub SendSaveAnimation(Animationnum As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveAnimation)
@@ -593,7 +593,7 @@ Module modNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendEditorRequestMap(ByVal MapNum As Integer)
+    Friend Sub SendEditorRequestMap(MapNum As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.EditorRequestMap)

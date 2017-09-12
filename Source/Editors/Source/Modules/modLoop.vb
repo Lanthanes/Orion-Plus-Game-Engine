@@ -1,4 +1,5 @@
-﻿Imports System.Threading
+﻿Imports System.IO
+Imports System.Threading
 
 Module modLoop
 #Region "Startup"
@@ -153,7 +154,7 @@ Module modLoop
             .Root = "Options"
         }
 
-        If Not FileExist(myXml.Filename) Then
+        If Not File.Exists(myXml.Filename) Then
             Options.Password = ""
             Options.SavePass = False
             Options.Username = ""

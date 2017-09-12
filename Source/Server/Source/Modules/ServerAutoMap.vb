@@ -128,7 +128,7 @@ Module ServerAutoMap
     ''' <param name="TileType">Which TileType to use, if any, blocked, None, etc</param>
     ''' <param name="EndX">The X coordinate, where the tiles end on the tilesheet.</param>
     ''' <param name="EndY">The Y coordinate, where the tiles end on the tilesheet.</param>
-    Sub LoadDetail(ByVal Prefab As TilePrefab, ByVal Tileset As Integer, ByVal X As Integer, ByVal Y As Integer, Optional TileType As Integer = 0, Optional EndX As Integer = 0, Optional EndY As Integer = 0)
+    Sub LoadDetail(Prefab As TilePrefab, Tileset As Integer, X As Integer, Y As Integer, Optional TileType As Integer = 0, Optional EndX As Integer = 0, Optional EndY As Integer = 0)
         If EndX = 0 Then EndX = X
         If EndY = 0 Then EndY = Y
 
@@ -149,7 +149,7 @@ Module ServerAutoMap
     ''' <param name="X">The X coordinate, where the tiles start on the tilesheet.</param>
     ''' <param name="Y">The Y coordinate, where the tiles start on the tilesheet.</param>
     ''' <param name="TileType">Which TileType to use, if any, blocked, None, etc.</param>
-    Sub AddDetail(ByVal Prefab As TilePrefab, ByVal Tileset As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal TileType As Integer)
+    Sub AddDetail(Prefab As TilePrefab, Tileset As Integer, X As Integer, Y As Integer, TileType As Integer)
         Dim DetailCount As Integer
 
         DetailCount = UBound(Detail) + 1
@@ -183,11 +183,11 @@ Module ServerAutoMap
     ''' </summary>
     ''' <param name="Prefab"></param>
     ''' <returns></returns>
-    Function HaveDetails(ByVal Prefab As TilePrefab) As Boolean
+    Function HaveDetails(Prefab As TilePrefab) As Boolean
         HaveDetails = Not (Prefab = TilePrefab.Water OrElse Prefab = TilePrefab.River)
     End Function
 
-    Sub AddTile(ByVal Prefab As TilePrefab, ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Sub AddTile(Prefab As TilePrefab, MapNum As Integer, X As Integer, Y As Integer)
         Dim TileDest As TileRec
         Dim CleanNextTiles As Boolean
         Dim i As Integer
@@ -233,19 +233,19 @@ Module ServerAutoMap
         MapOrientation(MapNum).Tile(X, Y) = Prefab
     End Sub
 
-    Function CanPlaceResource(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer) As Boolean
+    Function CanPlaceResource(MapNum As Integer, X As Integer, Y As Integer) As Boolean
         If MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Grass OrElse MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Overgrass OrElse (MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Mountain AndAlso Not Map(MapNum).Tile(X, Y).Type = TileType.Blocked) Then
             CanPlaceResource = True
         End If
     End Function
 
-    Function CanPlaceOvergrass(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer) As Boolean
+    Function CanPlaceOvergrass(MapNum As Integer, X As Integer, Y As Integer) As Boolean
         If MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Grass OrElse (MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Mountain AndAlso Not Map(MapNum).Tile(X, Y).Type = TileType.Blocked) Then
             CanPlaceOvergrass = True
         End If
     End Function
 
-    Sub MakeResource(ByVal MapNum As Integer)
+    Sub MakeResource(MapNum As Integer)
         Dim x As Integer, y As Integer
 
         For x = 1 To Map(MapNum).MaxX - 1
@@ -263,13 +263,13 @@ Module ServerAutoMap
         Next x
     End Sub
 
-    Sub MakeResources(ByVal MapStart As Integer, ByVal Size As Integer)
+    Sub MakeResources(MapStart As Integer, Size As Integer)
         Dim i As Integer
         Dim TotalMaps As Integer
         Dim tick As Integer
 
         Console.WriteLine("Working...")
-        DoEvents()
+        Application.DoEvents()
         tick = GetTimeMs()
         TotalMaps = Size * Size
 
@@ -280,16 +280,16 @@ Module ServerAutoMap
 
         tick = GetTimeMs() - tick
         Console.WriteLine("Done and cached resources in " & CDbl(tick / 1000) & "s")
-        DoEvents()
+        Application.DoEvents()
     End Sub
 
-    Sub MakeOvergrasses(ByVal MapStart As Integer, ByVal Size As Integer)
+    Sub MakeOvergrasses(MapStart As Integer, Size As Integer)
         Dim i As Integer
         Dim TotalMaps As Integer
         Dim tick As Integer
 
         Console.WriteLine("Working...")
-        DoEvents()
+        Application.DoEvents()
         tick = GetTimeMs()
         TotalMaps = Size * Size
 
@@ -299,10 +299,10 @@ Module ServerAutoMap
 
         tick = GetTimeMs() - tick
         Console.WriteLine("Done overgrasses in " & CDbl(tick / 1000) & "s")
-        DoEvents()
+        Application.DoEvents()
     End Sub
 
-    Sub MakeOvergrass(ByVal MapNum As Integer)
+    Sub MakeOvergrass(MapNum As Integer)
         Dim StartX As Integer, StartY As Integer
         Dim TotalOvergrass As Integer
         'Dim MapSize As Integer
@@ -380,7 +380,7 @@ Module ServerAutoMap
 
     End Sub
 
-    Sub PaintOvergrass(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal BrushSizeX As Integer, ByVal BrushSizeY As Integer)
+    Sub PaintOvergrass(MapNum As Integer, X As Integer, Y As Integer, BrushSizeX As Integer, BrushSizeY As Integer)
         Dim pX As Integer, pY As Integer
 
         For pX = X - BrushSizeX To X + BrushSizeX
@@ -400,7 +400,7 @@ Module ServerAutoMap
         Next pX
     End Sub
 
-    Sub PaintTile(ByVal Prefab As TilePrefab, ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal BrushSizeX As Integer, ByVal BrushSizeY As Integer, Optional HumanMade As Boolean = True, Optional OnlyTo As TilePrefab = 0)
+    Sub PaintTile(Prefab As TilePrefab, MapNum As Integer, X As Integer, Y As Integer, BrushSizeX As Integer, BrushSizeY As Integer, Optional HumanMade As Boolean = True, Optional OnlyTo As TilePrefab = 0)
         Dim pX As Integer, pY As Integer
         For pX = X - BrushSizeX To X + BrushSizeX
             For pY = Y - BrushSizeY To Y + BrushSizeY
@@ -428,7 +428,7 @@ Module ServerAutoMap
         Next pX
     End Sub
 
-    Sub PaintRiver(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal RiverDir As Byte, ByVal RiverWidth As Integer)
+    Sub PaintRiver(MapNum As Integer, X As Integer, Y As Integer, RiverDir As Byte, RiverWidth As Integer)
         Dim pX As Integer, pY As Integer
         If RiverDir = DirectionType.Down Then
             For pX = X - RiverWidth To X + RiverWidth
@@ -446,7 +446,7 @@ Module ServerAutoMap
         End If
     End Sub
 
-    Sub MakeRivers(ByVal MapStart As Integer, ByVal Size As Integer)
+    Sub MakeRivers(MapStart As Integer, Size As Integer)
         'Dim RiverType As Integer
         Dim RiverMap As Integer
         Dim TotalRivers As Integer
@@ -462,7 +462,7 @@ Module ServerAutoMap
         Dim tick As Integer
 
         Console.WriteLine("Working...")
-        DoEvents()
+        Application.DoEvents()
         tick = GetTimeMs()
         RiverBorder = 4
         MadeRivers = 0
@@ -576,10 +576,10 @@ SelectMap:
 
         tick = GetTimeMs() - tick
         Console.WriteLine("Done " & TotalRivers & " rivers in " & CDbl(tick / 1000) & "s")
-        DoEvents()
+        Application.DoEvents()
     End Sub
 
-    Sub PlaceMountain(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal MountainPrefab As MountainTile)
+    Sub PlaceMountain(MapNum As Integer, X As Integer, Y As Integer, MountainPrefab As MountainTile)
         Dim OldX As Integer, OldY As Integer
 
         OldX = Tile(TilePrefab.Mountain).Layer(2).X
@@ -592,7 +592,7 @@ SelectMap:
     End Sub
 
 
-    Sub MarkMountain(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal Width As Integer, ByVal Height As Integer)
+    Sub MarkMountain(MapNum As Integer, X As Integer, Y As Integer, Width As Integer, Height As Integer)
         Dim pX As Integer, pY As Integer
         For pX = X - Int(Width / 2) To X + Int(Width / 2)
             For pY = Y - Int(Height / 2) To Y + Int(Height / 2)
@@ -605,7 +605,7 @@ SelectMap:
         Next pX
     End Sub
 
-    Sub MakeMapMountains(ByVal MapNum As Integer)
+    Sub MakeMapMountains(MapNum As Integer)
         Dim MountainMinAreaWidth As Integer, MountainMinAreaHeight As Integer
         Dim MountainMinSize As Integer, MountainMinArea As Integer
         Dim MountainSize As Integer
@@ -707,7 +707,7 @@ Important:
         End If
     End Sub
 
-    Function GetMountainPrefab(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer) As MountainTile
+    Function GetMountainPrefab(MapNum As Integer, X As Integer, Y As Integer) As MountainTile
         Dim VerticalPos As Byte
         Dim MountainPrefab As MountainTile
         If MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Mountain Then
@@ -769,7 +769,7 @@ Important:
         End If
     End Function
 
-    Function ValidMountainPosition(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal Width As Integer, ByVal Height As Integer) As Boolean
+    Function ValidMountainPosition(MapNum As Integer, X As Integer, Y As Integer, Width As Integer, Height As Integer) As Boolean
         Dim pX As Integer, pY As Integer
         ValidMountainPosition = True
         For pX = X - Int(Width / 2) To X + Int(Width / 2)
@@ -783,13 +783,13 @@ Important:
         Next pX
     End Function
 
-    Sub MakeMountains(ByVal MapStart As Integer, ByVal Size As Integer)
+    Sub MakeMountains(MapStart As Integer, Size As Integer)
         Dim i As Integer
         Dim TotalMaps As Integer
         Dim tick As Integer
         Dim MapCount As Integer
         Console.WriteLine("Working...")
-        DoEvents()
+        Application.DoEvents()
         tick = GetTimeMs()
         TotalMaps = Size * Size
         MapCount = 0
@@ -801,10 +801,10 @@ Important:
         Next i
         tick = GetTimeMs() - tick
         Console.WriteLine("Done mountains in " & (MapCount) & " maps in " & CDbl(tick / 1000) & "s")
-        DoEvents()
+        Application.DoEvents()
     End Sub
 
-    Sub MakeMap(ByVal MapNum As Integer, ByVal Prefab As MapPrefab)
+    Sub MakeMap(MapNum As Integer, Prefab As MapPrefab)
         Dim x As Integer, y As Integer
         Dim TileX As Integer, TileY As Integer
         Dim TileStartX As Integer, TileStartY As Integer
@@ -1049,7 +1049,7 @@ Important:
 
     End Sub
 
-    Sub MakePath(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal Dir As Byte, Optional Steps As Integer = 1)
+    Sub MakePath(MapNum As Integer, X As Integer, Y As Integer, Dir As Byte, Optional Steps As Integer = 1)
         Dim PathEnd As Boolean
         Dim BrushX As Integer, BrushY As Integer
         Dim i As Byte
@@ -1151,7 +1151,7 @@ ChangeDir:
         Loop
     End Sub
 
-    Function CheckPath(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal Dir As Byte) As Boolean
+    Function CheckPath(MapNum As Integer, X As Integer, Y As Integer, Dir As Byte) As Boolean
         Dim SizeX As Integer, SizeY As Integer
         Select Case Dir
             Case DirectionType.Up, DirectionType.Down : SizeX = 1
@@ -1175,7 +1175,7 @@ ChangeDir:
         Next pX
     End Function
 
-    Function SearchForPreviousPaths(ByVal MapNum As Integer, ByVal X As Integer, ByVal Y As Integer) As Boolean
+    Function SearchForPreviousPaths(MapNum As Integer, X As Integer, Y As Integer) As Boolean
         Dim pX As Integer, pY As Integer
         For pX = X - 10 To X + 10
             For pY = Y - 10 To Y + 10
@@ -1191,7 +1191,7 @@ ChangeDir:
         Next pX
     End Function
 
-    Sub MakeMapPaths(ByVal MapNum As Integer)
+    Sub MakeMapPaths(MapNum As Integer)
         Dim x As Integer, y As Integer
         Dim StartX() As Integer = {0}, StartY() As Integer = {0}
         Dim LocationCount As Integer
@@ -1201,7 +1201,7 @@ ChangeDir:
         Dim tick As Integer
 
         Console.WriteLine("Working...")
-        DoEvents()
+        Application.DoEvents()
         tick = GetTimeMs()
 
         MaxTries = 30
@@ -1262,10 +1262,10 @@ ChangeDir:
 
         tick = GetTimeMs() - tick
         Console.WriteLine("Done " & TotalPaths & " paths in " & CDbl(tick / 1000) & "s")
-        DoEvents()
+        Application.DoEvents()
     End Sub
 
-    Sub MakePaths(ByVal MapStart As Integer, ByVal Size As Integer)
+    Sub MakePaths(MapStart As Integer, Size As Integer)
         Dim TotalMaps As Integer
         TotalMaps = Size * Size
 
@@ -1280,7 +1280,7 @@ ChangeDir:
 
     End Sub
 
-    Sub StartAutomapper(ByVal MapStart As Integer, ByVal Size As Integer, ByVal MapX As Integer, ByVal MapY As Integer)
+    Sub StartAutomapper(MapStart As Integer, Size As Integer, MapX As Integer, MapY As Integer)
         Dim StartTick As Integer
         Dim tick As Integer
         StartTick = GetTimeMs()
@@ -1367,7 +1367,7 @@ ChangeDir:
 
         tick = GetTimeMs() - tick
         Console.WriteLine("Done " & TotalMaps & " maps models in " & CDbl(tick / 1000) & "s")
-        DoEvents()
+        Application.DoEvents()
 
         If PathsChecked = True Then MakePaths(MapStart, Size)
         If RiversChecked = True Then MakeRivers(MapStart, Size)
@@ -1377,7 +1377,7 @@ ChangeDir:
 
         tick = GetTimeMs()
         Console.WriteLine("Working...")
-        DoEvents()
+        Application.DoEvents()
 
         For mapnum = MapStart To MapStart + TotalMaps - 1
             SaveMap(mapnum)

@@ -1,4 +1,5 @@
-﻿Imports System.Threading
+﻿Imports System.IO
+Imports System.Threading
 Imports System.Windows.Forms
 
 Module modGeneral
@@ -74,7 +75,7 @@ Module modGeneral
         SetStatus(Strings.Get("loadscreen", "options"))
 
         ' load options
-        If FileExist(Application.StartupPath & "\Data\Config.xml") Then
+        If File.Exists(Application.StartupPath & "\Data\Config.xml") Then
             LoadOptions()
         Else
             CreateOptions()
@@ -142,11 +143,11 @@ Module modGeneral
         GameLoop()
     End Sub
 
-    Friend Function IsLoginLegal(ByVal Username As String, ByVal Password As String) As Boolean
+    Friend Function IsLoginLegal(Username As String, Password As String) As Boolean
         Return Len(Trim$(Username)) >= 3 AndAlso Len(Trim$(Password)) >= 3
     End Function
 
-    Friend Function IsStringLegal(ByVal sInput As String) As Boolean
+    Friend Function IsStringLegal(sInput As String) As Boolean
         Dim i As Integer
 
         ' Prevent high ascii chars
@@ -173,11 +174,11 @@ Module modGeneral
         StopMusic()
     End Sub
 
-    Friend Sub SetStatus(ByVal Caption As String)
+    Friend Sub SetStatus(Caption As String)
         FrmMenu.lblStatus.Text = Caption
     End Sub
 
-    Friend Sub MenuState(ByVal State As Integer)
+    Friend Sub MenuState(State As Integer)
         pnlloadvisible = True
         frmmenuvisible = False
         Select Case State
@@ -225,7 +226,7 @@ Module modGeneral
 
     End Sub
 
-    Friend Function ConnectToServer(ByVal i As Integer) As Boolean
+    Friend Function ConnectToServer(i As Integer) As Boolean
         Dim until As Integer
         ConnectToServer = False
 
@@ -244,7 +245,7 @@ Module modGeneral
 
         ' Wait until connected or a few seconds have passed and report the server being down
         Do While (Not Socket.IsConnected()) AndAlso (GetTickCount() <= until)
-            DoEvents()
+            Application.DoEvents()
             Thread.Sleep(10)
         Loop
 
@@ -257,14 +258,6 @@ Module modGeneral
             ConnectToServer(i + 1)
         End If
 
-    End Function
-
-    Friend Sub DoEvents()
-        Application.DoEvents()
-    End Sub
-
-    Friend Function FileExist(ByVal file_path) As Boolean
-        FileExist = IO.File.Exists(file_path)
     End Function
 
     Friend Sub RePositionGUI()
@@ -352,7 +345,7 @@ Module modGeneral
         End
     End Sub
 
-    Friend Sub CheckDir(ByVal DirPath As String)
+    Friend Sub CheckDir(DirPath As String)
 
         If Not IO.Directory.Exists(DirPath) Then
             IO.Directory.CreateDirectory(DirPath)

@@ -95,10 +95,6 @@ Module ServerLoop
                     Select New With {Key .Index = p.Index, Key .Success = HandlePlayerHouse(p.Index)}
                 ).ToArray()
 
-                ' Disconnect timer removed, it didnt do anything useful by a correctly made network.
-                ' Proper check needs to attempt to send a checkalive packet to get accurate results im not adding this tho xD
-                ' ~SpiceyWolf
-
                 ' Move the timer up 500ms.
                 tmr500 = GetTimeMs() + 500
 
@@ -128,7 +124,7 @@ Module ServerLoop
                 LastUpdateSavePlayers = GetTimeMs() + 600000
             End If
 
-            DoEvents()
+            Application.DoEvents()
             'Thread.Yield()
             Thread.Sleep(1)
         Loop
@@ -150,7 +146,7 @@ Module ServerLoop
                     SavePlayer(i)
                     SaveBank(i)
                 End If
-                DoEvents()
+                Application.DoEvents()
             Next
 
         End If
@@ -179,7 +175,7 @@ Module ServerLoop
                 SendMapItemsToAll(y)
             End If
 
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
@@ -218,7 +214,6 @@ Module ServerLoop
         Dim DistanceX As Integer, DistanceY As Integer
         Dim NpcNum As Integer
         Dim Target As Integer, TargetTypes As Byte, TargetX As Integer, TargetY As Integer, target_verify As Boolean
-        Dim DidWalk As Boolean
         Dim Resource_index As Integer
 
         For MapNum = 1 To MAX_CACHED_MAPS
@@ -389,7 +384,6 @@ Module ServerLoop
                                         If Target > 0 Then
                                             ' Check if the player is even playing, if so follow'm
                                             If IsPlaying(Target) AndAlso GetPlayerMap(Target) = MapNum Then
-                                                DidWalk = False
                                                 target_verify = True
                                                 TargetY = GetPlayerY(Target)
                                                 TargetX = GetPlayerX(Target)
@@ -401,7 +395,6 @@ Module ServerLoop
                                     ElseIf TargetTypes = TargetType.Npc Then 'npc
                                         If Target > 0 Then
                                             If MapNpc(MapNum).Npc(Target).Num > 0 Then
-                                                DidWalk = False
                                                 target_verify = True
                                                 TargetY = MapNpc(MapNum).Npc(Target).Y
                                                 TargetX = MapNpc(MapNum).Npc(Target).X
@@ -413,7 +406,6 @@ Module ServerLoop
                                     ElseIf TargetTypes = TargetType.Pet Then
                                         If Target > 0 Then
                                             If IsPlaying(Target) = True AndAlso GetPlayerMap(Target) = MapNum AndAlso PetAlive(Target) Then
-                                                DidWalk = False
                                                 target_verify = True
                                                 TargetY = Player(Target).Character(TempPlayer(Target).CurChar).Pet.Y
                                                 TargetX = Player(Target).Character(TempPlayer(Target).CurChar).Pet.X
@@ -583,7 +575,7 @@ Module ServerLoop
 
     End Sub
 
-    Function GetNpcVitalRegen(ByVal NpcNum As Integer, ByVal Vital As VitalType) As Integer
+    Function GetNpcVitalRegen(NpcNum As Integer, Vital As VitalType) As Integer
         Dim i As Integer
 
         'Prevent subscript out of range
@@ -607,19 +599,19 @@ Module ServerLoop
 
     End Function
 
-    Friend Function HandleCloseSocket(ByVal Index As Integer) As Boolean
+    Friend Function HandleCloseSocket(Index As Integer) As Boolean
         Socket.Disconnect(Index)
         HandleCloseSocket = True
     End Function
 
-    Friend Function HandlePlayerHouse(ByVal Index As Integer) As Boolean
+    Friend Function HandlePlayerHouse(Index As Integer) As Boolean
         Player(Index).Character(TempPlayer(Index).CurChar).InHouse = 0
         PlayerWarp(Index, Player(Index).Character(TempPlayer(Index).CurChar).LastMap, Player(Index).Character(TempPlayer(Index).CurChar).LastX, Player(Index).Character(TempPlayer(Index).CurChar).LastY)
         PlayerMsg(Index, "Your visitation has ended. Possibly due to a disconnection. You are being warped back to your previous location.", ColorType.Yellow)
         HandlePlayerHouse = True
     End Function
 
-    Friend Function HandlePetSkill(ByVal Index As Integer) As Boolean
+    Friend Function HandlePetSkill(Index As Integer) As Boolean
         PetCastSkill(Index, TempPlayer(Index).PetskillBuffer.Skill, TempPlayer(Index).PetskillBuffer.Target, TempPlayer(Index).PetskillBuffer.TargetTypes, True)
         TempPlayer(Index).PetskillBuffer.Skill = 0
         TempPlayer(Index).PetskillBuffer.Timer = 0
@@ -628,7 +620,7 @@ Module ServerLoop
         HandlePetSkill = True
     End Function
 
-    Friend Function HandlePlayerCraft(ByVal Index As Integer) As Boolean
+    Friend Function HandlePlayerCraft(Index As Integer) As Boolean
         TempPlayer(Index).CraftIt = 0
         TempPlayer(Index).CraftTimer = 0
         TempPlayer(Index).CraftTimeNeeded = 0
@@ -636,37 +628,35 @@ Module ServerLoop
         HandlePlayerCraft = True
     End Function
 
-    Friend Function HandleClearStun(ByVal Index As Integer) As Boolean
+    Friend Function HandleClearStun(Index As Integer) As Boolean
         TempPlayer(Index).StunDuration = 0
         TempPlayer(Index).StunTimer = 0
         SendStunned(Index)
         HandleClearStun = True
     End Function
 
-    Friend Function HandleClearPetStun(ByVal Index As Integer) As Boolean
+    Friend Function HandleClearPetStun(Index As Integer) As Boolean
         TempPlayer(Index).PetStunDuration = 0
         TempPlayer(Index).PetStunTimer = 0
         HandleClearPetStun = True
     End Function
 
-    Friend Function HandleStopPetRegen(ByVal Index As Integer) As Boolean
+    Friend Function HandleStopPetRegen(Index As Integer) As Boolean
         TempPlayer(Index).PetstopRegen = False
         TempPlayer(Index).PetstopRegenTimer = 0
         HandleStopPetRegen = True
     End Function
 
-    Friend Function HandleCastSkill(ByVal Index As Integer) As Boolean
+    Friend Function HandleCastSkill(Index As Integer) As Boolean
         CastSkill(Index, TempPlayer(Index).SkillBuffer)
         TempPlayer(Index).SkillBuffer = 0
         TempPlayer(Index).SkillBufferTimer = 0
         HandleCastSkill = True
     End Function
 
-    Friend Sub CastSkill(ByVal Index As Integer, ByVal SkillSlot As Integer)
+    Friend Sub CastSkill(Index As Integer, SkillSlot As Integer)
         ' Set up some basic variables we'll be using.
         Dim SkillId = GetPlayerSkill(Index, SkillSlot)
-        Dim MapNum = GetPlayerMap(Index)
-        Dim Level = Skill(SkillId).LevelReq
 
         ' Preventative checks
         If Not IsPlaying(Index) OrElse SkillSlot <= 0 OrElse SkillSlot > MAX_PLAYER_SKILLS OrElse Not HasSkill(Index, SkillId) Then Exit Sub
@@ -706,7 +696,7 @@ Module ServerLoop
         FinalizeCast(Index, GetPlayerSkillSlot(Index, SkillId), Skill(SkillId).MpCost)
     End Sub
 
-    Private Sub HandleSelfCastAoESkill(ByVal Index As Integer, ByVal SkillId As Integer)
+    Private Sub HandleSelfCastAoESkill(Index As Integer, SkillId As Integer)
 
         ' Set up some variables we'll definitely be using.
         Dim CenterX = GetPlayerX(Index)
@@ -723,7 +713,7 @@ Module ServerLoop
 
     End Sub
 
-    Private Sub HandleTargetedAoESkill(ByVal Index As Integer, ByVal SkillId As Integer)
+    Private Sub HandleTargetedAoESkill(Index As Integer, SkillId As Integer)
 
         ' Set up some variables we'll definitely be using.
         Dim CenterX As Integer
@@ -755,7 +745,7 @@ Module ServerLoop
         End Select
     End Sub
 
-    Private Sub HandleSelfCastSkill(ByVal Index As Integer, ByVal SkillId As Integer)
+    Private Sub HandleSelfCastSkill(Index As Integer, SkillId As Integer)
         ' Determine what kind of spell we're dealing with and process it.
         Select Case Skill(SkillId).Type
             Case SkillType.HealHp
@@ -773,12 +763,9 @@ Module ServerLoop
         SendAnimation(GetPlayerMap(Index), Skill(SkillId).SkillAnim, 0, 0, Enums.TargetType.Player, Index)
     End Sub
 
-    Private Sub HandleTargetedSkill(ByVal Index As Integer, ByVal SkillId As Integer)
+    Private Sub HandleTargetedSkill(Index As Integer, SkillId As Integer)
         ' Set up some variables we'll definitely be using.
-        Dim TargetX As Integer
-        Dim TargetY As Integer
-        Dim TargetType As TargetType
-        Dim Vital As Enums.VitalType
+        Dim Vital As VitalType
         Dim DealsDamage As Boolean
         Dim Amount = Skill(SkillId).Vital
         Dim Target = TempPlayer(Index).Target
@@ -807,10 +794,6 @@ Module ServerLoop
 
         Select Case TempPlayer(Index).TargetType
             Case TargetType.Npc
-                TargetType = TargetType.Npc
-                TargetX = MapNpc(GetPlayerMap(Index)).Npc(Target).X
-                TargetY = MapNpc(GetPlayerMap(Index)).Npc(Target).Y
-
                 ' Deal with damaging abilities.
                 If DealsDamage AndAlso CanPlayerAttackNpc(Index, Target, True) Then SkillNpc_Effect(Vital, False, Target, Amount, SkillId, GetPlayerMap(Index))
 
@@ -823,9 +806,6 @@ Module ServerLoop
                 End If
 
             Case TargetType.Player
-                TargetType = TargetType.Player
-                TargetX = GetPlayerX(Target)
-                TargetY = GetPlayerY(Target)
 
                 ' Deal with damaging abilities.
                 If DealsDamage AndAlso CanPlayerAttackPlayer(Index, Target, True) Then SkillPlayer_Effect(Vital, False, Target, Amount, SkillId)
@@ -849,10 +829,10 @@ Module ServerLoop
         End Select
 
         ' Play our animation.
-        SendAnimation(GetPlayerMap(Index), Skill(SkillId).SkillAnim, 0, 0, TargetType, Target)
+        SendAnimation(GetPlayerMap(Index), Skill(SkillId).SkillAnim, 0, 0, TempPlayer(Index).TargetType, Target)
     End Sub
 
-    Private Sub HandleAoE(ByVal Index As Integer, ByVal SkillId As Integer, ByVal X As Integer, ByVal Y As Integer)
+    Private Sub HandleAoE(Index As Integer, SkillId As Integer, X As Integer, Y As Integer)
         ' Get some basic things set up.
         Dim Map = GetPlayerMap(Index)
         Dim Range = Skill(SkillId).Range
@@ -929,14 +909,14 @@ Module ServerLoop
         Next
     End Sub
 
-    Private Sub FinalizeCast(ByVal Index As Integer, ByVal SkillSlot As Integer, ByVal SkillCost As Integer)
+    Private Sub FinalizeCast(Index As Integer, SkillSlot As Integer, SkillCost As Integer)
         SetPlayerVital(Index, VitalType.MP, GetPlayerVital(Index, VitalType.MP) - SkillCost)
         SendVital(Index, VitalType.MP)
         TempPlayer(Index).SkillCD(SkillSlot) = GetTimeMs() + (Skill(SkillSlot).CdTime * 1000)
         SendCooldown(Index, SkillSlot)
     End Sub
 
-    Private Function IsTargetOnMap(ByVal Index As Integer) As Boolean
+    Private Function IsTargetOnMap(Index As Integer) As Boolean
         If TempPlayer(Index).TargetType = TargetType.Player Then
             If GetPlayerMap(TempPlayer(Index).Target) = GetPlayerMap(Index) Then IsTargetOnMap = True
         ElseIf TempPlayer(Index).TargetType = TargetType.Npc Then
@@ -944,7 +924,7 @@ Module ServerLoop
         End If
     End Function
 
-    Private Function IsInSkillRange(ByVal Index As Integer, ByVal SkillId As Integer) As Boolean
+    Private Function IsInSkillRange(Index As Integer, SkillId As Integer) As Boolean
         Dim TargetX As Integer
         Dim TargetY As Integer
 
@@ -959,7 +939,7 @@ Module ServerLoop
         IsInSkillRange = IsInRange(Skill(SkillId).Range, GetPlayerX(Index), GetPlayerY(Index), TargetX, TargetY)
     End Function
 
-    Friend Sub CastNpcSkill(ByVal NpcNum As Integer, ByVal MapNum As Integer, ByVal skillslot As Integer)
+    Friend Sub CastNpcSkill(NpcNum As Integer, MapNum As Integer, skillslot As Integer)
         Dim skillnum As Integer, MPCost As Integer
         Dim Vital As Integer, DidCast As Boolean
         Dim i As Integer
@@ -1185,7 +1165,7 @@ Module ServerLoop
         End If
     End Sub
 
-    Friend Sub SkillPlayer_Effect(ByVal Vital As Byte, ByVal increment As Boolean, ByVal Index As Integer, ByVal Damage As Integer, ByVal Skillnum As Integer)
+    Friend Sub SkillPlayer_Effect(Vital As Byte, increment As Boolean, Index As Integer, Damage As Integer, Skillnum As Integer)
         Dim sSymbol As String
         Dim Colour As Integer
 
@@ -1212,7 +1192,7 @@ Module ServerLoop
         End If
     End Sub
 
-    Friend Sub SkillNpc_Effect(ByVal Vital As Byte, ByVal increment As Boolean, ByVal Index As Integer, ByVal Damage As Integer, ByVal skillnum As Integer, ByVal MapNum As Integer)
+    Friend Sub SkillNpc_Effect(Vital As Byte, increment As Boolean, Index As Integer, Damage As Integer, skillnum As Integer, MapNum As Integer)
         Dim sSymbol As String
         Dim Color As Integer
 

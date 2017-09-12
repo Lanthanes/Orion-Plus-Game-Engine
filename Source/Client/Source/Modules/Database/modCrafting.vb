@@ -64,7 +64,7 @@ Friend Module modCrafting
 
     End Sub
 
-    Sub ClearRecipe(ByVal Num As Integer)
+    Sub ClearRecipe(Num As Integer)
         Recipe(Num).Name = ""
         Recipe(Num).RecipeType = 0
         Recipe(Num).MakeItemNum = 0
@@ -159,7 +159,7 @@ Friend Module modCrafting
         Buffer.Dispose()
     End Sub
 
-    Sub SendSaveRecipe(ByVal RecipeNum As Integer)
+    Sub SendSaveRecipe(RecipeNum As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveRecipe)
@@ -182,7 +182,7 @@ Friend Module modCrafting
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendCraftIt(ByVal RecipeName As String, ByVal Amount As Integer)
+    Friend Sub SendCraftIt(RecipeName As String, Amount As Integer)
         Dim Buffer As New ByteStream(4), i As Integer
         Dim recipeindex As Integer
 
@@ -265,7 +265,7 @@ Friend Module modCrafting
         pnlCraftVisible = True
     End Sub
 
-    Sub LoadRecipe(ByVal RecipeName As String)
+    Sub LoadRecipe(RecipeName As String)
         Dim recipeindex As Integer
 
         recipeindex = GetRecipeIndex(RecipeName)
@@ -290,7 +290,7 @@ Friend Module modCrafting
 
     End Sub
 
-    Function GetRecipeIndex(ByVal RecipeName As String) As Integer
+    Function GetRecipeIndex(RecipeName As String) As Integer
         Dim i As Integer
 
         GetRecipeIndex = 0

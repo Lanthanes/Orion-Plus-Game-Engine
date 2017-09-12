@@ -31,9 +31,9 @@ Friend Module ServerCrafting
         Dim i As Integer
 
         For i = 1 To MAX_RECIPE
-            If Not FileExist(Path.Combine(Application.StartupPath, "data", "recipes", String.Format("recipe{0}.dat", i))) Then
+            If Not File.Exists(Path.Combine(Application.StartupPath, "data", "recipes", String.Format("recipe{0}.dat", i))) Then
                 SaveRecipe(i)
-                DoEvents()
+                Application.DoEvents()
             End If
         Next
 
@@ -44,12 +44,12 @@ Friend Module ServerCrafting
 
         For i = 1 To MAX_RECIPE
             SaveRecipe(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub SaveRecipe(ByVal RecipeNum As Integer)
+    Sub SaveRecipe(RecipeNum As Integer)
         Dim filename As String
         Dim i As Integer
 
@@ -77,12 +77,12 @@ Friend Module ServerCrafting
 
         For i = 1 To MAX_RECIPE
             LoadRecipe(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub LoadRecipe(ByVal RecipeNum As Integer)
+    Sub LoadRecipe(RecipeNum As Integer)
         Dim filename As String
         Dim i As Integer
 
@@ -112,12 +112,12 @@ Friend Module ServerCrafting
 
         For i = 1 To MAX_RECIPE
             ClearRecipe(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub ClearRecipe(ByVal Num As Integer)
+    Sub ClearRecipe(Num As Integer)
         Recipe(Num).Name = ""
         Recipe(Num).RecipeType = 0
         Recipe(Num).MakeItemNum = 0
@@ -129,14 +129,14 @@ Friend Module ServerCrafting
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_RequestRecipes(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_RequestRecipes(Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CRequestRecipes", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CRequestRecipes")
 
         SendRecipes(Index)
     End Sub
 
-    Sub Packet_RequestEditRecipes(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_RequestEditRecipes(Index As Integer, ByRef data() As Byte)
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
 
@@ -151,7 +151,7 @@ Friend Module ServerCrafting
 
     End Sub
 
-    Sub Packet_SaveRecipe(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_SaveRecipe(Index As Integer, ByRef data() As Byte)
         Dim n As Integer
 
         ' Prevent hacking
@@ -186,14 +186,14 @@ Friend Module ServerCrafting
 
     End Sub
 
-    Sub Packet_CloseCraft(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_CloseCraft(Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CCloseCraft", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CCloseCraft")
 
         TempPlayer(Index).IsCrafting = False
     End Sub
 
-    Sub Packet_StartCraft(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_StartCraft(Index As Integer, ByRef data() As Byte)
         Dim recipeindex As Integer, amount As Integer
         Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CStartCraft", PACKET_LOG)
@@ -217,7 +217,7 @@ Friend Module ServerCrafting
 #End Region
 
 #Region "Outgoing Packets"
-    Sub SendRecipes(ByVal Index As Integer)
+    Sub SendRecipes(Index As Integer)
         Dim i As Integer
 
         For i = 1 To MAX_RECIPE
@@ -230,7 +230,7 @@ Friend Module ServerCrafting
 
     End Sub
 
-    Sub SendUpdateRecipeTo(ByVal Index As Integer, ByVal RecipeNum As Integer)
+    Sub SendUpdateRecipeTo(Index As Integer, RecipeNum As Integer)
         Dim Buffer As ByteStream, i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateRecipe)
@@ -256,7 +256,7 @@ Friend Module ServerCrafting
         Buffer.Dispose()
     End Sub
 
-    Sub SendUpdateRecipeToAll(ByVal RecipeNum As Integer)
+    Sub SendUpdateRecipeToAll(RecipeNum As Integer)
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateRecipe)
@@ -282,7 +282,7 @@ Friend Module ServerCrafting
         Buffer.Dispose()
     End Sub
 
-    Sub SendPlayerRecipes(ByVal Index As Integer)
+    Sub SendPlayerRecipes(Index As Integer)
         Dim i As Integer
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
@@ -300,7 +300,7 @@ Friend Module ServerCrafting
         Buffer.Dispose()
     End Sub
 
-    Sub SendOpenCraft(ByVal Index As Integer)
+    Sub SendOpenCraft(Index As Integer)
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SOpenCraft)
@@ -313,7 +313,7 @@ Friend Module ServerCrafting
         Buffer.Dispose()
     End Sub
 
-    Sub SendCraftUpdate(ByVal Index As Integer, ByVal done As Byte)
+    Sub SendCraftUpdate(Index As Integer, done As Byte)
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateCraft)
@@ -331,7 +331,7 @@ Friend Module ServerCrafting
 
 #Region "Functions"
 
-    Friend Function CheckLearnedRecipe(ByVal Index As Integer, ByVal RecipeNum As Integer) As Boolean
+    Friend Function CheckLearnedRecipe(Index As Integer, RecipeNum As Integer) As Boolean
         CheckLearnedRecipe = False
 
         If Player(Index).Character(TempPlayer(Index).CurChar).RecipeLearned(RecipeNum) = 1 Then
@@ -339,7 +339,7 @@ Friend Module ServerCrafting
         End If
     End Function
 
-    Friend Sub LearnRecipe(ByVal Index As Integer, ByVal RecipeNum As Integer, ByVal InvNum As Integer)
+    Friend Sub LearnRecipe(Index As Integer, RecipeNum As Integer, InvNum As Integer)
         If CheckLearnedRecipe(Index, RecipeNum) Then ' we know this one allready
             PlayerMsg(Index, "You allready know this recipe!", ColorType.BrightRed)
         Else ' lets learn it
@@ -354,7 +354,7 @@ Friend Module ServerCrafting
         End If
     End Sub
 
-    Friend Sub StartCraft(ByVal Index As Integer, ByVal RecipeNum As Integer, ByVal Amount As Integer)
+    Friend Sub StartCraft(Index As Integer, RecipeNum As Integer, Amount As Integer)
 
         If TempPlayer?(Index).IsCrafting Then
             TempPlayer(Index).CraftRecipe = RecipeNum
@@ -368,7 +368,7 @@ Friend Module ServerCrafting
 
     End Sub
 
-    Friend Sub UpdateCraft(ByVal Index As Integer)
+    Friend Sub UpdateCraft(Index As Integer)
         Dim i As Integer
 
         'ok, we made the item, give and take the shit

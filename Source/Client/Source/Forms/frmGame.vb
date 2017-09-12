@@ -12,13 +12,13 @@ Friend Class frmGame
         End Get
     End Property
 
-    Private Sub FrmMainGame_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
+    Private Sub FrmMainGame_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         RePositionGUI()
 
         frmAdmin.Visible = False
     End Sub
 
-    Private Sub FrmMainGame_Closing(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Closing
+    Private Sub FrmMainGame_Closing(sender As Object, e As EventArgs) Handles MyBase.Closing
         Application.Exit()
     End Sub
 
@@ -26,7 +26,7 @@ Friend Class frmGame
         ChatInput.ProcessCharacter(e)
     End Sub
 
-    Private Sub FrmMainGame_KeyDown(ByVal sender As Object, ByVal e As KeyEventArgs) Handles MyBase.KeyDown
+    Private Sub FrmMainGame_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If (ChatInput.ProcessKey(e)) Then
             If (e.KeyCode = Keys.Enter) Then
                 HandlePressEnter()
@@ -52,7 +52,7 @@ Friend Class frmGame
         End If
     End Sub
 
-    Private Sub FrmMainGame_KeyUp(ByVal sender As Object, ByVal e As KeyEventArgs) Handles MyBase.KeyUp
+    Private Sub FrmMainGame_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
         Dim skillnum As Integer
         If e.KeyCode = Keys.S Then VbKeyDown = False
         If e.KeyCode = Keys.W Then VbKeyUp = False
@@ -150,7 +150,7 @@ Friend Class frmGame
 
     End Sub
 
-    Private Sub LblCurrencyOk_Click(ByVal sender As Object, ByVal e As EventArgs) Handles lblCurrencyOk.Click
+    Private Sub LblCurrencyOk_Click(sender As Object, e As EventArgs) Handles lblCurrencyOk.Click
         If IsNumeric(txtCurrency.Text) Then
             Select Case CurrencyMenu
                 Case 1 ' drop item
@@ -172,7 +172,7 @@ Friend Class frmGame
 #End Region
 
 #Region "PicScreen Code"
-    Private Sub Picscreen_MouseDown(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picscreen.MouseDown
+    Private Sub Picscreen_MouseDown(sender As Object, e As MouseEventArgs) Handles picscreen.MouseDown
         If Not CheckGuiClick(e.X, e.Y, e) Then
 
             ' left click
@@ -219,16 +219,16 @@ Friend Class frmGame
 
     End Sub
 
-    Private Sub Picscreen_DoubleClick(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picscreen.DoubleClick
+    Private Sub Picscreen_DoubleClick(sender As Object, e As MouseEventArgs) Handles picscreen.DoubleClick
         CheckGuiDoubleClick(e.X, e.Y, e)
     End Sub
 
-    Private Overloads Sub Picscreen_Paint(ByVal sender As Object, ByVal e As PaintEventArgs) Handles picscreen.Paint
+    Private Overloads Sub Picscreen_Paint(sender As Object, e As PaintEventArgs) Handles picscreen.Paint
         'This is here to make sure that the box dosen't try to re-paint itself... saves time and w/e else
         Exit Sub
     End Sub
 
-    Private Sub Picscreen_MouseMove(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picscreen.MouseMove
+    Private Sub Picscreen_MouseMove(sender As Object, e As MouseEventArgs) Handles picscreen.MouseMove
         CurX = TileView.Left + ((e.Location.X + Camera.Left) \ PIC_X)
         CurY = TileView.Top + ((e.Location.Y + Camera.Top) \ PIC_Y)
         CurMouseX = e.Location.X
@@ -237,13 +237,13 @@ Friend Class frmGame
 
     End Sub
 
-    Private Sub Picscreen_MouseUp(ByVal sender As Object, ByVal e As MouseEventArgs) Handles picscreen.MouseUp
+    Private Sub Picscreen_MouseUp(sender As Object, e As MouseEventArgs) Handles picscreen.MouseUp
         CurX = TileView.Left + ((e.Location.X + Camera.Left) \ PIC_X)
         CurY = TileView.Top + ((e.Location.Y + Camera.Top) \ PIC_Y)
         CheckGuiMouseUp(e.X, e.Y, e)
     End Sub
 
-    Private Sub Picscreen_KeyDown(ByVal sender As Object, ByVal e As KeyEventArgs) Handles picscreen.KeyDown
+    Private Sub Picscreen_KeyDown(sender As Object, e As KeyEventArgs) Handles picscreen.KeyDown
         Dim num As Integer
         If e.KeyCode = Keys.S Then VbKeyDown = True
         If e.KeyCode = Keys.W Then VbKeyUp = True
@@ -322,7 +322,7 @@ Friend Class frmGame
         End If
     End Sub
 
-    Private Sub Picscreen_KeyUp(ByVal sender As Object, ByVal e As KeyEventArgs) Handles picscreen.KeyUp
+    Private Sub Picscreen_KeyUp(sender As Object, e As KeyEventArgs) Handles picscreen.KeyUp
 
         If e.KeyCode = Keys.S Then VbKeyDown = False
         If e.KeyCode = Keys.W Then VbKeyUp = False
@@ -359,7 +359,7 @@ Friend Class frmGame
 
     Private ReadOnly NonAcceptableKeys() As Keys = {Keys.NumPad0, Keys.NumPad1, Keys.NumPad2, Keys.NumPad3, Keys.NumPad4, Keys.NumPad5, Keys.NumPad6, Keys.NumPad7, Keys.NumPad8, Keys.NumPad9}
 
-    Friend Function IsAcceptable(ByVal keyData As Keys) As Boolean
+    Friend Function IsAcceptable(keyData As Keys) As Boolean
         Dim index As Integer = Array.IndexOf(NonAcceptableKeys, keyData)
         Return index >= 0
     End Function

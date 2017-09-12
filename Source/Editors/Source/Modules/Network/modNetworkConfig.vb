@@ -34,7 +34,7 @@ Friend Module modNetworkConfig
         CloseEditor()
     End Sub
 
-    Private Sub Socket_CrashReport(ByVal err As String) Handles Socket.CrashReport
+    Private Sub Socket_CrashReport(err As String) Handles Socket.CrashReport
         MsgBox("There was a network error -> Report: " & err)
         DestroyNetwork()
         CloseEditor()

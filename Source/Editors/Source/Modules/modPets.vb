@@ -99,7 +99,7 @@ Module modPets
 
     End Sub
 
-    Friend Sub SendSavePet(ByVal petNum As Integer)
+    Friend Sub SendSavePet(petNum As Integer)
         Dim Buffer As ByteStream
         Dim i As Integer
 
@@ -182,7 +182,7 @@ Module modPets
 #End Region
 
 #Region "DataBase"
-    Sub ClearPet(ByVal Index As Integer)
+    Sub ClearPet(Index As Integer)
 
         Pet(Index).Name = ""
 

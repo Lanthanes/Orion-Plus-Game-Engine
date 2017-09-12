@@ -180,7 +180,6 @@ Module modNetworkReceive
 
     Private Sub Packet_MapData(ByRef Data() As Byte)
         Dim X As Integer, Y As Integer, i As Integer
-        Dim MusicFile As String
         Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
 
         MapData = False
@@ -427,8 +426,6 @@ Module modNetworkReceive
         CurrentTintG = Map.MapTintG
         CurrentTintB = Map.MapTintB
         CurrentTintA = Map.MapTintA
-
-        MusicFile = Trim$(Map.Music)
 
         InMapEditor = True
 

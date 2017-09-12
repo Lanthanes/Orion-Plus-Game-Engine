@@ -4,7 +4,7 @@ Imports System.Drawing
 Imports System.Linq
 
 Module modDataBase
-    Friend Function GetFileContents(ByVal FullPath As String, Optional ByRef ErrInfo As String = "") As String
+    Friend Function GetFileContents(FullPath As String, Optional ByRef ErrInfo As String = "") As String
         Dim strContents As String
         Dim objReader As StreamReader
         strContents = ""
@@ -23,7 +23,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "\tilesets\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "\tilesets\" & i & GFX_EXT)
             NumTileSets = NumTileSets + 1
             i = i + 1
         End While
@@ -35,7 +35,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "characters\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "characters\" & i & GFX_EXT)
             NumCharacters = NumCharacters + 1
             i = i + 1
         End While
@@ -47,7 +47,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "paperdolls\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "paperdolls\" & i & GFX_EXT)
             NumPaperdolls = NumPaperdolls + 1
             i = i + 1
         End While
@@ -59,7 +59,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "animations\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "animations\" & i & GFX_EXT)
             NumAnimations = NumAnimations + 1
             i = i + 1
         End While
@@ -71,7 +71,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "Items\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "Items\" & i & GFX_EXT)
             NumItems = NumItems + 1
             i = i + 1
         End While
@@ -83,7 +83,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "Resources\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "Resources\" & i & GFX_EXT)
             NumResources = NumResources + 1
             i = i + 1
         End While
@@ -95,7 +95,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "SkillIcons\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "SkillIcons\" & i & GFX_EXT)
             NumSkillIcons = NumSkillIcons + 1
             i = i + 1
         End While
@@ -107,7 +107,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "Faces\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "Faces\" & i & GFX_EXT)
             NumFaces = NumFaces + 1
             i = i + 1
         End While
@@ -119,7 +119,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "Fogs\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "Fogs\" & i & GFX_EXT)
             NumFogs = NumFogs + 1
             i = i + 1
         End While
@@ -131,7 +131,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "Emotes\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "Emotes\" & i & GFX_EXT)
             NumEmotes = NumEmotes + 1
             i = i + 1
         End While
@@ -143,7 +143,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "Panoramas\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "Panoramas\" & i & GFX_EXT)
             NumPanorama = NumPanorama + 1
             i = i + 1
         End While
@@ -155,7 +155,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "Parallax\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "Parallax\" & i & GFX_EXT)
             NumParallax = NumParallax + 1
             i = i + 1
         End While
@@ -357,7 +357,7 @@ Module modDataBase
 
     End Sub
 
-    Sub ClearMapItem(ByVal Index As Integer)
+    Sub ClearMapItem(Index As Integer)
         MapItem(Index).Frame = 0
         MapItem(Index).Num = 0
         MapItem(Index).Value = 0
@@ -365,7 +365,7 @@ Module modDataBase
         MapItem(Index).Y = 0
     End Sub
 
-    Sub ClearMapNpc(ByVal Index As Integer)
+    Sub ClearMapNpc(Index As Integer)
         MapNpc(Index).Attacking = 0
         MapNpc(Index).AttackTimer = 0
         MapNpc(Index).Dir = 0
@@ -402,7 +402,7 @@ Module modDataBase
 #End Region
 
 #Region "Items"
-    Friend Sub ClearItem(ByVal Index As Integer)
+    Friend Sub ClearItem(Index As Integer)
         'Index = Index - 1
         Item(Index) = Nothing
         Item(Index) = New ItemRec
@@ -446,7 +446,7 @@ Module modDataBase
         ReDim Resource_Changed(0 To MAX_RESOURCES)
     End Sub
 
-    Sub ClearResource(ByVal Index As Integer)
+    Sub ClearResource(Index As Integer)
         Resource(Index) = Nothing
         Resource(Index) = New ResourceRec
         Resource(Index).Name = ""
@@ -474,7 +474,7 @@ Module modDataBase
 
     End Sub
 
-    Sub ClearNpc(ByVal Index As Integer)
+    Sub ClearNpc(Index As Integer)
         Npc(Index) = Nothing
         Npc(Index) = New NpcRec
 
@@ -493,7 +493,7 @@ Module modDataBase
 #End Region
 
 #Region "Animations"
-    Sub ClearAnimation(ByVal Index As Integer)
+    Sub ClearAnimation(Index As Integer)
         Animation(Index) = Nothing
         Animation(Index) = New AnimationRec
         For x = 0 To 1
@@ -545,7 +545,7 @@ Module modDataBase
         Next
     End Sub
 
-    Sub ClearAnimInstance(ByVal index As Integer)
+    Sub ClearAnimInstance(index As Integer)
         AnimInstance(index).Animation = 0
         AnimInstance(index).X = 0
         AnimInstance(index).Y = 0
@@ -575,7 +575,7 @@ Module modDataBase
 
     End Sub
 
-    Sub ClearSkill(ByVal Index As Integer)
+    Sub ClearSkill(Index As Integer)
         Skill(Index) = Nothing
         Skill(Index) = New SkillRec
         Skill(Index).Name = ""
@@ -583,7 +583,7 @@ Module modDataBase
 #End Region
 
 #Region "Shops"
-    Sub ClearShop(ByVal Index As Integer)
+    Sub ClearShop(Index As Integer)
         Shop(Index) = Nothing
         Shop(Index) = New ShopRec
         Shop(Index).Name = ""

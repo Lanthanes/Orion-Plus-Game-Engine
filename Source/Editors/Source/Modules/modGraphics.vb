@@ -1,4 +1,5 @@
-﻿Imports SFML.Graphics
+﻿Imports System.IO
+Imports SFML.Graphics
 Imports SFML.Window
 
 Module modGraphics
@@ -171,7 +172,7 @@ Module modGraphics
 
         'sadly, gui shit is always needed, so we preload it :/
         DoorGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\Door" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\Door" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             DoorGFX = New Texture(Application.StartupPath & GFX_PATH & "Misc\Door" & GFX_EXT)
             DoorSprite = New Sprite(DoorGFX)
@@ -182,7 +183,7 @@ Module modGraphics
         End If
 
         DirectionsGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\Direction" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\Direction" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             DirectionsGfx = New Texture(Application.StartupPath & GFX_PATH & "Misc\Direction" & GFX_EXT)
             DirectionsSprite = New Sprite(DirectionsGfx)
@@ -193,7 +194,7 @@ Module modGraphics
         End If
 
         WeatherGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\Weather" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\Weather" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             WeatherGFX = New Texture(Application.StartupPath & GFX_PATH & "Misc\Weather" & GFX_EXT)
             WeatherSprite = New Sprite(WeatherGFX)
@@ -204,7 +205,7 @@ Module modGraphics
         End If
 
         LightGfxInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\Light" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\Light" & GFX_EXT) Then
             LightGfx = New Texture(Application.StartupPath & GFX_PATH & "Misc\Light" & GFX_EXT)
             LightSprite = New Sprite(LightGfx)
 
@@ -215,7 +216,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub LoadTexture(ByVal Index As Integer, ByVal TexType As Byte)
+    Friend Sub LoadTexture(Index As Integer, TexType As Byte)
 
         If TexType = 1 Then 'tilesets
             If Index <= 0 OrElse Index > NumTileSets Then Exit Sub
@@ -383,15 +384,15 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub RenderSprite(ByVal TmpSprite As Sprite, ByVal Target As RenderWindow, ByVal DestX As Integer, ByVal DestY As Integer, ByVal SourceX As Integer, ByVal SourceY As Integer,
-           ByVal SourceWidth As Integer, ByVal SourceHeight As Integer)
+    Friend Sub RenderSprite(TmpSprite As Sprite, Target As RenderWindow, DestX As Integer, DestY As Integer, SourceX As Integer, SourceY As Integer,
+           SourceWidth As Integer, SourceHeight As Integer)
 
         TmpSprite.TextureRect = New IntRect(SourceX, SourceY, SourceWidth, SourceHeight)
         TmpSprite.Position = New Vector2f(DestX, DestY)
         Target.Draw(TmpSprite)
     End Sub
 
-    Friend Sub DrawDirections(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub DrawDirections(X As Integer, Y As Integer)
         Dim rec As Rectangle, i As Integer
 
         ' render grid
@@ -419,7 +420,7 @@ Module modGraphics
     End Sub
 
     ' BitWise Operators for directional blocking
-    Friend Sub SetDirBlock(ByRef blockvar As Byte, ByRef Dir As Byte, ByVal block As Boolean)
+    Friend Sub SetDirBlock(ByRef blockvar As Byte, ByRef Dir As Byte, block As Boolean)
         If block Then
             blockvar = blockvar Or (2 ^ Dir)
         Else
@@ -431,15 +432,15 @@ Module modGraphics
         Return Not (Not blockvar AndAlso (2 ^ Dir))
     End Function
 
-    Friend Function ConvertMapX(ByVal X As Integer) As Integer
+    Friend Function ConvertMapX(X As Integer) As Integer
         ConvertMapX = X - (TileView.Left * PIC_X) - Camera.Left
     End Function
 
-    Friend Function ConvertMapY(ByVal Y As Integer) As Integer
+    Friend Function ConvertMapY(Y As Integer) As Integer
         ConvertMapY = Y - (TileView.Top * PIC_Y) - Camera.Top
     End Function
 
-    Friend Sub DrawNpc(ByVal MapNpcNum As Integer)
+    Friend Sub DrawNpc(MapNpcNum As Integer)
         Dim anim As Byte
         Dim X As Integer
         Dim Y As Integer
@@ -521,7 +522,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawResource(ByVal Resource As Integer, ByVal dx As Integer, ByVal dy As Integer, ByVal rec As Rectangle)
+    Friend Sub DrawResource(Resource As Integer, dx As Integer, dy As Integer, rec As Rectangle)
         If Resource < 1 OrElse Resource > NumResources Then Exit Sub
         Dim X As Integer
         Dim Y As Integer
@@ -547,7 +548,7 @@ Module modGraphics
         RenderSprite(ResourcesSprite(Resource), GameWindow, X, Y, rec.X, rec.Y, rec.Width, rec.Height)
     End Sub
 
-    Friend Sub DrawMapResource(ByVal Resource_num As Integer)
+    Friend Sub DrawMapResource(Resource_num As Integer)
         Dim Resource_master As Integer
 
         Dim Resource_state As Integer
@@ -590,7 +591,7 @@ Module modGraphics
         DrawResource(Resource_sprite, X, Y, rec)
     End Sub
 
-    Friend Sub DrawItem(ByVal itemnum As Integer)
+    Friend Sub DrawItem(itemnum As Integer)
 
         Dim srcrec As Rectangle
         Dim destrec As Rectangle
@@ -628,7 +629,7 @@ Module modGraphics
         RenderSprite(ItemsSprite(PicNum), GameWindow, x, y, srcrec.X, srcrec.Y, srcrec.Width, srcrec.Height)
     End Sub
 
-    Friend Sub DrawCharacter(ByVal Sprite As Integer, ByVal x2 As Integer, ByVal y2 As Integer, ByVal rec As Rectangle)
+    Friend Sub DrawCharacter(Sprite As Integer, x2 As Integer, y2 As Integer, rec As Rectangle)
         Dim X As Integer
         Dim y As Integer
         Dim width As Integer
@@ -654,7 +655,7 @@ Module modGraphics
         RenderSprite(CharacterSprite(Sprite), GameWindow, X, y, rec.X, rec.Y, rec.Width, rec.Height)
     End Sub
 
-    Friend Sub DrawMapTile(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub DrawMapTile(X As Integer, Y As Integer)
         Dim i As Integer
         Dim srcrect As New Rectangle(0, 0, 0, 0)
 
@@ -695,7 +696,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawMapFringeTile(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub DrawMapFringeTile(X As Integer, Y As Integer)
         Dim i As Integer
         Dim srcrect As New Rectangle(0, 0, 0, 0)
         Dim dest As Rectangle = New Rectangle(frmMapEditor.PointToScreen(frmMapEditor.picScreen.Location), New Size(32, 32))
@@ -741,7 +742,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Function IsValidMapPoint(ByVal X As Integer, ByVal Y As Integer) As Boolean
+    Friend Function IsValidMapPoint(X As Integer, Y As Integer) As Boolean
         IsValidMapPoint = False
 
         If X < 0 Then Exit Function
@@ -933,7 +934,7 @@ Module modGraphics
         UpdateCamera()
 
         'let program do other things
-        DoEvents()
+        Application.DoEvents()
 
         frmMapEditor.picScreen.Width = (Map.MaxX * PIC_X) + PIC_X
         frmMapEditor.picScreen.Height = (Map.MaxY * PIC_Y) + PIC_Y
@@ -1122,7 +1123,7 @@ Module modGraphics
         DrawText(DrawMapNameX, DrawMapNameY, Map.Name, DrawMapNameColor, Color.Black, GameWindow)
     End Sub
 
-    Friend Sub DrawDoor(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub DrawDoor(X As Integer, Y As Integer)
         Dim rec As Rectangle
 
         Dim x2 As Integer, y2 As Integer
@@ -1388,7 +1389,7 @@ Module modGraphics
             Exit Sub
         End If
 
-        If FileExist(Application.StartupPath & GFX_PATH & "items\" & itemnum & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "items\" & itemnum & GFX_EXT) Then
             frmMapEditor.picMapItem.BackgroundImage = Drawing.Image.FromFile(Application.StartupPath & GFX_PATH & "items\" & itemnum & GFX_EXT)
         End If
 
@@ -1404,7 +1405,7 @@ Module modGraphics
             Exit Sub
         End If
 
-        If FileExist(Application.StartupPath & GFX_PATH & "items\" & itemnum & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "items\" & itemnum & GFX_EXT) Then
             frmMapEditor.picMapKey.BackgroundImage = Drawing.Image.FromFile(Application.StartupPath & GFX_PATH & "items\" & itemnum & GFX_EXT)
         End If
 
@@ -1419,7 +1420,7 @@ Module modGraphics
             Exit Sub
         End If
 
-        If FileExist(Application.StartupPath & GFX_PATH & "items\" & itemnum & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "items\" & itemnum & GFX_EXT) Then
             frmItem.picItem.BackgroundImage = Drawing.Image.FromFile(Application.StartupPath & GFX_PATH & "items\" & itemnum & GFX_EXT)
         End If
 
@@ -1435,7 +1436,7 @@ Module modGraphics
             Exit Sub
         End If
 
-        If FileExist(Application.StartupPath & GFX_PATH & "paperdolls\" & Sprite & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "paperdolls\" & Sprite & GFX_EXT) Then
             frmItem.picPaperdoll.BackgroundImage = Drawing.Image.FromFile(Application.StartupPath & GFX_PATH & "paperdolls\" & Sprite & GFX_EXT)
         End If
     End Sub
@@ -1516,7 +1517,7 @@ Module modGraphics
             Exit Sub
         End If
 
-        If FileExist(Application.StartupPath & GFX_PATH & "characters\" & Sprite & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "characters\" & Sprite & GFX_EXT) Then
             frmNPC.picSprite.Width = Drawing.Image.FromFile(Application.StartupPath & GFX_PATH & "characters\" & Sprite & GFX_EXT).Width / 4
             frmNPC.picSprite.Height = Drawing.Image.FromFile(Application.StartupPath & GFX_PATH & "characters\" & Sprite & GFX_EXT).Height / 4
             frmNPC.picSprite.BackgroundImage = Drawing.Image.FromFile(Application.StartupPath & GFX_PATH & "characters\" & Sprite & GFX_EXT)
@@ -1532,7 +1533,7 @@ Module modGraphics
         If Sprite < 1 OrElse Sprite > NumResources Then
             frmResource.picNormalpic.BackgroundImage = Nothing
         Else
-            If FileExist(Application.StartupPath & GFX_PATH & "resources\" & Sprite & GFX_EXT) Then
+            If File.Exists(Application.StartupPath & GFX_PATH & "resources\" & Sprite & GFX_EXT) Then
                 frmResource.picNormalpic.BackgroundImage = Drawing.Image.FromFile(Application.StartupPath & GFX_PATH & "resources\" & Sprite & GFX_EXT)
             End If
         End If
@@ -1543,7 +1544,7 @@ Module modGraphics
         If Sprite < 1 OrElse Sprite > NumResources Then
             frmResource.picExhaustedPic.BackgroundImage = Nothing
         Else
-            If FileExist(Application.StartupPath & GFX_PATH & "resources\" & Sprite & GFX_EXT) Then
+            If File.Exists(Application.StartupPath & GFX_PATH & "resources\" & Sprite & GFX_EXT) Then
                 frmResource.picExhaustedPic.BackgroundImage = Drawing.Image.FromFile(Application.StartupPath & GFX_PATH & "resources\" & Sprite & GFX_EXT)
             End If
         End If

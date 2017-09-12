@@ -83,11 +83,11 @@ Friend Module ServerQuest
         Dim I As Integer
         For I = 1 To MAX_QUESTS
             SaveQuest(I)
-            DoEvents()
+            Application.DoEvents()
         Next
     End Sub
 
-    Sub SaveQuest(ByVal QuestNum As Integer)
+    Sub SaveQuest(QuestNum As Integer)
         Dim filename As String
         Dim I As Integer
         filename = Path.Combine(Application.StartupPath, "data", "quests", String.Format("quest{0}.dat", QuestNum))
@@ -145,11 +145,11 @@ Friend Module ServerQuest
 
         For I = 1 To MAX_QUESTS
             LoadQuest(I)
-            DoEvents()
+            Application.DoEvents()
         Next
     End Sub
 
-    Sub LoadQuest(ByVal QuestNum As Integer)
+    Sub LoadQuest(QuestNum As Integer)
         Dim FileName As String
         Dim I As Integer
 
@@ -208,14 +208,14 @@ Friend Module ServerQuest
     Sub CheckQuests()
         Dim I As Integer
         For I = 1 To MAX_QUESTS
-            If Not FileExist(Path.Combine(Application.StartupPath, "data", "quests", String.Format("quest{0}.dat", I))) Then
+            If Not File.Exists(Path.Combine(Application.StartupPath, "data", "quests", String.Format("quest{0}.dat", I))) Then
                 SaveQuest(I)
-                DoEvents()
+                Application.DoEvents()
             End If
         Next
     End Sub
 
-    Sub ClearQuest(ByVal QuestNum As Integer)
+    Sub ClearQuest(QuestNum As Integer)
         Dim I As Integer
 
         ' clear the Quest
@@ -273,13 +273,12 @@ Friend Module ServerQuest
 
         For I = 1 To MAX_QUESTS
             ClearQuest(I)
-            DoEvents()
         Next
     End Sub
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_RequestEditQuest(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_RequestEditQuest(Index As Integer, ByRef data() As Byte)
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
 
@@ -289,7 +288,7 @@ Friend Module ServerQuest
         Buffer.Dispose()
     End Sub
 
-    Sub Packet_SaveQuest(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_SaveQuest(Index As Integer, ByRef data() As Byte)
         Dim QuestNum As Integer
         Dim Buffer As New ByteStream(data)
         ' Prevent hacking
@@ -355,11 +354,11 @@ Friend Module ServerQuest
         Addlog(GetPlayerLogin(Index) & " saved Quest #" & QuestNum & ".", ADMIN_LOG)
     End Sub
 
-    Sub Packet_RequestQuests(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_RequestQuests(Index As Integer, ByRef data() As Byte)
         SendQuests(Index)
     End Sub
 
-    Sub Packet_PlayerHandleQuest(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_PlayerHandleQuest(Index As Integer, ByRef data() As Byte)
         Dim QuestNum As Integer, Order As Integer ', I As Integer
         Dim Buffer As New ByteStream(data)
         QuestNum = Buffer.ReadInt32
@@ -392,11 +391,11 @@ Friend Module ServerQuest
         Buffer.Dispose()
     End Sub
 
-    Sub Packet_QuestLogUpdate(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_QuestLogUpdate(Index As Integer, ByRef data() As Byte)
         SendPlayerQuests(Index)
     End Sub
 
-    Sub Packet_QuestReset(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_QuestReset(Index As Integer, ByRef data() As Byte)
         Dim QuestNum As Integer
 
         ' Prevent hacking
@@ -411,7 +410,7 @@ Friend Module ServerQuest
 #End Region
 
 #Region "Outgoing packets"
-    Sub SendQuests(ByVal Index As Integer)
+    Sub SendQuests(Index As Integer)
         Dim I As Integer
 
         For I = 1 To MAX_QUESTS
@@ -421,7 +420,7 @@ Friend Module ServerQuest
         Next
     End Sub
 
-    Sub SendUpdateQuestToAll(ByVal QuestNum As Integer)
+    Sub SendUpdateQuestToAll(QuestNum As Integer)
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
@@ -474,7 +473,7 @@ Friend Module ServerQuest
         Buffer.Dispose()
     End Sub
 
-    Sub SendUpdateQuestTo(ByVal Index As Integer, ByVal QuestNum As Integer)
+    Sub SendUpdateQuestTo(Index As Integer, QuestNum As Integer)
         Dim Buffer As ByteStream, I As Integer
         Buffer = New ByteStream(4)
 
@@ -527,7 +526,7 @@ Friend Module ServerQuest
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendPlayerQuests(ByVal Index As Integer)
+    Friend Sub SendPlayerQuests(Index As Integer)
         Dim I As Integer
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
@@ -545,7 +544,7 @@ Friend Module ServerQuest
 
     End Sub
 
-    Friend Sub SendPlayerQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
+    Friend Sub SendPlayerQuest(Index As Integer, QuestNum As Integer)
         Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
@@ -561,7 +560,7 @@ Friend Module ServerQuest
     End Sub
 
     'sends a message to the client that is shown on the screen
-    Friend Sub QuestMessage(ByVal Index As Integer, ByVal QuestNum As Integer, ByVal message As String, ByVal QuestNumForStart As Integer)
+    Friend Sub QuestMessage(Index As Integer, QuestNum As Integer, message As String, QuestNumForStart As Integer)
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
@@ -579,7 +578,7 @@ Friend Module ServerQuest
 
 #Region "Functions"
 
-    Friend Sub ResetQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
+    Friend Sub ResetQuest(Index As Integer, QuestNum As Integer)
         If GetPlayerAccess(Index) > 0 Then
             Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatusType.NotStarted
             Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).ActualTask = 1
@@ -590,7 +589,7 @@ Friend Module ServerQuest
         End If
     End Sub
 
-    Friend Function CanStartQuest(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
+    Friend Function CanStartQuest(Index As Integer, QuestNum As Integer) As Boolean
         CanStartQuest = False
         If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
         If QuestInProgress(Index, QuestNum) Then Exit Function
@@ -627,7 +626,7 @@ Friend Module ServerQuest
         End If
     End Function
 
-    Friend Function CanEndQuest(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
+    Friend Function CanEndQuest(Index As Integer, QuestNum As Integer) As Boolean
         CanEndQuest = False
 
         If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).ActualTask >= Quest(QuestNum).Task.Length Then
@@ -639,7 +638,7 @@ Friend Module ServerQuest
     End Function
 
     'Tells if the quest is in progress or not
-    Friend Function QuestInProgress(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
+    Friend Function QuestInProgress(Index As Integer, QuestNum As Integer) As Boolean
         QuestInProgress = False
         If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
@@ -648,7 +647,7 @@ Friend Module ServerQuest
         End If
     End Function
 
-    Friend Function QuestCompleted(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
+    Friend Function QuestCompleted(Index As Integer, QuestNum As Integer) As Boolean
         QuestCompleted = False
         If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
@@ -658,7 +657,7 @@ Friend Module ServerQuest
     End Function
 
     'Gets the quest reference num (id) from the quest name (it shall be unique)
-    Friend Function GetQuestNum(ByVal QuestName As String) As Integer
+    Friend Function GetQuestNum(QuestName As String) As Integer
         Dim I As Integer
         GetQuestNum = 0
 
@@ -670,7 +669,7 @@ Friend Module ServerQuest
         Next
     End Function
 
-    Friend Function GetItemNum(ByVal ItemName As String) As Integer
+    Friend Function GetItemNum(ItemName As String) As Integer
         Dim I As Integer
         GetItemNum = 0
 
@@ -686,7 +685,7 @@ Friend Module ServerQuest
     ' // General Purpose //
     ' /////////////////////
 
-    Friend Sub CheckTasks(ByVal Index As Integer, ByVal TaskType As Integer, ByVal TargetIndex As Integer)
+    Friend Sub CheckTasks(Index As Integer, TaskType As Integer, TargetIndex As Integer)
         Dim I As Integer
 
         For I = 1 To MAX_QUESTS
@@ -696,7 +695,7 @@ Friend Module ServerQuest
         Next
     End Sub
 
-    Friend Sub CheckTask(ByVal Index As Integer, ByVal QuestNum As Integer, ByVal TaskType As Integer, ByVal TargetIndex As Integer)
+    Friend Sub CheckTask(Index As Integer, QuestNum As Integer, TaskType As Integer, TargetIndex As Integer)
         Dim ActualTask As Integer, I As Integer
         ActualTask = Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).ActualTask
 
@@ -812,7 +811,7 @@ Friend Module ServerQuest
         SendPlayerQuest(Index, QuestNum)
     End Sub
 
-    Friend Sub ShowQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
+    Friend Sub ShowQuest(Index As Integer, QuestNum As Integer)
         If QuestInProgress(Index, QuestNum) Then
             QuestMessage(Index, QuestNum, Trim$(Quest(QuestNum).Chat(2)), 0) 'show meanwhile message
             Exit Sub
@@ -822,7 +821,7 @@ Friend Module ServerQuest
         QuestMessage(Index, QuestNum, Trim$(Quest(QuestNum).Chat(1)), QuestNum) 'chat 1 = request message
     End Sub
 
-    Friend Sub EndQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
+    Friend Sub EndQuest(Index As Integer, QuestNum As Integer)
         Dim I As Integer
 
         QuestMessage(Index, QuestNum, Trim$(Quest(QuestNum).Chat(3)), 0)

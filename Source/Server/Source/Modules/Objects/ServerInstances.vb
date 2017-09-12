@@ -35,7 +35,7 @@
         FindFreeInstanceMapSlot = -1
     End Function
 
-    Friend Function CreateInstance(ByVal MapNum As Integer) As Integer
+    Friend Function CreateInstance(MapNum As Integer) As Integer
         Dim i As Integer, slot As Integer
 
         If MapNum <= 0 OrElse MapNum > MAX_MAPS Then
@@ -72,7 +72,7 @@
         Exit Function
     End Function
 
-    Friend Sub DestroyInstancedMap(ByVal Slot As Integer)
+    Friend Sub DestroyInstancedMap(Slot As Integer)
         Dim x As Integer
 
         ClearMap(Slot + MAX_MAPS)
@@ -87,11 +87,11 @@
         InstancedMaps(Slot).OriginalMap = 0
     End Sub
 
-    Friend Function IsInstancedMap(ByVal MapNum As Integer) As Boolean
+    Friend Function IsInstancedMap(MapNum As Integer) As Boolean
         IsInstancedMap = MapNum > MAX_MAPS AndAlso MapNum <= MAX_CACHED_MAPS
     End Function
 
-    Friend Function GetInstanceBaseMap(ByVal MapNum As Integer) As Integer
+    Friend Function GetInstanceBaseMap(MapNum As Integer) As Integer
         GetInstanceBaseMap = InstancedMaps(MapNum - MAX_MAPS).OriginalMap
     End Function
 End Module

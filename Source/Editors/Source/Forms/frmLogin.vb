@@ -7,7 +7,7 @@
         CloseEditor()
     End Sub
 
-    Private Sub TmrConnect_Tick(ByVal sender As Object, ByVal e As EventArgs) Handles tmrConnect.Tick
+    Private Sub TmrConnect_Tick(sender As Object, e As EventArgs) Handles tmrConnect.Tick
         Static i As Integer
         If Socket.IsConnected() = True Then
             lblConnectionStatus.ForeColor = Color.Green
@@ -27,7 +27,7 @@
         End If
     End Sub
 
-    Friend Function IsLoginLegal(ByVal Username As String, ByVal Password As String) As Boolean
+    Friend Function IsLoginLegal(Username As String, Password As String) As Boolean
         If Len(Trim$(Username)) >= 3 Then
             If Len(Trim$(Password)) >= 3 Then
                 IsLoginLegal = True
@@ -49,36 +49,36 @@
     End Sub
 
 #Region "Editors"
-    Private Sub BtnMapEditor_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnMapEditor.Click
+    Private Sub BtnMapEditor_Click(sender As Object, e As EventArgs) Handles btnMapEditor.Click
         SendEditorRequestMap(1)
     End Sub
 
-    Private Sub BtnItemEditor_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnItemEditor.Click
+    Private Sub BtnItemEditor_Click(sender As Object, e As EventArgs) Handles btnItemEditor.Click
         SendRequestItems()
         SendRequestEditItem()
     End Sub
 
-    Private Sub BtnResourceEditor_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnResourceEditor.Click
+    Private Sub BtnResourceEditor_Click(sender As Object, e As EventArgs) Handles btnResourceEditor.Click
         SendRequestResources()
         SendRequestEditResource()
     End Sub
 
-    Private Sub BtnNPCEditor_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnNPCEditor.Click
+    Private Sub BtnNPCEditor_Click(sender As Object, e As EventArgs) Handles btnNPCEditor.Click
         SendRequestNPCS()
         SendRequestEditNpc()
     End Sub
 
-    Private Sub BtnSkillEditor_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnSkillEditor.Click
+    Private Sub BtnSkillEditor_Click(sender As Object, e As EventArgs) Handles btnSkillEditor.Click
         SendRequestSkills()
         SendRequestEditSkill()
     End Sub
 
-    Private Sub BtnShopEditor_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnShopEditor.Click
+    Private Sub BtnShopEditor_Click(sender As Object, e As EventArgs) Handles btnShopEditor.Click
         SendRequestShops()
         SendRequestEditShop()
     End Sub
 
-    Private Sub BtnAnimationEditor_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnAnimationEditor.Click
+    Private Sub BtnAnimationEditor_Click(sender As Object, e As EventArgs) Handles btnAnimationEditor.Click
         SendRequestAnimations()
         SendRequestEditAnimation()
     End Sub

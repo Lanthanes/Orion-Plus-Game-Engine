@@ -12,7 +12,7 @@ Module ServerParties
 #End Region
 
 #Region "Outgoing Packets"
-    Sub SendDataToParty(ByVal PartyNum As Integer, ByRef Data() As Byte)
+    Sub SendDataToParty(PartyNum As Integer, ByRef Data() As Byte)
         Dim i As Integer
 
         For i = 1 To Party(PartyNum).MemberCount
@@ -22,7 +22,7 @@ Module ServerParties
         Next
     End Sub
 
-    Sub SendPartyInvite(ByVal Index As Integer, ByVal Target As Integer)
+    Sub SendPartyInvite(Index As Integer, Target As Integer)
         Dim Buffer As New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPartyInvite)
 
@@ -35,7 +35,7 @@ Module ServerParties
         Buffer.Dispose()
     End Sub
 
-    Sub SendPartyUpdate(ByVal PartyNum As Integer)
+    Sub SendPartyUpdate(PartyNum As Integer)
         Dim Buffer As New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPartyUpdate)
 
@@ -53,7 +53,7 @@ Module ServerParties
         Buffer.Dispose()
     End Sub
 
-    Sub SendPartyUpdateTo(ByVal Index As Integer)
+    Sub SendPartyUpdateTo(Index As Integer)
         Dim Buffer As New ByteStream(4), i As Integer, partyNum As Integer
 
         Buffer.WriteInt32(ServerPackets.SPartyUpdate)
@@ -80,7 +80,7 @@ Module ServerParties
         Buffer.Dispose()
     End Sub
 
-    Sub SendPartyVitals(ByVal PartyNum As Integer, ByVal Index As Integer)
+    Sub SendPartyVitals(PartyNum As Integer, Index As Integer)
         Dim Buffer As ByteStream, i As Integer
 
         Buffer = New ByteStream(4)
@@ -101,15 +101,9 @@ Module ServerParties
 #End Region
 
 #Region "Incoming Packets"
-    Friend Sub Packet_PartyRquest(ByVal Index As Integer, ByRef data() As Byte)
-        Dim n As Integer
-        Dim Buffer As New ByteStream(data)
-
+    Friend Sub Packet_PartyRquest(Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CRequestParty", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CRequestParty")
-
-        n = FindPlayer(Buffer.ReadString)
-        Buffer.Dispose()
 
         ' Prevent partying with self
         If TempPlayer(Index).Target = Index Then Exit Sub
@@ -124,28 +118,28 @@ Module ServerParties
         Party_Invite(Index, TempPlayer(Index).Target)
     End Sub
 
-    Friend Sub Packet_AcceptParty(ByVal Index As Integer, ByRef data() As Byte)
+    Friend Sub Packet_AcceptParty(Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CAcceptParty", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CAcceptParty")
 
         Party_InviteAccept(TempPlayer(Index).PartyInvite, Index)
     End Sub
 
-    Friend Sub Packet_DeclineParty(ByVal Index As Integer, ByRef data() As Byte)
+    Friend Sub Packet_DeclineParty(Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CDeclineParty", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CDeclineParty")
 
         Party_InviteDecline(TempPlayer(Index).PartyInvite, Index)
     End Sub
 
-    Friend Sub Packet_LeaveParty(ByVal Index As Integer, ByRef data() As Byte)
+    Friend Sub Packet_LeaveParty(Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CLeaveParty", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CLeaveParty")
 
         Party_PlayerLeave(Index)
     End Sub
 
-    Friend Sub Packet_PartyChatMsg(ByVal Index As Integer, ByRef data() As Byte)
+    Friend Sub Packet_PartyChatMsg(Index As Integer, ByRef data() As Byte)
         Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CPartyChatMsg", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CPartyChatMsg")
@@ -165,14 +159,14 @@ Module ServerParties
 
     End Sub
 
-    Sub ClearParty(ByVal PartyNum As Integer)
+    Sub ClearParty(PartyNum As Integer)
         Party(PartyNum) = Nothing
         Party(PartyNum).Leader = 0
         Party(PartyNum).MemberCount = 0
         ReDim Party(PartyNum).Member(MAX_PARTY_MEMBERS)
     End Sub
 
-    Friend Sub PartyMsg(ByVal PartyNum As Integer, ByVal Msg As String)
+    Friend Sub PartyMsg(PartyNum As Integer, Msg As String)
         Dim i As Integer
 
         ' send message to all people
@@ -187,7 +181,7 @@ Module ServerParties
         Next
     End Sub
 
-    Private Sub Party_RemoveFromParty(ByVal Index As Integer, ByVal PartyNum As Integer)
+    Private Sub Party_RemoveFromParty(Index As Integer, PartyNum As Integer)
         For i = 1 To MAX_PARTY_MEMBERS
             If Party(PartyNum).Member(i) = Index Then
                 Party(PartyNum).Member(i) = 0
@@ -201,7 +195,7 @@ Module ServerParties
         SendPartyUpdateTo(Index)
     End Sub
 
-    Friend Sub Party_PlayerLeave(ByVal Index As Integer)
+    Friend Sub Party_PlayerLeave(Index As Integer)
         Dim PartyNum As Integer, i As Integer
 
         PartyNum = TempPlayer(Index).InParty
@@ -250,7 +244,7 @@ Module ServerParties
         End If
     End Sub
 
-    Friend Sub Party_Invite(ByVal Index As Integer, ByVal Target As Integer)
+    Friend Sub Party_Invite(Index As Integer, Target As Integer)
         Dim PartyNum As Integer, i As Integer
 
         ' check if the person is a valid target
@@ -307,7 +301,7 @@ Module ServerParties
         End If
     End Sub
 
-    Friend Sub Party_InviteAccept(ByVal Index As Integer, ByVal Target As Integer)
+    Friend Sub Party_InviteAccept(Index As Integer, Target As Integer)
         Dim partyNum As Integer, i As Integer
 
         ' check if already in a party
@@ -367,14 +361,14 @@ Module ServerParties
         End If
     End Sub
 
-    Friend Sub Party_InviteDecline(ByVal Index As Integer, ByVal Target As Integer)
+    Friend Sub Party_InviteDecline(Index As Integer, Target As Integer)
         PlayerMsg(Index, String.Format("{0} has declined to join your party.", GetPlayerName(Target)), ColorType.BrightRed)
         PlayerMsg(Target, "You declined to join the party.", ColorType.Yellow)
         ' clear the invitation
         TempPlayer(Target).PartyInvite = 0
     End Sub
 
-    Friend Sub Party_CountMembers(ByVal PartyNum As Integer)
+    Friend Sub Party_CountMembers(PartyNum As Integer)
         Dim i As Integer, highIndex As Integer, x As Integer
 
         ' find the high index
@@ -413,7 +407,7 @@ Module ServerParties
         Party_CountMembers(PartyNum)
     End Sub
 
-    Friend Sub Party_ShareExp(ByVal PartyNum As Integer, ByVal Exp As Integer, ByVal Index As Integer, ByVal MapNum As Integer)
+    Friend Sub Party_ShareExp(PartyNum As Integer, Exp As Integer, Index As Integer, MapNum As Integer)
         Dim expShare As Integer, leftOver As Integer, i As Integer, tmpIndex As Integer, LoseMemberCount As Byte
 
         ' check if it's worth sharing
@@ -463,7 +457,7 @@ Module ServerParties
 
     End Sub
 
-    Sub PartyWarp(ByVal Index As Long, ByVal MapNum As Long, ByVal X As Long, ByVal Y As Long)
+    Sub PartyWarp(Index As Long, MapNum As Long, X As Long, Y As Long)
         Dim i As Integer
 
         If TempPlayer(Index).InParty Then
@@ -476,12 +470,12 @@ Module ServerParties
 
     End Sub
 
-    Friend Function IsPlayerInParty(ByVal Index As Integer) As Boolean
+    Friend Function IsPlayerInParty(Index As Integer) As Boolean
         If Index < 0 OrElse Index > MAX_PLAYERS OrElse Not TempPlayer(Index).InGame Then Exit Function
         If TempPlayer(Index).InParty > 0 Then IsPlayerInParty = True
     End Function
 
-    Friend Function GetPlayerParty(ByVal Index As Integer) As Integer
+    Friend Function GetPlayerParty(Index As Integer) As Integer
         If Index < 0 OrElse Index > MAX_PLAYERS OrElse Not TempPlayer(Index).InGame Then Exit Function
         GetPlayerParty = TempPlayer(Index).InParty
     End Function

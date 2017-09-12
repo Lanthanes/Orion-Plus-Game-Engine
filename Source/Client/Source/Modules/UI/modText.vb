@@ -14,7 +14,7 @@ Module modText
     Friend LastLineIndex As Integer = 0
     Friend ScrollMod As Integer = 0
 
-    Friend Sub DrawText(ByVal X As Integer, ByVal Y As Integer, ByVal text As String, ByVal color As Color, ByVal BackColor As Color, ByRef target As RenderWindow, Optional TextSize As Byte = FONT_SIZE)
+    Friend Sub DrawText(X As Integer, Y As Integer, text As String, color As Color, BackColor As Color, ByRef target As RenderWindow, Optional TextSize As Byte = FONT_SIZE)
         Dim BackString As Text = New Text(text, SFMLGameFont)
         Dim FrontString As Text = New Text(text, SFMLGameFont)
         BackString.CharacterSize = TextSize
@@ -38,7 +38,7 @@ Module modText
         target.Draw(FrontString)
     End Sub
 
-    Friend Sub DrawPlayerName(ByVal Index As Integer)
+    Friend Sub DrawPlayerName(Index As Integer)
         Dim TextX As Integer
         Dim TextY As Integer
         Dim color As Color, backcolor As Color
@@ -84,7 +84,7 @@ Module modText
         DrawText(TextX, TextY, Trim$(Name), color, backcolor, GameWindow)
     End Sub
 
-    Friend Sub DrawNPCName(ByVal MapNpcNum As Integer)
+    Friend Sub DrawNPCName(MapNpcNum As Integer)
         Dim TextX As Integer
         Dim TextY As Integer
         Dim color As Color, backcolor As Color
@@ -115,7 +115,7 @@ Module modText
         DrawText(TextX, TextY, Trim$(Npc(npcNum).Name), color, backcolor, GameWindow)
     End Sub
 
-    Friend Sub DrawEventName(ByVal Index As Integer)
+    Friend Sub DrawEventName(Index As Integer)
         Dim TextX As Integer
         Dim TextY As Integer
         Dim color As Color, backcolor As Color
@@ -178,7 +178,7 @@ Module modText
 
     End Sub
 
-    Sub DrawActionMsg(ByVal Index As Integer)
+    Sub DrawActionMsg(Index As Integer)
         Dim X As Integer, y As Integer, i As Integer, Time As Integer
 
         ' how long we want each message to appear
@@ -236,13 +236,13 @@ Module modText
     End Sub
 
     Private ReadOnly widthTester As Text = New Text("", SFMLGameFont)
-    Friend Function GetTextWidth(ByVal Text As String, Optional TextSize As Byte = FONT_SIZE) As Integer
+    Friend Function GetTextWidth(Text As String, Optional TextSize As Byte = FONT_SIZE) As Integer
         widthTester.DisplayedString = Text
         widthTester.CharacterSize = TextSize
         Return widthTester.GetLocalBounds().Width
     End Function
 
-    Friend Sub AddText(ByVal Msg As String, ByVal Color As Integer)
+    Friend Sub AddText(Msg As String, Color As Integer)
         If txtChatAdd = "" Then
             txtChatAdd = txtChatAdd & Msg
             AddChatRec(Msg, Color)
@@ -255,14 +255,14 @@ Module modText
         End If
     End Sub
 
-    Friend Sub AddChatRec(ByVal Msg As String, ByVal Color As Integer)
+    Friend Sub AddChatRec(Msg As String, Color As Integer)
         Dim struct As ChatRec
         struct.Text = Msg
         struct.Color = Color
         Chat.Add(struct)
     End Sub
 
-    Friend Function GetSFMLColor(ByVal Color As Byte) As Color
+    Friend Function GetSFMLColor(Color As Byte) As Color
         Select Case Color
             Case ColorType.Black
                 Return SFML.Graphics.Color.Black
@@ -442,7 +442,7 @@ Module modText
 
     End Function
 
-    'Friend Function KeyPressed(ByVal e As KeyEventArgs) As String
+    'Friend Function KeyPressed(e As KeyEventArgs) As String
 
     '    Dim keyValue As String = ""
     '    Threading.Thread.CurrentThread.CurrentCulture = New Globalization.CultureInfo("ru-RU")
@@ -612,7 +612,7 @@ Module modText
 
     'End Function
 
-    Friend Sub DrawChatBubble(ByVal Index As Integer)
+    Friend Sub DrawChatBubble(Index As Integer)
         Dim theArray As List(Of String), X As Integer, Y As Integer, i As Integer, MaxWidth As Integer, X2 As Integer, Y2 As Integer
 
         With chatBubble(Index)

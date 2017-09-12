@@ -1,5 +1,5 @@
 ﻿Module ServerRandomItems
-    Friend Sub ClearRandBank(ByVal index As Integer, ByVal BankNum As Integer)
+    Friend Sub ClearRandBank(index As Integer, BankNum As Integer)
         Dim i As Integer
 
         Bank(index).ItemRand(BankNum).Prefix = ""
@@ -13,7 +13,7 @@
         Next i
     End Sub
 
-    Friend Sub ClearRandInv(ByVal index As Integer, ByVal InvNum As Integer)
+    Friend Sub ClearRandInv(index As Integer, InvNum As Integer)
         Dim i As Integer
 
         Player(index).Character(TempPlayer(index).CurChar).RandInv(InvNum).Prefix = ""
@@ -27,7 +27,7 @@
         Next i
     End Sub
 
-    Friend Sub ClearRandEq(ByVal index As Integer, ByVal Equipment As EquipmentType)
+    Friend Sub ClearRandEq(index As Integer, Equipment As EquipmentType)
         Dim i As Integer
 
         Player(index).Character(TempPlayer(index).CurChar).RandEquip(Equipment).Prefix = ""
@@ -41,7 +41,7 @@
         Next i
     End Sub
 
-    Friend Sub GivePlayerRandomItem(ByVal index As Long, ByVal itemnum As Long, ByVal invslot As Long)
+    Friend Sub GivePlayerRandomItem(index As Long, itemnum As Long, invslot As Long)
         Dim RandomType As Long, StatAmount As Long, Rarity As Long, TempNum As Long, TempAmount As Double, i As Long, ItemLevel As Long
         Dim Prefix As String = ""
 

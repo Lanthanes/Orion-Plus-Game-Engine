@@ -35,20 +35,20 @@ Friend Module ClientNetworkConfig
         DestroyGame()
     End Sub
 
-    Private Sub Socket_CrashReport(ByVal err As String) Handles Socket.CrashReport
+    Private Sub Socket_CrashReport(err As String) Handles Socket.CrashReport
         MsgBox("There was a network error -> Report: " & err)
         DestroyNetwork()
         DestroyGame()
     End Sub
 #If DEBUG Then
-    Private Sub Socket_TrafficReceived(ByVal size As Integer, ByRef data() As Byte) Handles Socket.TrafficReceived
+    Private Sub Socket_TrafficReceived(size As Integer, ByRef data() As Byte) Handles Socket.TrafficReceived
         Console.WriteLine("Traffic Received : [Size: " & size & "]")
         Dim tmpData = data
         Dim BreakPointDummy As Integer
         'Put breakline on BreakPointDummy to look at what is contained in data at runtime in the VS logger.
     End Sub
 
-    Private Sub Socket_PacketReceived(ByVal size As Integer, ByVal header As Integer, ByRef data() As Byte) Handles Socket.PacketReceived
+    Private Sub Socket_PacketReceived(size As Integer, header As Integer, ByRef data() As Byte) Handles Socket.PacketReceived
         Console.WriteLine("Packet Received : [Size: " & size & "| Packet: " & CType(header, ServerPackets).ToString() & "]")
         Dim tmpData = data
         Dim BreakPointDummy As Integer

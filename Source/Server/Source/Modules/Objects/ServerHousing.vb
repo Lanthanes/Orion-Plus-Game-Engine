@@ -45,7 +45,7 @@ Friend Module ServerHousing
             HouseConfig(i).Price = Val(myXml.ReadString("House" & i, "Price"))
             HouseConfig(i).X = Val(myXml.ReadString("House" & i, "X"))
             HouseConfig(i).Y = Val(myXml.ReadString("House" & i, "Y"))
-            DoEvents()
+            Application.DoEvents()
         Next
         For i = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
@@ -55,7 +55,7 @@ Friend Module ServerHousing
 
     End Sub
 
-    Sub SaveHouse(ByVal Index As Integer)
+    Sub SaveHouse(Index As Integer)
         Dim myXml As New XmlClass With {
             .Filename = Path.Combine(Application.StartupPath, "data", "houseconfig.xml"),
             .Root = "Config"
@@ -84,7 +84,7 @@ Friend Module ServerHousing
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_BuyHouse(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_BuyHouse(Index As Integer, ByRef data() As Byte)
         Dim i As Integer, price As Integer
         Dim Buffer As New ByteStream(data)
         i = Buffer.ReadInt32
@@ -115,7 +115,7 @@ Friend Module ServerHousing
 
     End Sub
 
-    Sub Packet_InviteToHouse(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_InviteToHouse(Index As Integer, ByRef data() As Byte)
         Dim invitee As Integer, Name As String
         Dim Buffer As New ByteStream(data)
         Name = Trim$(Buffer.ReadString)
@@ -170,7 +170,7 @@ Friend Module ServerHousing
 
     End Sub
 
-    Sub Packet_AcceptInvite(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_AcceptInvite(Index As Integer, ByRef data() As Byte)
         Dim response As Integer
         Dim Buffer As New ByteStream(data)
         response = Buffer.ReadInt32
@@ -204,7 +204,7 @@ Friend Module ServerHousing
 
     End Sub
 
-    Sub Packet_PlaceFurniture(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_PlaceFurniture(Index As Integer, ByRef data() As Byte)
         Dim i As Integer, x As Integer, y As Integer, invslot As Integer
         Dim ItemNum As Integer, x1 As Integer, y1 As Integer, widthoffset As Integer
 
@@ -384,7 +384,7 @@ Friend Module ServerHousing
 
     End Sub
 
-    Sub Packet_RequestEditHouse(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_RequestEditHouse(Index As Integer, ByRef data() As Byte)
         Dim Buffer As ByteStream, i As Integer
 
         ' Prevent hacking
@@ -405,7 +405,7 @@ Friend Module ServerHousing
 
     End Sub
 
-    Sub Packet_SaveHouses(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_SaveHouses(Index As Integer, ByRef data() As Byte)
         Dim i As Integer, x As Integer, Count As Integer, z As Integer
 
         ' Prevent hacking
@@ -436,7 +436,7 @@ Friend Module ServerHousing
 
     End Sub
 
-    Sub Packet_SellHouse(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_SellHouse(Index As Integer, ByRef data() As Byte)
         Dim i As Integer, refund As Integer
         Dim TmpIndex As Integer
         Dim Buffer As New ByteStream(data)
@@ -474,7 +474,7 @@ Friend Module ServerHousing
 #End Region
 
 #Region "OutGoing Packets"
-    Sub SendHouseConfigs(ByVal Index As Integer)
+    Sub SendHouseConfigs(Index As Integer)
         Dim Buffer As New ByteStream(4), i As Integer
 
         Buffer.WriteInt32(ServerPackets.SHouseConfigs)
@@ -491,7 +491,7 @@ Friend Module ServerHousing
 
     End Sub
 
-    Sub SendFurnitureToHouse(ByVal HouseIndex As Integer)
+    Sub SendFurnitureToHouse(HouseIndex As Integer)
         Dim Buffer As New ByteStream(4), i As Integer
 
         Buffer.WriteInt32(ServerPackets.SFurniture)
@@ -513,7 +513,7 @@ Friend Module ServerHousing
             End If
         Next
 
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 #End Region

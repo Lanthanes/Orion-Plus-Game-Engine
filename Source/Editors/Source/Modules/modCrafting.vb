@@ -62,7 +62,7 @@ Friend Module modCrafting
 
     End Sub
 
-    Sub ClearRecipe(ByVal Num As Integer)
+    Sub ClearRecipe(Num As Integer)
         Recipe(Num).Name = ""
         Recipe(Num).RecipeType = 0
         Recipe(Num).MakeItemNum = 0
@@ -228,7 +228,7 @@ Friend Module modCrafting
         Buffer.Dispose()
     End Sub
 
-    Sub SendSaveRecipe(ByVal RecipeNum As Integer)
+    Sub SendSaveRecipe(RecipeNum As Integer)
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
@@ -256,7 +256,7 @@ Friend Module modCrafting
 
 #Region "Functions"
 
-    Function GetRecipeIndex(ByVal RecipeName As String) As Integer
+    Function GetRecipeIndex(RecipeName As String) As Integer
         Dim i As Integer
 
         GetRecipeIndex = 0

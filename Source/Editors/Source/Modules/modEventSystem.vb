@@ -387,7 +387,7 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub AddEvent(X As Integer, Y As Integer, Optional ByVal cancelLoad As Boolean = False)
+    Sub AddEvent(X As Integer, Y As Integer, Optional cancelLoad As Boolean = False)
         Dim count As Integer, pageCount As Integer, i As Integer
 
         count = Map.EventCount + 1
@@ -2526,12 +2526,12 @@ newlist:
                             .Questnum = Buffer.ReadInt32
                         End With
                         If Map.Events(i).Pages(X).CommandListCount > 0 Then
-                            ReDim Map.Events(i).Pages(X).CommandList(0 To Map.Events(i).Pages(X).CommandListCount)
+                            ReDim Map.Events(i).Pages(X).CommandList(Map.Events(i).Pages(X).CommandListCount)
                             For Y = 1 To Map.Events(i).Pages(X).CommandListCount
                                 Map.Events(i).Pages(X).CommandList(Y).CommandCount = Buffer.ReadInt32
                                 Map.Events(i).Pages(X).CommandList(Y).ParentList = Buffer.ReadInt32
                                 If Map.Events(i).Pages(X).CommandList(Y).CommandCount > 0 Then
-                                    ReDim Map.Events(i).Pages(X).CommandList(Y).Commands(0 To Map.Events(i).Pages(X).CommandList(Y).CommandCount)
+                                    ReDim Map.Events(i).Pages(X).CommandList(Y).Commands(Map.Events(i).Pages(X).CommandList(Y).CommandCount)
                                     For z = 1 To Map.Events(i).Pages(X).CommandList(Y).CommandCount
                                         With Map.Events(i).Pages(X).CommandList(Y).Commands(z)
                                             .Index = Buffer.ReadInt32
@@ -2924,7 +2924,7 @@ nextevent:
 
     End Sub
 
-    Friend Sub DrawEvent(ByVal Id As Integer) ' draw on map, outside the editor
+    Friend Sub DrawEvent(Id As Integer) ' draw on map, outside the editor
         Dim X As Integer, Y As Integer, Width As Integer, Height As Integer, sRect As Rectangle, Anim As Integer, spritetop As Integer
 
         If Map.MapEvents(Id).Visible = 0 Then Exit Sub

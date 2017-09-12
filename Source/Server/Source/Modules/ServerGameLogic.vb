@@ -2,7 +2,7 @@
 Imports ASFW
 
 Module ServerGameLogic
-    Function GetTotalMapPlayers(ByVal MapNum As Integer) As Integer
+    Function GetTotalMapPlayers(MapNum As Integer) As Integer
         Dim i As Integer, n As Integer
         n = 0
 
@@ -26,7 +26,7 @@ Module ServerGameLogic
         GetPlayersOnline = x
     End Function
 
-    Function GetNpcMaxVital(ByVal NpcNum As Integer, ByVal Vital As VitalType) As Integer
+    Function GetNpcMaxVital(NpcNum As Integer, Vital As VitalType) As Integer
         GetNpcMaxVital = 0
 
         ' Prevent subscript out of range
@@ -43,7 +43,7 @@ Module ServerGameLogic
 
     End Function
 
-    Function FindPlayer(ByVal Name As String) As Integer
+    Function FindPlayer(Name As String) As Integer
         Dim i As Integer
 
         For i = 1 To GetPlayersOnline()
@@ -61,7 +61,7 @@ Module ServerGameLogic
         FindPlayer = 0
     End Function
 
-    Sub SpawnItem(ByVal itemNum As Integer, ByVal ItemVal As Integer, ByVal MapNum As Integer, ByVal x As Integer, ByVal y As Integer)
+    Sub SpawnItem(itemNum As Integer, ItemVal As Integer, MapNum As Integer, x As Integer, y As Integer)
         Dim i As Integer
 
         ' Check for subscript out of range
@@ -75,7 +75,7 @@ Module ServerGameLogic
         SpawnItemSlot(i, itemNum, ItemVal, MapNum, x, y)
     End Sub
 
-    Sub SpawnItemSlot(ByVal MapItemSlot As Integer, ByVal itemNum As Integer, ByVal ItemVal As Integer, ByVal MapNum As Integer, ByVal x As Integer, ByVal y As Integer)
+    Sub SpawnItemSlot(MapItemSlot As Integer, itemNum As Integer, ItemVal As Integer, MapNum As Integer, x As Integer, y As Integer)
         Dim i As Integer
         Dim Buffer As New ByteStream(4)
 
@@ -109,7 +109,7 @@ Module ServerGameLogic
         Buffer.Dispose()
     End Sub
 
-    Function FindOpenMapItemSlot(ByVal MapNum As Integer) As Integer
+    Function FindOpenMapItemSlot(MapNum As Integer) As Integer
         Dim i As Integer
         FindOpenMapItemSlot = 0
 
@@ -134,7 +134,7 @@ Module ServerGameLogic
 
     End Sub
 
-    Sub SpawnMapItems(ByVal MapNum As Integer)
+    Sub SpawnMapItems(MapNum As Integer)
         Dim x As Integer
         Dim y As Integer
 
@@ -163,7 +163,7 @@ Module ServerGameLogic
 
     End Sub
 
-    Friend Sub SpawnNpc(ByVal MapNpcNum As Integer, ByVal MapNum As Integer)
+    Friend Sub SpawnNpc(MapNpcNum As Integer, MapNum As Integer)
         Dim Buffer As New ByteStream(4)
         Dim NpcNum As Integer
         Dim i As Integer
@@ -261,12 +261,12 @@ Module ServerGameLogic
         Buffer.Dispose()
     End Sub
 
-    Friend Function Random(ByVal low As Int32, ByVal high As Int32) As Integer
+    Friend Function Random(low As Int32, high As Int32) As Integer
         Static RandomNumGen As New System.Random
         Return RandomNumGen.Next(low, high + 1)
     End Function
 
-    Friend Function NpcTileIsOpen(ByVal MapNum As Integer, ByVal x As Integer, ByVal y As Integer) As Boolean
+    Friend Function NpcTileIsOpen(MapNum As Integer, x As Integer, y As Integer) As Boolean
         Dim LoopI As Integer
         NpcTileIsOpen = True
 
@@ -292,7 +292,7 @@ Module ServerGameLogic
 
     End Function
 
-    Friend Function CheckGrammar(ByVal Word As String, Optional ByVal Caps As Byte = 0) As String
+    Friend Function CheckGrammar(Word As String, Optional Caps As Byte = 0) As String
         Dim FirstLetter As String
 
         FirstLetter = LCase$(Left$(Word, 1))
@@ -309,7 +309,7 @@ Module ServerGameLogic
         End If
     End Function
 
-    Function CanNpcMove(ByVal MapNum As Integer, ByVal MapNpcNum As Integer, ByVal Dir As Byte) As Boolean
+    Function CanNpcMove(MapNum As Integer, MapNpcNum As Integer, Dir As Byte) As Boolean
         Dim i As Integer
         Dim n As Integer
         Dim x As Integer
@@ -463,7 +463,7 @@ Module ServerGameLogic
 
     End Function
 
-    Sub NpcMove(ByVal MapNum As Integer, ByVal MapNpcNum As Integer, ByVal Dir As Integer, ByVal Movement As Integer)
+    Sub NpcMove(MapNum As Integer, MapNpcNum As Integer, Dir As Integer, Movement As Integer)
         Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
@@ -535,7 +535,7 @@ Module ServerGameLogic
         Buffer.Dispose()
     End Sub
 
-    Sub NpcDir(ByVal MapNum As Integer, ByVal MapNpcNum As Integer, ByVal Dir As Integer)
+    Sub NpcDir(MapNum As Integer, MapNpcNum As Integer, Dir As Integer)
         Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
@@ -566,7 +566,7 @@ Module ServerGameLogic
 
     End Sub
 
-    Sub SpawnMapNpcs(ByVal MapNum As Integer)
+    Sub SpawnMapNpcs(MapNum As Integer)
         Dim i As Integer
 
         For i = 1 To MAX_MAP_NPCS
@@ -575,7 +575,7 @@ Module ServerGameLogic
 
     End Sub
 
-    Sub SendMapNpcsToMap(ByVal MapNum As Integer)
+    Sub SendMapNpcsToMap(MapNum As Integer)
         Dim i As Integer
         Dim Buffer As New ByteStream(4)
 

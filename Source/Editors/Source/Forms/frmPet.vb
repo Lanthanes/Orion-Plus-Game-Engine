@@ -1,4 +1,6 @@
-﻿Friend Class frmPet
+﻿Imports System.IO
+
+Friend Class frmPet
 
 #Region "Basics"
     Private Sub FrmEditor_Pet_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -46,7 +48,7 @@
             Exit Sub
         End If
 
-        If FileExist(Application.StartupPath & GFX_PATH & "Characters\" & petnum & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Characters\" & petnum & GFX_EXT) Then
             picSprite.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_PATH & "Characters\" & petnum & GFX_EXT)
         End If
 

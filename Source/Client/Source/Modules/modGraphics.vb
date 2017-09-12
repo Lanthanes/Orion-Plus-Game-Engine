@@ -1,5 +1,6 @@
 ﻿Imports SFML.Graphics
 Imports System.Drawing
+Imports System.IO
 Imports System.Windows.Forms
 Imports SFML.Window
 Imports Orion
@@ -311,7 +312,7 @@ Module modGraphics
 
         'sadly, gui shit is always needed, so we preload it :/
         CursorInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\Cursor" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\Cursor" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             CursorGFX = New Texture(Application.StartupPath & GFX_PATH & "Misc\Cursor" & GFX_EXT)
             CursorSprite = New Sprite(CursorGFX)
@@ -322,7 +323,7 @@ Module modGraphics
         End If
 
         DoorGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\Door" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\Door" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             DoorGFX = New Texture(Application.StartupPath & GFX_PATH & "Misc\Door" & GFX_EXT)
             DoorSprite = New Sprite(DoorGFX)
@@ -333,7 +334,7 @@ Module modGraphics
         End If
 
         BloodGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\Blood" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\Blood" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             BloodGFX = New Texture(Application.StartupPath & GFX_PATH & "Misc\Blood" & GFX_EXT)
             BloodSprite = New Sprite(BloodGFX)
@@ -344,7 +345,7 @@ Module modGraphics
         End If
 
         DirectionsGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\Direction" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\Direction" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             DirectionsGfx = New Texture(Application.StartupPath & GFX_PATH & "Misc\Direction" & GFX_EXT)
             DirectionsSprite = New Sprite(DirectionsGfx)
@@ -355,7 +356,7 @@ Module modGraphics
         End If
 
         WeatherGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\Weather" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\Weather" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             WeatherGFX = New Texture(Application.StartupPath & GFX_PATH & "Misc\Weather" & GFX_EXT)
             WeatherSprite = New Sprite(WeatherGFX)
@@ -366,7 +367,7 @@ Module modGraphics
         End If
 
         HotBarGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\HotBar" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\HotBar" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             HotBarGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\HotBar" & GFX_EXT)
             HotBarSprite = New Sprite(HotBarGFX)
@@ -377,7 +378,7 @@ Module modGraphics
         End If
 
         ChatWindowGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\" & "Chat" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\" & "Chat" & GFX_EXT) Then
             ChatWindowGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\" & "Chat" & GFX_EXT)
             ChatWindowSprite = New Sprite(ChatWindowGFX)
 
@@ -387,7 +388,7 @@ Module modGraphics
         End If
 
         MyChatWindowGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\" & "MyChat" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\" & "MyChat" & GFX_EXT) Then
             MyChatWindowGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\" & "MyChat" & GFX_EXT)
             MyChatWindowSprite = New Sprite(MyChatWindowGFX)
 
@@ -397,7 +398,7 @@ Module modGraphics
         End If
 
         ButtonGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Button" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Button" & GFX_EXT) Then
             ButtonGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Button" & GFX_EXT)
             ButtonSprite = New Sprite(ButtonGFX)
 
@@ -407,7 +408,7 @@ Module modGraphics
         End If
 
         ButtonHoverGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Button_Hover" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Button_Hover" & GFX_EXT) Then
             ButtonHoverGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Button_Hover" & GFX_EXT)
             ButtonHoverSprite = New Sprite(ButtonHoverGFX)
 
@@ -417,7 +418,7 @@ Module modGraphics
         End If
 
         HUDPanelGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\HUD" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\HUD" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             HUDPanelGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\HUD" & GFX_EXT)
             HUDPanelSprite = New Sprite(HUDPanelGFX)
@@ -428,7 +429,7 @@ Module modGraphics
         End If
 
         HPBarGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "HPBar" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "HPBar" & GFX_EXT) Then
             HPBarGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "HPBar" & GFX_EXT)
             HPBarSprite = New Sprite(HPBarGFX)
 
@@ -438,7 +439,7 @@ Module modGraphics
         End If
 
         MPBarGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "MPBar" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "MPBar" & GFX_EXT) Then
             MPBarGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "MPBar" & GFX_EXT)
             MPBarSprite = New Sprite(MPBarGFX)
 
@@ -448,7 +449,7 @@ Module modGraphics
         End If
 
         EXPBarGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "EXPBar" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "EXPBar" & GFX_EXT) Then
             EXPBarGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "EXPBar" & GFX_EXT)
             EXPBarSprite = New Sprite(EXPBarGFX)
 
@@ -458,7 +459,7 @@ Module modGraphics
         End If
 
         ActionPanelGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "ActionBar\ActionBar" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "ActionBar\ActionBar" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             ActionPanelGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "ActionBar\ActionBar" & GFX_EXT)
             ActionPanelSprite = New Sprite(ActionPanelGFX)
@@ -469,7 +470,7 @@ Module modGraphics
         End If
 
         InvPanelGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\inventory" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\inventory" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             InvPanelGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\inventory" & GFX_EXT)
             InvPanelSprite = New Sprite(InvPanelGFX)
@@ -480,7 +481,7 @@ Module modGraphics
         End If
 
         SkillPanelGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\skills" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\skills" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             SkillPanelGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\skills" & GFX_EXT)
             SkillPanelSprite = New Sprite(SkillPanelGFX)
@@ -491,7 +492,7 @@ Module modGraphics
         End If
 
         CharPanelGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\char" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\char" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             CharPanelGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\char" & GFX_EXT)
             CharPanelSprite = New Sprite(CharPanelGFX)
@@ -502,7 +503,7 @@ Module modGraphics
         End If
 
         CharPanelPlusGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\plus" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\plus" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             CharPanelPlusGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\plus" & GFX_EXT)
             CharPanelPlusSprite = New Sprite(CharPanelPlusGFX)
@@ -513,7 +514,7 @@ Module modGraphics
         End If
 
         CharPanelMinGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\min" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\min" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             CharPanelMinGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\min" & GFX_EXT)
             CharPanelMinSprite = New Sprite(CharPanelMinGFX)
@@ -524,7 +525,7 @@ Module modGraphics
         End If
 
         BankPanelGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\Bank" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\Bank" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             BankPanelGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\Bank" & GFX_EXT)
             BankPanelSprite = New Sprite(BankPanelGFX)
@@ -535,7 +536,7 @@ Module modGraphics
         End If
 
         ShopPanelGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\Shop" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\Shop" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             ShopPanelGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\Shop" & GFX_EXT)
             ShopPanelSprite = New Sprite(ShopPanelGFX)
@@ -546,7 +547,7 @@ Module modGraphics
         End If
 
         TradePanelGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\Trade" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\Trade" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             TradePanelGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\Trade" & GFX_EXT)
             TradePanelSprite = New Sprite(TradePanelGFX)
@@ -557,7 +558,7 @@ Module modGraphics
         End If
 
         EventChatGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\EventChat" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\EventChat" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             EventChatGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\EventChat" & GFX_EXT)
             EventChatSprite = New Sprite(EventChatGFX)
@@ -568,7 +569,7 @@ Module modGraphics
         End If
 
         TargetGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\Target" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\Target" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             TargetGFX = New Texture(Application.StartupPath & GFX_PATH & "Misc\Target" & GFX_EXT)
             TargetSprite = New Sprite(TargetGFX)
@@ -579,7 +580,7 @@ Module modGraphics
         End If
 
         DescriptionGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\" & "Description" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\" & "Description" & GFX_EXT) Then
             DescriptionGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\" & "Description" & GFX_EXT)
             DescriptionSprite = New Sprite(DescriptionGFX)
 
@@ -589,7 +590,7 @@ Module modGraphics
         End If
 
         RClickGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\" & "RightClick" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\" & "RightClick" & GFX_EXT) Then
             RClickGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\" & "RightClick" & GFX_EXT)
             RClickSprite = New Sprite(RClickGFX)
 
@@ -599,7 +600,7 @@ Module modGraphics
         End If
 
         QuestGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\" & "QuestLog" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\" & "QuestLog" & GFX_EXT) Then
             QuestGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\" & "QuestLog" & GFX_EXT)
             QuestSprite = New Sprite(QuestGFX)
 
@@ -609,7 +610,7 @@ Module modGraphics
         End If
 
         CraftGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\" & "Craft" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\" & "Craft" & GFX_EXT) Then
             CraftGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\" & "Craft" & GFX_EXT)
             CraftSprite = New Sprite(CraftGFX)
 
@@ -619,7 +620,7 @@ Module modGraphics
         End If
 
         ProgBarGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\" & "ProgBar" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\" & "ProgBar" & GFX_EXT) Then
             ProgBarGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\" & "ProgBar" & GFX_EXT)
             ProgBarSprite = New Sprite(ProgBarGFX)
 
@@ -629,7 +630,7 @@ Module modGraphics
         End If
 
         ChatBubbleGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\ChatBubble" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\ChatBubble" & GFX_EXT) Then
             ChatBubbleGFX = New Texture(Application.StartupPath & GFX_PATH & "Misc\ChatBubble" & GFX_EXT)
             ChatBubbleSprite = New Sprite(ChatBubbleGFX)
             'Cache the width and height
@@ -638,7 +639,7 @@ Module modGraphics
         End If
 
         PetStatsGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\Pet" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\Pet" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             PetStatsGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\Pet" & GFX_EXT)
             PetStatsSprite = New Sprite(PetStatsGFX)
@@ -649,7 +650,7 @@ Module modGraphics
         End If
 
         PetbarGFXInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Main\Petbar" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Main\Petbar" & GFX_EXT) Then
             'Load texture first, dont care about memory streams (just use the filename)
             PetBarGFX = New Texture(Application.StartupPath & GFX_GUI_PATH & "Main\Petbar" & GFX_EXT)
             PetBarSprite = New Sprite(PetBarGFX)
@@ -660,7 +661,7 @@ Module modGraphics
         End If
 
         LightGfxInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\Light" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\Light" & GFX_EXT) Then
             LightGfx = New Texture(Application.StartupPath & GFX_PATH & "Misc\Light" & GFX_EXT)
             LightSprite = New Sprite(LightGfx)
 
@@ -670,7 +671,7 @@ Module modGraphics
         End If
 
         ShadowGfxInfo = New GraphicInfo
-        If FileExist(Application.StartupPath & GFX_PATH & "Misc\Shadow" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Misc\Shadow" & GFX_EXT) Then
             ShadowGfx = New Texture(Application.StartupPath & GFX_PATH & "Misc\Shadow" & GFX_EXT)
             ShadowSprite = New Sprite(ShadowGfx)
 
@@ -680,7 +681,7 @@ Module modGraphics
         End If
     End Sub
 
-    Friend Sub LoadTexture(ByVal Index As Integer, ByVal TexType As Byte)
+    Friend Sub LoadTexture(Index As Integer, TexType As Byte)
 
         If TexType = 1 Then 'tilesets
             If Index < 0 OrElse Index > NumTileSets Then Exit Sub
@@ -895,7 +896,7 @@ Module modGraphics
     End Sub
 #End Region
 
-    Friend Sub DrawEmotes(ByVal x2 As Integer, ByVal y2 As Integer, ByVal Sprite As Integer)
+    Friend Sub DrawEmotes(x2 As Integer, y2 As Integer, Sprite As Integer)
         Dim rec As Rectangle
         Dim X As Integer, y As Integer, Anim As Integer
         'Dim width As Integer, height As Integer
@@ -971,7 +972,7 @@ Module modGraphics
         End If
     End Sub
 
-    Friend Sub DrawButton(ByVal Text As String, ByVal DestX As Integer, ByVal DestY As Integer, ByVal Hover As Byte)
+    Friend Sub DrawButton(Text As String, DestX As Integer, DestY As Integer, Hover As Byte)
         If Hover = 0 Then
             RenderSprite(ButtonSprite, GameWindow, DestX, DestY, 0, 0, ButtonGFXInfo.Width, ButtonGFXInfo.Height)
 
@@ -984,8 +985,8 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub RenderSprite(ByVal TmpSprite As Sprite, ByVal Target As RenderWindow, ByVal DestX As Integer, ByVal DestY As Integer, ByVal SourceX As Integer, ByVal SourceY As Integer,
-           ByVal SourceWidth As Integer, ByVal SourceHeight As Integer)
+    Friend Sub RenderSprite(TmpSprite As Sprite, Target As RenderWindow, DestX As Integer, DestY As Integer, SourceX As Integer, SourceY As Integer,
+           SourceWidth As Integer, SourceHeight As Integer)
 
         If TmpSprite Is Nothing Then Exit Sub
 
@@ -994,7 +995,7 @@ Module modGraphics
         Target.Draw(TmpSprite)
     End Sub
 
-    Friend Sub RenderTextures(ByVal Txture As Texture, ByVal Target As RenderWindow, ByVal dX As Single, ByVal dY As Single, ByVal sx As Single, ByVal sy As Single, ByVal dWidth As Single, ByVal dHeight As Single, ByVal sWidth As Single, ByVal sHeight As Single)
+    Friend Sub RenderTextures(Txture As Texture, Target As RenderWindow, dX As Single, dY As Single, sx As Single, sy As Single, dWidth As Single, dHeight As Single, sWidth As Single, sHeight As Single)
         Dim TmpImage As Sprite = New Sprite(Txture)
         TmpImage.TextureRect = New IntRect(sx, sy, sWidth, sHeight)
         TmpImage.Scale = New Vector2f(dWidth / sWidth, dHeight / sHeight)
@@ -1002,7 +1003,7 @@ Module modGraphics
         Target.Draw(TmpImage)
     End Sub
 
-    Friend Sub DrawDirections(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub DrawDirections(X As Integer, Y As Integer)
         Dim rec As Rectangle, i As Integer
 
         ' render grid
@@ -1029,15 +1030,15 @@ Module modGraphics
         Next
     End Sub
 
-    Friend Function ConvertMapX(ByVal X As Integer) As Integer
+    Friend Function ConvertMapX(X As Integer) As Integer
         ConvertMapX = X - (TileView.Left * PIC_X) - Camera.Left
     End Function
 
-    Friend Function ConvertMapY(ByVal Y As Integer) As Integer
+    Friend Function ConvertMapY(Y As Integer) As Integer
         ConvertMapY = Y - (TileView.Top * PIC_Y) - Camera.Top
     End Function
 
-    Friend Sub DrawPlayer(ByVal Index As Integer)
+    Friend Sub DrawPlayer(Index As Integer)
         Dim Anim As Byte, X As Integer, Y As Integer
         Dim Spritenum As Integer, spriteleft As Integer
         Dim attackspeed As Integer, AttackSprite As Byte
@@ -1157,7 +1158,7 @@ Module modGraphics
         End If
     End Sub
 
-    Friend Sub DrawPaperdoll(ByVal x2 As Integer, ByVal y2 As Integer, ByVal Sprite As Integer, ByVal Anim As Integer, ByVal spritetop As Integer)
+    Friend Sub DrawPaperdoll(x2 As Integer, y2 As Integer, Sprite As Integer, Anim As Integer, spritetop As Integer)
         Dim rec As Rectangle
         Dim X As Integer, Y As Integer
         Dim width As Integer, height As Integer
@@ -1189,7 +1190,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawNpc(ByVal MapNpcNum As Integer)
+    Friend Sub DrawNpc(MapNpcNum As Integer)
         Dim anim As Byte
         Dim X As Integer
         Dim Y As Integer
@@ -1281,7 +1282,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawResource(ByVal Resource As Integer, ByVal dx As Integer, ByVal dy As Integer, ByVal rec As Rectangle)
+    Friend Sub DrawResource(Resource As Integer, dx As Integer, dy As Integer, rec As Rectangle)
         If Resource < 1 OrElse Resource > NumResources Then Exit Sub
         Dim X As Integer
         Dim Y As Integer
@@ -1308,7 +1309,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawMapResource(ByVal Resource_num As Integer)
+    Friend Sub DrawMapResource(Resource_num As Integer)
         Dim Resource_master As Integer
 
         Dim Resource_state As Integer
@@ -1352,7 +1353,7 @@ Module modGraphics
         DrawResource(Resource_sprite, X, Y, rec)
     End Sub
 
-    Friend Sub DrawItem(ByVal itemnum As Integer)
+    Friend Sub DrawItem(itemnum As Integer)
 
         Dim srcrec As Rectangle
         Dim destrec As Rectangle
@@ -1391,7 +1392,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawCharacter(ByVal Sprite As Integer, ByVal x2 As Integer, ByVal y2 As Integer, ByVal rec As Rectangle)
+    Friend Sub DrawCharacter(Sprite As Integer, x2 As Integer, y2 As Integer, rec As Rectangle)
         Dim X As Integer
         Dim y As Integer
         Dim width As Integer
@@ -1421,7 +1422,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawBlood(ByVal Index As Integer)
+    Friend Sub DrawBlood(Index As Integer)
         Dim dest As Point = New Point(frmGame.PointToScreen(frmGame.picscreen.Location))
         Dim srcrec As Rectangle
         Dim destrec As Rectangle
@@ -1448,7 +1449,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawMapTile(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub DrawMapTile(X As Integer, Y As Integer)
         Dim i As Integer
         Dim srcrect As New Rectangle(0, 0, 0, 0)
 
@@ -1489,7 +1490,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawMapFringeTile(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub DrawMapFringeTile(X As Integer, Y As Integer)
         Dim i As Integer
         Dim srcrect As New Rectangle(0, 0, 0, 0)
         'Dim dest As Rectangle = New Rectangle(FrmMainGame.PointToScreen(FrmMainGame.picscreen.Location), New Size(32, 32))
@@ -1534,7 +1535,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Function IsValidMapPoint(ByVal X As Integer, ByVal Y As Integer) As Boolean
+    Friend Function IsValidMapPoint(X As Integer, Y As Integer) As Boolean
         IsValidMapPoint = False
 
         If X < 0 Then Exit Function
@@ -1807,7 +1808,7 @@ Module modGraphics
         UpdateCamera()
 
         'let program do other things
-        DoEvents()
+        Application.DoEvents()
 
         'Clear each of our render targets
         GameWindow.DispatchEvents()
@@ -2106,7 +2107,7 @@ Module modGraphics
         GameWindow.Display()
     End Sub
 
-    Friend Sub DrawPanorama(ByVal Index As Integer)
+    Friend Sub DrawPanorama(Index As Integer)
         If Map.Moral = MapMoralType.Indoors Then Exit Sub
 
         If Index < 1 OrElse Index > NumParallax Then Exit Sub
@@ -2128,7 +2129,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawParallax(ByVal Index As Integer)
+    Friend Sub DrawParallax(Index As Integer)
         Dim horz As Integer = 0
         Dim vert As Integer = 0
 
@@ -2251,7 +2252,7 @@ Module modGraphics
         DrawText(DrawMapNameX, DrawMapNameY, Strings.Get("gamegui", "mapname") & Map.Name, DrawMapNameColor, SFML.Graphics.Color.Black, GameWindow)
     End Sub
 
-    Friend Sub DrawDoor(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub DrawDoor(X As Integer, Y As Integer)
         Dim rec As Rectangle
 
         Dim x2 As Integer, y2 As Integer
@@ -2295,7 +2296,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawAnimation(ByVal Index As Integer, ByVal Layer As Integer)
+    Friend Sub DrawAnimation(Index As Integer, Layer As Integer)
 
         Dim Sprite As Integer
         Dim sRECT As Rectangle
@@ -2847,7 +2848,7 @@ Module modGraphics
         DrawText(CharWindowX + 210, CharWindowY + 224, Strings.Get("charwindow", "charfish") & GetPlayerGatherSkillLvl(MyIndex, ResourceSkills.Fisherman) & Strings.Get("charwindow", "charexp") & GetPlayerGatherSkillExp(MyIndex, ResourceSkills.Fisherman) & "/" & GetPlayerGatherSkillMaxExp(MyIndex, ResourceSkills.Fisherman), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow, 11)
     End Sub
 
-    Friend Sub DrawInventoryItem(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub DrawInventoryItem(X As Integer, Y As Integer)
         Dim rec As Rectangle
         Dim itemnum As Integer, itempic As Integer
 
@@ -3054,7 +3055,7 @@ NextLoop:
         Next
     End Sub
 
-    Friend Sub DrawSkillItem(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub DrawSkillItem(X As Integer, Y As Integer)
         Dim rec As Rectangle
         Dim skillnum As Integer, skillpic As Integer
 
@@ -3262,7 +3263,7 @@ NextLoop:
 
     End Sub
 
-    Friend Sub DrawBankItem(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub DrawBankItem(X As Integer, Y As Integer)
         Dim rec As Rectangle
 
         Dim itemnum As Integer
@@ -3489,7 +3490,7 @@ NextLoop:
         Return New SFML.Graphics.Color(ToConvert.R, ToConvert.G, ToConvert.G, ToConvert.A)
     End Function
 
-    Friend Sub DrawTarget(ByVal X2 As Integer, ByVal Y2 As Integer)
+    Friend Sub DrawTarget(X2 As Integer, Y2 As Integer)
         Dim rec As Rectangle
         Dim X As Integer, y As Integer
         Dim width As Integer, height As Integer
@@ -3509,7 +3510,7 @@ NextLoop:
         RenderSprite(TargetSprite, GameWindow, X, y, rec.X, rec.Y, rec.Width, rec.Height)
     End Sub
 
-    Friend Sub DrawHover(ByVal X2 As Integer, ByVal Y2 As Integer)
+    Friend Sub DrawHover(X2 As Integer, Y2 As Integer)
         Dim rec As Rectangle
         Dim X As Integer, Y As Integer
         Dim width As Integer, height As Integer

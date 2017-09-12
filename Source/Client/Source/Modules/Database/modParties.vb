@@ -85,7 +85,7 @@ Module modParties
 #End Region
 
 #Region "Outgoing Packets"
-    Friend Sub SendPartyRequest(ByVal Name As String)
+    Friend Sub SendPartyRequest(Name As String)
         Dim Buffer As New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CRequestParty)
         Buffer.WriteString(Name)
@@ -121,7 +121,7 @@ Module modParties
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendPartyChatMsg(ByVal Text As String)
+    Friend Sub SendPartyChatMsg(Text As String)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPartyChatMsg)

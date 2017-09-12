@@ -107,7 +107,7 @@ Friend Module modQuest
 #End Region
 
 #Region "DataBase"
-    Sub ClearQuest(ByVal QuestNum As Integer)
+    Sub ClearQuest(QuestNum As Integer)
         Dim I As Integer
 
         ' clear the Quest
@@ -295,7 +295,7 @@ Friend Module modQuest
 
     End Sub
 
-    Friend Sub PlayerHandleQuest(ByVal QuestNum As Integer, ByVal Order As Integer)
+    Friend Sub PlayerHandleQuest(QuestNum As Integer, Order As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPlayerHandleQuest)
@@ -306,7 +306,7 @@ Friend Module modQuest
         Buffer.Dispose()
     End Sub
 
-    Friend Sub QuestReset(ByVal QuestNum As Integer)
+    Friend Sub QuestReset(QuestNum As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CQuestReset)
@@ -320,7 +320,7 @@ Friend Module modQuest
 
 #Region "Support Functions"
     'Tells if the quest is in progress or not
-    Friend Function QuestInProgress(ByVal QuestNum As Integer) As Boolean
+    Friend Function QuestInProgress(QuestNum As Integer) As Boolean
         QuestInProgress = False
         If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
@@ -329,7 +329,7 @@ Friend Module modQuest
         End If
     End Function
 
-    Friend Function QuestCompleted(ByVal QuestNum As Integer) As Boolean
+    Friend Function QuestCompleted(QuestNum As Integer) As Boolean
         QuestCompleted = False
         If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
@@ -338,7 +338,7 @@ Friend Module modQuest
         End If
     End Function
 
-    Friend Function GetQuestNum(ByVal QuestName As String) As Integer
+    Friend Function GetQuestNum(QuestName As String) As Integer
         Dim I As Integer
         GetQuestNum = 0
 
@@ -352,7 +352,7 @@ Friend Module modQuest
 #End Region
 
 #Region "Misc Functions"
-    Friend Function CanStartQuest(ByVal QuestNum As Integer) As Boolean
+    Friend Function CanStartQuest(QuestNum As Integer) As Boolean
         Dim i As Integer
 
         CanStartQuest = False
@@ -391,7 +391,7 @@ Friend Module modQuest
         End If
     End Function
 
-    Friend Function CanEndQuest(ByVal Index As Integer, QuestNum As Integer) As Boolean
+    Friend Function CanEndQuest(Index As Integer, QuestNum As Integer) As Boolean
         CanEndQuest = False
 
         If Player(Index).PlayerQuest(QuestNum).ActualTask >= Quest(QuestNum).Task.Length Then
@@ -402,7 +402,7 @@ Friend Module modQuest
         End If
     End Function
 
-    Function HasItem(ByVal Index As Integer, ByVal itemNum As Integer) As Integer
+    Function HasItem(Index As Integer, itemNum As Integer) As Integer
         Dim i As Integer
 
         ' Check for subscript out of range

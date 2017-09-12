@@ -1,42 +1,42 @@
 ﻿Friend Class frmAnimation
 
-    Private Sub NudSprite0_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSprite0.Click
+    Private Sub NudSprite0_ValueChanged(sender As Object, e As EventArgs) Handles nudSprite0.Click
         Animation(EditorIndex).Sprite(0) = nudSprite0.Value
     End Sub
 
-    Private Sub NudSprite1_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudSprite1.Click
+    Private Sub NudSprite1_ValueChanged(sender As Object, e As EventArgs) Handles nudSprite1.Click
         Animation(EditorIndex).Sprite(1) = nudSprite1.Value
     End Sub
 
-    Private Sub NudLoopCount0_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLoopCount0.Click
+    Private Sub NudLoopCount0_ValueChanged(sender As Object, e As EventArgs) Handles nudLoopCount0.Click
         Animation(EditorIndex).LoopCount(0) = nudLoopCount0.Value
     End Sub
 
-    Private Sub NudLoopCount1_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLoopCount1.Click
+    Private Sub NudLoopCount1_ValueChanged(sender As Object, e As EventArgs) Handles nudLoopCount1.Click
         Animation(EditorIndex).LoopCount(1) = nudLoopCount1.Value
     End Sub
 
-    Private Sub NudFrameCount0_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudFrameCount0.Click
+    Private Sub NudFrameCount0_ValueChanged(sender As Object, e As EventArgs) Handles nudFrameCount0.Click
         Animation(EditorIndex).Frames(0) = nudFrameCount0.Value
     End Sub
 
-    Private Sub NudFrameCount1_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudFrameCount1.Click
+    Private Sub NudFrameCount1_ValueChanged(sender As Object, e As EventArgs) Handles nudFrameCount1.Click
         Animation(EditorIndex).Frames(1) = nudFrameCount1.Value
     End Sub
 
-    Private Sub NudLoopTime0_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLoopTime0.Click
+    Private Sub NudLoopTime0_ValueChanged(sender As Object, e As EventArgs) Handles nudLoopTime0.Click
         Animation(EditorIndex).LoopTime(0) = nudLoopTime0.Value
     End Sub
 
-    Private Sub NudLoopTime1_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles nudLoopTime1.Click
+    Private Sub NudLoopTime1_ValueChanged(sender As Object, e As EventArgs) Handles nudLoopTime1.Click
         Animation(EditorIndex).LoopTime(1) = nudLoopTime1.Value
     End Sub
 
-    Private Sub BtnSave_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnSave.Click
+    Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         AnimationEditorOk()
     End Sub
 
-    Private Sub TxtName_TextChanged(ByVal sender As Object, ByVal e As EventArgs) Handles txtName.TextChanged
+    Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
         Dim tmpIndex As Integer
         If EditorIndex = 0 OrElse EditorIndex > MAX_ANIMATIONS Then Exit Sub
         tmpIndex = lstIndex.SelectedIndex
@@ -46,11 +46,11 @@
         lstIndex.SelectedIndex = tmpIndex
     End Sub
 
-    Private Sub LstIndex_MouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles lstIndex.MouseClick
+    Private Sub LstIndex_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles lstIndex.MouseClick
         AnimationEditorInit()
     End Sub
 
-    Private Sub BtnDelete_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnDelete.Click
+    Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         Dim tmpIndex As Integer
 
         If EditorIndex = 0 OrElse EditorIndex > MAX_ANIMATIONS Then Exit Sub
@@ -65,7 +65,7 @@
         AnimationEditorInit()
     End Sub
 
-    Private Sub BtnCancel_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnCancel.Click
+    Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         AnimationEditorCancel()
     End Sub
 

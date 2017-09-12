@@ -782,8 +782,7 @@ Module ClientNetworkReceive
     End Sub
 
     Private Sub Packet_MapData(ByRef Data() As Byte)
-        Dim X As Integer, Y As Integer, i As Integer
-        Dim MapNum As Integer, MusicFile As String
+        Dim X As Integer, Y As Integer, i As Integer, MapNum As Integer
         Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
 
         MapData = False
@@ -1036,8 +1035,7 @@ Module ClientNetworkReceive
         CurrentTintB = Map.MapTintB
         CurrentTintA = Map.MapTintA
 
-        MusicFile = Trim$(Map.Music)
-        PlayMusic(MusicFile)
+        PlayMusic(Trim$(Map.Music))
 
         UpdateDrawMapName()
 

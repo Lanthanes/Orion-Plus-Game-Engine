@@ -427,7 +427,7 @@ Friend Module ServerEvents
             .Root = "Data"
         }
 
-        If Not FileExist(myXml.Filename) Then
+        If Not File.Exists(myXml.Filename) Then
             CreateSwitches()
             Exit Sub
         End If
@@ -448,7 +448,7 @@ Friend Module ServerEvents
             .Root = "Data"
         }
 
-        If Not FileExist(myXml.Filename) Then
+        If Not File.Exists(myXml.Filename) Then
             CreateVariables()
             Exit Sub
         End If
@@ -1382,7 +1382,7 @@ Friend Module ServerEvents
                                 End If
                             End If
                         End If
-                        DoEvents()
+                        Application.DoEvents()
                     Next i
                 Next j
 
@@ -1475,7 +1475,7 @@ Friend Module ServerEvents
                 path(tim).Y = LastY
 
                 'Now we loop back and decrease tim, and look for the next square with lower value
-                DoEvents()
+                Application.DoEvents()
             Loop
 
             'Ok we got a path. Now, lets look at the first step and see what direction we should take.
@@ -1759,7 +1759,7 @@ Friend Module ServerEvents
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_EventChatReply(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_EventChatReply(Index As Integer, ByRef data() As Byte)
         Dim eventID As Integer, pageID As Integer, reply As Integer, i As Integer
         Dim Buffer As New ByteStream(data)
         Addlog("Recieved CMSG: CEventChatReply", PACKET_LOG)
@@ -1810,7 +1810,7 @@ Friend Module ServerEvents
 
     End Sub
 
-    Sub Packet_Event(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_Event(Index As Integer, ByRef data() As Byte)
         Dim i As Integer, begineventprocessing As Boolean, z As Integer
         Dim x As Integer, y As Integer
         Dim Buffer As New ByteStream(data)
@@ -1874,13 +1874,13 @@ Friend Module ServerEvents
 
     End Sub
 
-    Sub Packet_RequestSwitchesAndVariables(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_RequestSwitchesAndVariables(Index As Integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CRequestSwitchesAndVariables", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CRequestSwitchesAndVariables")
         SendSwitchesAndVariables(Index)
     End Sub
 
-    Sub Packet_SwitchesAndVariables(ByVal Index As Integer, ByRef data() As Byte)
+    Sub Packet_SwitchesAndVariables(Index As Integer, ByRef data() As Byte)
         Dim i As Integer
         Dim Buffer As New ByteStream(data)
 

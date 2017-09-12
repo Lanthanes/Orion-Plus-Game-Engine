@@ -1,4 +1,5 @@
 ﻿Imports System.Drawing
+Imports System.IO
 Imports System.Windows.Forms
 Imports ASFW
 
@@ -8,14 +9,14 @@ Friend Class FrmMenu
     ''' <summary>
     ''' clean up and close the game.
     ''' </summary>
-    Private Sub FrmMenu_Disposed(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Disposed
+    Private Sub FrmMenu_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
         DestroyGame()
     End Sub
 
     ''' <summary>
     ''' On load, get GUI ready.
     ''' </summary>
-    Private Sub Frmmenu_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
+    Private Sub Frmmenu_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Strings.Init(0, "English")
 
         LoadMenuGraphics()
@@ -51,7 +52,7 @@ Friend Class FrmMenu
     ''' <summary>
     ''' Draw Char select when its needed.
     ''' </summary>
-    Private Sub PnlCharSelect_VisibleChanged(ByVal sender As Object, ByVal e As EventArgs) Handles pnlCharSelect.VisibleChanged
+    Private Sub PnlCharSelect_VisibleChanged(sender As Object, e As EventArgs) Handles pnlCharSelect.VisibleChanged
         DrawCharacterSelect()
     End Sub
 
@@ -78,12 +79,12 @@ Friend Class FrmMenu
     Friend Sub LoadMenuGraphics()
 
         'main menu
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Menu\menu" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Menu\menu" & GFX_EXT) Then
             BackgroundImage = Image.FromFile(Application.StartupPath & GFX_GUI_PATH & "Menu\menu" & GFX_EXT)
         End If
 
         'main menu buttons
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Menu\button" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Menu\button" & GFX_EXT) Then
             btnCredits.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_GUI_PATH & "Menu\button" & GFX_EXT)
             btnExit.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_GUI_PATH & "Menu\button" & GFX_EXT)
             btnLogin.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_GUI_PATH & "Menu\button" & GFX_EXT)
@@ -97,7 +98,7 @@ Friend Class FrmMenu
         End If
 
         'main menu panels
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Menu\panel" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Menu\panel" & GFX_EXT) Then
             pnlMainMenu.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_GUI_PATH & "Menu\panel" & GFX_EXT)
             pnlLogin.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_GUI_PATH & "Menu\panel" & GFX_EXT)
             pnlNewChar.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_GUI_PATH & "Menu\panel" & GFX_EXT)
@@ -108,7 +109,7 @@ Friend Class FrmMenu
         End If
 
         'logo
-        If FileExist(Application.StartupPath & GFX_GUI_PATH & "Menu\logo" & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_GUI_PATH & "Menu\logo" & GFX_EXT) Then
             picLogo.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_GUI_PATH & "Menu\logo" & GFX_EXT)
         End If
 
@@ -308,7 +309,7 @@ Friend Class FrmMenu
     ''' <summary>
     ''' Stop the NewChar panel from repainting itself.
     ''' </summary>
-    Private Sub PnlNewChar_Paint(ByVal sender As Object, ByVal e As PaintEventArgs) Handles pnlNewChar.Paint
+    Private Sub PnlNewChar_Paint(sender As Object, e As PaintEventArgs) Handles pnlNewChar.Paint
         'nada here
     End Sub
 #End Region
@@ -317,7 +318,7 @@ Friend Class FrmMenu
     ''' <summary>
     ''' This timer handles the scrolling credits.
     ''' </summary>
-    Private Sub TmrCredits_Tick(ByVal sender As Object, ByVal e As EventArgs) Handles tmrCredits.Tick
+    Private Sub TmrCredits_Tick(sender As Object, e As EventArgs) Handles tmrCredits.Tick
         Dim credits As String
         Dim filepath As String
         filepath = Application.StartupPath & "\Data\credits.txt"
@@ -331,7 +332,7 @@ Friend Class FrmMenu
                 If lblScrollingCredits.Bottom <= lblCreditsTop.Bottom Then
                     lblScrollingCredits.Top = 177
                 End If
-                DoEvents()
+                Application.DoEvents()
                 Threading.Thread.Sleep(100)
             Loop
         End If
@@ -342,7 +343,7 @@ Friend Class FrmMenu
     ''' <summary>
     ''' Handles press enter on login name txtbox.
     ''' </summary>
-    Private Sub TxtLogin_KeyDown(ByVal sender As Object, ByVal e As KeyEventArgs) Handles txtLogin.KeyDown
+    Private Sub TxtLogin_KeyDown(sender As Object, e As KeyEventArgs) Handles txtLogin.KeyDown
         If e.KeyCode = Keys.Enter Then
             BtnLogin_Click(Me, Nothing)
         End If
@@ -350,7 +351,7 @@ Friend Class FrmMenu
     ''' <summary>
     ''' Handles press enter on login password txtbox.
     ''' </summary>
-    Private Sub TxtPassword_KeyDown(ByVal sender As Object, ByVal e As KeyEventArgs) Handles txtPassword.KeyDown
+    Private Sub TxtPassword_KeyDown(sender As Object, e As KeyEventArgs) Handles txtPassword.KeyDown
         If e.KeyCode = Keys.Enter Then
             BtnLogin_Click(Me, Nothing)
         End If
@@ -359,7 +360,7 @@ Friend Class FrmMenu
     ''' <summary>
     ''' Handle the SavePas checkbox.
     ''' </summary>
-    Private Sub ChkSavePass_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles chkSavePass.CheckedChanged
+    Private Sub ChkSavePass_CheckedChanged(sender As Object, e As EventArgs) Handles chkSavePass.CheckedChanged
         chkSavePassChecked = chkSavePass.Checked
     End Sub
 #End Region
@@ -368,7 +369,7 @@ Friend Class FrmMenu
     ''' <summary>
     ''' Changes selected class.
     ''' </summary>
-    Private Sub CmbClass_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cmbClass.SelectedIndexChanged
+    Private Sub CmbClass_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbClass.SelectedIndexChanged
         newCharClass = cmbClass.SelectedIndex + 1
         txtDescription.Text = Classes(newCharClass).Desc
         DrawCharacter()
@@ -377,21 +378,21 @@ Friend Class FrmMenu
     ''' <summary>
     ''' Switches to male gender.
     ''' </summary>
-    Private Sub RdoMale_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles rdoMale.CheckedChanged
+    Private Sub RdoMale_CheckedChanged(sender As Object, e As EventArgs) Handles rdoMale.CheckedChanged
         DrawCharacter()
     End Sub
 
     ''' <summary>
     ''' Switches to female gender.
     ''' </summary>
-    Private Sub RdoFemale_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles rdoFemale.CheckedChanged
+    Private Sub RdoFemale_CheckedChanged(sender As Object, e As EventArgs) Handles rdoFemale.CheckedChanged
         DrawCharacter()
     End Sub
 
     ''' <summary>
     ''' Switches sprite for selected class to next one, if any.
     ''' </summary>
-    Private Sub LblNextChar_Click(ByVal sender As Object, ByVal e As EventArgs) Handles lblNextChar.Click
+    Private Sub LblNextChar_Click(sender As Object, e As EventArgs) Handles lblNextChar.Click
         newCharSprite = newCharSprite + 1
         If rdoMale.Checked = True Then
             If newCharSprite > Classes(newCharClass).MaleSprite.Length - 1 Then newCharSprite = 1
@@ -404,7 +405,7 @@ Friend Class FrmMenu
     ''' <summary>
     ''' Switches sprite for selected class to previous one, if any.
     ''' </summary>
-    Private Sub LblPrevChar_Click(ByVal sender As Object, ByVal e As EventArgs) Handles lblPrevChar.Click
+    Private Sub LblPrevChar_Click(sender As Object, e As EventArgs) Handles lblPrevChar.Click
         newCharSprite = newCharSprite - 1
         If rdoMale.Checked = True Then
             If newCharSprite = 0 Then newCharSprite = Classes(newCharClass).MaleSprite.Length - 1
@@ -417,7 +418,7 @@ Friend Class FrmMenu
     ''' <summary>
     ''' Initial drawing of new char.
     ''' </summary>
-    Private Sub PnlNewChar_VisibleChanged(ByVal sender As Object, ByVal e As EventArgs) Handles pnlNewChar.VisibleChanged
+    Private Sub PnlNewChar_VisibleChanged(sender As Object, e As EventArgs) Handles pnlNewChar.VisibleChanged
         DrawCharacter()
     End Sub
 #End Region

@@ -17,7 +17,7 @@ Friend Module modHotBar
         Dim sType As Byte
     End Structure
 
-    Friend Function IsHotBarSlot(ByVal X As Single, ByVal Y As Single) As Integer
+    Friend Function IsHotBarSlot(X As Single, Y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
 
@@ -41,7 +41,7 @@ Friend Module modHotBar
 
     End Function
 
-    Friend Sub SendSetHotbarSlot(ByVal Slot As Integer, ByVal Num As Integer, ByVal Type As Integer)
+    Friend Sub SendSetHotbarSlot(Slot As Integer, Num As Integer, Type As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSetHotbarSlot)
@@ -54,7 +54,7 @@ Friend Module modHotBar
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendDeleteHotbar(ByVal Slot As Integer)
+    Friend Sub SendDeleteHotbar(Slot As Integer)
         Dim Buffer As New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CDeleteHotbarSlot)
 
@@ -64,7 +64,7 @@ Friend Module modHotBar
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendUseHotbarSlot(ByVal Slot As Integer)
+    Friend Sub SendUseHotbarSlot(Slot As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CUseHotbarSlot)

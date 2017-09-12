@@ -1,7 +1,7 @@
 ﻿Friend Class frmOptions
 #Region "Options"
 
-    Private Sub scrlVolume_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles scrlVolume.ValueChanged
+    Private Sub scrlVolume_ValueChanged(sender As Object, e As EventArgs) Handles scrlVolume.ValueChanged
         Options.Volume = scrlVolume.Value
 
         MaxVolume = Options.Volume

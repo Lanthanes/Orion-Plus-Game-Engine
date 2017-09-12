@@ -118,7 +118,7 @@
 
     End Sub
 
-    Sub LoadDetail(ByVal Prefab As TilePrefab, ByVal Tileset As Integer, ByVal X As Integer, ByVal Y As Integer, Optional TileType As Integer = 0, Optional EndX As Integer = 0, Optional EndY As Integer = 0)
+    Sub LoadDetail(Prefab As TilePrefab, Tileset As Integer, X As Integer, Y As Integer, Optional TileType As Integer = 0, Optional EndX As Integer = 0, Optional EndY As Integer = 0)
         If EndX = 0 Then EndX = X
         If EndY = 0 Then EndY = Y
 
@@ -131,7 +131,7 @@
 
     End Sub
 
-    Sub AddDetail(ByVal Prefab As TilePrefab, ByVal Tileset As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal TileType As Integer)
+    Sub AddDetail(Prefab As TilePrefab, Tileset As Integer, X As Integer, Y As Integer, TileType As Integer)
         Dim DetailCount As Integer
         DetailCount = UBound(Detail) + 1
 

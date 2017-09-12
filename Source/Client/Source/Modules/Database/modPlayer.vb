@@ -1,7 +1,7 @@
 ﻿Imports ASFW
 
 Module modPlayer
-    Function IsPlaying(ByVal Index As Integer) As Boolean
+    Function IsPlaying(Index As Integer) As Boolean
 
         ' if the player doesn't exist, the name will equal 0
         If Len(GetPlayerName(Index)) > 0 Then
@@ -10,7 +10,7 @@ Module modPlayer
 
     End Function
 
-    Function GetPlayerName(ByVal Index As Integer) As String
+    Function GetPlayerName(Index As Integer) As String
         GetPlayerName = ""
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerName = Trim$(Player(Index).Name)
@@ -315,10 +315,9 @@ Module modPlayer
 
     End Function
 
-    Function CheckDirection(ByVal Direction As Byte) As Boolean
+    Function CheckDirection(Direction As Byte) As Boolean
         Dim X As Integer, Y As Integer
         Dim i As Integer, z As Integer
-        Dim Buffer As New ByteStream(4)
 
         CheckDirection = False
 
@@ -422,7 +421,7 @@ Module modPlayer
 
     End Function
 
-    Sub ProcessMovement(ByVal Index As Integer)
+    Sub ProcessMovement(Index As Integer)
         Dim MovementSpeed As Integer
 
         ' Check if player is walking, and if so process moving them over
@@ -472,13 +471,13 @@ Module modPlayer
 
     End Sub
 
-    Function GetPlayerDir(ByVal Index As Integer) As Integer
+    Function GetPlayerDir(Index As Integer) As Integer
 
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerDir = Player(Index).Dir
     End Function
 
-    Function GetPlayerGatherSkillLvl(ByVal Index As Integer, ByVal SkillSlot As Integer) As Integer
+    Function GetPlayerGatherSkillLvl(Index As Integer, SkillSlot As Integer) As Integer
 
         GetPlayerGatherSkillLvl = 0
 
@@ -487,7 +486,7 @@ Module modPlayer
         GetPlayerGatherSkillLvl = Player(Index).GatherSkills(SkillSlot).SkillLevel
     End Function
 
-    Function GetPlayerGatherSkillExp(ByVal Index As Integer, ByVal SkillSlot As Integer) As Integer
+    Function GetPlayerGatherSkillExp(Index As Integer, SkillSlot As Integer) As Integer
 
         GetPlayerGatherSkillExp = 0
 
@@ -496,7 +495,7 @@ Module modPlayer
         GetPlayerGatherSkillExp = Player(Index).GatherSkills(SkillSlot).SkillCurExp
     End Function
 
-    Function GetPlayerGatherSkillMaxExp(ByVal Index As Integer, ByVal SkillSlot As Integer) As Integer
+    Function GetPlayerGatherSkillMaxExp(Index As Integer, SkillSlot As Integer) As Integer
 
         GetPlayerGatherSkillMaxExp = 0
 
@@ -505,7 +504,7 @@ Module modPlayer
         GetPlayerGatherSkillMaxExp = Player(Index).GatherSkills(SkillSlot).SkillNextLvlExp
     End Function
 
-    Friend Sub PlayerCastSkill(ByVal skillslot As Integer)
+    Friend Sub PlayerCastSkill(skillslot As Integer)
         Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
@@ -543,73 +542,73 @@ Module modPlayer
 
     End Sub
 
-    Sub SetPlayerMap(ByVal Index As Integer, ByVal MapNum As Integer)
+    Sub SetPlayerMap(Index As Integer, MapNum As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Map = MapNum
     End Sub
 
-    Function GetPlayerInvItemNum(ByVal Index As Integer, ByVal invslot As Integer) As Integer
+    Function GetPlayerInvItemNum(Index As Integer, invslot As Integer) As Integer
         GetPlayerInvItemNum = 0
         If Index > MAX_PLAYERS Then Exit Function
         If invslot = 0 Then Exit Function
         GetPlayerInvItemNum = PlayerInv(invslot).Num
     End Function
 
-    Sub SetPlayerName(ByVal Index As Integer, ByVal Name As String)
+    Sub SetPlayerName(Index As Integer, Name As String)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Name = Name
     End Sub
 
-    Sub SetPlayerClass(ByVal Index As Integer, ByVal Classnum As Integer)
+    Sub SetPlayerClass(Index As Integer, Classnum As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Classes = Classnum
     End Sub
 
-    Sub SetPlayerPOINTS(ByVal Index As Integer, ByVal POINTS As Integer)
+    Sub SetPlayerPOINTS(Index As Integer, POINTS As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).POINTS = POINTS
     End Sub
 
-    Sub SetPlayerStat(ByVal Index As Integer, ByVal Stat As StatType, ByVal Value As Integer)
+    Sub SetPlayerStat(Index As Integer, Stat As StatType, Value As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         If Value <= 0 Then Value = 1
         If Value > Byte.MaxValue Then Value = Byte.MaxValue
         Player(Index).Stat(Stat) = Value
     End Sub
 
-    Sub SetPlayerInvItemNum(ByVal Index As Integer, ByVal invslot As Integer, ByVal itemnum As Integer)
+    Sub SetPlayerInvItemNum(Index As Integer, invslot As Integer, itemnum As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         PlayerInv(invslot).Num = itemnum
     End Sub
 
-    Function GetPlayerInvItemValue(ByVal Index As Integer, ByVal invslot As Integer) As Integer
+    Function GetPlayerInvItemValue(Index As Integer, invslot As Integer) As Integer
         GetPlayerInvItemValue = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerInvItemValue = PlayerInv(invslot).Value
     End Function
 
-    Sub SetPlayerInvItemValue(ByVal Index As Integer, ByVal invslot As Integer, ByVal ItemValue As Integer)
+    Sub SetPlayerInvItemValue(Index As Integer, invslot As Integer, ItemValue As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         PlayerInv(invslot).Value = ItemValue
     End Sub
 
-    Function GetPlayerPOINTS(ByVal Index As Integer) As Integer
+    Function GetPlayerPOINTS(Index As Integer) As Integer
         GetPlayerPOINTS = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerPOINTS = Player(Index).POINTS
     End Function
 
-    Sub SetPlayerAccess(ByVal Index As Integer, ByVal Access As Integer)
+    Sub SetPlayerAccess(Index As Integer, Access As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Access = Access
     End Sub
 
-    Sub SetPlayerPK(ByVal Index As Integer, ByVal PK As Integer)
+    Sub SetPlayerPK(Index As Integer, PK As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).PK = PK
     End Sub
 
-    Sub SetPlayerVital(ByVal Index As Integer, ByVal Vital As VitalType, ByVal Value As Integer)
+    Sub SetPlayerVital(Index As Integer, Vital As VitalType, Value As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Vital(Vital) = Value
 
@@ -618,7 +617,7 @@ Module modPlayer
         End If
     End Sub
 
-    Function GetPlayerMaxVital(ByVal Index As Integer, ByVal Vital As VitalType) As Integer
+    Function GetPlayerMaxVital(Index As Integer, Vital As VitalType) As Integer
         GetPlayerMaxVital = 0
         If Index > MAX_PLAYERS Then Exit Function
 
@@ -633,113 +632,113 @@ Module modPlayer
 
     End Function
 
-    Sub SetPlayerX(ByVal Index As Integer, ByVal X As Integer)
+    Sub SetPlayerX(Index As Integer, X As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).X = X
     End Sub
 
-    Sub SetPlayerY(ByVal Index As Integer, ByVal Y As Integer)
+    Sub SetPlayerY(Index As Integer, Y As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Y = Y
     End Sub
 
-    Sub SetPlayerSprite(ByVal Index As Integer, ByVal Sprite As Integer)
+    Sub SetPlayerSprite(Index As Integer, Sprite As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Sprite = Sprite
     End Sub
 
-    Sub SetPlayerExp(ByVal Index As Integer, ByVal EXP As Integer)
+    Sub SetPlayerExp(Index As Integer, EXP As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).EXP = EXP
     End Sub
 
-    Sub SetPlayerLevel(ByVal Index As Integer, ByVal Level As Integer)
+    Sub SetPlayerLevel(Index As Integer, Level As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Level = Level
     End Sub
 
-    Sub SetPlayerDir(ByVal Index As Integer, ByVal Dir As Integer)
+    Sub SetPlayerDir(Index As Integer, Dir As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Dir = Dir
     End Sub
 
-    Function GetPlayerVital(ByVal Index As Integer, ByVal Vital As VitalType) As Integer
+    Function GetPlayerVital(Index As Integer, Vital As VitalType) As Integer
         GetPlayerVital = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerVital = Player(Index).Vital(Vital)
     End Function
 
-    Function GetPlayerSprite(ByVal Index As Integer) As Integer
+    Function GetPlayerSprite(Index As Integer) As Integer
         GetPlayerSprite = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerSprite = Player(Index).Sprite
     End Function
 
-    Function GetPlayerClass(ByVal Index As Integer) As Integer
+    Function GetPlayerClass(Index As Integer) As Integer
         GetPlayerClass = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerClass = Player(Index).Classes
     End Function
 
-    Function GetPlayerMap(ByVal Index As Integer) As Integer
+    Function GetPlayerMap(Index As Integer) As Integer
         GetPlayerMap = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerMap = Player(Index).Map
     End Function
 
-    Function GetPlayerLevel(ByVal Index As Integer) As Integer
+    Function GetPlayerLevel(Index As Integer) As Integer
         GetPlayerLevel = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerLevel = Player(Index).Level
     End Function
 
-    Function GetPlayerEquipment(ByVal Index As Integer, ByVal EquipmentSlot As EquipmentType) As Byte
+    Function GetPlayerEquipment(Index As Integer, EquipmentSlot As EquipmentType) As Byte
         GetPlayerEquipment = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerEquipment = Player(Index).Equipment(EquipmentSlot)
     End Function
 
-    Function GetPlayerStat(ByVal Index As Integer, ByVal Stat As StatType) As Integer
+    Function GetPlayerStat(Index As Integer, Stat As StatType) As Integer
         GetPlayerStat = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerStat = Player(Index).Stat(Stat)
     End Function
 
-    Function GetPlayerExp(ByVal Index As Integer) As Integer
+    Function GetPlayerExp(Index As Integer) As Integer
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerExp = Player(Index).EXP
     End Function
 
-    Function GetPlayerX(ByVal Index As Integer) As Integer
+    Function GetPlayerX(Index As Integer) As Integer
         GetPlayerX = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerX = Player(Index).X
     End Function
 
-    Function GetPlayerY(ByVal Index As Integer) As Integer
+    Function GetPlayerY(Index As Integer) As Integer
         GetPlayerY = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerY = Player(Index).Y
     End Function
 
-    Function GetPlayerAccess(ByVal Index As Integer) As Integer
+    Function GetPlayerAccess(Index As Integer) As Integer
         GetPlayerAccess = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerAccess = Player(Index).Access
     End Function
 
-    Function GetPlayerPK(ByVal Index As Integer) As Integer
+    Function GetPlayerPK(Index As Integer) As Integer
         GetPlayerPK = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerPK = Player(Index).PK
     End Function
 
-    Sub SetPlayerEquipment(ByVal Index As Integer, ByVal InvNum As Integer, ByVal EquipmentSlot As EquipmentType)
+    Sub SetPlayerEquipment(Index As Integer, InvNum As Integer, EquipmentSlot As EquipmentType)
         If Index < 1 OrElse Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Equipment(EquipmentSlot) = InvNum
     End Sub
 
-    Sub ClearPlayer(ByVal Index As Integer)
+    Sub ClearPlayer(Index As Integer)
         Player(Index).Name = ""
         Player(Index).Access = 0
         Player(Index).Attacking = 0

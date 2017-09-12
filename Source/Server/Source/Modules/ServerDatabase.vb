@@ -42,7 +42,7 @@ Module ServerDatabase
     Sub ClearClasses()
         Dim i As Integer
 
-        ReDim Classes(0 To Max_Classes)
+        ReDim Classes(Max_Classes)
 
         For i = 1 To Max_Classes
             Classes(i) = Nothing
@@ -51,9 +51,9 @@ Module ServerDatabase
         Next
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Stat(0 To StatType.Count - 1)
-            ReDim Classes(i).StartItem(0 To 5)
-            ReDim Classes(i).StartValue(0 To 5)
+            ReDim Classes(i).Stat(StatType.Count - 1)
+            ReDim Classes(i).StartItem(5)
+            ReDim Classes(i).StartValue(5)
         Next
 
     End Sub
@@ -64,7 +64,7 @@ Module ServerDatabase
         Dim tmpArray() As String
         Dim x As Integer
 
-        If Not FileExist(Path.Combine(Application.StartupPath, "data", "Classes.xml")) Then CreateClasses()
+        If Not File.Exists(Path.Combine(Application.StartupPath, "data", "Classes.xml")) Then CreateClasses()
 
         Dim myXml As New XmlClass With {
             .Filename = Path.Combine(Application.StartupPath, "data", "Classes.xml"),
@@ -186,7 +186,7 @@ Module ServerDatabase
 
     End Sub
 
-    Function GetClassMaxVital(ByVal ClassNum As Integer, ByVal Vital As VitalType) As Integer
+    Function GetClassMaxVital(ClassNum As Integer, Vital As VitalType) As Integer
         GetClassMaxVital = 0
 
         Select Case Vital
@@ -200,17 +200,15 @@ Module ServerDatabase
 
     End Function
 
-    Function GetClassName(ByVal ClassNum As Integer) As String
+    Function GetClassName(ClassNum As Integer) As String
         GetClassName = Trim$(Classes(ClassNum).Name)
     End Function
 #End Region
 
 #Region "Maps"
     Sub CheckMaps()
-        Dim i As Integer
-
         For i = 1 To MAX_MAPS
-            If Not FileExist(Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}.dat", i))) Then
+            If Not File.Exists(Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}.dat", i))) Then
                 SaveMap(i)
             End If
         Next
@@ -218,13 +216,9 @@ Module ServerDatabase
     End Sub
 
     Sub ClearMaps()
-        Dim i As Integer
-
         For i = 1 To MAX_CACHED_MAPS
             ClearMap(i)
-            DoEvents()
         Next
-
     End Sub
 
     Sub ClearMap(MapNum As Integer)
@@ -334,7 +328,7 @@ Module ServerDatabase
             .Root = "Data"
         }
 
-        If Not FileExist(Application.StartupPath & "\data\maps\map" & MapNum & "_eventdata.xml") Then
+        If Not File.Exists(Application.StartupPath & "\data\maps\map" & MapNum & "_eventdata.xml") Then
             myXml.NewXmlDocument()
         End If
 
@@ -599,12 +593,12 @@ Module ServerDatabase
                         Next
                     End If
                 End If
-                DoEvents()
+                Application.DoEvents()
             Next
         End If
 
         myXml.CloseXml(False)
-        If FileExist(Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}_eventdata.dat", MapNum))) Then
+        If File.Exists(Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}_eventdata.dat", MapNum))) Then
             File.Delete(Path.Combine(Application.StartupPath, "data", "maps", String.Format("map{0}_eventdata.dat", MapNum)))
         End If
     End Sub
@@ -619,7 +613,7 @@ Module ServerDatabase
         Next
     End Sub
 
-    Sub LoadMap(ByVal MapNum As Integer)
+    Sub LoadMap(MapNum As Integer)
         Dim filename As String
         Dim x As Integer
         Dim y As Integer
@@ -688,15 +682,13 @@ Module ServerDatabase
         If Map(MapNum).Name Is Nothing Then Map(MapNum).Name = ""
         If Map(MapNum).Music Is Nothing Then Map(MapNum).Music = ""
 
-        If FileExist(Application.StartupPath & "\data\maps\map" & MapNum & "_eventdata.xml") Then
+        If File.Exists(Application.StartupPath & "\data\maps\map" & MapNum & "_eventdata.xml") Then
             LoadMapEvent(MapNum)
         End If
 
     End Sub
 
     Sub ClearTempTiles()
-        Dim i As Integer
-
         ReDim TempTile(MAX_CACHED_MAPS)
 
         For i = 1 To MAX_CACHED_MAPS
@@ -705,7 +697,7 @@ Module ServerDatabase
 
     End Sub
 
-    Sub ClearTempTile(ByVal MapNum As Integer)
+    Sub ClearTempTile(MapNum As Integer)
         Dim y As Integer
         Dim x As Integer
         TempTile(MapNum).DoorTimer = 0
@@ -719,7 +711,7 @@ Module ServerDatabase
 
     End Sub
 
-    Sub ClearMapItem(ByVal Index As Integer, ByVal MapNum As Integer)
+    Sub ClearMapItem(Index As Integer, MapNum As Integer)
         MapItem(MapNum, Index) = Nothing
         MapItem(MapNum, Index).RandData.Prefix = ""
         MapItem(MapNum, Index).RandData.Suffix = ""
@@ -745,12 +737,12 @@ Module ServerDatabase
 
         For i = 1 To MAX_ITEMS
             SaveItem(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub SaveItem(ByVal itemNum As Integer)
+    Sub SaveItem(itemNum As Integer)
         Dim filename As String
         filename = Path.Combine(Application.StartupPath, "data", "items", String.Format("item{0}.dat", itemNum))
 
@@ -821,12 +813,12 @@ Module ServerDatabase
 
         For i = 1 To MAX_ITEMS
             LoadItem(i)
-            DoEvents()
+            Application.DoEvents()
         Next
         'SaveItems()
     End Sub
 
-    Sub LoadItem(ByVal ItemNum As Integer)
+    Sub LoadItem(ItemNum As Integer)
         Dim filename As String
         Dim s As Integer
 
@@ -898,7 +890,7 @@ Module ServerDatabase
 
         For i = 1 To MAX_ITEMS
 
-            If Not FileExist(Path.Combine(Application.StartupPath, "data", "items", String.Format("item{0}.dat", i))) Then
+            If Not File.Exists(Path.Combine(Application.StartupPath, "data", "items", String.Format("item{0}.dat", i))) Then
                 SaveItem(i)
             End If
 
@@ -906,7 +898,7 @@ Module ServerDatabase
 
     End Sub
 
-    Sub ClearItem(ByVal Index As Integer)
+    Sub ClearItem(Index As Integer)
         Item(Index) = Nothing
         Item(Index).Name = ""
         Item(Index).Description = ""
@@ -921,12 +913,9 @@ Module ServerDatabase
     End Sub
 
     Sub ClearItems()
-        Dim i As Integer
-
         For i = 1 To MAX_ITEMS
             ClearItem(i)
         Next
-
     End Sub
 
 #End Region
@@ -937,12 +926,12 @@ Module ServerDatabase
 
         For i = 1 To MAX_NPCS
             SaveNpc(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub SaveNpc(ByVal NpcNum As Integer)
+    Sub SaveNpc(NpcNum As Integer)
         Dim filename As String
         Dim i As Integer
         filename = Path.Combine(Application.StartupPath, "data", "npcs", String.Format("npc{0}.dat", NpcNum))
@@ -990,12 +979,12 @@ Module ServerDatabase
 
         For i = 1 To MAX_NPCS
             LoadNpc(i)
-            DoEvents()
+            Application.DoEvents()
         Next
         'SaveNpcs()
     End Sub
 
-    Sub LoadNpc(ByVal NpcNum As Integer)
+    Sub LoadNpc(NpcNum As Integer)
         Dim filename As String
         Dim n As Integer
 
@@ -1043,16 +1032,16 @@ Module ServerDatabase
         Dim i As Integer
 
         For i = 1 To MAX_NPCS
-            If Not FileExist(Path.Combine(Application.StartupPath, "data", "npcs", String.Format("npc{0}.dat", i))) Then
+            If Not File.Exists(Path.Combine(Application.StartupPath, "data", "npcs", String.Format("npc{0}.dat", i))) Then
                 SaveNpc(i)
-                DoEvents()
+                Application.DoEvents()
             End If
 
         Next
 
     End Sub
 
-    Sub ClearMapNpc(ByVal Index As Integer, ByVal MapNum As Integer)
+    Sub ClearMapNpc(Index As Integer, MapNum As Integer)
         MapNpc(MapNum).Npc(Index) = Nothing
 
         ReDim MapNpc(MapNum).Npc(Index).Vital(0 To VitalType.Count)
@@ -1064,23 +1053,23 @@ Module ServerDatabase
 
         For y = 1 To MAX_CACHED_MAPS
             ClearMapNpcs(y)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub ClearMapNpcs(ByVal MapNum As Integer)
+    Sub ClearMapNpcs(MapNum As Integer)
         Dim x As Integer
         Dim y As Integer
 
         For x = 1 To MAX_MAP_NPCS
             ClearMapNpc(x, y)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub ClearNpc(ByVal Index As Integer)
+    Sub ClearNpc(Index As Integer)
         Npc(Index) = Nothing
         Npc(Index).Name = ""
         Npc(Index).AttackSay = ""
@@ -1094,11 +1083,8 @@ Module ServerDatabase
     End Sub
 
     Sub ClearNpcs()
-        Dim i As Integer
-
         For i = 1 To MAX_NPCS
             ClearNpc(i)
-            DoEvents()
         Next
 
     End Sub
@@ -1111,12 +1097,12 @@ Module ServerDatabase
 
         For i = 1 To MAX_RESOURCES
             SaveResource(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub SaveResource(ByVal ResourceNum As Integer)
+    Sub SaveResource(ResourceNum As Integer)
         Dim filename As String
 
         filename = Path.Combine(Application.StartupPath, "data", "resources", String.Format("resource{0}.dat", ResourceNum))
@@ -1148,12 +1134,12 @@ Module ServerDatabase
 
         For i = 1 To MAX_RESOURCES
             LoadResource(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub LoadResource(ByVal ResourceNum As Integer)
+    Sub LoadResource(ResourceNum As Integer)
         Dim filename As String
 
         filename = Path.Combine(Application.StartupPath, "data", "resources", String.Format("resource{0}.dat", ResourceNum))
@@ -1182,20 +1168,17 @@ Module ServerDatabase
     End Sub
 
     Sub CheckResources()
-        Dim i As Integer
-
         For i = 1 To MAX_RESOURCES
 
-            If Not FileExist(Path.Combine(Application.StartupPath, "data", "resources", String.Format("resource{0}.dat", i))) Then
+            If Not File.Exists(Path.Combine(Application.StartupPath, "data", "resources", String.Format("resource{0}.dat", i))) Then
                 SaveResource(i)
-                DoEvents()
             End If
 
         Next
 
     End Sub
 
-    Sub ClearResource(ByVal Index As Integer)
+    Sub ClearResource(Index As Integer)
         Resource(Index) = Nothing
         Resource(Index).Name = ""
         Resource(Index).EmptyMessage = ""
@@ -1203,15 +1186,12 @@ Module ServerDatabase
     End Sub
 
     Sub ClearResources()
-        Dim i As Integer
-
         For i = 1 To MAX_RESOURCES
             ClearResource(i)
-            DoEvents()
         Next
     End Sub
 
-    Friend Sub CacheResources(ByVal MapNum As Integer)
+    Friend Sub CacheResources(MapNum As Integer)
         Dim x As Integer, y As Integer, Resource_Count As Integer
         Resource_Count = 0
 
@@ -1240,12 +1220,12 @@ Module ServerDatabase
 
         For i = 1 To MAX_SHOPS
             SaveShop(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub SaveShop(ByVal shopNum As Integer)
+    Sub SaveShop(shopNum As Integer)
         Dim i As Integer
         Dim filename As String
 
@@ -1275,12 +1255,12 @@ Module ServerDatabase
 
         For i = 1 To MAX_SHOPS
             LoadShop(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub LoadShop(ByVal ShopNum As Integer)
+    Sub LoadShop(ShopNum As Integer)
         Dim filename As String
         Dim x As Integer
 
@@ -1306,16 +1286,16 @@ Module ServerDatabase
 
         For i = 1 To MAX_SHOPS
 
-            If Not FileExist(Path.Combine(Application.StartupPath, "data", "shops", String.Format("shop{0}.dat", i))) Then
+            If Not File.Exists(Path.Combine(Application.StartupPath, "data", "shops", String.Format("shop{0}.dat", i))) Then
                 SaveShop(i)
-                DoEvents()
+                Application.DoEvents()
             End If
 
         Next
 
     End Sub
 
-    Sub ClearShop(ByVal Index As Integer)
+    Sub ClearShop(Index As Integer)
         Dim i As Integer
 
         Shop(Index) = Nothing
@@ -1329,12 +1309,9 @@ Module ServerDatabase
     End Sub
 
     Sub ClearShops()
-        Dim i As Integer
-
         For i = 1 To MAX_SHOPS
             Call ClearShop(i)
         Next
-
     End Sub
 
 #End Region
@@ -1346,12 +1323,12 @@ Module ServerDatabase
 
         For i = 1 To MAX_SKILLS
             SaveSkill(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub SaveSkill(ByVal skillnum As Integer)
+    Sub SaveSkill(skillnum As Integer)
         Dim filename As String
         filename = Path.Combine(Application.StartupPath, "data", "skills", String.Format("skills{0}.dat", skillnum))
 
@@ -1396,12 +1373,12 @@ Module ServerDatabase
 
         For i = 1 To MAX_SKILLS
             LoadSkill(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub LoadSkill(ByVal SkillNum As Integer)
+    Sub LoadSkill(SkillNum As Integer)
         Dim filename As String
 
         filename = Path.Combine(Application.StartupPath, "data", "skills", String.Format("skills{0}.dat", SkillNum))
@@ -1444,27 +1421,24 @@ Module ServerDatabase
 
         For i = 1 To MAX_SKILLS
 
-            If Not FileExist(Path.Combine(Application.StartupPath, "data", "skills", String.Format("skills{0}.dat", i))) Then
+            If Not File.Exists(Path.Combine(Application.StartupPath, "data", "skills", String.Format("skills{0}.dat", i))) Then
                 SaveSkill(i)
-                DoEvents()
+                Application.DoEvents()
             End If
 
         Next
 
     End Sub
 
-    Sub ClearSkill(ByVal Index As Integer)
+    Sub ClearSkill(Index As Integer)
         Skill(Index) = Nothing
         Skill(Index).Name = ""
         Skill(Index).LevelReq = 1 'Needs to be 1 for the skill editor
     End Sub
 
     Sub ClearSkills()
-        Dim i As Integer
-
         For i = 1 To MAX_SKILLS
             ClearSkill(i)
-            DoEvents()
         Next
 
     End Sub
@@ -1477,12 +1451,12 @@ Module ServerDatabase
 
         For i = 1 To MAX_ANIMATIONS
             SaveAnimation(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub SaveAnimation(ByVal AnimationNum As Integer)
+    Sub SaveAnimation(AnimationNum As Integer)
         Dim filename As String
         Dim x As Integer
 
@@ -1519,12 +1493,12 @@ Module ServerDatabase
 
         For i = 1 To MAX_ANIMATIONS
             LoadAnimation(i)
-            DoEvents()
+            Application.DoEvents()
         Next
 
     End Sub
 
-    Sub LoadAnimation(ByVal AnimationNum As Integer)
+    Sub LoadAnimation(AnimationNum As Integer)
         Dim filename As String
 
         filename = Path.Combine(Application.StartupPath, "data", "animations", String.Format("animation{0}.dat", AnimationNum))
@@ -1558,15 +1532,15 @@ Module ServerDatabase
 
         For i = 1 To MAX_ANIMATIONS
 
-            If Not FileExist(Path.Combine(Application.StartupPath, "data", "animations", String.Format("animation{0}.dat", i))) Then
+            If Not File.Exists(Path.Combine(Application.StartupPath, "data", "animations", String.Format("animation{0}.dat", i))) Then
                 SaveAnimation(i)
-                DoEvents()
+                Application.DoEvents()
             End If
 
         Next
     End Sub
 
-    Sub ClearAnimation(ByVal Index As Integer)
+    Sub ClearAnimation(Index As Integer)
         Animation(Index) = Nothing
         Animation(Index).Name = ""
         Animation(Index).Sound = ""
@@ -1577,57 +1551,27 @@ Module ServerDatabase
     End Sub
 
     Sub ClearAnimations()
-        Dim i As Integer
-
         For i = 1 To MAX_ANIMATIONS
             ClearAnimation(i)
-            DoEvents()
         Next
     End Sub
 
 #End Region
 
 #Region "Accounts"
-    Function AccountExist(ByVal Name As String) As Boolean
-        Dim filename As String
-        filename = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Name), String.Format("{0}.bin", Trim$(Name)))
-
-        If FileExist(filename) Then
-            AccountExist = True
-        Else
-            AccountExist = False
-        End If
+    Function AccountExist(Name As String) As Boolean
+        Return File.Exists(Application.StartupPath & "\Data\Accounts" & Trim$(Name) & ".bin")
     End Function
 
-    Function PasswordOK(ByVal Name As String, ByVal Password As String) As Boolean
-        Dim filename As String
-        Dim RightPassword As String
-        Dim namecheck As String
-
-        RightPassword = ""
-        namecheck = ""
-        PasswordOK = False
-
-        If AccountExist(Name) Then
-            filename = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Name), String.Format("{0}.bin", Trim$(Name)))
-            Dim reader As New ByteStream()
-            BinaryFile.Load(filename, reader)
-            namecheck = reader.ReadString()
-            RightPassword = reader.ReadString()
-
-            If Trim(namecheck) <> Trim(Name) Then
-                Exit Function
-            End If
-
-            If UCase$(Trim$(Password)) = UCase$(Trim$(RightPassword)) Then
-                PasswordOK = True
-            Else
-                PasswordOK = False
-            End If
-        End If
+    Function PasswordOK(Name As String, Password As String) As Boolean
+        If Not AccountExist(Name) Then Return False
+        Dim reader As New ByteStream()
+        BinaryFile.Load(Application.StartupPath & "\Data\Accounts" & Trim$(Name) & ".bin", reader)
+        If reader.ReadString().Trim <> Name.Trim Then Return False
+        Return reader.ReadString().Trim.ToUpper = Password.Trim.ToUpper
     End Function
 
-    Sub AddAccount(ByVal Index As Integer, ByVal Name As String, ByVal Password As String)
+    Sub AddAccount(Index As Integer, Name As String, Password As String)
         ClearPlayer(Index)
 
         Player(Index).Login = Name
@@ -1636,48 +1580,25 @@ Module ServerDatabase
         SavePlayer(Index)
     End Sub
 
-    Sub DeleteName(ByVal Name As String)
-
-        Dim fileName As String = Path.Combine(Application.StartupPath, "data", "accounts", "charlist.txt")
-
-        ' Read the file line by line
-        Dim fileContents = File.ReadAllLines(fileName).ToList
-
-        ' Remove unwanted stuff
-        For i = 0 To fileContents.Count - 1
-            If fileContents(i).Contains(Trim$(LCase$(Name))) Then
-                fileContents.RemoveAt(i)
-            End If
-        Next
-
-        ' Write the file to disk
-        File.WriteAllLines(fileName, fileContents.ToArray)
+    Sub DeleteName(Name As String)
+        TextFile.RemoveString(Application.StartupPath & "\Data\Accounts\charlist.txt", Name.Trim.ToLower)
     End Sub
 
 #End Region
 
 #Region "Players"
     Sub SaveAllPlayersOnline()
-        Dim i As Integer
-
         For i = 1 To GetPlayersOnline()
-            If IsPlaying(i) Then
-                SavePlayer(i)
-                SaveBank(i)
-                DoEvents()
-            End If
+            If Not IsPlaying(i) Then Continue For
+            SavePlayer(i)
+            SaveBank(i)
         Next
-
     End Sub
 
-    Sub SavePlayer(ByVal Index As Integer)
-        Dim filename As String
-        Dim playername As String
-
-        playername = Trim$(Player(Index).Login)
-        CheckDir(Path.Combine(Application.StartupPath, "data", "accounts", playername))
-
-        filename = Path.Combine(Application.StartupPath, "data", "accounts", playername, String.Format("{0}.bin", playername))
+    Sub SavePlayer(Index As Integer)
+        Dim playername As String = Trim$(Player(Index).Login)
+        Dim filename As String = Application.StartupPath & "\Data\Accounts" & playername
+        CheckDir(filename) : filename += ".bin"
 
         Dim writer As New ByteStream(100)
 
@@ -1693,12 +1614,9 @@ Module ServerDatabase
 
     End Sub
 
-    Sub LoadPlayer(ByVal Index As Integer, ByVal Name As String)
-        Dim filename As String
-
+    Sub LoadPlayer(Index As Integer, Name As String)
+        Dim filename As String = Path.Combine(Application.StartupPath, "data", "accounts", Name.Trim(), String.Format("{0}.bin", Name.Trim()))
         ClearPlayer(Index)
-
-        filename = Path.Combine(Application.StartupPath, "data", "accounts", Name.Trim(), String.Format("{0}.bin", Name.Trim()))
         Dim reader As New ByteStream()
         BinaryFile.Load(filename, reader)
 
@@ -1706,15 +1624,13 @@ Module ServerDatabase
         Player(Index).Password = reader.ReadString()
         Player(Index).Access = reader.ReadByte()
 
-        For i = 1 To MAX_CHARS
+        For i As Integer = 1 To MAX_CHARS
             LoadCharacter(Index, i)
         Next
 
     End Sub
 
-    Sub ClearPlayer(ByVal Index As Integer)
-        Dim i As Integer
-
+    Sub ClearPlayer(Index As Integer)
         ReDim TempPlayer(Index).SkillCD(MAX_PLAYER_SKILLS)
 
         Player(Index).Login = ""
@@ -1722,7 +1638,7 @@ Module ServerDatabase
 
         Player(Index).Access = 0
 
-        For i = 1 To MAX_CHARS
+        For i As Integer = 1 To MAX_CHARS
             ClearCharacter(Index, i)
         Next
 
@@ -1731,14 +1647,14 @@ Module ServerDatabase
 #End Region
 
 #Region "Bank"
-    Friend Sub LoadBank(ByVal Index As Integer, ByVal Name As String)
+    Friend Sub LoadBank(Index As Integer, Name As String)
         Dim filename As String
 
         ClearBank(Index)
 
         filename = Path.Combine(Application.StartupPath, "data", "banks", String.Format("{0}.bin", Name.Trim()))
 
-        If Not FileExist(filename) Then
+        If Not File.Exists(filename) Then
             SaveBank(Index)
             Exit Sub
         End If
@@ -1762,7 +1678,7 @@ Module ServerDatabase
         Next
     End Sub
 
-    Sub SaveBank(ByVal Index As Integer)
+    Sub SaveBank(Index As Integer)
         Dim filename = Path.Combine(Application.StartupPath, "data", "banks", String.Format("{0}.bin", Player(Index).Login.Trim()))
 
         Dim writer As New ByteStream(100)
@@ -1795,7 +1711,7 @@ Module ServerDatabase
         BinaryFile.Save(filename, writer)
     End Sub
 
-    Sub ClearBank(ByVal Index As Integer)
+    Sub ClearBank(Index As Integer)
         ReDim Bank(Index).Item(MAX_BANK)
         ReDim Bank(Index).ItemRand(MAX_BANK)
 
@@ -1819,7 +1735,7 @@ Module ServerDatabase
 #End Region
 
 #Region "Characters"
-    Sub ClearCharacter(ByVal Index As Integer, ByVal CharNum As Integer)
+    Sub ClearCharacter(Index As Integer, CharNum As Integer)
         Player(Index).Character(CharNum).Classes = 0
         Player(Index).Character(CharNum).Dir = 0
 
@@ -1963,12 +1879,10 @@ Module ServerDatabase
 
     End Sub
 
-    Sub LoadCharacter(ByVal Index As Integer, ByVal CharNum As Integer)
-        Dim filename As String
+    Sub LoadCharacter(Index As Integer, CharNum As Integer)
+        Dim filename As String = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Player(Index).Login), String.Format("{0}.bin", CharNum))
 
         ClearCharacter(Index, CharNum)
-
-        filename = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Player(Index).Login), String.Format("{0}.bin", CharNum))
 
         Dim reader As New ByteStream()
         BinaryFile.Load(filename, reader)
@@ -2115,10 +2029,8 @@ Module ServerDatabase
 
     End Sub
 
-    Sub SaveCharacter(ByVal Index As Integer, ByVal CharNum As Integer)
-        Dim filename As String
-
-        filename = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Player(Index).Login), String.Format("{0}.bin", CharNum))
+    Sub SaveCharacter(Index As Integer, CharNum As Integer)
+        Dim filename As String = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Player(Index).Login), String.Format("{0}.bin", CharNum))
 
         Dim writer As New ByteStream(100)
 
@@ -2251,29 +2163,19 @@ Module ServerDatabase
         BinaryFile.Save(filename, writer)
     End Sub
 
-    Function CharExist(ByVal Index As Integer, ByVal CharNum As Integer) As Boolean
-
-        If Len(Trim$(Player(Index).Character(CharNum).Name)) > 0 Then
-            CharExist = True
-        Else
-            CharExist = False
-        End If
-
+    Function CharExist(Index As Integer, CharNum As Integer) As Boolean
+        Return Len(Trim$(Player(Index).Character(CharNum).Name)) > 0
     End Function
 
-    Sub AddChar(ByVal Index As Integer, ByVal CharNum As Integer, ByVal Name As String, ByVal Sex As Byte, ByVal ClassNum As Byte, ByVal Sprite As Integer)
+    Sub AddChar(Index As Integer, CharNum As Integer, Name As String, Sex As Byte, ClassNum As Byte, Sprite As Integer)
         Dim n As Integer, i As Integer
-        Dim spritecheck As Boolean
 
         If Len(Trim$(Player(Index).Character(CharNum).Name)) = 0 Then
-
-            spritecheck = False
-
             Player(Index).Character(CharNum).Name = Name
             Player(Index).Character(CharNum).Sex = Sex
             Player(Index).Character(CharNum).Classes = ClassNum
 
-            If Player(Index).Character(CharNum).Sex = Enums.SexType.Male Then
+            If Player(Index).Character(CharNum).Sex = SexType.Male Then
                 Player(Index).Character(CharNum).Sprite = Classes(ClassNum).MaleSprite(Sprite - 1)
             Else
                 Player(Index).Character(CharNum).Sprite = Classes(ClassNum).FemaleSprite(Sprite - 1)
@@ -2330,12 +2232,11 @@ Module ServerDatabase
 
     End Sub
 
-    Function FindChar(ByVal Name As String) As Boolean
+    Function FindChar(Name As String) As Boolean
         FindChar = False
         Dim characters() As String
         Dim fullpath As String
         Dim Contents As String
-        Dim bAns As Boolean = False
 
         fullpath = Path.Combine(Application.StartupPath, "data", "accounts", "charlist.txt")
 
@@ -2399,7 +2300,7 @@ Module ServerDatabase
 
 #Region "Logs"
 
-    Friend Function GetFileContents(ByVal FullPath As String, Optional ByRef ErrInfo As String = "") As String
+    Friend Function GetFileContents(FullPath As String, Optional ByRef ErrInfo As String = "") As String
         Dim strContents As String
         Dim objReader As StreamReader
         strContents = ""
@@ -2418,7 +2319,7 @@ Module ServerDatabase
         Return strContents
     End Function
 
-    Friend Function Addlog(ByVal strData As String, ByVal FN As String, Optional ByVal ErrInfo As String = "") As Boolean
+    Friend Function Addlog(strData As String, FN As String, Optional ErrInfo As String = "") As Boolean
         Dim fullpath As String
         Dim Contents As String
         Dim bAns As Boolean = False
@@ -2437,7 +2338,7 @@ Module ServerDatabase
         Return bAns
     End Function
 
-    Friend Function AddTextToFile(ByVal strData As String, ByVal FN As String, Optional ByVal ErrInfo As String = "") As Boolean
+    Friend Function AddTextToFile(strData As String, FN As String, Optional ErrInfo As String = "") As Boolean
         Dim fullpath As String
         Dim Contents As String
         Dim bAns As Boolean = False
@@ -2459,7 +2360,7 @@ Module ServerDatabase
 #End Region
 
 #Region "Banning"
-    Sub ServerBanIndex(ByVal BanPlayerIndex As Integer)
+    Sub ServerBanIndex(BanPlayerIndex As Integer)
         Dim filename As String
         Dim IP As String
         Dim F As Integer
@@ -2467,7 +2368,7 @@ Module ServerDatabase
         filename = Application.StartupPath & "data\banlist.txt"
 
         ' Make sure the file exists
-        If Not FileExist("data\banlist.txt") Then
+        If Not File.Exists("data\banlist.txt") Then
             F = FreeFile()
             'COME HERE!!!
         End If
@@ -2490,17 +2391,12 @@ Module ServerDatabase
         AlertMsg(BanPlayerIndex, "You have been banned by " & "The Server" & "!")
     End Sub
 
-    Sub BanIndex(ByVal BanPlayerIndex As Integer, ByVal BannedByIndex As Integer)
-        Dim filename As String
-        Dim IP As String
-        Dim F As Integer
-        Dim i As Integer
-        filename = Path.Combine(Application.StartupPath, "data", "banlist.txt")
+    Sub BanIndex(BanPlayerIndex As Integer, BannedByIndex As Integer)
+        Dim filename As String = Application.StartupPath & "\Data\banlist.txt"
+        Dim IP As String, i As Integer
 
         ' Make sure the file exists
-        If Not FileExist("data\banlist.txt") Then
-            F = FreeFile()
-        End If
+        If Not File.Exists(filename) Then File.Create(filename).Dispose()
 
         ' Cut off last portion of ip
         IP = Socket.ClientIp(BanPlayerIndex)
@@ -2596,7 +2492,7 @@ Module ServerDatabase
 
     End Function
 
-    Function ItemData(ByVal itemNum As Integer) As Byte()
+    Function ItemData(itemNum As Integer) As Byte()
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(itemNum)
@@ -2676,7 +2572,7 @@ Module ServerDatabase
         Buffer.Dispose()
     End Function
 
-    Function AnimationData(ByVal AnimationNum As Integer) As Byte()
+    Function AnimationData(AnimationNum As Integer) As Byte()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(AnimationNum)
@@ -2721,7 +2617,7 @@ Module ServerDatabase
         Buffer.Dispose()
     End Function
 
-    Function NpcData(ByVal NpcNum As Integer) As Byte()
+    Function NpcData(NpcNum As Integer) As Byte()
         Dim Buffer As ByteStream, i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(NpcNum)
@@ -2779,7 +2675,7 @@ Module ServerDatabase
         Buffer.Dispose()
     End Function
 
-    Function ShopData(ByVal shopNum As Integer) As Byte()
+    Function ShopData(shopNum As Integer) As Byte()
         Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
@@ -2818,7 +2714,7 @@ Module ServerDatabase
         Buffer.Dispose()
     End Function
 
-    Function SkillData(ByVal skillnum As Integer) As Byte()
+    Function SkillData(skillnum As Integer) As Byte()
         Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
@@ -2875,7 +2771,7 @@ Module ServerDatabase
         Buffer.Dispose()
     End Function
 
-    Function ResourceData(ByVal ResourceNum As Integer) As Byte()
+    Function ResourceData(ResourceNum As Integer) As Byte()
         Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
@@ -2897,7 +2793,7 @@ Module ServerDatabase
         Buffer.WriteInt32(Resource(ResourceNum).Walkthrough)
 
         Return Buffer.ToArray
-        Buffer.Dispose
+        Buffer.Dispose()
     End Function
 
 #End Region

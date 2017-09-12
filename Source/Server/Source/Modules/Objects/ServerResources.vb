@@ -19,7 +19,7 @@ Friend Module ServerResources
         myXml.CloseXml(False)
     End Sub
 
-    Sub CheckResource(ByVal Index As Integer, ByVal x As Integer, ByVal y As Integer)
+    Sub CheckResource(Index As Integer, x As Integer, y As Integer)
         Dim Resource_num As Integer, ResourceType As Byte
         Dim Resource_index As Integer
         Dim rX As Integer, rY As Integer
@@ -109,7 +109,7 @@ Friend Module ServerResources
         End If
     End Sub
 
-    Function GetPlayerGatherSkillLvl(ByVal Index As Integer, ByVal SkillSlot As Integer) As Integer
+    Function GetPlayerGatherSkillLvl(Index As Integer, SkillSlot As Integer) As Integer
 
         GetPlayerGatherSkillLvl = 0
 
@@ -118,7 +118,7 @@ Friend Module ServerResources
         GetPlayerGatherSkillLvl = Player(Index).Character(TempPlayer(Index).CurChar).GatherSkills(SkillSlot).SkillLevel
     End Function
 
-    Function GetPlayerGatherSkillExp(ByVal Index As Integer, ByVal SkillSlot As Integer) As Integer
+    Function GetPlayerGatherSkillExp(Index As Integer, SkillSlot As Integer) As Integer
 
         GetPlayerGatherSkillExp = 0
 
@@ -127,7 +127,7 @@ Friend Module ServerResources
         GetPlayerGatherSkillExp = Player(Index).Character(TempPlayer(Index).CurChar).GatherSkills(SkillSlot).SkillCurExp
     End Function
 
-    Function GetPlayerGatherSkillMaxExp(ByVal Index As Integer, ByVal SkillSlot As Integer) As Integer
+    Function GetPlayerGatherSkillMaxExp(Index As Integer, SkillSlot As Integer) As Integer
 
         GetPlayerGatherSkillMaxExp = 0
 
@@ -136,25 +136,25 @@ Friend Module ServerResources
         GetPlayerGatherSkillMaxExp = Player(Index).Character(TempPlayer(Index).CurChar).GatherSkills(SkillSlot).SkillNextLvlExp
     End Function
 
-    Sub SetPlayerGatherSkillLvl(ByVal Index As Integer, ByVal SkillSlot As Integer, ByVal lvl As Integer)
+    Sub SetPlayerGatherSkillLvl(Index As Integer, SkillSlot As Integer, lvl As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
 
         Player(Index).Character(TempPlayer(Index).CurChar).GatherSkills(SkillSlot).SkillLevel = lvl
     End Sub
 
-    Sub SetPlayerGatherSkillExp(ByVal Index As Integer, ByVal SkillSlot As Integer, ByVal Exp As Integer)
+    Sub SetPlayerGatherSkillExp(Index As Integer, SkillSlot As Integer, Exp As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
 
         Player(Index).Character(TempPlayer(Index).CurChar).GatherSkills(SkillSlot).SkillCurExp = Exp
     End Sub
 
-    Sub SetPlayerGatherSkillMaxExp(ByVal Index As Integer, ByVal SkillSlot As Integer, ByVal MaxExp As Integer)
+    Sub SetPlayerGatherSkillMaxExp(Index As Integer, SkillSlot As Integer, MaxExp As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
 
         Player(Index).Character(TempPlayer(Index).CurChar).GatherSkills(SkillSlot).SkillNextLvlExp = MaxExp
     End Sub
 
-    Sub CheckResourceLevelUp(ByVal Index As Integer, ByVal SkillSlot As Integer)
+    Sub CheckResourceLevelUp(Index As Integer, SkillSlot As Integer)
         Dim expRollover As Integer, skillname As String = ""
         Dim level_count As Integer
 
@@ -184,7 +184,7 @@ Friend Module ServerResources
         End If
     End Sub
 
-    Private Function GetResourceSkillName(ByVal ResSkill As ResourceSkills) As String
+    Private Function GetResourceSkillName(ResSkill As ResourceSkills) As String
         Select Case ResSkill
             Case ResourceSkills.Herbalist
                 GetResourceSkillName = "herbalism"
@@ -199,7 +199,7 @@ Friend Module ServerResources
         End Select
     End Function
 
-    Function GetSkillNextLevel(ByVal Index As Integer, ByVal SkillSlot As Integer) As Integer
+    Function GetSkillNextLevel(Index As Integer, SkillSlot As Integer) As Integer
         GetSkillNextLevel = 0
         If Index < 0 OrElse Index > MAX_PLAYERS Then Exit Function
 

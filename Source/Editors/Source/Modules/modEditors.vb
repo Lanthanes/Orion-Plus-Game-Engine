@@ -1,4 +1,6 @@
-﻿Module modEditors
+﻿Imports System.IO
+
+Module modEditors
 
 #Region "Animation Editor"
     Friend Sub AnimationEditorInit()
@@ -233,7 +235,7 @@
         frmMapEditor.picBackSelect.Left = (frmMapEditor.scrlPictureX.Value * PIC_X) * -1
     End Sub
 
-    Friend Sub MapEditorChooseTile(ByVal Button As Integer, ByVal X As Single, ByVal Y As Single)
+    Friend Sub MapEditorChooseTile(Button As Integer, X As Single, Y As Single)
 
         If Button = MouseButtons.Left Then 'Left Mouse Button
 
@@ -270,7 +272,7 @@
 
     End Sub
 
-    Friend Sub MapEditorDrag(ByVal Button As Integer, ByVal X As Single, ByVal Y As Single)
+    Friend Sub MapEditorDrag(Button As Integer, X As Single, Y As Single)
 
         If Button = MouseButtons.Left Then 'Left Mouse Button
             ' convert the pixel number to tile number
@@ -301,7 +303,7 @@
 
     End Sub
 
-    Friend Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Integer, ByVal Y As Integer, Optional ByVal movedMouse As Boolean = True)
+    Friend Sub MapEditorMouseDown(Button As Integer, X As Integer, Y As Integer, Optional movedMouse As Boolean = True)
         Dim i As Integer
         Dim CurLayer As Integer
 
@@ -500,7 +502,7 @@
 
     End Sub
 
-    Friend Sub MapEditorSetTile(ByVal X As Integer, ByVal Y As Integer, ByVal CurLayer As Integer, Optional ByVal multitile As Boolean = False, Optional ByVal theAutotile As Byte = 0)
+    Friend Sub MapEditorSetTile(X As Integer, Y As Integer, CurLayer As Integer, Optional multitile As Boolean = False, Optional theAutotile As Byte = 0)
         Dim x2 As Integer, y2 As Integer
 
         If theAutotile > 0 Then
@@ -574,7 +576,7 @@
         End If
     End Sub
 
-    Friend Sub MapEditorFillLayer(Optional ByVal theAutotile As Byte = 0)
+    Friend Sub MapEditorFillLayer(Optional theAutotile As Byte = 0)
         Dim X As Integer
         Dim Y As Integer
         Dim CurLayer As Integer
@@ -1205,7 +1207,7 @@
         End If
 
         frmShop.nudFace.Value = Shop(EditorIndex).Face
-        If FileExist(Application.StartupPath & GFX_PATH & "Faces\" & Shop(EditorIndex).Face & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Faces\" & Shop(EditorIndex).Face & GFX_EXT) Then
             frmShop.picFace.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_PATH & "Faces\" & Shop(EditorIndex).Face & GFX_EXT)
         End If
 

@@ -27,7 +27,7 @@ Friend Module ServerTime
         SendGameClockToAll()
     End Sub
 
-    Sub SendGameClockTo(ByVal Index As Integer)
+    Sub SendGameClockTo(Index As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SClock)
@@ -54,7 +54,7 @@ Friend Module ServerTime
         Next
     End Sub
 
-    Sub SendTimeTo(ByVal Index As Integer)
+    Sub SendTimeTo(Index As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.STime)

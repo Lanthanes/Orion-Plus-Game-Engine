@@ -1,4 +1,5 @@
 ﻿
+Imports System.IO
 Imports ASFW
 
 Friend Module modProjectiles
@@ -45,7 +46,7 @@ Friend Module modProjectiles
 
     End Sub
 
-    Sub SendSaveProjectile(ByVal ProjectileNum As Integer)
+    Sub SendSaveProjectile(ProjectileNum As Integer)
         Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
@@ -74,7 +75,7 @@ Friend Module modProjectiles
 
     End Sub
 
-    Sub SendClearProjectile(ByVal ProjectileNum As Integer, ByVal CollisionIndex As Integer, ByVal CollisionType As Byte, ByVal CollisionZone As Integer)
+    Sub SendClearProjectile(ProjectileNum As Integer, CollisionIndex As Integer, CollisionType As Byte, CollisionZone As Integer)
         Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
@@ -144,7 +145,7 @@ Friend Module modProjectiles
 
     End Sub
 
-    Sub ClearProjectile(ByVal Index As Integer)
+    Sub ClearProjectile(Index As Integer)
 
         Projectiles(Index).Name = ""
         Projectiles(Index).Sprite = 0
@@ -154,7 +155,7 @@ Friend Module modProjectiles
 
     End Sub
 
-    Sub ClearMapProjectile(ByVal ProjectileNum As Integer)
+    Sub ClearMapProjectile(ProjectileNum As Integer)
 
         MapProjectiles(ProjectileNum).ProjectileNum = 0
         MapProjectiles(ProjectileNum).Owner = 0
@@ -175,7 +176,7 @@ Friend Module modProjectiles
 
         i = 1
 
-        While FileExist(Application.StartupPath & GFX_PATH & "projectiles\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GFX_PATH & "projectiles\" & i & GFX_EXT)
 
             NumProjectiles = NumProjectiles + 1
             i = i + 1
@@ -195,7 +196,7 @@ Friend Module modProjectiles
             Exit Sub
         End If
 
-        If FileExist(Application.StartupPath & GFX_PATH & "Projectiles\" & iconnum & GFX_EXT) Then
+        If File.Exists(Application.StartupPath & GFX_PATH & "Projectiles\" & iconnum & GFX_EXT) Then
             frmProjectile.picProjectile.BackgroundImage = Image.FromFile(Application.StartupPath & GFX_PATH & "Projectiles\" & iconnum & GFX_EXT)
         End If
 

@@ -10,7 +10,7 @@
     End Sub
 
 #Region "Moderation"
-    Private Sub BtnAdminWarpTo_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnAdminWarpTo.Click
+    Private Sub BtnAdminWarpTo_Click(sender As Object, e As EventArgs) Handles btnAdminWarpTo.Click
 
         If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", QColorType.AlertColor)
@@ -25,7 +25,7 @@
         End If
     End Sub
 
-    Private Sub BtnAdminBan_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnAdminBan.Click
+    Private Sub BtnAdminBan_Click(sender As Object, e As EventArgs) Handles btnAdminBan.Click
         If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", QColorType.AlertColor)
             Exit Sub
@@ -36,7 +36,7 @@
         SendBan(Trim$(txtAdminName.Text))
     End Sub
 
-    Private Sub BtnAdminKick_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnAdminKick.Click
+    Private Sub BtnAdminKick_Click(sender As Object, e As EventArgs) Handles btnAdminKick.Click
         If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", QColorType.AlertColor)
             Exit Sub
@@ -47,7 +47,7 @@
         SendKick(Trim$(txtAdminName.Text))
     End Sub
 
-    Private Sub BtnAdminWarp2Me_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnAdminWarp2Me.Click
+    Private Sub BtnAdminWarp2Me_Click(sender As Object, e As EventArgs) Handles btnAdminWarp2Me.Click
         If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", QColorType.AlertColor)
             Exit Sub
@@ -60,7 +60,7 @@
         WarpToMe(Trim$(txtAdminName.Text))
     End Sub
 
-    Private Sub BtnAdminWarpMe2_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnAdminWarpMe2.Click
+    Private Sub BtnAdminWarpMe2_Click(sender As Object, e As EventArgs) Handles btnAdminWarpMe2.Click
         If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", QColorType.AlertColor)
             Exit Sub
@@ -77,7 +77,7 @@
         WarpMeTo(Trim$(txtAdminName.Text))
     End Sub
 
-    Private Sub BtnAdminSetAccess_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnAdminSetAccess.Click
+    Private Sub BtnAdminSetAccess_Click(sender As Object, e As EventArgs) Handles btnAdminSetAccess.Click
         If GetPlayerAccess(MyIndex) < AdminType.Creator Then
             AddText("You need to be a high enough staff member to do this!", QColorType.AlertColor)
             Exit Sub
@@ -94,7 +94,7 @@
         SendSetAccess(Trim$(txtAdminName.Text), cmbAccess.SelectedIndex)
     End Sub
 
-    Private Sub BtnAdminSetSprite_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnAdminSetSprite.Click
+    Private Sub BtnAdminSetSprite_Click(sender As Object, e As EventArgs) Handles btnAdminSetSprite.Click
         If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", QColorType.AlertColor)
             Exit Sub
@@ -107,7 +107,7 @@
 #End Region
 
 #Region "Editors"
-    Private Sub BtnMapEditor_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnMapEditor.Click
+    Private Sub BtnMapEditor_Click(sender As Object, e As EventArgs) Handles btnMapEditor.Click
 
         If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", QColorType.AlertColor)
@@ -151,7 +151,7 @@
         nudSpawnItemAmount.Enabled = False
     End Sub
 
-    Private Sub BtnSpawnItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnSpawnItem.Click
+    Private Sub BtnSpawnItem_Click(sender As Object, e As EventArgs) Handles btnSpawnItem.Click
         If GetPlayerAccess(MyIndex) < AdminType.Creator Then
             AddText("You need to be a high enough staff member to do this!", QColorType.AlertColor)
             Exit Sub
@@ -160,7 +160,7 @@
         SendSpawnItem(cmbSpawnItem.SelectedIndex + 1, nudSpawnItemAmount.Value)
     End Sub
 
-    Private Sub BtnLevelUp_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnLevelUp.Click
+    Private Sub BtnLevelUp_Click(sender As Object, e As EventArgs) Handles btnLevelUp.Click
         If GetPlayerAccess(MyIndex) < AdminType.Developer Then
             AddText("You need to be a high enough staff member to do this!", QColorType.AlertColor)
             Exit Sub
@@ -170,7 +170,7 @@
 
     End Sub
 
-    Private Sub BtnALoc_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnALoc.Click
+    Private Sub BtnALoc_Click(sender As Object, e As EventArgs) Handles btnALoc.Click
         If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", QColorType.AlertColor)
             Exit Sub
@@ -179,7 +179,7 @@
         BLoc = Not BLoc
     End Sub
 
-    Private Sub BtnRespawn_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnRespawn.Click
+    Private Sub BtnRespawn_Click(sender As Object, e As EventArgs) Handles btnRespawn.Click
         If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", QColorType.AlertColor)
             Exit Sub

@@ -335,7 +335,7 @@ Module modGameLogic
 
     End Sub
 
-    Sub ProcessNpcMovement(ByVal MapNpcNum As Integer)
+    Sub ProcessNpcMovement(MapNpcNum As Integer)
 
         ' Check if NPC is walking, and if so process moving them over
         If MapNpc(MapNpcNum).Moving = MovementType.Walking Then
@@ -417,7 +417,7 @@ Module modGameLogic
         pnlloadvisible = False
     End Function
 
-    Friend Sub CreateActionMsg(ByVal message As String, ByVal color As Integer, ByVal MsgType As Byte, ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub CreateActionMsg(message As String, color As Integer, MsgType As Byte, X As Integer, Y As Integer)
 
         ActionMsgIndex = ActionMsgIndex + 1
         If ActionMsgIndex >= Byte.MaxValue Then ActionMsgIndex = 1
@@ -439,7 +439,7 @@ Module modGameLogic
 
     End Sub
 
-    Friend Function Rand(ByVal MaxNumber As Integer, Optional ByVal MinNumber As Integer = 0) As Integer
+    Friend Function Rand(MaxNumber As Integer, Optional MinNumber As Integer = 0) As Integer
         If MinNumber > MaxNumber Then
             Dim t As Integer = MinNumber
             MinNumber = MaxNumber
@@ -450,7 +450,7 @@ Module modGameLogic
     End Function
 
     ' BitWise Operators for directional blocking
-    Friend Sub SetDirBlock(ByRef blockvar As Byte, ByRef Dir As Byte, ByVal block As Boolean)
+    Friend Sub SetDirBlock(ByRef blockvar As Byte, ByRef Dir As Byte, block As Boolean)
         If block Then
             blockvar = blockvar Or (2 ^ Dir)
         Else
@@ -462,7 +462,7 @@ Module modGameLogic
         Return Not (Not blockvar AndAlso (2 ^ Dir))
     End Function
 
-    Friend Function ConvertCurrency(ByVal Amount As Integer) As String
+    Friend Function ConvertCurrency(Amount As Integer) As String
 
         If Int(Amount) < 10000 Then
             ConvertCurrency = Amount
@@ -931,7 +931,7 @@ Continue1:
         Buffer.Dispose()
     End Sub
 
-    Friend Sub UpdateDescWindow(ByVal itemnum As Integer, ByVal Amount As Integer, ByVal InvNum As Integer, ByVal WindowType As Byte)
+    Friend Sub UpdateDescWindow(itemnum As Integer, Amount As Integer, InvNum As Integer, WindowType As Byte)
         Dim theName As String = "", tmpRarity As Integer
 
         If Item(itemnum).Randomize <> 0 AndAlso InvNum <> 0 Then
@@ -1249,12 +1249,12 @@ Continue1:
 
     End Sub
 
-    Friend Sub OpenShop(ByVal shopnum As Integer)
+    Friend Sub OpenShop(shopnum As Integer)
         InShop = shopnum
         ShopAction = 0
     End Sub
 
-    Friend Function GetBankItemNum(ByVal bankslot As Byte) As Integer
+    Friend Function GetBankItemNum(bankslot As Byte) As Integer
         GetBankItemNum = 0
 
         If bankslot = 0 Then
@@ -1270,19 +1270,19 @@ Continue1:
         GetBankItemNum = Bank.Item(bankslot).Num
     End Function
 
-    Friend Sub SetBankItemNum(ByVal Bankslot As Byte, ByVal itemnum As Integer)
+    Friend Sub SetBankItemNum(Bankslot As Byte, itemnum As Integer)
         Bank.Item(Bankslot).Num = itemnum
     End Sub
 
-    Friend Function GetBankItemValue(ByVal Bankslot As Byte) As Integer
+    Friend Function GetBankItemValue(Bankslot As Byte) As Integer
         GetBankItemValue = Bank.Item(Bankslot).Value
     End Function
 
-    Friend Sub SetBankItemValue(ByVal Bankslot As Byte, ByVal ItemValue As Integer)
+    Friend Sub SetBankItemValue(Bankslot As Byte, ItemValue As Integer)
         Bank.Item(Bankslot).Value = ItemValue
     End Sub
 
-    Friend Sub ClearActionMsg(ByVal Index As Byte)
+    Friend Sub ClearActionMsg(Index As Byte)
         ActionMsg(Index).message = ""
         ActionMsg(Index).Created = 0
         ActionMsg(Index).Type = 0
@@ -1292,7 +1292,7 @@ Continue1:
         ActionMsg(Index).Y = 0
     End Sub
 
-    Friend Sub UpdateSkillWindow(ByVal skillnum As Integer)
+    Friend Sub UpdateSkillWindow(skillnum As Integer)
 
         If LastSkillDesc = skillnum Then Exit Sub
 
@@ -1343,7 +1343,7 @@ Continue1:
 
     End Sub
 
-    Friend Sub CheckAnimInstance(ByVal Index As Integer)
+    Friend Sub CheckAnimInstance(Index As Integer)
         Dim looptime As Integer
         Dim Layer As Integer, Sound As String
         Dim FrameCount As Integer
@@ -1408,7 +1408,7 @@ Continue1:
         g.Dispose()
     End Sub
 
-    Friend Sub AddChatBubble(ByVal target As Long, ByVal targetType As Byte, ByVal Msg As String, ByVal colour As Long)
+    Friend Sub AddChatBubble(target As Long, targetType As Byte, Msg As String, colour As Long)
         Dim i As Long, Index As Long
 
         ' set the global index
