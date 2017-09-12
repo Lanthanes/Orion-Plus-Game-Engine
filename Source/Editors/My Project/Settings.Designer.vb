@@ -36,12 +36,12 @@ Namespace My
     End Sub
 #End If
 #End Region
-        
-        Public Shared ReadOnly Property [Default]() As MySettings
+
+        Friend Shared ReadOnly Property [Default]() As MySettings
             Get
-                
+
 #If _MyType = "WindowsForms" Then
-               If Not addedHandler Then
+                If Not addedHandler Then
                     SyncLock addedHandlerLockObject
                         If Not addedHandler Then
                             AddHandler My.Application.Shutdown, AddressOf AutoSaveSettings

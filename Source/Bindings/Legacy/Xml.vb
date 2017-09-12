@@ -2,12 +2,12 @@
 Imports System.IO
 Imports System.Text
 
-Public Class XmlClass
+Friend Class XmlClass
     Private xmlDoc As New XmlDocument()
     Private m_Filename As String = vbNullString
     Private m_Root As String = "Settings"
 
-    Public Property Root As String
+    Friend Property Root As String
         Get
             Return m_Root
         End Get
@@ -18,7 +18,7 @@ Public Class XmlClass
 
     End Property
 
-    Public Property Filename As String
+    Friend Property Filename As String
         Get
             Return m_Filename
         End Get
@@ -45,7 +45,7 @@ Public Class XmlClass
 
     End Sub
 
-    Public Sub WriteString(ByVal Selection As String, ByVal Name As String, ByVal Value As String)
+    Friend Sub WriteString(ByVal Selection As String, ByVal Name As String, ByVal Value As String)
         'Dim xmlDoc As New XmlDocument()
 
         'Check if xml filename is here.
@@ -85,7 +85,7 @@ Public Class XmlClass
         'xmlDoc = Nothing
     End Sub
 
-    Public Function ReadString(ByVal Selection As String, ByVal Name As String, Optional ByVal DefaultValue As String = "") As String
+    Friend Function ReadString(ByVal Selection As String, ByVal Name As String, Optional ByVal DefaultValue As String = "") As String
         'Dim xmlDoc As New XmlDocument()
 
         If Not File.Exists(Me.Filename) Then
@@ -109,7 +109,7 @@ Public Class XmlClass
         End If
     End Function
 
-    Public Sub RemoveNode(ByVal Selection As String, ByVal Name As String)
+    Friend Sub RemoveNode(ByVal Selection As String, ByVal Name As String)
         'Dim xmlDoc As New XmlDocument()
 
         'Remove xml node
@@ -127,12 +127,12 @@ Public Class XmlClass
         End If
     End Sub
 
-    Public Sub LoadXml()
+    Friend Sub LoadXml()
         'Load xml document.
         xmlDoc.Load(Me.Filename)
     End Sub
 
-    Public Sub CloseXml(Save As Boolean)
+    Friend Sub CloseXml(Save As Boolean)
         If Save Then
             'Update xml document.
             xmlDoc.Save(Filename)

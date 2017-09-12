@@ -1,7 +1,7 @@
 ﻿Imports ASFW
 Imports Orion
 
-Public Module ServerTime
+Friend Module ServerTime
     Sub InitTime()
         ' Add handlers to time events
         AddHandler Time.Instance.OnTimeChanged, AddressOf HandleTimeChanged

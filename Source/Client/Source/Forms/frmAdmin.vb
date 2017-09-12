@@ -1,4 +1,4 @@
-﻿Public Class frmAdmin
+﻿Friend Class frmAdmin
     Private Sub FrmAdmin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' set values for admin panel
         cmbSpawnItem.Items.Clear()

@@ -1,15 +1,15 @@
 ﻿Module Types
     ' Common data structure arrays
-    Public Classes() As ClassRec
-    Public Item(MAX_ITEMS) As ItemRec
-    Public Npc(MAX_NPCS) As NpcRec
-    Public Shop(MAX_SHOPS) As ShopRec
-    Public Skill(MAX_SKILLS) As SkillRec
-    Public Resource(MAX_RESOURCES) As ResourceRec
-    Public Animation(MAX_ANIMATIONS) As AnimationRec
+    Friend Classes() As ClassRec
+    Friend Item(MAX_ITEMS) As ItemRec
+    Friend Npc(MAX_NPCS) As NpcRec
+    Friend Shop(MAX_SHOPS) As ShopRec
+    Friend Skill(MAX_SKILLS) As SkillRec
+    Friend Resource(MAX_RESOURCES) As ResourceRec
+    Friend Animation(MAX_ANIMATIONS) As AnimationRec
 
     ' Common data structures
-    Public Structure RandInvRec
+    Friend Structure RandInvRec
         Dim Prefix As String
         Dim Suffix As String
         Dim Stat() As Integer
@@ -18,13 +18,13 @@
         Dim Speed As Integer
     End Structure
 
-    Public Structure ResourceSkillsRec
+    Friend Structure ResourceSkillsRec
         Dim SkillLevel As Integer
         Dim SkillCurExp As Integer
         Dim SkillNextLvlExp As Integer
     End Structure
 
-    Public Structure AnimationRec
+    Friend Structure AnimationRec
         Dim Name As String
         Dim Sound As String
         Dim Sprite() As Integer
@@ -33,14 +33,14 @@
         Dim LoopTime() As Integer
     End Structure
 
-    Public Structure Rect
+    Friend Structure Rect
         Dim Top As Integer
         Dim Left As Integer
         Dim Right As Integer
         Dim Bottom As Integer
     End Structure
 
-    Public Structure ResourceRec
+    Friend Structure ResourceRec
         Dim Name As String
         Dim SuccessMessage As String
         Dim EmptyMessage As String
@@ -57,7 +57,7 @@
         Dim Animation As Integer
     End Structure
 
-    Public Structure SkillRec
+    Friend Structure SkillRec
         Dim Name As String
         Dim Type As Byte
         Dim MpCost As Integer
@@ -89,35 +89,35 @@
         Dim KnockBackTiles As Byte
     End Structure
 
-    Public Structure ShopRec
+    Friend Structure ShopRec
         Dim Name As String
         Dim Face As Byte
         Dim BuyRate As Integer
         Dim TradeItem() As TradeItemRec
     End Structure
 
-    Public Structure PlayerInvRec
+    Friend Structure PlayerInvRec
         Dim Num As Byte
         Dim Value As Integer
     End Structure
 
-    Public Structure BankRec
+    Friend Structure BankRec
         Dim Item() As PlayerInvRec
         Dim ItemRand() As RandInvRec
     End Structure
 
-    Public Structure Cache
+    Friend Structure Cache
         Dim Data() As Byte
     End Structure
 
-    Public Structure TileDataRec
+    Friend Structure TileDataRec
         Dim X As Byte
         Dim Y As Byte
         Dim Tileset As Byte
         Dim AutoTile As Byte
     End Structure
 
-    Public Structure TileRec
+    Friend Structure TileRec
         Dim Layer() As TileDataRec
         Dim Type As Byte
         Dim Data1 As Integer
@@ -126,7 +126,7 @@
         Dim DirBlock As Byte
     End Structure
 
-    Public Structure ItemRec
+    Friend Structure ItemRec
         Dim Name As String
         Dim Pic As Integer
         Dim Description As String
@@ -170,7 +170,7 @@
         Dim Ammo As Integer
     End Structure
 
-    Public Structure AnimInstanceRec
+    Friend Structure AnimInstanceRec
         Dim Animation As Integer
         Dim X As Integer
         Dim Y As Integer
@@ -186,7 +186,7 @@
         Dim FrameIndex() As Integer
     End Structure
 
-    Public Structure NpcRec
+    Friend Structure NpcRec
         Dim Name As String
         Dim AttackSay As String
         Dim Sprite As Integer
@@ -209,7 +209,7 @@
         Dim Damage As Integer
     End Structure
 
-    Public Structure TradeItemRec
+    Friend Structure TradeItemRec
         Dim Item As Integer
         Dim ItemValue As Integer
         Dim CostItem As Integer

@@ -1,24 +1,24 @@
 ﻿Imports System.IO
 Imports ASFW
 
-Public Module ServerEvents
+Friend Module ServerEvents
 #Region "Globals"
-    Public TempEventMap() As GlobalEventsStruct
-    Public Switches() As String
-    Public Variables() As String
+    Friend TempEventMap() As GlobalEventsStruct
+    Friend Switches() As String
+    Friend Variables() As String
 
-    Public Const MAX_SWITCHES As Integer = 500
-    Public Const MAX_VARIABLES As Integer = 500
+    Friend Const MAX_SWITCHES As Integer = 500
+    Friend Const MAX_VARIABLES As Integer = 500
 
-    Public Const PathfindingType As Integer = 1
+    Friend Const PathfindingType As Integer = 1
 
     'Effect Constants - Used for event options...
-    Public Const EFFECT_TYPE_FADEIN As Integer = 2
-    Public Const EFFECT_TYPE_FADEOUT As Integer = 1
-    Public Const EFFECT_TYPE_FLASH As Integer = 3
-    Public Const EFFECT_TYPE_FOG As Integer = 4
-    Public Const EFFECT_TYPE_WEATHER As Integer = 5
-    Public Const EFFECT_TYPE_TINT As Integer = 6
+    Friend Const EFFECT_TYPE_FADEIN As Integer = 2
+    Friend Const EFFECT_TYPE_FADEOUT As Integer = 1
+    Friend Const EFFECT_TYPE_FLASH As Integer = 3
+    Friend Const EFFECT_TYPE_FOG As Integer = 4
+    Friend Const EFFECT_TYPE_WEATHER As Integer = 5
+    Friend Const EFFECT_TYPE_TINT As Integer = 6
 #End Region
 
 #Region "Structures"
@@ -73,7 +73,7 @@ Public Module ServerEvents
         Dim Events() As GlobalEventStruct
     End Structure
 
-    Public Structure ConditionalBranchStruct
+    Friend Structure ConditionalBranchStruct
         Dim Condition As Integer
         Dim Data1 As Integer
         Dim Data2 As Integer
@@ -177,7 +177,7 @@ Public Module ServerEvents
         Dim SelfSwitches() As Integer '0 to 4
     End Structure
 
-    Public Structure GlobalMapEventsStruct
+    Friend Structure GlobalMapEventsStruct
         Dim EventID As Integer
         Dim PageID As Integer
         Dim X As Integer
@@ -244,7 +244,7 @@ Public Module ServerEvents
 #End Region
 
 #Region "Enums"
-    Public Enum MoveRouteOpts
+    Friend Enum MoveRouteOpts
         MoveUp = 1
         MoveDown
         MoveLeft
@@ -291,7 +291,7 @@ Public Module ServerEvents
     End Enum
 
     ' Event Types
-    Public Enum EventType
+    Friend Enum EventType
         ' Message
         evAddText = 1
         evShowText
@@ -2099,14 +2099,14 @@ Public Module ServerEvents
 
         'End Event Data
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
-        Buffer.Dispose
+        Buffer.Dispose()
         SendSwitchesAndVariables(Index)
 
     End Sub
 #End Region
 
 #Region "Misc"
-    Public Sub GivePlayerEXP(Index As Integer, Exp As Integer)
+    Friend Sub GivePlayerEXP(Index As Integer, Exp As Integer)
         ' give the exp
 
         SetPlayerExp(Index, GetPlayerExp(Index) + Exp)
@@ -2128,7 +2128,7 @@ Public Module ServerEvents
 
     End Sub
 
-    Public Sub CustomScript(Index As Integer, caseID As Integer, MapNum As Integer, EventId As Integer)
+    Friend Sub CustomScript(Index As Integer, caseID As Integer, MapNum As Integer, EventId As Integer)
 
         Select Case caseID
 

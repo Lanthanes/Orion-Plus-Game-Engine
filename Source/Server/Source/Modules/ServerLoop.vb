@@ -607,19 +607,19 @@ Module ServerLoop
 
     End Function
 
-    Public Function HandleCloseSocket(ByVal Index As Integer) As Boolean
+    Friend Function HandleCloseSocket(ByVal Index As Integer) As Boolean
         Socket.Disconnect(Index)
         HandleCloseSocket = True
     End Function
 
-    Public Function HandlePlayerHouse(ByVal Index As Integer) As Boolean
+    Friend Function HandlePlayerHouse(ByVal Index As Integer) As Boolean
         Player(Index).Character(TempPlayer(Index).CurChar).InHouse = 0
         PlayerWarp(Index, Player(Index).Character(TempPlayer(Index).CurChar).LastMap, Player(Index).Character(TempPlayer(Index).CurChar).LastX, Player(Index).Character(TempPlayer(Index).CurChar).LastY)
         PlayerMsg(Index, "Your visitation has ended. Possibly due to a disconnection. You are being warped back to your previous location.", ColorType.Yellow)
         HandlePlayerHouse = True
     End Function
 
-    Public Function HandlePetSkill(ByVal Index As Integer) As Boolean
+    Friend Function HandlePetSkill(ByVal Index As Integer) As Boolean
         PetCastSkill(Index, TempPlayer(Index).PetskillBuffer.Skill, TempPlayer(Index).PetskillBuffer.Target, TempPlayer(Index).PetskillBuffer.TargetTypes, True)
         TempPlayer(Index).PetskillBuffer.Skill = 0
         TempPlayer(Index).PetskillBuffer.Timer = 0
@@ -628,7 +628,7 @@ Module ServerLoop
         HandlePetSkill = True
     End Function
 
-    Public Function HandlePlayerCraft(ByVal Index As Integer) As Boolean
+    Friend Function HandlePlayerCraft(ByVal Index As Integer) As Boolean
         TempPlayer(Index).CraftIt = 0
         TempPlayer(Index).CraftTimer = 0
         TempPlayer(Index).CraftTimeNeeded = 0
@@ -636,33 +636,33 @@ Module ServerLoop
         HandlePlayerCraft = True
     End Function
 
-    Public Function HandleClearStun(ByVal Index As Integer) As Boolean
+    Friend Function HandleClearStun(ByVal Index As Integer) As Boolean
         TempPlayer(Index).StunDuration = 0
         TempPlayer(Index).StunTimer = 0
         SendStunned(Index)
         HandleClearStun = True
     End Function
 
-    Public Function HandleClearPetStun(ByVal Index As Integer) As Boolean
+    Friend Function HandleClearPetStun(ByVal Index As Integer) As Boolean
         TempPlayer(Index).PetStunDuration = 0
         TempPlayer(Index).PetStunTimer = 0
         HandleClearPetStun = True
     End Function
 
-    Public Function HandleStopPetRegen(ByVal Index As Integer) As Boolean
+    Friend Function HandleStopPetRegen(ByVal Index As Integer) As Boolean
         TempPlayer(Index).PetstopRegen = False
         TempPlayer(Index).PetstopRegenTimer = 0
         HandleStopPetRegen = True
     End Function
 
-    Public Function HandleCastSkill(ByVal Index As Integer) As Boolean
+    Friend Function HandleCastSkill(ByVal Index As Integer) As Boolean
         CastSkill(Index, TempPlayer(Index).SkillBuffer)
         TempPlayer(Index).SkillBuffer = 0
         TempPlayer(Index).SkillBufferTimer = 0
         HandleCastSkill = True
     End Function
 
-    Public Sub CastSkill(ByVal Index As Integer, ByVal SkillSlot As Integer)
+    Friend Sub CastSkill(ByVal Index As Integer, ByVal SkillSlot As Integer)
         ' Set up some basic variables we'll be using.
         Dim SkillId = GetPlayerSkill(Index, SkillSlot)
         Dim MapNum = GetPlayerMap(Index)
@@ -959,7 +959,7 @@ Module ServerLoop
         IsInSkillRange = IsInRange(Skill(SkillId).Range, GetPlayerX(Index), GetPlayerY(Index), TargetX, TargetY)
     End Function
 
-    Public Sub CastNpcSkill(ByVal NpcNum As Integer, ByVal MapNum As Integer, ByVal skillslot As Integer)
+    Friend Sub CastNpcSkill(ByVal NpcNum As Integer, ByVal MapNum As Integer, ByVal skillslot As Integer)
         Dim skillnum As Integer, MPCost As Integer
         Dim Vital As Integer, DidCast As Boolean
         Dim i As Integer
@@ -1185,7 +1185,7 @@ Module ServerLoop
         End If
     End Sub
 
-    Public Sub SkillPlayer_Effect(ByVal Vital As Byte, ByVal increment As Boolean, ByVal Index As Integer, ByVal Damage As Integer, ByVal Skillnum As Integer)
+    Friend Sub SkillPlayer_Effect(ByVal Vital As Byte, ByVal increment As Boolean, ByVal Index As Integer, ByVal Damage As Integer, ByVal Skillnum As Integer)
         Dim sSymbol As String
         Dim Colour As Integer
 
@@ -1212,7 +1212,7 @@ Module ServerLoop
         End If
     End Sub
 
-    Public Sub SkillNpc_Effect(ByVal Vital As Byte, ByVal increment As Boolean, ByVal Index As Integer, ByVal Damage As Integer, ByVal skillnum As Integer, ByVal MapNum As Integer)
+    Friend Sub SkillNpc_Effect(ByVal Vital As Byte, ByVal increment As Boolean, ByVal Index As Integer, ByVal Damage As Integer, ByVal skillnum As Integer, ByVal MapNum As Integer)
         Dim sSymbol As String
         Dim Color As Integer
 

@@ -8,7 +8,7 @@ Namespace My
     ' UnhandledException: Raised if the application encounters an unhandled exception.
     ' StartupNextInstance: Raised when launching a single-instance application and the application is already active. 
     ' NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
-    Partial Friend Class MyApplication
+    Partial Class MyApplication
         Private Sub MyApplication_UnhandledException(sender As Object, e As UnhandledExceptionEventArgs) Handles Me.UnhandledException
             Dim myFilePath As String = "\ErrorLog.log"
 

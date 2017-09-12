@@ -1,17 +1,17 @@
 ﻿Imports System.Text
 
 Module BufferUtility
-    Public Function ReadUnicodeString(ByVal data As Byte()) As String
+    Friend Function ReadUnicodeString(ByVal data As Byte()) As String
         If data Is Nothing OrElse data.Length = 0 Then Return "Null"
         Return Conv_String(Encoding.ASCII.GetString(data, 0, data.Length))
     End Function
 
-    Public Function WriteUnicodeString(ByVal Input As String)
+    Friend Function WriteUnicodeString(ByVal Input As String)
         If Input = vbNullString Then Return New Byte()
         Return Encoding.ASCII.GetBytes(Conv_Uni(Input))
     End Function
 
-    Public Function Conv_String(ByVal message As String) As String
+    Friend Function Conv_String(ByVal message As String) As String
         Conv_String = ""
 
         Try

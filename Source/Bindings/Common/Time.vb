@@ -23,18 +23,18 @@
 Imports System.Timers
 
 Namespace Global.Orion
-    Public Enum TimeOfDay As Byte
+    Friend Enum TimeOfDay As Byte
         Day = 0
         Night = 1
         Dawn = 2
         Dusk = 3
     End Enum
 
-    Public Delegate Sub HandleTimeEvent(ByRef source As Time)
+    Friend Delegate Sub HandleTimeEvent(ByRef source As Time)
 
-    Public Class Time
+    Friend Class Time
         Private Shared mInstance As Time = Nothing
-        Public Shared ReadOnly Property Instance As Time
+        Friend Shared ReadOnly Property Instance As Time
             Get
                 If (mInstance Is Nothing) Then
                     mInstance = New Time()
@@ -44,14 +44,14 @@ Namespace Global.Orion
             End Get
         End Property
 
-        Public Event OnTimeChanged As HandleTimeEvent
-        Public Event OnTimeOfDayChanged As HandleTimeEvent
-        Public Event OnTimeSync As HandleTimeEvent
+        Friend Event OnTimeChanged As HandleTimeEvent
+        Friend Event OnTimeOfDayChanged As HandleTimeEvent
+        Friend Event OnTimeSync As HandleTimeEvent
 
         Private mTimer As Timer
 
         Private mTime As Date
-        Public Property Time As Date
+        Friend Property Time As Date
             Get
                 Return mTime
             End Get
@@ -68,7 +68,7 @@ Namespace Global.Orion
         End Property
 
         Private mGameSpeed As Double
-        Public Property GameSpeed As Double
+        Friend Property GameSpeed As Double
             Get
                 Return mGameSpeed
             End Get
@@ -79,7 +79,7 @@ Namespace Global.Orion
         End Property
 
         Private mSyncInterval As Integer
-        Public Property SyncInterval As Integer
+        Friend Property SyncInterval As Integer
             Get
                 Return mSyncInterval
             End Get
@@ -94,7 +94,7 @@ Namespace Global.Orion
         End Property
 
         Private mTimeOfDay As TimeOfDay
-        Public Property TimeOfDay As TimeOfDay
+        Friend Property TimeOfDay As TimeOfDay
             Get
                 Return mTimeOfDay
             End Get
@@ -104,7 +104,7 @@ Namespace Global.Orion
             End Set
         End Property
 
-        Public Sub New()
+        Friend Sub New()
             mSyncInterval = 6000.0
 
             mTimer = New Timer(SyncInterval)
@@ -122,19 +122,19 @@ Namespace Global.Orion
             Return Me.ToString("h:mm:ss tt")
         End Function
 
-        Public Overloads Function ToString(ByRef format As String) As String
+        Friend Overloads Function ToString(ByRef format As String) As String
             Return Time.ToString(format)
         End Function
 
-        Public Sub Reset()
+        Friend Sub Reset()
             Time = New DateTime(0)
         End Sub
 
-        Public Sub Tick()
+        Friend Sub Tick()
             Time = Time.AddSeconds(GameSpeed)
         End Sub
 
-        Public Shared Function GetTimeOfDay(ByRef hours As Integer) As TimeOfDay
+        Friend Shared Function GetTimeOfDay(ByRef hours As Integer) As TimeOfDay
             If (hours < 6) Then
                 Return TimeOfDay.Night
             ElseIf (6 <= hours AndAlso hours <= 9) Then

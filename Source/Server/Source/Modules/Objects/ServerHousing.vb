@@ -1,11 +1,11 @@
 ﻿Imports System.IO
 Imports ASFW
 
-Public Module ServerHousing
+Friend Module ServerHousing
 #Region "Globals & Types"
-    Public MAX_HOUSES As Integer = 100
+    Friend MAX_HOUSES As Integer = 100
 
-    Public HouseConfig() As HouseRec
+    Friend HouseConfig() As HouseRec
 
     Structure HouseRec
         Dim ConfigName As String

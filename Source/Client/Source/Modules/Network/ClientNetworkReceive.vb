@@ -441,8 +441,8 @@ Module ClientNetworkReceive
         Next
 
         ' changes to inventory, need to clear any drop menu
-        FrmMainGame.pnlCurrency.Visible = False
-        FrmMainGame.txtCurrency.Text = ""
+        frmGame.pnlCurrency.Visible = False
+        frmGame.txtCurrency.Text = ""
         tmpCurrencyItem = 0
         CurrencyMenu = 0 ' clear
 
@@ -466,8 +466,8 @@ Module ClientNetworkReceive
         Player(MyIndex).RandInv(n).Speed = Buffer.ReadInt32
 
         ' changes, clear drop menu
-        FrmMainGame.pnlCurrency.Visible = False
-        FrmMainGame.txtCurrency.Text = ""
+        frmGame.pnlCurrency.Visible = False
+        frmGame.txtCurrency.Text = ""
         tmpCurrencyItem = 0
         CurrencyMenu = 0 ' clear
 
@@ -495,8 +495,8 @@ Module ClientNetworkReceive
 
         ' changes to inventory, need to clear any drop menu
 
-        FrmMainGame.pnlCurrency.Visible = False
-        FrmMainGame.txtCurrency.Text = ""
+        frmGame.pnlCurrency.Visible = False
+        frmGame.txtCurrency.Text = ""
         tmpCurrencyItem = 0
         CurrencyMenu = 0 ' clear
 
@@ -1225,8 +1225,8 @@ Module ClientNetworkReceive
         Buffer.Dispose()
 
         ' changes to inventory, need to clear any drop menu
-        FrmMainGame.pnlCurrency.Visible = False
-        FrmMainGame.txtCurrency.Text = ""
+        frmGame.pnlCurrency.Visible = False
+        frmGame.txtCurrency.Text = ""
         tmpCurrencyItem = 0
         CurrencyMenu = 0 ' clear
 
@@ -1892,8 +1892,8 @@ Module ClientNetworkReceive
 
         ' changes to inventory, need to clear any drop menu
 
-        FrmMainGame.pnlCurrency.Visible = False
-        FrmMainGame.txtCurrency.Text = ""
+        frmGame.pnlCurrency.Visible = False
+        frmGame.txtCurrency.Text = ""
         tmpCurrencyItem = 0
         CurrencyMenu = 0 ' clear
 

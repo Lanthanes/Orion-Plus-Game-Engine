@@ -919,7 +919,7 @@ Partial Class FrmMenu
         Me.PerformLayout()
 
     End Sub
-    Public WithEvents pnlLogin As System.Windows.Forms.Panel
+    Friend WithEvents pnlLogin As System.Windows.Forms.Panel
     Friend WithEvents chkSavePass As System.Windows.Forms.CheckBox
     Friend WithEvents txtPassword As System.Windows.Forms.TextBox
     Friend WithEvents lblLoginPass As System.Windows.Forms.Label
@@ -934,11 +934,11 @@ Partial Class FrmMenu
     Friend WithEvents txtRuser As System.Windows.Forms.TextBox
     Friend WithEvents lblNewAccName As System.Windows.Forms.Label
     Friend WithEvents lblNewAccount As System.Windows.Forms.Label
-    Public WithEvents pnlCredits As System.Windows.Forms.Panel
+    Friend WithEvents pnlCredits As System.Windows.Forms.Panel
     Friend WithEvents lblCreditsTop As System.Windows.Forms.Label
     Friend WithEvents lblScrollingCredits As System.Windows.Forms.Label
     Friend WithEvents tmrCredits As System.Windows.Forms.Timer
-    Public WithEvents pnlNewChar As System.Windows.Forms.Panel
+    Friend WithEvents pnlNewChar As System.Windows.Forms.Panel
     Friend WithEvents placeholderforsprite As System.Windows.Forms.PictureBox
     Friend WithEvents lblNextChar As System.Windows.Forms.Label
     Friend WithEvents lblPrevChar As System.Windows.Forms.Label
@@ -952,10 +952,10 @@ Partial Class FrmMenu
     Friend WithEvents lblNewChar As System.Windows.Forms.Label
     Friend WithEvents lblStatusHeader As System.Windows.Forms.Label
     Friend WithEvents lblServerStatus As System.Windows.Forms.Label
-    Public WithEvents pnlMainMenu As System.Windows.Forms.Panel
+    Friend WithEvents pnlMainMenu As System.Windows.Forms.Panel
     Friend WithEvents lblNewsHeader As System.Windows.Forms.Label
     Friend WithEvents lblNews As System.Windows.Forms.Label
-    Public WithEvents pnlIPConfig As Windows.Forms.Panel
+    Friend WithEvents pnlIPConfig As Windows.Forms.Panel
     Friend WithEvents txtPort As Windows.Forms.TextBox
     Friend WithEvents lblPort As Windows.Forms.Label
     Friend WithEvents txtIP As Windows.Forms.TextBox
@@ -971,7 +971,7 @@ Partial Class FrmMenu
     Friend WithEvents btnExit As Windows.Forms.Button
     Friend WithEvents btnCreateCharacter As Windows.Forms.Button
     Friend WithEvents btnSaveIP As Windows.Forms.Button
-    Public WithEvents pnlCharSelect As Windows.Forms.Panel
+    Friend WithEvents pnlCharSelect As Windows.Forms.Panel
     Friend WithEvents lblCharSelect As Windows.Forms.Label
     Friend WithEvents Label16 As Windows.Forms.Label
     Friend WithEvents picChar3 As Windows.Forms.PictureBox

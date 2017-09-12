@@ -4,7 +4,7 @@ Imports System.Xml
 Class Language
     Private _loaded As Boolean = False
     Private loadedStrings As New Dictionary(Of String, Dictionary(Of String, String))()
-    Public Sub New(filename As String)
+    Friend Sub New(filename As String)
         If File.Exists(filename) Then
             Dim xmlDoc As New XmlDocument()
             ' Create an XML document object
@@ -30,11 +30,11 @@ Class Language
         End If
     End Sub
 
-    Public Function Loaded() As Boolean
+    Friend Function Loaded() As Boolean
         Return _loaded
     End Function
 
-    Public Function HasString(section As String, id As String) As Boolean
+    Friend Function HasString(section As String, id As String) As Boolean
         If loadedStrings.ContainsKey(section.ToLower()) Then
             If loadedStrings(section.ToLower()).ContainsKey(id.ToLower()) Then
                 Return True
@@ -43,7 +43,7 @@ Class Language
         Return False
     End Function
 
-    Public Function GetString(section As String, id As String, ParamArray args As Object()) As String
+    Friend Function GetString(section As String, id As String, ParamArray args As Object()) As String
         Try
             Return String.Format(loadedStrings(section.ToLower())(id.ToLower()), args)
         Catch generatedExceptionName As FormatException

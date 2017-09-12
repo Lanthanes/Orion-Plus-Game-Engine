@@ -1,19 +1,19 @@
 ﻿Imports ASFW
 
 Module ServerTypes
-    Public Options As New ServerOptions()
-    ' Public data structures
-    Public Map(MAX_CACHED_MAPS) As MapRec
-    Public TempTile(MAX_CACHED_MAPS) As TempTileRec
-    Public PlayersOnMap(MAX_CACHED_MAPS) As Integer
-    Public ResourceCache(MAX_CACHED_MAPS) As ResourceCacheRec
-    Public MapItem(MAX_CACHED_MAPS, MAX_MAP_ITEMS) As MapItemRec
-    Public MapNpc(MAX_CACHED_MAPS) As MapDataRec
-    Public Bank(MAX_PLAYERS) As BankRec
-    Public TempPlayer(MAX_PLAYERS) As TempPlayerRec
-    Public Player(MAX_PLAYERS) As PlayerRec
+    Friend Options As New ServerOptions()
+    ' Friend data structures
+    Friend Map(MAX_CACHED_MAPS) As MapRec
+    Friend TempTile(MAX_CACHED_MAPS) As TempTileRec
+    Friend PlayersOnMap(MAX_CACHED_MAPS) As Integer
+    Friend ResourceCache(MAX_CACHED_MAPS) As ResourceCacheRec
+    Friend MapItem(MAX_CACHED_MAPS, MAX_MAP_ITEMS) As MapItemRec
+    Friend MapNpc(MAX_CACHED_MAPS) As MapDataRec
+    Friend Bank(MAX_PLAYERS) As BankRec
+    Friend TempPlayer(MAX_PLAYERS) As TempPlayerRec
+    Friend Player(MAX_PLAYERS) As PlayerRec
 
-    Public Structure PlayerRec
+    Friend Structure PlayerRec
         ' Account
         Dim Login As String
         Dim Password As String
@@ -24,7 +24,7 @@ Module ServerTypes
 
     End Structure
 
-    Public Structure CharacterRec
+    Friend Structure CharacterRec
         ' General
         Dim Name As String
         Dim Sex As Byte
@@ -84,7 +84,7 @@ Module ServerTypes
         Dim Pet As PlayerPetRec
     End Structure
 
-    Public Structure TempPlayerRec
+    Friend Structure TempPlayerRec
         ' Non saved local vars
         Dim InGame As Boolean
         Dim AttackTimer As Integer
@@ -165,7 +165,7 @@ Module ServerTypes
 
     End Structure
 
-    Public Structure MapRec
+    Friend Structure MapRec
         Dim Name As String
         Dim Music As String
 
@@ -210,7 +210,7 @@ Module ServerTypes
         Dim Parallax As Byte
     End Structure
 
-    Public Structure ClassRec
+    Friend Structure ClassRec
         Dim Name As String
         Dim Desc As String
         Dim Stat() As Byte
@@ -224,7 +224,7 @@ Module ServerTypes
         Dim BaseExp As Integer
     End Structure
 
-    Public Structure MapItemRec
+    Friend Structure MapItemRec
         Dim Num As Byte
         Dim Value As Integer
         Dim X As Byte
@@ -233,7 +233,7 @@ Module ServerTypes
         Dim RandData As RandInvRec
     End Structure
 
-    Public Structure MapNpcRec
+    Friend Structure MapNpcRec
         Dim Num As Integer
         Dim Target As Integer
         Dim TargetType As Byte
@@ -253,16 +253,16 @@ Module ServerTypes
         Dim StopRegenTimer As Integer
     End Structure
 
-    Public Structure TempTileRec
+    Friend Structure TempTileRec
         Dim DoorOpen(,) As Byte
         Dim DoorTimer As Integer
     End Structure
 
-    Public Structure MapDataRec
+    Friend Structure MapDataRec
         Dim Npc() As MapNpcRec
     End Structure
 
-    Public Structure MapResourceRec
+    Friend Structure MapResourceRec
         Dim ResourceState As Byte
         Dim ResourceTimer As Integer
         Dim X As Integer
@@ -270,24 +270,24 @@ Module ServerTypes
         Dim Cur_Health As Byte
     End Structure
 
-    Public Structure ResourceCacheRec
+    Friend Structure ResourceCacheRec
         Dim Resource_Count As Integer
         Dim ResourceData() As MapResourceRec
     End Structure
 
-    Public Structure HotbarRec
+    Friend Structure HotbarRec
         Dim Slot As Integer
         Dim SlotType As Byte
     End Structure
 
-    Public Structure SkillBufferRec
+    Friend Structure SkillBufferRec
         Dim Skill As Integer
         Dim Timer As Integer
         Dim Target As Integer
         Dim TargetTypes As Byte
     End Structure
 
-    Public Structure DoTRec
+    Friend Structure DoTRec
         Dim Used As Boolean
         Dim Skill As Integer
         Dim Timer As Integer

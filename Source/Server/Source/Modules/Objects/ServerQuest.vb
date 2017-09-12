@@ -3,41 +3,41 @@ Imports ASFW
 Imports ASFW.IO
 Imports ASFW.IO.FileIO
 
-Public Module ServerQuest
+Friend Module ServerQuest
 #Region "Constants"
     'Constants
-    Public Const MAX_QUESTS As Byte = 250
-    'Public Const MAX_TASKS As Byte = 10
-    'Public Const MAX_REQUIREMENTS As Byte = 10
-    Public Const MAX_ACTIVEQUESTS = 10
+    Friend Const MAX_QUESTS As Byte = 250
+    'Friend Const MAX_TASKS As Byte = 10
+    'Friend Const MAX_REQUIREMENTS As Byte = 10
+    Friend Const MAX_ACTIVEQUESTS = 10
 
-    Public Const EDITOR_TASKS As Byte = 7
+    Friend Const EDITOR_TASKS As Byte = 7
 
-    'Public Const QUEST_TYPE_GOSLAY As Byte = 1
-    'Public Const QUEST_TYPE_GOCOLLECT As Byte = 2
-    'Public Const QUEST_TYPE_GOTALK As Byte = 3
-    'Public Const QUEST_TYPE_GOREACH As Byte = 4
-    'Public Const QUEST_TYPE_GOGIVE As Byte = 5
-    'Public Const QUEST_TYPE_GOKILL As Byte = 6
-    'Public Const QUEST_TYPE_GOGATHER As Byte = 7
-    'Public Const QUEST_TYPE_GOFETCH As Byte = 8
-    'Public Const QUEST_TYPE_TALKEVENT As Byte = 9
+    'Friend Const QUEST_TYPE_GOSLAY As Byte = 1
+    'Friend Const QUEST_TYPE_GOCOLLECT As Byte = 2
+    'Friend Const QUEST_TYPE_GOTALK As Byte = 3
+    'Friend Const QUEST_TYPE_GOREACH As Byte = 4
+    'Friend Const QUEST_TYPE_GOGIVE As Byte = 5
+    'Friend Const QUEST_TYPE_GOKILL As Byte = 6
+    'Friend Const QUEST_TYPE_GOGATHER As Byte = 7
+    'Friend Const QUEST_TYPE_GOFETCH As Byte = 8
+    'Friend Const QUEST_TYPE_TALKEVENT As Byte = 9
 
-    'Public Const QUEST_NOT_STARTED As Byte = 0
-    'Public Const QUEST_STARTED As Byte = 1
-    'Public Const QUEST_COMPLETED As Byte = 2
-    'Public Const QUEST_REPEATABLE As Byte = 3
+    'Friend Const QUEST_NOT_STARTED As Byte = 0
+    'Friend Const QUEST_STARTED As Byte = 1
+    'Friend Const QUEST_COMPLETED As Byte = 2
+    'Friend Const QUEST_REPEATABLE As Byte = 3
 
     'Types
-    Public Quest(0 To MAX_QUESTS) As QuestRec
+    Friend Quest(0 To MAX_QUESTS) As QuestRec
 
-    Public Structure PlayerQuestRec
+    Friend Structure PlayerQuestRec
         Dim Status As Integer '0=not started, 1=started, 2=completed, 3=completed but repeatable
         Dim ActualTask As Integer
         Dim CurrentCount As Integer 'Used to handle the Amount property
     End Structure
 
-    Public Structure TaskRec
+    Friend Structure TaskRec
         Dim Order As Integer
         Dim NPC As Integer
         Dim Item As Integer
@@ -50,7 +50,7 @@ Public Module ServerQuest
         Dim TaskType As Integer
     End Structure
 
-    Public Structure QuestRec
+    Friend Structure QuestRec
         Dim Name As String
         Dim QuestLog As String
         Dim Repeat As Byte
@@ -527,7 +527,7 @@ Public Module ServerQuest
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendPlayerQuests(ByVal Index As Integer)
+    Friend Sub SendPlayerQuests(ByVal Index As Integer)
         Dim I As Integer
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
@@ -545,7 +545,7 @@ Public Module ServerQuest
 
     End Sub
 
-    Public Sub SendPlayerQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
+    Friend Sub SendPlayerQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
         Dim Buffer As ByteStream
 
         Buffer = New ByteStream(4)
@@ -561,7 +561,7 @@ Public Module ServerQuest
     End Sub
 
     'sends a message to the client that is shown on the screen
-    Public Sub QuestMessage(ByVal Index As Integer, ByVal QuestNum As Integer, ByVal message As String, ByVal QuestNumForStart As Integer)
+    Friend Sub QuestMessage(ByVal Index As Integer, ByVal QuestNum As Integer, ByVal message As String, ByVal QuestNumForStart As Integer)
         Dim Buffer As ByteStream
         Buffer = New ByteStream(4)
 
@@ -579,7 +579,7 @@ Public Module ServerQuest
 
 #Region "Functions"
 
-    Public Sub ResetQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
+    Friend Sub ResetQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
         If GetPlayerAccess(Index) > 0 Then
             Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).Status = QuestStatusType.NotStarted
             Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).ActualTask = 1
@@ -590,7 +590,7 @@ Public Module ServerQuest
         End If
     End Sub
 
-    Public Function CanStartQuest(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
+    Friend Function CanStartQuest(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
         CanStartQuest = False
         If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
         If QuestInProgress(Index, QuestNum) Then Exit Function
@@ -627,7 +627,7 @@ Public Module ServerQuest
         End If
     End Function
 
-    Public Function CanEndQuest(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
+    Friend Function CanEndQuest(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
         CanEndQuest = False
 
         If Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).ActualTask >= Quest(QuestNum).Task.Length Then
@@ -639,7 +639,7 @@ Public Module ServerQuest
     End Function
 
     'Tells if the quest is in progress or not
-    Public Function QuestInProgress(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
+    Friend Function QuestInProgress(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
         QuestInProgress = False
         If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
@@ -648,7 +648,7 @@ Public Module ServerQuest
         End If
     End Function
 
-    Public Function QuestCompleted(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
+    Friend Function QuestCompleted(ByVal Index As Integer, ByVal QuestNum As Integer) As Boolean
         QuestCompleted = False
         If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
 
@@ -658,7 +658,7 @@ Public Module ServerQuest
     End Function
 
     'Gets the quest reference num (id) from the quest name (it shall be unique)
-    Public Function GetQuestNum(ByVal QuestName As String) As Integer
+    Friend Function GetQuestNum(ByVal QuestName As String) As Integer
         Dim I As Integer
         GetQuestNum = 0
 
@@ -670,7 +670,7 @@ Public Module ServerQuest
         Next
     End Function
 
-    Public Function GetItemNum(ByVal ItemName As String) As Integer
+    Friend Function GetItemNum(ByVal ItemName As String) As Integer
         Dim I As Integer
         GetItemNum = 0
 
@@ -686,7 +686,7 @@ Public Module ServerQuest
     ' // General Purpose //
     ' /////////////////////
 
-    Public Sub CheckTasks(ByVal Index As Integer, ByVal TaskType As Integer, ByVal TargetIndex As Integer)
+    Friend Sub CheckTasks(ByVal Index As Integer, ByVal TaskType As Integer, ByVal TargetIndex As Integer)
         Dim I As Integer
 
         For I = 1 To MAX_QUESTS
@@ -696,7 +696,7 @@ Public Module ServerQuest
         Next
     End Sub
 
-    Public Sub CheckTask(ByVal Index As Integer, ByVal QuestNum As Integer, ByVal TaskType As Integer, ByVal TargetIndex As Integer)
+    Friend Sub CheckTask(ByVal Index As Integer, ByVal QuestNum As Integer, ByVal TaskType As Integer, ByVal TargetIndex As Integer)
         Dim ActualTask As Integer, I As Integer
         ActualTask = Player(Index).Character(TempPlayer(Index).CurChar).PlayerQuest(QuestNum).ActualTask
 
@@ -812,7 +812,7 @@ Public Module ServerQuest
         SendPlayerQuest(Index, QuestNum)
     End Sub
 
-    Public Sub ShowQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
+    Friend Sub ShowQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
         If QuestInProgress(Index, QuestNum) Then
             QuestMessage(Index, QuestNum, Trim$(Quest(QuestNum).Chat(2)), 0) 'show meanwhile message
             Exit Sub
@@ -822,7 +822,7 @@ Public Module ServerQuest
         QuestMessage(Index, QuestNum, Trim$(Quest(QuestNum).Chat(1)), QuestNum) 'chat 1 = request message
     End Sub
 
-    Public Sub EndQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
+    Friend Sub EndQuest(ByVal Index As Integer, ByVal QuestNum As Integer)
         Dim I As Integer
 
         QuestMessage(Index, QuestNum, Trim$(Quest(QuestNum).Chat(3)), 0)

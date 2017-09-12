@@ -21,7 +21,7 @@ Friend Module ServerNetworkConfig
         Socket.Dispose()
     End Sub
 
-    Public Function GetIP() As String
+    Friend Function GetIP() As String
         Dim request = HttpWebRequest.Create(New Uri("http://ascensiongamedev.com/resources/myip.php"))
         request.Method = WebRequestMethods.Http.Get
 
@@ -49,7 +49,7 @@ Friend Module ServerNetworkConfig
         Return False
     End Function
 
-    Public Sub SendDataToAll(ByRef data() As Byte, ByVal head As Integer)
+    Friend Sub SendDataToAll(ByRef data() As Byte, ByVal head As Integer)
         For i As Integer = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
                 Socket.SendDataTo(i, data, head)

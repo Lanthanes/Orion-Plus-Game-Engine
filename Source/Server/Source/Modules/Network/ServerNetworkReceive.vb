@@ -3,7 +3,7 @@ Imports ASFW
 Imports ASFW.IO
 
 Module ServerNetworkReceive
-    Public Sub PacketRouter()
+    Friend Sub PacketRouter()
         Socket.PacketId(ClientPackets.CCheckPing) = AddressOf Packet_Ping
         Socket.PacketId(ClientPackets.CNewAccount) = AddressOf Packet_NewAccount
         Socket.PacketId(ClientPackets.CDelAccount) = AddressOf Packet_DeleteAccount
@@ -531,7 +531,7 @@ Module ServerNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Public Sub Packet_PlayerMsg(index As Integer, ByRef Data() As Byte)
+    Friend Sub Packet_PlayerMsg(index As Integer, ByRef Data() As Byte)
         Dim OtherPlayer As String, Msg As String, OtherPlayerIndex As Integer
         Dim Buffer As New ByteStream(Data)
         Addlog("Recieved CMSG: CPlayerMsg", PACKET_LOG)

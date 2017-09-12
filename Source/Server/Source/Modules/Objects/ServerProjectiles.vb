@@ -3,16 +3,16 @@ Imports ASFW
 Imports ASFW.IO
 Imports ASFW.IO.FileIO
 
-Public Module ServerProjectiles
+Friend Module ServerProjectiles
 
 #Region "Defines"
-    Public Const MAX_PROJECTILES As Integer = 255
-    Public Projectiles(0 To MAX_PROJECTILES) As ProjectileRec
-    Public MapProjectiles(,) As MapProjectileRec
+    Friend Const MAX_PROJECTILES As Integer = 255
+    Friend Projectiles(0 To MAX_PROJECTILES) As ProjectileRec
+    Friend MapProjectiles(,) As MapProjectileRec
 #End Region
 
 #Region "Types"
-    Public Structure ProjectileRec
+    Friend Structure ProjectileRec
         Dim Name As String
         Dim Sprite As Integer
         Dim Range As Byte
@@ -20,7 +20,7 @@ Public Module ServerProjectiles
         Dim Damage As Integer
     End Structure
 
-    Public Structure MapProjectileRec
+    Friend Structure MapProjectileRec
         Dim ProjectileNum As Integer
         Dim Owner As Integer
         Dim OwnerType As Byte
@@ -323,14 +323,14 @@ Public Module ServerProjectiles
         End With
 
         SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
-        Buffer.Dispose
+        Buffer.Dispose()
 
     End Sub
 
 #End Region
 
 #Region "Functions"
-    Public Sub PlayerFireProjectile(ByVal Index As Integer, Optional ByVal IsSkill As Integer = 0)
+    Friend Sub PlayerFireProjectile(ByVal Index As Integer, Optional ByVal IsSkill As Integer = 0)
         Dim ProjectileSlot As Integer
         Dim ProjectileNum As Integer
         Dim MapNum As Integer
@@ -372,7 +372,7 @@ Public Module ServerProjectiles
 
     End Sub
 
-    Public Function Engine_GetAngle(ByVal CenterX As Integer, ByVal CenterY As Integer, ByVal targetX As Integer, ByVal targetY As Integer) As Single
+    Friend Function Engine_GetAngle(ByVal CenterX As Integer, ByVal CenterY As Integer, ByVal targetX As Integer, ByVal targetY As Integer) As Single
         '************************************************************
         'Gets the angle between two points in a 2d plane
         '************************************************************

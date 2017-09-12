@@ -1,17 +1,17 @@
 ﻿Imports Orion
 
-Public Class ServerOptions
+Friend Class ServerOptions
     Inherits AbstractOptions
 
-    Public Const KEY_GAMENAME As String = "gamename"
-    Public Const KEY_MOTD As String = "motd"
-    Public Const KEY_PORT As String = "port"
-    Public Const KEY_WEBSITE As String = "website"
-    Public Const KEY_STARTMAP As String = "startmap"
-    Public Const KEY_STARTX As String = "startx"
-    Public Const KEY_STARTY As String = "starty"
+    Friend Const KEY_GAMENAME As String = "gamename"
+    Friend Const KEY_MOTD As String = "motd"
+    Friend Const KEY_PORT As String = "port"
+    Friend Const KEY_WEBSITE As String = "website"
+    Friend Const KEY_STARTMAP As String = "startmap"
+    Friend Const KEY_STARTX As String = "startx"
+    Friend Const KEY_STARTY As String = "starty"
 
-    Public Property GameName As String
+    Friend Property GameName As String
         Get
             Return Options(KEY_GAMENAME)
         End Get
@@ -20,7 +20,7 @@ Public Class ServerOptions
         End Set
     End Property
 
-    Public Property Motd As String
+    Friend Property Motd As String
         Get
             Return Options(KEY_MOTD)
         End Get
@@ -29,7 +29,7 @@ Public Class ServerOptions
         End Set
     End Property
 
-    Public Property Port As Integer
+    Friend Property Port As Integer
         Get
             Return Options(KEY_PORT)
         End Get
@@ -38,7 +38,7 @@ Public Class ServerOptions
         End Set
     End Property
 
-    Public Property Website As String
+    Friend Property Website As String
         Get
             Return Options(KEY_WEBSITE)
         End Get
@@ -47,7 +47,7 @@ Public Class ServerOptions
         End Set
     End Property
 
-    Public Property StartMap As Integer
+    Friend Property StartMap As Integer
         Get
             Return Options(KEY_STARTMAP)
         End Get
@@ -56,7 +56,7 @@ Public Class ServerOptions
         End Set
     End Property
 
-    Public Property StartX As Integer
+    Friend Property StartX As Integer
         Get
             Return Options(KEY_STARTX)
         End Get
@@ -65,7 +65,7 @@ Public Class ServerOptions
         End Set
     End Property
 
-    Public Property StartY As Integer
+    Friend Property StartY As Integer
         Get
             Return Options(KEY_STARTY)
         End Get

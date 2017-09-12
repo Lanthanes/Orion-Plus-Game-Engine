@@ -3,7 +3,7 @@ Imports ASFW
 Imports ASFW.IO
 
 Module ClientNetworkSend
-    Public Sub SendNewAccount(ByVal Name As String, ByVal Password As String)
+    Friend Sub SendNewAccount(ByVal Name As String, ByVal Password As String)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CNewAccount)
@@ -14,7 +14,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendAddChar(ByVal Slot As Integer, ByVal Name As String, ByVal Sex As Integer, ByVal ClassNum As Integer, ByVal Sprite As Integer)
+    Friend Sub SendAddChar(ByVal Slot As Integer, ByVal Name As String, ByVal Sex As Integer, ByVal ClassNum As Integer, ByVal Sprite As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CAddChar)
@@ -28,7 +28,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendLogin(ByVal Name As String, ByVal Password As String)
+    Friend Sub SendLogin(ByVal Name As String, ByVal Password As String)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CLogin)
@@ -50,7 +50,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendRequestEditMap()
+    Friend Sub SendRequestEditMap()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestEditMap)
@@ -59,7 +59,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendMap()
+    Friend Sub SendMap()
         Dim X As Integer, Y As Integer, i As Integer
         Dim data() As Byte
         Dim Buffer As New ByteStream(4)
@@ -231,7 +231,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendPlayerMove()
+    Friend Sub SendPlayerMove()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPlayerMove)
@@ -244,7 +244,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SayMsg(ByVal text As String)
+    Friend Sub SayMsg(ByVal text As String)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSayMsg)
@@ -255,7 +255,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendKick(ByVal Name As String)
+    Friend Sub SendKick(ByVal Name As String)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CKickPlayer)
@@ -265,7 +265,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendBan(ByVal Name As String)
+    Friend Sub SendBan(ByVal Name As String)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CBanPlayer)
@@ -275,7 +275,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub WarpMeTo(ByVal Name As String)
+    Friend Sub WarpMeTo(ByVal Name As String)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CWarpMeTo)
@@ -285,7 +285,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub WarpToMe(ByVal Name As String)
+    Friend Sub WarpToMe(ByVal Name As String)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CWarpToMe)
@@ -295,7 +295,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub WarpTo(ByVal MapNum As Integer)
+    Friend Sub WarpTo(ByVal MapNum As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CWarpTo)
@@ -305,7 +305,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendRequestLevelUp()
+    Friend Sub SendRequestLevelUp()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestLevelUp)
@@ -325,7 +325,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendSetSprite(ByVal SpriteNum As Integer)
+    Friend Sub SendSetSprite(ByVal SpriteNum As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSetSprite)
@@ -335,7 +335,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendSetAccess(ByVal Name As String, ByVal Access As Byte)
+    Friend Sub SendSetAccess(ByVal Name As String, ByVal Access As Byte)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSetAccess)
@@ -364,7 +364,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendPlayerDir()
+    Friend Sub SendPlayerDir()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPlayerDir)
@@ -374,7 +374,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendPlayerRequestNewMap()
+    Friend Sub SendPlayerRequestNewMap()
         If GettingMap Then Exit Sub
 
         Dim Buffer As New ByteStream(4)
@@ -432,7 +432,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendMapRespawn()
+    Friend Sub SendMapRespawn()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CMapRespawn)
@@ -460,7 +460,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub BroadcastMsg(ByVal text As String)
+    Friend Sub BroadcastMsg(ByVal text As String)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CBroadcastMsg)
@@ -471,7 +471,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub PlayerMsg(ByVal text As String, ByVal MsgTo As String)
+    Friend Sub PlayerMsg(ByVal text As String, ByVal MsgTo As String)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPlayerMsg)
@@ -483,7 +483,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendWhosOnline()
+    Friend Sub SendWhosOnline()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CWhosOnline)
@@ -492,7 +492,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendMOTDChange(ByVal MOTD As String)
+    Friend Sub SendMOTDChange(ByVal MOTD As String)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSetMotd)
@@ -502,7 +502,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendBanList()
+    Friend Sub SendBanList()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CBanList)
@@ -522,7 +522,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendUseItem(ByVal InvNum As Integer)
+    Friend Sub SendUseItem(ByVal InvNum As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CUseItem)
@@ -532,7 +532,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendDropItem(ByVal InvNum As Integer, ByVal Amount As Integer)
+    Friend Sub SendDropItem(ByVal InvNum As Integer, ByVal Amount As Integer)
         Dim Buffer As New ByteStream(4)
 
         If InBank OrElse InShop Then Exit Sub
@@ -552,7 +552,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub BuyItem(ByVal shopslot As Integer)
+    Friend Sub BuyItem(ByVal shopslot As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CBuyItem)
@@ -562,7 +562,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SellItem(ByVal invslot As Integer)
+    Friend Sub SellItem(ByVal invslot As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSellItem)
@@ -572,7 +572,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub DepositItem(ByVal invslot As Integer, ByVal Amount As Integer)
+    Friend Sub DepositItem(ByVal invslot As Integer, ByVal Amount As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CDepositItem)
@@ -583,7 +583,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub WithdrawItem(ByVal bankslot As Integer, ByVal Amount As Integer)
+    Friend Sub WithdrawItem(ByVal bankslot As Integer, ByVal Amount As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CWithdrawItem)
@@ -594,7 +594,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub ChangeBankSlots(ByVal OldSlot As Integer, ByVal NewSlot As Integer)
+    Friend Sub ChangeBankSlots(ByVal OldSlot As Integer, ByVal NewSlot As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CChangeBankSlots)
@@ -605,7 +605,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub CloseBank()
+    Friend Sub CloseBank()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CCloseBank)
@@ -631,7 +631,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub AdminWarp(ByVal X As Integer, ByVal Y As Integer)
+    Friend Sub AdminWarp(ByVal X As Integer, ByVal Y As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CAdminWarp)
@@ -666,7 +666,7 @@ Module ClientNetworkSend
 
     End Sub
 
-    Public Sub TradeItem(ByVal invslot As Integer, ByVal Amount As Integer)
+    Friend Sub TradeItem(ByVal invslot As Integer, ByVal Amount As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CTradeItem)
@@ -677,7 +677,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub UntradeItem(ByVal invslot As Integer)
+    Friend Sub UntradeItem(ByVal invslot As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CUntradeItem)
@@ -687,7 +687,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub AcceptTrade()
+    Friend Sub AcceptTrade()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CAcceptTrade)
@@ -696,7 +696,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub DeclineTrade()
+    Friend Sub DeclineTrade()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CDeclineTrade)
@@ -705,7 +705,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendLeaveGame()
+    Friend Sub SendLeaveGame()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CQuit)
@@ -724,7 +724,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub ForgetSkill(ByVal Skillslot As Integer)
+    Friend Sub ForgetSkill(ByVal Skillslot As Integer)
         Dim Buffer As New ByteStream(4)
 
         ' Check for subscript out of range
@@ -753,7 +753,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendRequestMapreport()
+    Friend Sub SendRequestMapreport()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CMapReport)
@@ -762,7 +762,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendRequestAdmin()
+    Friend Sub SendRequestAdmin()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CAdmin)
@@ -771,7 +771,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendRequestClasses()
+    Friend Sub SendRequestClasses()
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestClasses)
@@ -780,7 +780,7 @@ Module ClientNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Public Sub SendUseEmote(ByVal Emote As Integer)
+    Friend Sub SendUseEmote(ByVal Emote As Integer)
         Dim Buffer As New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CEmote)

@@ -2,7 +2,7 @@
 
 Module ServerNpc
 #Region "Npcombat"
-    Public Sub TryNpcAttackPlayer(mapnpcnum As Integer, Index As Integer)
+    Friend Sub TryNpcAttackPlayer(mapnpcnum As Integer, Index As Integer)
 
         Dim MapNum As Integer, npcnum As Integer, Damage As Integer, i As Integer, armor As Integer
 
@@ -192,7 +192,7 @@ Module ServerNpc
 
     End Function
 
-    Public Sub NpcAttackPlayer(MapNpcNum As Integer, Victim As Integer, Damage As Integer)
+    Friend Sub NpcAttackPlayer(MapNpcNum As Integer, Victim As Integer, Damage As Integer)
         Dim Name As String, MapNum As Integer
         Dim z As Integer, InvCount As Integer, EqCount As Integer, j As Integer, x As Integer
         Dim Buffer As New ByteStream(4)
@@ -370,7 +370,7 @@ Module ServerNpc
 
     End Sub
 
-    Public Sub KnockBackNpc(Index As Integer, NpcNum As Integer, Optional IsSkill As Integer = 0)
+    Friend Sub KnockBackNpc(Index As Integer, NpcNum As Integer, Optional IsSkill As Integer = 0)
         If IsSkill > 0 Then
             For i = 1 To Skill(IsSkill).KnockBackTiles
                 If CanNpcMove(GetPlayerMap(Index), NpcNum, GetPlayerDir(Index)) Then
@@ -392,7 +392,7 @@ Module ServerNpc
         End If
     End Sub
 
-    Public Function RandomNpcAttack(MapNum As Integer, MapNpcNum As Integer) As Integer
+    Friend Function RandomNpcAttack(MapNum As Integer, MapNpcNum As Integer) As Integer
         Dim i As Integer, SkillList As New List(Of Byte)
 
         RandomNpcAttack = 0
@@ -413,11 +413,11 @@ Module ServerNpc
 
     End Function
 
-    Public Function GetNpcSkill(NpcNum As Integer, skillslot As Integer) As Integer
+    Friend Function GetNpcSkill(NpcNum As Integer, skillslot As Integer) As Integer
         GetNpcSkill = Npc(NpcNum).Skill(skillslot)
     End Function
 
-    Public Sub BufferNpcSkill(ByVal MapNum As Integer, ByVal MapNpcNum As Integer, ByVal skillslot As Integer)
+    Friend Sub BufferNpcSkill(ByVal MapNum As Integer, ByVal MapNpcNum As Integer, ByVal skillslot As Integer)
         Dim skillnum As Integer
         Dim MPCost As Integer
         Dim SkillCastType As Integer
@@ -507,7 +507,7 @@ Module ServerNpc
         End If
     End Sub
 
-    Public Function CanNpcBlock(npcnum As Integer) As Boolean
+    Friend Function CanNpcBlock(npcnum As Integer) As Boolean
         Dim rate As Integer
         Dim stat As Integer
         Dim rndNum As Integer
@@ -522,7 +522,7 @@ Module ServerNpc
 
     End Function
 
-    Public Function CanNpcCrit(npcnum As Integer) As Boolean
+    Friend Function CanNpcCrit(npcnum As Integer) As Boolean
         Dim rate As Integer
         Dim rndNum As Integer
 
@@ -535,7 +535,7 @@ Module ServerNpc
 
     End Function
 
-    Public Function CanNpcDodge(npcnum As Integer) As Boolean
+    Friend Function CanNpcDodge(npcnum As Integer) As Boolean
         Dim rate As Integer
         Dim rndNum As Integer
 
@@ -548,7 +548,7 @@ Module ServerNpc
 
     End Function
 
-    Public Function CanNpcParry(npcnum As Integer) As Boolean
+    Friend Function CanNpcParry(npcnum As Integer) As Boolean
         Dim rate As Integer
         Dim rndNum As Integer
 
@@ -567,7 +567,7 @@ Module ServerNpc
 
     End Function
 
-    Public Sub SpellNpc_Effect(Vital As Byte, increment As Boolean, Index As Integer, Damage As Integer, Skillnum As Integer, MapNum As Integer)
+    Friend Sub SpellNpc_Effect(Vital As Byte, increment As Boolean, Index As Integer, Damage As Integer, Skillnum As Integer, MapNum As Integer)
         Dim sSymbol As String
         Dim Colour As Long
 
@@ -602,13 +602,13 @@ Module ServerNpc
 
     End Sub
 
-    Public Function IsNpcDead(ByVal MapNum As Integer, ByVal MapNpcNum As Integer)
+    Friend Function IsNpcDead(ByVal MapNum As Integer, ByVal MapNpcNum As Integer)
         IsNpcDead = False
         If MapNum < 0 OrElse MapNum > MAX_MAPS OrElse MapNpcNum < 0 OrElse MapNpcNum > MAX_MAP_NPCS Then Exit Function
         If MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.HP) <= 0 Then IsNpcDead = True
     End Function
 
-    Public Sub DropNpcItems(ByVal MapNum As Integer, ByVal MapNpcNum As Integer)
+    Friend Sub DropNpcItems(ByVal MapNum As Integer, ByVal MapNpcNum As Integer)
         Dim NpcNum = MapNpc(MapNum).Npc(MapNpcNum).Num
         Dim tmpitem = Random(1, 5)
         Dim n = Int(Rnd() * Npc(NpcNum).DropChance(tmpitem)) + 1

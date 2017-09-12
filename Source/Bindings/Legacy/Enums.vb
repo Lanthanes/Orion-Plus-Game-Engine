@@ -155,7 +155,7 @@
     End Enum
 
     ''' <Summary> Stats used by Players, Npcs and Classes </Summary>
-    Public Enum StatType As Byte
+    Friend Enum StatType As Byte
         Strength = 1
         Endurance
         Vitality
@@ -167,7 +167,7 @@
     End Enum
 
     ''' <Summary> Vitals used by Players, Npcs, and Classes </Summary>
-    Public Enum VitalType As Byte
+    Friend Enum VitalType As Byte
         HP = 1
         MP
         SP
@@ -176,7 +176,7 @@
     End Enum
 
     ''' <Summary> Equipment used by Players </Summary>
-    Public Enum EquipmentType As Byte
+    Friend Enum EquipmentType As Byte
         Weapon = 1
         Armor
         Helmet
@@ -188,7 +188,7 @@
     End Enum
 
     ''' <Summary> Layers in a map </Summary>
-    Public Enum LayerType As Byte
+    Friend Enum LayerType As Byte
         Ground = 1
         Mask
         Mask2
@@ -199,7 +199,7 @@
     End Enum
 
     ''' <Summary> Resource Skills </Summary>
-    Public Enum ResourceSkills As Byte
+    Friend Enum ResourceSkills As Byte
         Herbalist = 1
         WoodCutter
         Miner
@@ -208,7 +208,7 @@
         Count
     End Enum
 
-    Public Enum RandomBonusType
+    Friend Enum RandomBonusType
         RANDOM_SPEED = 1            ' Reduces time between attacks by 20%
         RANDOM_DAMAGE        ' Increases base damage by 25%
         RANDOM_WARRIOR         ' Adds Strength and Endurance
@@ -227,7 +227,7 @@
         RANDOM_CANNON          ' Gives Attack, Ranged and Magic
     End Enum
 
-    Public Enum RarityType
+    Friend Enum RarityType
         RARITY_BROKEN = 1
         RARITY_COMMON
         RARITY_UNCOMMON
@@ -235,7 +235,7 @@
         RARITY_EPIC
     End Enum
 
-    Public Enum WeatherType
+    Friend Enum WeatherType
         None
         Rain
         Snow
@@ -245,7 +245,7 @@
         Fog
     End Enum
 
-    Public Enum QuestType
+    Friend Enum QuestType
         Slay = 1
         Collect
         Talk
@@ -257,7 +257,7 @@
         TalkEvent
     End Enum
 
-    Public Enum QuestStatusType
+    Friend Enum QuestStatusType
         NotStarted
         Started
         Completed

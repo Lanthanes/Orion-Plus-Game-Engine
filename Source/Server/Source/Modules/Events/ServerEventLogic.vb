@@ -1,8 +1,8 @@
 ﻿Imports ASFW
 Imports Orion
 
-Public Module ServerEventLogic
-    Public Sub RemoveDeadEvents()
+Friend Module ServerEventLogic
+    Friend Sub RemoveDeadEvents()
         Dim i As Integer, MapNum As Integer, Buffer As New ByteStream(4), x As Integer, id As Integer, page As Integer, compare As Integer
 
         For i = 1 To GetPlayersOnline()
@@ -131,7 +131,7 @@ Public Module ServerEventLogic
 
     End Sub
 
-    Public Sub SpawnNewEvents()
+    Friend Sub SpawnNewEvents()
         Dim Buffer As ByteStream, pageID As Integer, id As Integer, compare As Integer, i As Integer, MapNum As Integer
         Dim n As Integer, x As Integer, z As Integer, spawnevent As Boolean, p As Integer
 
@@ -350,7 +350,7 @@ Public Module ServerEventLogic
 
     End Sub
 
-    Public Sub ProcessEventMovement()
+    Friend Sub ProcessEventMovement()
         Dim rand As Integer, x As Integer, i As Integer, playerID As Integer, eventID As Integer, WalkThrough As Integer, isglobal As Boolean, MapNum As Integer
         Dim actualmovespeed As Integer, Buffer As ByteStream, z As Integer, sendupdate As Boolean
         Dim donotprocessmoveroute As Boolean, pageNum As Integer
@@ -733,7 +733,7 @@ Public Module ServerEventLogic
 
     End Sub
 
-    Public Sub ProcessLocalEventMovement()
+    Friend Sub ProcessLocalEventMovement()
         Dim rand As Integer, x As Integer, i As Integer, playerID As Integer, eventID As Integer, WalkThrough As Integer
         Dim isglobal As Boolean, MapNum As Integer, actualmovespeed As Integer, Buffer As ByteStream, z As Integer, sendupdate As Boolean
         Dim donotprocessmoveroute As Boolean
@@ -1130,7 +1130,7 @@ Public Module ServerEventLogic
 
     End Sub
 
-    Public Sub ProcessEventCommands()
+    Friend Sub ProcessEventCommands()
         Dim Buffer As New ByteStream(4), i As Integer, x As Integer, removeEventProcess As Boolean, w As Integer, v As Integer, p As Integer
         Dim restartlist As Boolean, restartloop As Boolean, endprocess As Boolean
 
@@ -1992,7 +1992,7 @@ Public Module ServerEventLogic
 
     End Sub
 
-    Public Sub UpdateEventLogic()
+    Friend Sub UpdateEventLogic()
         'Check Removing and Adding of Events (Did switches change or something?)
 
         If Gettingmap = True Then Exit Sub
@@ -2407,7 +2407,7 @@ Public Module ServerEventLogic
 
     End Sub
 
-    Public Sub SpawnMapEventsFor(Index As Integer, MapNum As Integer)
+    Friend Sub SpawnMapEventsFor(Index As Integer, MapNum As Integer)
         Dim i As Integer, z As Integer, spawncurrentevent As Boolean, p As Integer, compare As Integer
         Dim Buffer As New ByteStream(4)
 
@@ -2615,7 +2615,7 @@ nextevent:
                 Addlog("Sent SMSG: SSpawnEvent For Player", PACKET_LOG)
                 Console.WriteLine("Sent SMSG: SSpawnEvent For Player")
 
-                Buffer.Dispose
+                Buffer.Dispose()
             Next
         End If
 

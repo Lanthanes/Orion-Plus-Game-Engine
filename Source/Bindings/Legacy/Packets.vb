@@ -1,6 +1,6 @@
 ﻿Module Packets
     ' Packets sent by server to client
-    Public Enum ServerPackets
+    Friend Enum ServerPackets
         SAlertMsg = 1
         SKeyPair
         SLoadCharOk
@@ -169,7 +169,7 @@
     End Enum
 
     ' Packets sent by client to server
-    Public Enum ClientPackets
+    Friend Enum ClientPackets
         CNewAccount = 1
         CDelAccount
         CLogin
@@ -301,7 +301,7 @@
         Count
     End Enum
 
-    Public Enum EditorPackets
+    Friend Enum EditorPackets
         'Editor login
         EditorLogin = ClientPackets.Count
 

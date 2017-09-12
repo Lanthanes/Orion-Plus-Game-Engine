@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 
-Public Module ServerResources
-    Public SkillExpTable(100) As Integer
+Friend Module ServerResources
+    Friend SkillExpTable(100) As Integer
 
     Sub LoadSkillExp()
         Dim i As Integer

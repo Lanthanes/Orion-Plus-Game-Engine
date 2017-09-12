@@ -1,4 +1,4 @@
-﻿Public Class FrmVisualWarp
+﻿Friend Class FrmVisualWarp
     Private Sub LstMaps_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstMaps.SelectedIndexChanged
         DrawMap()
         EditorWarpMap = lstMaps.SelectedIndex + 1

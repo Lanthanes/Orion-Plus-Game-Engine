@@ -7,7 +7,7 @@ Imports ASFW.IO.FileIO
 Module ServerDatabase
 
 #Region "Classes"
-    Public Sub CreateClasses()
+    Friend Sub CreateClasses()
         Dim myXml As New XmlClass With {
             .Filename = Path.Combine(Application.StartupPath, "data", "Classes.xml"),
             .Root = "Data"
@@ -1211,7 +1211,7 @@ Module ServerDatabase
         Next
     End Sub
 
-    Public Sub CacheResources(ByVal MapNum As Integer)
+    Friend Sub CacheResources(ByVal MapNum As Integer)
         Dim x As Integer, y As Integer, Resource_Count As Integer
         Resource_Count = 0
 
@@ -1731,7 +1731,7 @@ Module ServerDatabase
 #End Region
 
 #Region "Bank"
-    Public Sub LoadBank(ByVal Index As Integer, ByVal Name As String)
+    Friend Sub LoadBank(ByVal Index As Integer, ByVal Name As String)
         Dim filename As String
 
         ClearBank(Index)
@@ -2354,7 +2354,7 @@ Module ServerDatabase
 #End Region
 
 #Region "Options"
-    Public Sub SaveOptions()
+    Friend Sub SaveOptions()
         Dim myXml As New XmlClass With {
             .Filename = Path.Combine(Application.StartupPath, "Data", "Config.xml"),
             .Root = "Options"
@@ -2379,7 +2379,7 @@ Module ServerDatabase
         myXml.CloseXml(True)
     End Sub
 
-    Public Sub LoadOptions()
+    Friend Sub LoadOptions()
         Dim myXml As New XmlClass With {
             .Filename = Path.Combine(Application.StartupPath, "Data", "Config.xml"),
             .Root = "Options"
@@ -2399,7 +2399,7 @@ Module ServerDatabase
 
 #Region "Logs"
 
-    Public Function GetFileContents(ByVal FullPath As String, Optional ByRef ErrInfo As String = "") As String
+    Friend Function GetFileContents(ByVal FullPath As String, Optional ByRef ErrInfo As String = "") As String
         Dim strContents As String
         Dim objReader As StreamReader
         strContents = ""
@@ -2418,7 +2418,7 @@ Module ServerDatabase
         Return strContents
     End Function
 
-    Public Function Addlog(ByVal strData As String, ByVal FN As String, Optional ByVal ErrInfo As String = "") As Boolean
+    Friend Function Addlog(ByVal strData As String, ByVal FN As String, Optional ByVal ErrInfo As String = "") As Boolean
         Dim fullpath As String
         Dim Contents As String
         Dim bAns As Boolean = False
@@ -2437,7 +2437,7 @@ Module ServerDatabase
         Return bAns
     End Function
 
-    Public Function AddTextToFile(ByVal strData As String, ByVal FN As String, Optional ByVal ErrInfo As String = "") As Boolean
+    Friend Function AddTextToFile(ByVal strData As String, ByVal FN As String, Optional ByVal ErrInfo As String = "") As Boolean
         Dim fullpath As String
         Dim Contents As String
         Dim bAns As Boolean = False

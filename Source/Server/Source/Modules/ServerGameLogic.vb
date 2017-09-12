@@ -15,7 +15,7 @@ Module ServerGameLogic
         GetTotalMapPlayers = n
     End Function
 
-    Public Function GetPlayersOnline() As Integer
+    Friend Function GetPlayersOnline() As Integer
         Dim x As Integer
         x = 0
         For i As Integer = 1 To Socket.HighIndex
@@ -163,7 +163,7 @@ Module ServerGameLogic
 
     End Sub
 
-    Public Sub SpawnNpc(ByVal MapNpcNum As Integer, ByVal MapNum As Integer)
+    Friend Sub SpawnNpc(ByVal MapNpcNum As Integer, ByVal MapNum As Integer)
         Dim Buffer As New ByteStream(4)
         Dim NpcNum As Integer
         Dim i As Integer
@@ -261,12 +261,12 @@ Module ServerGameLogic
         Buffer.Dispose()
     End Sub
 
-    Public Function Random(ByVal low As Int32, ByVal high As Int32) As Integer
+    Friend Function Random(ByVal low As Int32, ByVal high As Int32) As Integer
         Static RandomNumGen As New System.Random
         Return RandomNumGen.Next(low, high + 1)
     End Function
 
-    Public Function NpcTileIsOpen(ByVal MapNum As Integer, ByVal x As Integer, ByVal y As Integer) As Boolean
+    Friend Function NpcTileIsOpen(ByVal MapNum As Integer, ByVal x As Integer, ByVal y As Integer) As Boolean
         Dim LoopI As Integer
         NpcTileIsOpen = True
 
@@ -292,7 +292,7 @@ Module ServerGameLogic
 
     End Function
 
-    Public Function CheckGrammar(ByVal Word As String, Optional ByVal Caps As Byte = 0) As String
+    Friend Function CheckGrammar(ByVal Word As String, Optional ByVal Caps As Byte = 0) As String
         Dim FirstLetter As String
 
         FirstLetter = LCase$(Left$(Word, 1))

@@ -1,4 +1,4 @@
-﻿Public Class frmLogin
+﻿Friend Class frmLogin
     Private Sub FrmLogin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Main()
     End Sub
@@ -27,7 +27,7 @@
         End If
     End Sub
 
-    Public Function IsLoginLegal(ByVal Username As String, ByVal Password As String) As Boolean
+    Friend Function IsLoginLegal(ByVal Username As String, ByVal Password As String) As Boolean
         If Len(Trim$(Username)) >= 3 Then
             If Len(Trim$(Password)) >= 3 Then
                 IsLoginLegal = True

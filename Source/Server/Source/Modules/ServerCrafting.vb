@@ -3,15 +3,15 @@ Imports ASFW
 Imports ASFW.IO
 Imports ASFW.IO.FileIO
 
-Public Module ServerCrafting
+Friend Module ServerCrafting
 #Region "Globals"
-    Public Recipe(MAX_RECIPE) As RecipeRec
+    Friend Recipe(MAX_RECIPE) As RecipeRec
 
-    Public Const RecipeType_Herb As Byte = 0
-    Public Const RecipeType_Wood As Byte = 1
-    Public Const RecipeType_Metal As Byte = 2
+    Friend Const RecipeType_Herb As Byte = 0
+    Friend Const RecipeType_Wood As Byte = 1
+    Friend Const RecipeType_Metal As Byte = 2
 
-    Public Structure RecipeRec
+    Friend Structure RecipeRec
         Dim Name As String
         Dim RecipeType As Byte
         Dim MakeItemNum As Integer
@@ -20,7 +20,7 @@ Public Module ServerCrafting
         Dim CreateTime As Byte
     End Structure
 
-    Public Structure IngredientsRec
+    Friend Structure IngredientsRec
         Dim ItemNum As Integer
         Dim Value As Integer
     End Structure
@@ -325,13 +325,13 @@ Public Module ServerCrafting
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Buffer.Dispose
+        Buffer.Dispose()
     End Sub
 #End Region
 
 #Region "Functions"
 
-    Public Function CheckLearnedRecipe(ByVal Index As Integer, ByVal RecipeNum As Integer) As Boolean
+    Friend Function CheckLearnedRecipe(ByVal Index As Integer, ByVal RecipeNum As Integer) As Boolean
         CheckLearnedRecipe = False
 
         If Player(Index).Character(TempPlayer(Index).CurChar).RecipeLearned(RecipeNum) = 1 Then
@@ -339,7 +339,7 @@ Public Module ServerCrafting
         End If
     End Function
 
-    Public Sub LearnRecipe(ByVal Index As Integer, ByVal RecipeNum As Integer, ByVal InvNum As Integer)
+    Friend Sub LearnRecipe(ByVal Index As Integer, ByVal RecipeNum As Integer, ByVal InvNum As Integer)
         If CheckLearnedRecipe(Index, RecipeNum) Then ' we know this one allready
             PlayerMsg(Index, "You allready know this recipe!", ColorType.BrightRed)
         Else ' lets learn it
@@ -354,7 +354,7 @@ Public Module ServerCrafting
         End If
     End Sub
 
-    Public Sub StartCraft(ByVal Index As Integer, ByVal RecipeNum As Integer, ByVal Amount As Integer)
+    Friend Sub StartCraft(ByVal Index As Integer, ByVal RecipeNum As Integer, ByVal Amount As Integer)
 
         If TempPlayer?(Index).IsCrafting Then
             TempPlayer(Index).CraftRecipe = RecipeNum
@@ -368,7 +368,7 @@ Public Module ServerCrafting
 
     End Sub
 
-    Public Sub UpdateCraft(ByVal Index As Integer)
+    Friend Sub UpdateCraft(ByVal Index As Integer)
         Dim i As Integer
 
         'ok, we made the item, give and take the shit

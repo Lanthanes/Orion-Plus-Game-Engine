@@ -2,7 +2,7 @@
 Imports System.Windows.Forms
 Imports ASFW
 
-Public Class FrmMenu
+Friend Class FrmMenu
     Inherits Form
 #Region "Form Functions"
     ''' <summary>
@@ -75,7 +75,7 @@ Public Class FrmMenu
     ''' <summary>
     ''' Preload the images in the menu.
     ''' </summary>
-    Public Sub LoadMenuGraphics()
+    Friend Sub LoadMenuGraphics()
 
         'main menu
         If FileExist(Application.StartupPath & GFX_GUI_PATH & "Menu\menu" & GFX_EXT) Then

@@ -8,21 +8,21 @@ Module ServerAutoMap
 
     Private MapOrientation() As MapOrientationRec
 
-    Public MapStart As Integer = 1
-    Public MapSize As Integer = 4
-    Public MapX As Integer = 50
-    Public MapY As Integer = 50
+    Friend MapStart As Integer = 1
+    Friend MapSize As Integer = 4
+    Friend MapX As Integer = 50
+    Friend MapY As Integer = 50
 
-    Public SandBorder As Integer = 4
-    Public DetailFreq As Integer = 10
-    Public ResourceFreq As Integer = 20
+    Friend SandBorder As Integer = 4
+    Friend DetailFreq As Integer = 10
+    Friend ResourceFreq As Integer = 20
 
-    Public DetailsChecked As Boolean = True
-    Public PathsChecked As Boolean = True
-    Public RiversChecked As Boolean = True
-    Public MountainsChecked As Boolean = True
-    Public OverGrassChecked As Boolean = True
-    Public ResourcesChecked As Boolean = True
+    Friend DetailsChecked As Boolean = True
+    Friend PathsChecked As Boolean = True
+    Friend RiversChecked As Boolean = True
+    Friend MountainsChecked As Boolean = True
+    Friend OverGrassChecked As Boolean = True
+    Friend ResourcesChecked As Boolean = True
 
     Enum TilePrefab
         Water = 1
@@ -38,9 +38,9 @@ Module ServerAutoMap
     'Distance between mountains and the map limit, so the player can walk freely when teleport between maps
     Private Const MountainBorder As Byte = 5
 
-    Public Tile(0 To TilePrefab.Count - 1) As TileRec
-    Public Detail() As DetailRec
-    Public ResourcesNum As String
+    Friend Tile(0 To TilePrefab.Count - 1) As TileRec
+    Friend Detail() As DetailRec
+    Friend ResourcesNum As String
     Private Resources() As String
     Private ActualMap As Integer
 

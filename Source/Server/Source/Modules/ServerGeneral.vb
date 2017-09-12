@@ -2,12 +2,12 @@
 Imports Orion
 
 Module ServerGeneral
-    Public Declare Function GetQueueStatus Lib "user32" (ByVal fuFlags As Integer) As Integer
-    Public ServerDestroyed As Boolean
-    Public MyIPAddress As String
-    Public myStopWatch As New Stopwatch()
+    Friend Declare Function GetQueueStatus Lib "user32" (ByVal fuFlags As Integer) As Integer
+    Friend ServerDestroyed As Boolean
+    Friend MyIPAddress As String
+    Friend myStopWatch As New Stopwatch()
 
-    Public Function GetTimeMs() As Long
+    Friend Function GetTimeMs() As Long
         Return myStopWatch.ElapsedMilliseconds
     End Function
 
@@ -300,7 +300,7 @@ Module ServerGeneral
 #End If
     End Sub
 
-    Public Sub ClearGameData()
+    Friend Sub ClearGameData()
         Console.WriteLine("Clearing temp tile fields...") : ClearTempTiles()
         Console.WriteLine("Clearing Maps...") : ClearMaps()
         Console.WriteLine("Clearing Map Items...") : ClearMapItems()
@@ -352,11 +352,11 @@ Module ServerGeneral
         FileExist = IO.File.Exists(file_path)
     End Function
 
-    Public Sub DoEvents()
+    Friend Sub DoEvents()
         Application.DoEvents()
     End Sub
 
-    Public Sub CheckDir(ByVal DirPath As String)
+    Friend Sub CheckDir(ByVal DirPath As String)
 
         If Not IO.Directory.Exists(DirPath) Then
             IO.Directory.CreateDirectory(DirPath)
@@ -378,7 +378,7 @@ Module ServerGeneral
         UpdateCaption()
     End Sub
 
-    Public Function GetExceptionInfo(ex As Exception) As String
+    Friend Function GetExceptionInfo(ex As Exception) As String
         Dim Result As String
         Dim hr As Integer = Runtime.InteropServices.Marshal.GetHRForException(ex)
         Result = ex.GetType.ToString & "(0x" & hr.ToString("X8") & "): " & ex.Message & Environment.NewLine & ex.StackTrace & Environment.NewLine

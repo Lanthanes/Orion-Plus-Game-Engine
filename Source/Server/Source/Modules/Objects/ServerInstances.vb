@@ -4,16 +4,16 @@
     End Structure
 
     'Consts
-    Public Const INSTANCED_MAP_MASK As Integer = 16777216 '1 << 24
-    Public Const MAP_NUMBER_MASK As Integer = INSTANCED_MAP_MASK - 1
+    Friend Const INSTANCED_MAP_MASK As Integer = 16777216 '1 << 24
+    Friend Const MAP_NUMBER_MASK As Integer = INSTANCED_MAP_MASK - 1
 
-    Public Const MAX_INSTANCED_MAPS As Integer = 100
-    Public Const MAX_CACHED_MAPS As Integer = MAX_MAPS + MAX_INSTANCED_MAPS
-    Public Const INSTANCED_MAP_SUFFIX As String = " (Instanced)"
+    Friend Const MAX_INSTANCED_MAPS As Integer = 100
+    Friend Const MAX_CACHED_MAPS As Integer = MAX_MAPS + MAX_INSTANCED_MAPS
+    Friend Const INSTANCED_MAP_SUFFIX As String = " (Instanced)"
 
-    Public InstancedMaps(MAX_INSTANCED_MAPS) As InstancedMap
+    Friend InstancedMaps(MAX_INSTANCED_MAPS) As InstancedMap
 
-    Public Sub ClearInstancedMaps()
+    Friend Sub ClearInstancedMaps()
         Dim i As Integer
 
         For i = 1 To MAX_INSTANCED_MAPS
@@ -22,7 +22,7 @@
         Next
     End Sub
 
-    Public Function FindFreeInstanceMapSlot() As Integer
+    Friend Function FindFreeInstanceMapSlot() As Integer
         Dim i As Integer
 
         For i = 1 To MAX_INSTANCED_MAPS
@@ -35,7 +35,7 @@
         FindFreeInstanceMapSlot = -1
     End Function
 
-    Public Function CreateInstance(ByVal MapNum As Integer) As Integer
+    Friend Function CreateInstance(ByVal MapNum As Integer) As Integer
         Dim i As Integer, slot As Integer
 
         If MapNum <= 0 OrElse MapNum > MAX_MAPS Then
@@ -72,7 +72,7 @@
         Exit Function
     End Function
 
-    Public Sub DestroyInstancedMap(ByVal Slot As Integer)
+    Friend Sub DestroyInstancedMap(ByVal Slot As Integer)
         Dim x As Integer
 
         ClearMap(Slot + MAX_MAPS)
@@ -87,11 +87,11 @@
         InstancedMaps(Slot).OriginalMap = 0
     End Sub
 
-    Public Function IsInstancedMap(ByVal MapNum As Integer) As Boolean
+    Friend Function IsInstancedMap(ByVal MapNum As Integer) As Boolean
         IsInstancedMap = MapNum > MAX_MAPS AndAlso MapNum <= MAX_CACHED_MAPS
     End Function
 
-    Public Function GetInstanceBaseMap(ByVal MapNum As Integer) As Integer
+    Friend Function GetInstanceBaseMap(ByVal MapNum As Integer) As Integer
         GetInstanceBaseMap = InstancedMaps(MapNum - MAX_MAPS).OriginalMap
     End Function
 End Module

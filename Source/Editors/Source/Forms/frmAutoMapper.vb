@@ -1,4 +1,4 @@
-﻿Public Class FrmAutoMapper
+﻿Friend Class FrmAutoMapper
 #Region "Frm Code"
 
     Private Sub TilesetsToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles TilesetsToolStripMenuItem.Click
@@ -45,12 +45,12 @@
         lstResources.Items.Add(Val(txtResource.Text))
     End Sub
 
-    Private Sub BtnRemove_Click(sender As Object, e As EventArgs) Handles btnRemoveResource.click
+    Private Sub BtnRemove_Click(sender As Object, e As EventArgs) Handles btnRemoveResource.Click
         If lstResources.SelectedIndex < 0 Then Exit Sub
         lstResources.Items.RemoveAt(lstResources.SelectedIndex)
     End Sub
 
-    Private Sub BtnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdateResource.click
+    Private Sub BtnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdateResource.Click
 
         If lstResources.SelectedIndex < 0 Then Exit Sub
 

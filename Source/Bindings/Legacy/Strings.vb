@@ -1,10 +1,10 @@
 Imports System.IO
 
-Public NotInheritable Class Strings
+Friend NotInheritable Class Strings
     Private Sub New()
     End Sub
 
-    Public Enum OrionComponent
+    Friend Enum OrionComponent
         Client = 0
         Editor
         Server
@@ -13,7 +13,7 @@ Public NotInheritable Class Strings
     Private Shared DefaultLanguage As Language
     Private Shared SelectedLanguage As Language
 
-    Public Shared Sub Init(component As OrionComponent, language As String)
+    Friend Shared Sub Init(component As OrionComponent, language As String)
         Dim langDir As String = ""
         Dim defaultFile As String = ""
         Dim strComponent As String = ""
@@ -75,7 +75,7 @@ Public NotInheritable Class Strings
 
     End Sub
 
-    Public Shared Function [Get](section As String, id As String, ParamArray args As Object()) As String
+    Friend Shared Function [Get](section As String, id As String, ParamArray args As Object()) As String
         If SelectedLanguage IsNot Nothing AndAlso SelectedLanguage.Loaded() AndAlso SelectedLanguage.HasString(section, id) Then
             Return SelectedLanguage.GetString(section, id, args)
         End If
