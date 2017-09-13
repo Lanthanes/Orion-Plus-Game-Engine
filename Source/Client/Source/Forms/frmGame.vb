@@ -1,13 +1,13 @@
 ﻿Imports System.Windows.Forms
 Imports Orion
 
-Friend Class frmGame
+Friend Class FrmGame
 #Region "Frm Code"
-    Private Const CP_NOCLOSE_BUTTON As Integer = &H200
+    Private Const CpNocloseButton As Integer = &H200
     Protected Overrides ReadOnly Property CreateParams() As CreateParams
         Get
             Dim myCp As CreateParams = MyBase.CreateParams
-            myCp.ClassStyle = myCp.ClassStyle Or CP_NOCLOSE_BUTTON
+            myCp.ClassStyle = myCp.ClassStyle Or CpNocloseButton
             Return myCp
         End Get
     End Property
@@ -229,8 +229,8 @@ Friend Class frmGame
     End Sub
 
     Private Sub Picscreen_MouseMove(sender As Object, e As MouseEventArgs) Handles picscreen.MouseMove
-        CurX = TileView.Left + ((e.Location.X + Camera.Left) \ PIC_X)
-        CurY = TileView.Top + ((e.Location.Y + Camera.Top) \ PIC_Y)
+        CurX = TileView.Left + ((e.Location.X + Camera.Left) \ PicX)
+        CurY = TileView.Top + ((e.Location.Y + Camera.Top) \ PicY)
         CurMouseX = e.Location.X
         CurMouseY = e.Location.Y
         CheckGuiMove(e.X, e.Y)
@@ -238,8 +238,8 @@ Friend Class frmGame
     End Sub
 
     Private Sub Picscreen_MouseUp(sender As Object, e As MouseEventArgs) Handles picscreen.MouseUp
-        CurX = TileView.Left + ((e.Location.X + Camera.Left) \ PIC_X)
-        CurY = TileView.Top + ((e.Location.Y + Camera.Top) \ PIC_Y)
+        CurX = TileView.Left + ((e.Location.X + Camera.Left) \ PicX)
+        CurY = TileView.Top + ((e.Location.Y + Camera.Top) \ PicY)
         CheckGuiMouseUp(e.X, e.Y, e)
     End Sub
 
@@ -357,10 +357,10 @@ Friend Class frmGame
 
 #Region "Misc"
 
-    Private ReadOnly NonAcceptableKeys() As Keys = {Keys.NumPad0, Keys.NumPad1, Keys.NumPad2, Keys.NumPad3, Keys.NumPad4, Keys.NumPad5, Keys.NumPad6, Keys.NumPad7, Keys.NumPad8, Keys.NumPad9}
+    Private ReadOnly _nonAcceptableKeys() As Keys = {Keys.NumPad0, Keys.NumPad1, Keys.NumPad2, Keys.NumPad3, Keys.NumPad4, Keys.NumPad5, Keys.NumPad6, Keys.NumPad7, Keys.NumPad8, Keys.NumPad9}
 
     Friend Function IsAcceptable(keyData As Keys) As Boolean
-        Dim index as integer = Array.IndexOf(NonAcceptableKeys, keyData)
+        Dim index as integer = Array.IndexOf(_nonAcceptableKeys, keyData)
         Return index >= 0
     End Function
 

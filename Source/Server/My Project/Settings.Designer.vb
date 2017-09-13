@@ -21,7 +21,7 @@ Namespace My
         Inherits Global.System.Configuration.ApplicationSettingsBase
         
         Private Shared defaultInstance As MySettings = CType(Global.System.Configuration.ApplicationSettingsBase.Synchronized(New MySettings()),MySettings)
-
+        
 #Region "My.Settings Auto-Save Functionality"
 #If _MyType = "WindowsForms" Then
     Private Shared addedHandler As Boolean
@@ -36,10 +36,10 @@ Namespace My
     End Sub
 #End If
 #End Region
-
-        Friend Shared ReadOnly Property [Default]() As MySettings
+        
+        Public Shared ReadOnly Property [Default]() As MySettings
             Get
-
+                
 #If _MyType = "WindowsForms" Then
                If Not addedHandler Then
                     SyncLock addedHandlerLockObject
@@ -64,9 +64,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.OrionServer.My.MySettings
+        Friend ReadOnly Property Settings() As Global.Engine.My.MySettings
             Get
-                Return Global.OrionServer.My.MySettings.Default
+                Return Global.Engine.My.MySettings.Default
             End Get
         End Property
     End Module

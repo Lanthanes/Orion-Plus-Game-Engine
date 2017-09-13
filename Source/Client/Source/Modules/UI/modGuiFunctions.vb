@@ -2,10 +2,10 @@
 Imports System.Windows.Forms
 Imports ASFW
 
-Friend Module modGuiFunctions
-    Friend Sub CheckGuiMove(X As Integer, Y As Integer)
-        Dim eqNum As Integer, InvNum As Integer, skillslot As Integer
-        Dim bankitem As Integer, shopslot As Integer, TradeNum As Integer
+Friend Module ModGuiFunctions
+    Friend Sub CheckGuiMove(x As Integer, y As Integer)
+        Dim eqNum As Integer, invNum As Integer, skillslot As Integer
+        Dim bankitem As Integer, shopslot As Integer, tradeNum As Integer
 
         ShowItemDesc = False
         'Charpanel
@@ -169,8 +169,8 @@ Friend Module modGuiFunctions
 
     End Sub
 
-    Friend Function CheckGuiClick(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
-        Dim EqNum As Integer, InvNum As Integer
+    Friend Function CheckGuiClick(x As Integer, y As Integer, e As MouseEventArgs) As Boolean
+        Dim eqNum As Integer, invNum As Integer
         Dim slotnum As Integer, hotbarslot As Integer
         dim buffer as ByteStream
 
@@ -256,7 +256,7 @@ Friend Module modGuiFunctions
                 ElseIf e.Button = MouseButtons.Right Then ' right click
                     If Player(MyIndex).Hotbar(hotbarslot).Slot > 0 Then
                         'forget hotbar skill
-                        Dim result1 As DialogResult = MessageBox.Show("Want to Delete this from your hotbar?", GAME_NAME, MessageBoxButtons.YesNo)
+                        Dim result1 As DialogResult = MessageBox.Show("Want to Delete this from your hotbar?", GameName, MessageBoxButtons.YesNo)
                         If result1 = DialogResult.Yes Then
                             SendDeleteHotbar(IsHotBarSlot(e.Location.X, e.Location.Y))
                         End If
@@ -287,9 +287,9 @@ Friend Module modGuiFunctions
                                     'summon
                                     SendSummonPet()
                                 ElseIf hotbarslot = 2 Then
-                                    SendPetBehaviour(PET_ATTACK_BEHAVIOUR_ATTACKONSIGHT)
+                                    SendPetBehaviour(PetAttackBehaviourAttackonsight)
                                 ElseIf hotbarslot = 3 Then
-                                    SendPetBehaviour(PET_ATTACK_BEHAVIOUR_GUARD)
+                                    SendPetBehaviour(PetAttackBehaviourGuard)
                                 End If
 
                             ElseIf hotbarslot >= 4 AndAlso hotbarslot <= 7 Then
@@ -367,7 +367,7 @@ Friend Module modGuiFunctions
 
                     If EqNum <> 0 Then
                         PlaySound("Click.ogg")
-                        Dim result1 As DialogResult = MessageBox.Show("Want to Unequip this?", GAME_NAME, MessageBoxButtons.YesNo)
+                        Dim result1 As DialogResult = MessageBox.Show("Want to Unequip this?", GameName, MessageBoxButtons.YesNo)
                         If result1 = DialogResult.Yes Then
                             SendUnequip(EqNum)
                         End If
@@ -405,19 +405,19 @@ Friend Module modGuiFunctions
                 VbKeyLeft = False
                 VbKeyRight = False
 
-                If DialogType = DIALOGUE_TYPE_BUYHOME Then 'house offer
+                If DialogType = DialogueTypeBuyhome Then 'house offer
                     SendBuyHouse(1)
-                ElseIf DialogType = DIALOGUE_TYPE_VISIT Then
+                ElseIf DialogType = DialogueTypeVisit Then
                     SendVisit(1)
-                ElseIf DialogType = DIALOGUE_TYPE_PARTY Then
+                ElseIf DialogType = DialogueTypeParty Then
                     SendAcceptParty()
-                ElseIf DialogType = DIALOGUE_TYPE_QUEST Then
+                ElseIf DialogType = DialogueTypeQuest Then
                     If QuestAcceptTag > 0 Then
                         PlayerHandleQuest(QuestAcceptTag, 1)
                         QuestAcceptTag = 0
                         RefreshQuestLog()
                     End If
-                ElseIf DialogType = DIALOGUE_TYPE_TRADE Then
+                ElseIf DialogType = DialogueTypeTrade Then
                     SendTradeInviteAccept(1)
                 End If
 
@@ -431,15 +431,15 @@ Friend Module modGuiFunctions
                 VbKeyLeft = False
                 VbKeyRight = False
 
-                If DialogType = DIALOGUE_TYPE_BUYHOME Then 'house offer declined
+                If DialogType = DialogueTypeBuyhome Then 'house offer declined
                     SendBuyHouse(0)
-                ElseIf DIALOGUE_TYPE_VISIT Then 'visit declined
+                ElseIf DialogueTypeVisit Then 'visit declined
                     SendVisit(0)
-                ElseIf DIALOGUE_TYPE_PARTY Then 'party declined
+                ElseIf DialogueTypeParty Then 'party declined
                     SendLeaveParty()
-                ElseIf DIALOGUE_TYPE_QUEST Then 'quest declined
+                ElseIf DialogueTypeQuest Then 'quest declined
                     QuestAcceptTag = 0
-                ElseIf DialogType = DIALOGUE_TYPE_TRADE Then
+                ElseIf DialogType = DialogueTypeTrade Then
                     SendTradeInviteAccept(0)
                 End If
                 PlaySound("Click.ogg")
@@ -621,7 +621,7 @@ Friend Module modGuiFunctions
             If AboveQuestPanel(X, Y) Then
                 'check if they press the list
                 Dim tmpy As Integer = 10
-                For i = 1 To MAX_ACTIVEQUESTS
+                For i = 1 To MaxActivequests
                     If Len(Trim$(QuestNames(i))) > 0 Then
                         If X > (QuestLogX + 7) AndAlso X < (QuestLogX + 7) + (GetTextWidth(QuestNames(i))) Then
                             If Y > (QuestLogY + tmpy) AndAlso Y < (QuestLogY + tmpy + 13) Then
@@ -704,9 +704,9 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Friend Function CheckGuiDoubleClick(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
-        Dim InvNum As Integer, skillnum As Integer, BankItem As Integer
-        Dim Value As Integer, TradeNum As Integer
+    Friend Function CheckGuiDoubleClick(x As Integer, y As Integer, e As MouseEventArgs) As Boolean
+        Dim invNum As Integer, skillnum As Integer, bankItem As Integer
+        Dim value As Integer, tradeNum As Integer
         Dim multiplier As Double
         Dim i As Integer
 
@@ -834,8 +834,8 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Friend Function CheckGuiMouseUp(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
-        Dim i As Integer, rec_pos As Rectangle, Buffer As ByteStream
+    Friend Function CheckGuiMouseUp(x As Integer, y As Integer, e As MouseEventArgs) As Boolean
+        Dim i As Integer, recPos As Rectangle, buffer As ByteStream
         Dim hotbarslot As Integer
 
         'Inventory
@@ -848,15 +848,15 @@ Friend Module modGuiFunctions
 
                     For i = 1 To MAX_INV
 
-                        With rec_pos
+                        With recPos
                             .Y = InvWindowY + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                            .Height = PIC_Y
+                            .Height = PicY
                             .X = InvWindowX + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
-                            .Width = PIC_X
+                            .Width = PicX
                         End With
 
-                        If e.Location.X >= rec_pos.Left AndAlso e.Location.X <= rec_pos.Right Then
-                            If e.Location.Y >= rec_pos.Top AndAlso e.Location.Y <= rec_pos.Bottom Then '
+                        If e.Location.X >= recPos.Left AndAlso e.Location.X <= recPos.Right Then
+                            If e.Location.Y >= recPos.Top AndAlso e.Location.Y <= recPos.Bottom Then '
                                 If DragInvSlotNum <> i Then
                                     SendChangeInvSlots(DragInvSlotNum, i)
                                     Exit For
@@ -909,15 +909,15 @@ Friend Module modGuiFunctions
 
                     For i = 1 To MAX_PLAYER_SKILLS
 
-                        With rec_pos
+                        With recPos
                             .Y = SkillWindowY + SkillTop + ((SkillOffsetY + 32) * ((i - 1) \ SkillColumns))
-                            .Height = PIC_Y
+                            .Height = PicY
                             .X = SkillWindowX + SkillLeft + ((SkillOffsetX + 32) * (((i - 1) Mod SkillColumns)))
-                            .Width = PIC_X
+                            .Width = PicX
                         End With
 
-                        If e.Location.X >= rec_pos.Left AndAlso e.Location.X <= rec_pos.Right Then
-                            If e.Location.Y >= rec_pos.Top AndAlso e.Location.Y <= rec_pos.Bottom Then '
+                        If e.Location.X >= recPos.Left AndAlso e.Location.X <= recPos.Right Then
+                            If e.Location.Y >= recPos.Top AndAlso e.Location.Y <= recPos.Bottom Then '
                                 If DragSkillSlotNum <> i Then
                                     'SendChangeSkillSlots(DragSkillSlotNum, i)
                                     Exit For
@@ -948,15 +948,15 @@ Friend Module modGuiFunctions
                 ' TODO : Add sub to change bankslots client side first so there's no delay in switching
                 If DragBankSlotNum > 0 Then
                     For i = 1 To MAX_BANK
-                        With rec_pos
+                        With recPos
                             .Y = BankWindowY + BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
-                            .Height = PIC_Y
+                            .Height = PicY
                             .X = BankWindowX + BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
-                            .Width = PIC_X
+                            .Width = PicX
                         End With
 
-                        If X >= rec_pos.Left AndAlso X <= rec_pos.Right Then
-                            If Y >= rec_pos.Top AndAlso Y <= rec_pos.Bottom Then
+                        If X >= recPos.Left AndAlso X <= recPos.Right Then
+                            If Y >= recPos.Top AndAlso Y <= recPos.Bottom Then
                                 If DragBankSlotNum <> i Then
                                     ChangeBankSlots(DragBankSlotNum, i)
                                     Exit For
@@ -972,8 +972,8 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Friend Function CheckGuiMouseDown(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
-        Dim InvNum As Integer, skillnum As Integer, bankNum As Integer, shopItem As Integer
+    Friend Function CheckGuiMouseDown(x As Integer, y As Integer, e As MouseEventArgs) As Boolean
+        Dim invNum As Integer, skillnum As Integer, bankNum As Integer, shopItem As Integer
 
         'Inventory
         If pnlInventoryVisible Then
@@ -1024,7 +1024,7 @@ Friend Module modGuiFunctions
                 ElseIf e.Button = MouseButtons.Right Then ' right click
 
                     If skillnum <> 0 Then
-                        Dim result1 As DialogResult = MessageBox.Show("Want to forget this skill?", GAME_NAME, MessageBoxButtons.YesNo)
+                        Dim result1 As DialogResult = MessageBox.Show("Want to forget this skill?", GameName, MessageBoxButtons.YesNo)
                         If result1 = DialogResult.Yes Then
                             ForgetSkill(skillnum)
                             Exit Function
@@ -1114,7 +1114,7 @@ Friend Module modGuiFunctions
     End Function
 
 #Region "Support Functions"
-    Function IsEqItem(X As Single, Y As Single) As Integer
+    Function IsEqItem(x As Single, y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
         IsEqItem = 0
@@ -1125,9 +1125,9 @@ Friend Module modGuiFunctions
 
                 With tempRec
                     .Top = CharWindowY + EqTop + ((EqOffsetY + 32) * ((i - 1) \ EqColumns))
-                    .Bottom = .Top + PIC_Y
+                    .Bottom = .Top + PicY
                     .Left = CharWindowX + EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
-                    .Right = .Left + PIC_X
+                    .Right = .Left + PicX
                 End With
 
                 If X >= tempRec.Left AndAlso X <= tempRec.Right Then
@@ -1142,7 +1142,7 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Function IsInvItem(X As Single, Y As Single) As Integer
+    Function IsInvItem(x As Single, y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
         IsInvItem = 0
@@ -1153,9 +1153,9 @@ Friend Module modGuiFunctions
 
                 With tempRec
                     .Top = InvWindowY + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                    .Bottom = .Top + PIC_Y
+                    .Bottom = .Top + PicY
                     .Left = InvWindowX + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
-                    .Right = .Left + PIC_X
+                    .Right = .Left + PicX
                 End With
 
                 If X >= tempRec.Left AndAlso X <= tempRec.Right Then
@@ -1170,7 +1170,7 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Function IsPlayerSkill(X As Single, Y As Single) As Integer
+    Function IsPlayerSkill(x As Single, y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
 
@@ -1182,9 +1182,9 @@ Friend Module modGuiFunctions
 
                 With tempRec
                     .Top = SkillWindowY + SkillTop + ((SkillOffsetY + 32) * ((i - 1) \ SkillColumns))
-                    .Bottom = .Top + PIC_Y
+                    .Bottom = .Top + PicY
                     .Left = SkillWindowX + SkillLeft + ((SkillOffsetX + 32) * (((i - 1) Mod SkillColumns)))
-                    .Right = .Left + PIC_X
+                    .Right = .Left + PicX
                 End With
 
                 If X >= tempRec.Left AndAlso X <= tempRec.Right Then
@@ -1199,7 +1199,7 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Function IsBankItem(X As Single, Y As Single) As Integer
+    Function IsBankItem(x As Single, y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
 
@@ -1210,9 +1210,9 @@ Friend Module modGuiFunctions
 
                 With tempRec
                     .Top = BankWindowY + BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
-                    .Bottom = .Top + PIC_Y
+                    .Bottom = .Top + PicY
                     .Left = BankWindowX + BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
-                    .Right = .Left + PIC_X
+                    .Right = .Left + PicX
                 End With
 
                 If X >= tempRec.Left AndAlso X <= tempRec.Right Then
@@ -1226,7 +1226,7 @@ Friend Module modGuiFunctions
         Next
     End Function
 
-    Function IsShopItem(X As Single, Y As Single) As Integer
+    Function IsShopItem(x As Single, y As Single) As Integer
         Dim tempRec As Rectangle
         Dim i As Integer
         IsShopItem = 0
@@ -1236,9 +1236,9 @@ Friend Module modGuiFunctions
             If Shop(InShop).TradeItem(i).Item > 0 AndAlso Shop(InShop).TradeItem(i).Item <= MAX_ITEMS Then
                 With tempRec
                     .Y = ShopWindowY + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
-                    .Height = PIC_Y
+                    .Height = PicY
                     .X = ShopWindowX + ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
-                    .Width = PIC_X
+                    .Width = PicX
                 End With
 
                 If X >= tempRec.Left AndAlso X <= tempRec.Right Then
@@ -1251,7 +1251,7 @@ Friend Module modGuiFunctions
         Next
     End Function
 
-    Function IsTradeItem(X As Single, Y As Single, Yours As Boolean) As Integer
+    Function IsTradeItem(x As Single, y As Single, yours As Boolean) As Integer
         Dim tempRec As Rect
         Dim i As Integer
         Dim itemnum As Integer
@@ -1265,18 +1265,18 @@ Friend Module modGuiFunctions
 
                 With tempRec
                     .Top = TradeWindowY + OurTradeY + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                    .Bottom = .Top + PIC_Y
+                    .Bottom = .Top + PicY
                     .Left = TradeWindowX + OurTradeX + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
-                    .Right = .Left + PIC_X
+                    .Right = .Left + PicX
                 End With
             Else
                 itemnum = TradeTheirOffer(i).Num
 
                 With tempRec
                     .Top = TradeWindowY + TheirTradeY + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                    .Bottom = .Top + PIC_Y
+                    .Bottom = .Top + PicY
                     .Left = TradeWindowX + TheirTradeX + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
-                    .Right = .Left + PIC_X
+                    .Right = .Left + PicX
                 End With
             End If
 
@@ -1295,7 +1295,7 @@ Friend Module modGuiFunctions
 
     End Function
 
-    Function AboveActionPanel(X As Single, Y As Single) As Boolean
+    Function AboveActionPanel(x As Single, y As Single) As Boolean
         AboveActionPanel = False
 
         If X > ActionPanelX AndAlso X < ActionPanelX + ActionPanelGFXInfo.Width Then
@@ -1305,7 +1305,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveHotbar(X As Single, Y As Single) As Boolean
+    Function AboveHotbar(x As Single, y As Single) As Boolean
         AboveHotbar = False
 
         If X > HotbarX AndAlso X < HotbarX + HotBarGFXInfo.Width Then
@@ -1315,7 +1315,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AbovePetbar(X As Single, Y As Single) As Boolean
+    Function AbovePetbar(x As Single, y As Single) As Boolean
         AbovePetbar = False
 
         If X > PetbarX AndAlso X < PetbarX + PetbarGFXInfo.Width Then
@@ -1325,7 +1325,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveInvpanel(X As Single, Y As Single) As Boolean
+    Function AboveInvpanel(x As Single, y As Single) As Boolean
         AboveInvpanel = False
 
         If X > InvWindowX AndAlso X < InvWindowX + InvPanelGFXInfo.Width Then
@@ -1335,7 +1335,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveCharpanel(X As Single, Y As Single) As Boolean
+    Function AboveCharpanel(x As Single, y As Single) As Boolean
         AboveCharpanel = False
 
         If X > CharWindowX AndAlso X < CharWindowX + CharPanelGFXInfo.Width Then
@@ -1345,7 +1345,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveSkillpanel(X As Single, Y As Single) As Boolean
+    Function AboveSkillpanel(x As Single, y As Single) As Boolean
         AboveSkillpanel = False
 
         If X > SkillWindowX AndAlso X < SkillWindowX + SkillPanelGFXInfo.Width Then
@@ -1355,7 +1355,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveBankpanel(X As Single, Y As Single) As Boolean
+    Function AboveBankpanel(x As Single, y As Single) As Boolean
         AboveBankpanel = False
 
         If X > BankWindowX AndAlso X < BankWindowX + BankPanelGFXInfo.Width Then
@@ -1365,7 +1365,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveShoppanel(X As Single, Y As Single) As Boolean
+    Function AboveShoppanel(x As Single, y As Single) As Boolean
         AboveShoppanel = False
 
         If X > ShopWindowX AndAlso X < ShopWindowX + ShopPanelGFXInfo.Width Then
@@ -1375,7 +1375,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveTradepanel(X As Single, Y As Single) As Boolean
+    Function AboveTradepanel(x As Single, y As Single) As Boolean
         AboveTradepanel = False
 
         If X > TradeWindowX AndAlso X < TradeWindowX + TradePanelGFXInfo.Width Then
@@ -1385,7 +1385,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveEventChat(X As Single, Y As Single) As Boolean
+    Function AboveEventChat(x As Single, y As Single) As Boolean
         AboveEventChat = False
 
         If X > EventChatX AndAlso X < EventChatX + EventChatGFXInfo.Width Then
@@ -1395,7 +1395,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveChatScrollUp(X As Single, Y As Single) As Boolean
+    Function AboveChatScrollUp(x As Single, y As Single) As Boolean
         AboveChatScrollUp = False
 
         If X > ChatWindowX + ChatWindowGFXInfo.Width - 24 AndAlso X < ChatWindowX + ChatWindowGFXInfo.Width Then
@@ -1405,7 +1405,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveChatScrollDown(X As Single, Y As Single) As Boolean
+    Function AboveChatScrollDown(x As Single, y As Single) As Boolean
         AboveChatScrollDown = False
 
         If X > ChatWindowX + ChatWindowGFXInfo.Width - 24 AndAlso X < ChatWindowX + ChatWindowGFXInfo.Width Then
@@ -1415,7 +1415,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveRClickPanel(X As Single, Y As Single) As Boolean
+    Function AboveRClickPanel(x As Single, y As Single) As Boolean
         AboveRClickPanel = False
 
         If X > RClickX AndAlso X < RClickX + RClickGFXInfo.Width Then
@@ -1425,7 +1425,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveQuestPanel(X As Single, Y As Single) As Boolean
+    Function AboveQuestPanel(x As Single, y As Single) As Boolean
         AboveQuestPanel = False
 
         If X > QuestLogX AndAlso X < QuestLogX + QuestGFXInfo.Width Then
@@ -1435,7 +1435,7 @@ Friend Module modGuiFunctions
         End If
     End Function
 
-    Function AboveCraftPanel(X As Single, Y As Single) As Boolean
+    Function AboveCraftPanel(x As Single, y As Single) As Boolean
         AboveCraftPanel = False
 
         If X > CraftPanelX AndAlso X < CraftPanelX + CraftGFXInfo.Width Then

@@ -4,14 +4,14 @@ Imports ASFW
 Imports SFML.Graphics
 Imports SFML.Window
 
-Friend Module modEventSystem
+Friend Module ModEventSystem
 #Region "Globals"
     ' Temp event storage
-    Friend tmpEvent As EventRec
-    Friend isEdit As Boolean
+    Friend TmpEvent As EventRec
+    Friend IsEdit As Boolean
 
-    Friend curPageNum As Integer
-    Friend curCommand As Integer
+    Friend CurPageNum As Integer
+    Friend CurCommand As Integer
     Friend GraphicSelX As Integer
     Friend GraphicSelY As Integer
     Friend GraphicSelX2 As Integer
@@ -28,7 +28,7 @@ Friend Module modEventSystem
     Friend IsMoveRouteCommand As Boolean
     Friend ListOfEvents() As Integer
 
-    Friend EventReplyID As Integer
+    Friend EventReplyId As Integer
     Friend EventReplyPage As Integer
     Friend EventChatFace As Integer
 
@@ -45,12 +45,12 @@ Friend Module modEventSystem
     Friend AnotherChat As Integer 'Determines if another showtext/showchoices is comming up, if so, dont close the event chatbox...
 
     'constants
-    Friend Switches(MAX_SWITCHES) As String
-    Friend Variables(MAX_VARIABLES) As String
-    Friend Const MAX_SWITCHES As Integer = 500
-    Friend Const MAX_VARIABLES As Integer = 500
+    Friend Switches(MaxSwitches) As String
+    Friend Variables(MaxVariables) As String
+    Friend Const MaxSwitches As Integer = 500
+    Friend Const MaxVariables As Integer = 500
 
-    Friend cpEvent As EventRec
+    Friend CpEvent As EventRec
     Friend EventCopy As Boolean
     Friend EventPaste As Boolean
     Friend EventList() As EventListRec
@@ -63,7 +63,7 @@ Friend Module modEventSystem
 
 #Region "Types"
     Friend Structure EventCommandRec
-        Dim index as integer
+        Dim Index as integer
         Dim Text1 As String
         Dim Text2 As String
         Dim Text3 As String
@@ -81,7 +81,7 @@ Friend Module modEventSystem
     End Structure
 
     Friend Structure MoveRouteRec
-        Dim index as integer
+        Dim Index as integer
         Dim Data1 As Integer
         Dim Data2 As Integer
         Dim Data3 As Integer
@@ -107,20 +107,20 @@ Friend Module modEventSystem
 
     Friend Structure EventPageRec
         'These are condition variables that decide if the event even appears to the player.
-        Dim chkVariable As Integer
+        Dim ChkVariable As Integer
         Dim Variableindex as integer
         Dim VariableCondition As Integer
         Dim VariableCompare As Integer
-        Dim chkSwitch As Integer
+        Dim ChkSwitch As Integer
         Dim Switchindex as integer
         Dim SwitchCompare As Integer
-        Dim chkHasItem As Integer
+        Dim ChkHasItem As Integer
         Dim HasItemindex as integer
         Dim HasItemAmount As Integer
-        Dim chkSelfSwitch As Integer
+        Dim ChkSelfSwitch As Integer
         Dim SelfSwitchindex as integer
         Dim SelfSwitchCompare As Integer
-        Dim chkPlayerGender As Integer
+        Dim ChkPlayerGender As Integer
         'End Conditions
 
         'Handles the Event Sprite
@@ -171,7 +171,7 @@ Friend Module modEventSystem
 
     Friend Structure MapEventRec
         Dim Name As String
-        Dim dir As Integer
+        Dim Dir As Integer
         Dim X As Integer
         Dim Y As Integer
         Dim GraphicType As Integer
@@ -192,7 +192,7 @@ Friend Module modEventSystem
         Dim ShowDir As Integer
         Dim WalkThrough As Integer
         Dim ShowName As Integer
-        Dim questnum As Integer
+        Dim Questnum As Integer
     End Structure
 
     Friend CopyEvent As EventRec
@@ -215,9 +215,9 @@ Friend Module modEventSystem
         MoveAwayFromPlayer
         StepForward
         StepBack
-        Wait100ms
-        Wait500ms
-        Wait1000ms
+        Wait100Ms
+        Wait500Ms
+        Wait1000Ms
         TurnUp
         TurnDown
         TurnLeft
@@ -228,12 +228,12 @@ Friend Module modEventSystem
         TurnRandom
         TurnTowardPlayer
         TurnAwayFromPlayer
-        SetSpeed8xSlower
-        SetSpeed4xSlower
-        SetSpeed2xSlower
+        SetSpeed8XSlower
+        SetSpeed4XSlower
+        SetSpeed2XSlower
         SetSpeedNormal
-        SetSpeed2xFaster
-        SetSpeed4xFaster
+        SetSpeed2XFaster
+        SetSpeed4XFaster
         SetFreqLowest
         SetFreqLower
         SetFreqNormal
@@ -254,65 +254,65 @@ Friend Module modEventSystem
     ' Event Types
     Friend Enum EventType
         ' Message
-        evAddText = 1
-        evShowText
-        evShowChoices
+        EvAddText = 1
+        EvShowText
+        EvShowChoices
         ' Game Progression
-        evPlayerVar
-        evPlayerSwitch
-        evSelfSwitch
+        EvPlayerVar
+        EvPlayerSwitch
+        EvSelfSwitch
         ' Flow Control
-        evCondition
-        evExitProcess
+        EvCondition
+        EvExitProcess
         ' Player
-        evChangeItems
-        evRestoreHP
-        evRestoreMP
-        evLevelUp
-        evChangeLevel
-        evChangeSkills
-        evChangeClass
-        evChangeSprite
-        evChangeSex
-        evChangePK
+        EvChangeItems
+        EvRestoreHp
+        EvRestoreMp
+        EvLevelUp
+        EvChangeLevel
+        EvChangeSkills
+        EvChangeClass
+        EvChangeSprite
+        EvChangeSex
+        EvChangePk
         ' Movement
-        evWarpPlayer
-        evSetMoveRoute
+        EvWarpPlayer
+        EvSetMoveRoute
         ' Character
-        evPlayAnimation
+        EvPlayAnimation
         ' Music and Sounds
-        evPlayBGM
-        evFadeoutBGM
-        evPlaySound
-        evStopSound
+        EvPlayBgm
+        EvFadeoutBgm
+        EvPlaySound
+        EvStopSound
         'Etc...
-        evCustomScript
-        evSetAccess
+        EvCustomScript
+        EvSetAccess
         'Shop/Bank
-        evOpenBank
-        evOpenShop
+        EvOpenBank
+        EvOpenShop
         'New
-        evGiveExp
-        evShowChatBubble
-        evLabel
-        evGotoLabel
-        evSpawnNpc
-        evFadeIn
-        evFadeOut
-        evFlashWhite
-        evSetFog
-        evSetWeather
-        evSetTint
-        evWait
-        evOpenMail
-        evBeginQuest
-        evEndQuest
-        evQuestTask
-        evShowPicture
-        evHidePicture
-        evWaitMovement
-        evHoldPlayer
-        evReleasePlayer
+        EvGiveExp
+        EvShowChatBubble
+        EvLabel
+        EvGotoLabel
+        EvSpawnNpc
+        EvFadeIn
+        EvFadeOut
+        EvFlashWhite
+        EvSetFog
+        EvSetWeather
+        EvSetTint
+        EvWait
+        EvOpenMail
+        EvBeginQuest
+        EvEndQuest
+        EvQuestTask
+        EvShowPicture
+        EvHidePicture
+        EvWaitMovement
+        EvHoldPlayer
+        EvReleasePlayer
     End Enum
 #End Region
 
@@ -356,10 +356,10 @@ Friend Module modEventSystem
 
     Sub Packet_EventMove(ByRef data() As Byte)
         Dim id As Integer
-        Dim X As Integer
-        Dim Y As Integer
-        Dim dir As Integer, ShowDir As Integer
-        Dim MovementSpeed As Integer
+        Dim x As Integer
+        Dim y As Integer
+        Dim dir As Integer, showDir As Integer
+        Dim movementSpeed As Integer
         dim buffer as New ByteStream(Data)
         id = Buffer.ReadInt32
         X = Buffer.ReadInt32
@@ -381,13 +381,13 @@ Friend Module modEventSystem
 
             Select Case dir
                 Case DirectionType.Up
-                    .YOffset = PIC_Y
+                    .YOffset = PicY
                 Case DirectionType.Down
-                    .YOffset = PIC_Y * -1
+                    .YOffset = PicY * -1
                 Case DirectionType.Left
-                    .XOffset = PIC_X
+                    .XOffset = PicX
                 Case DirectionType.Right
-                    .XOffset = PIC_X * -1
+                    .XOffset = PicX * -1
             End Select
 
         End With
@@ -415,10 +415,10 @@ Friend Module modEventSystem
     Sub Packet_SwitchesAndVariables(ByRef data() As Byte)
         Dim i As Integer
         dim buffer as New ByteStream(Data)
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             Switches(i) = Buffer.ReadString
         Next
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             Variables(i) = Buffer.ReadString
         Next
 
@@ -427,7 +427,7 @@ Friend Module modEventSystem
     End Sub
 
     Sub Packet_MapEventData(ByRef data() As Byte)
-        Dim i As Integer, X As Integer, Y As Integer, z As Integer, w As Integer
+        Dim i As Integer, x As Integer, y As Integer, z As Integer, w As Integer
         dim buffer as New ByteStream(Data)
         'Event Data!
         Map.EventCount = Buffer.ReadInt32
@@ -632,24 +632,24 @@ Friend Module modEventSystem
         effectType = Buffer.ReadInt32
 
         Select Case effectType
-            Case EFFECT_TYPE_FADEIN
+            Case EffectTypeFadein
                 UseFade = True
                 FadeType = 1
                 FadeAmount = 0
-            Case EFFECT_TYPE_FADEOUT
+            Case EffectTypeFadeout
                 UseFade = True
                 FadeType = 0
                 FadeAmount = 255
-            Case EFFECT_TYPE_FLASH
+            Case EffectTypeFlash
                 FlashTimer = GetTickCount() + 150
-            Case EFFECT_TYPE_FOG
+            Case EffectTypeFog
                 CurrentFog = Buffer.ReadInt32
                 CurrentFogSpeed = Buffer.ReadInt32
                 CurrentFogOpacity = Buffer.ReadInt32
-            Case EFFECT_TYPE_WEATHER
+            Case EffectTypeWeather
                 CurrentWeather = Buffer.ReadInt32
                 CurrentWeatherIntensity = Buffer.ReadInt32
-            Case EFFECT_TYPE_TINT
+            Case EffectTypeTint
                 Map.HasMapTint = 1
                 CurrentTintR = Buffer.ReadInt32
                 CurrentTintG = Buffer.ReadInt32
@@ -678,10 +678,10 @@ Friend Module modEventSystem
 
         Buffer.WriteInt32(ClientPackets.CSwitchesAndVariables)
 
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             Buffer.WriteString(Trim$(Switches(i)))
         Next
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             Buffer.WriteString(Trim$(Variables(i)))
         Next
 
@@ -695,7 +695,7 @@ Friend Module modEventSystem
 
     Friend Sub DrawEvents()
         Dim rec As Rectangle
-        Dim Width As Integer, Height As Integer, i As Integer, X As Integer, Y As Integer
+        Dim width As Integer, height As Integer, i As Integer, x As Integer, y As Integer
         Dim tX As Integer
         Dim tY As Integer
 
@@ -708,16 +708,16 @@ Friend Module modEventSystem
             If Map.Events(i).PageCount <= 0 Then
                 With rec
                     .Y = 0
-                    .Height = PIC_Y
+                    .Height = PicY
                     .X = 0
-                    .Width = PIC_X
+                    .Width = PicX
                 End With
                 Dim rec2 As New RectangleShape
                 rec2.OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue)
                 rec2.OutlineThickness = 0.6
                 rec2.FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
                 rec2.Size = New Vector2f(rec.Width, rec.Height)
-                rec2.Position = New Vector2f(ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y))
+                rec2.Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
                 GameWindow.Draw(rec2)
                 GoTo nextevent
             End If
@@ -727,8 +727,8 @@ Friend Module modEventSystem
             If 1 > Map.Events(i).PageCount Then Exit Sub
             Select Case Map.Events(i).Pages(1).GraphicType
                 Case 0
-                    tX = ((X) - 4) + (PIC_X * 0.5)
-                    tY = ((Y) - 7) + (PIC_Y * 0.5)
+                    tX = ((X) - 4) + (PicX * 0.5)
+                    tY = ((Y) - 7) + (PicY * 0.5)
                     DrawText(tX, tY, "EV", (SFML.Graphics.Color.Green), (SFML.Graphics.Color.Black), GameWindow)
                 Case 1
                     If Map.Events(i).Pages(1).Graphic > 0 AndAlso Map.Events(i).Pages(1).Graphic <= NumCharacters Then
@@ -742,27 +742,27 @@ Friend Module modEventSystem
                         End With
                         With rec
                             .Y = (Map.Events(i).Pages(1).GraphicY * (CharacterGFXInfo(Map.Events(i).Pages(1).Graphic).Height / 4))
-                            .Height = .Y + PIC_Y
+                            .Height = .Y + PicY
                             .X = (Map.Events(i).Pages(1).GraphicX * (CharacterGFXInfo(Map.Events(i).Pages(1).Graphic).Width / 4))
-                            .Width = .X + PIC_X
+                            .Width = .X + PicX
                         End With
                         Dim tmpSprite As Sprite = New Sprite(CharacterGFX(Map.Events(i).Pages(1).Graphic))
                         tmpSprite.TextureRect = New IntRect(rec.X, rec.Y, rec.Width, rec.Height)
-                        tmpSprite.Position = New Vector2f(ConvertMapX(Map.Events(i).X * PIC_X), ConvertMapY(Map.Events(i).Y * PIC_Y))
+                        tmpSprite.Position = New Vector2f(ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY))
                         GameWindow.Draw(tmpSprite)
                     Else
                         With rec
                             .Y = 0
-                            .Height = PIC_Y
+                            .Height = PicY
                             .X = 0
-                            .Width = PIC_X
+                            .Width = PicX
                         End With
                         Dim rec2 As New RectangleShape
                         rec2.OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue)
                         rec2.OutlineThickness = 0.6
                         rec2.FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
                         rec2.Size = New Vector2f(rec.Width, rec.Height)
-                        rec2.Position = New Vector2f(ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y))
+                        rec2.Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
                         GameWindow.Draw(rec2)
                     End If
                 Case 2
@@ -783,24 +783,24 @@ Friend Module modEventSystem
                         End With
 
                         If rec.Height > 32 Then
-                            RenderSprite(TileSetSprite(Map.Events(i).Pages(1).Graphic), GameWindow, ConvertMapX(Map.Events(i).X * PIC_X), ConvertMapY(Map.Events(i).Y * PIC_Y) - PIC_Y, rec.X, rec.Y, rec.Width, rec.Height)
+                            RenderSprite(TileSetSprite(Map.Events(i).Pages(1).Graphic), GameWindow, ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY) - PicY, rec.X, rec.Y, rec.Width, rec.Height)
                         Else
-                            RenderSprite(TileSetSprite(Map.Events(i).Pages(1).Graphic), GameWindow, ConvertMapX(Map.Events(i).X * PIC_X), ConvertMapY(Map.Events(i).Y * PIC_Y), rec.X, rec.Y, rec.Width, rec.Height)
+                            RenderSprite(TileSetSprite(Map.Events(i).Pages(1).Graphic), GameWindow, ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY), rec.X, rec.Y, rec.Width, rec.Height)
                         End If
 
                     Else
                         With rec
                             .Y = 0
-                            .Height = PIC_Y
+                            .Height = PicY
                             .X = 0
-                            .Width = PIC_X
+                            .Width = PicX
                         End With
                         Dim rec2 As New RectangleShape
                         rec2.OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue)
                         rec2.OutlineThickness = 0.6
                         rec2.FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
                         rec2.Size = New Vector2f(rec.Width, rec.Height)
-                        rec2.Position = New Vector2f(ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y))
+                        rec2.Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
                         GameWindow.Draw(rec2)
                     End If
             End Select
@@ -809,8 +809,8 @@ nextevent:
 
     End Sub
 
-    Friend Sub DrawEvent(Id As Integer) ' draw on map, outside the editor
-        Dim X As Integer, Y As Integer, Width As Integer, Height As Integer, sRect As Rectangle, Anim As Integer, spritetop As Integer
+    Friend Sub DrawEvent(id As Integer) ' draw on map, outside the editor
+        Dim x As Integer, y As Integer, width As Integer, height As Integer, sRect As Rectangle, anim As Integer, spritetop As Integer
 
         If Map.MapEvents(Id).Visible = 0 Then Exit Sub
 
@@ -858,15 +858,15 @@ nextevent:
 
                 sRect = New Rectangle((Anim) * (CharacterGFXInfo(Map.MapEvents(Id).GraphicNum).Width / 4), spritetop * (CharacterGFXInfo(Map.MapEvents(Id).GraphicNum).Height / 4), (CharacterGFXInfo(Map.MapEvents(Id).GraphicNum).Width / 4), (CharacterGFXInfo(Map.MapEvents(Id).GraphicNum).Height / 4))
                 ' Calculate the X
-                X = Map.MapEvents(Id).X * PIC_X + Map.MapEvents(Id).XOffset - ((CharacterGFXInfo(Map.MapEvents(Id).GraphicNum).Width / 4 - 32) / 2)
+                X = Map.MapEvents(Id).X * PicX + Map.MapEvents(Id).XOffset - ((CharacterGFXInfo(Map.MapEvents(Id).GraphicNum).Width / 4 - 32) / 2)
 
                 ' Is the player's height more than 32..?
                 If (CharacterGFXInfo(Map.MapEvents(Id).GraphicNum).Height * 4) > 32 Then
                     ' Create a 32 pixel offset for larger sprites
-                    Y = Map.MapEvents(Id).Y * PIC_Y + Map.MapEvents(Id).YOffset - ((CharacterGFXInfo(Map.MapEvents(Id).GraphicNum).Height / 4) - 32)
+                    Y = Map.MapEvents(Id).Y * PicY + Map.MapEvents(Id).YOffset - ((CharacterGFXInfo(Map.MapEvents(Id).GraphicNum).Height / 4) - 32)
                 Else
                     ' Proceed as normal
-                    Y = Map.MapEvents(Id).Y * PIC_Y + Map.MapEvents(Id).YOffset
+                    Y = Map.MapEvents(Id).Y * PicY + Map.MapEvents(Id).YOffset
                 End If
                 ' render the actual sprite
                 DrawCharacter(Map.MapEvents(Id).GraphicNum, X, Y, sRect)
@@ -902,9 +902,9 @@ nextevent:
                 Y = Y - (sRect.Bottom - sRect.Top) + 32
 
                 If Map.MapEvents(Id).GraphicY2 > 1 Then
-                    RenderSprite(TileSetSprite(Map.MapEvents(Id).GraphicNum), GameWindow, ConvertMapX(Map.MapEvents(Id).X * PIC_X), ConvertMapY(Map.MapEvents(Id).Y * PIC_Y) - PIC_Y, sRect.Left, sRect.Top, sRect.Width, sRect.Height)
+                    RenderSprite(TileSetSprite(Map.MapEvents(Id).GraphicNum), GameWindow, ConvertMapX(Map.MapEvents(Id).X * PicX), ConvertMapY(Map.MapEvents(Id).Y * PicY) - PicY, sRect.Left, sRect.Top, sRect.Width, sRect.Height)
                 Else
-                    RenderSprite(TileSetSprite(Map.MapEvents(Id).GraphicNum), GameWindow, ConvertMapX(Map.MapEvents(Id).X * PIC_X), ConvertMapY(Map.MapEvents(Id).Y * PIC_Y), sRect.Left, sRect.Top, sRect.Width, sRect.Height)
+                    RenderSprite(TileSetSprite(Map.MapEvents(Id).GraphicNum), GameWindow, ConvertMapX(Map.MapEvents(Id).X * PicX), ConvertMapY(Map.MapEvents(Id).Y * PicY), sRect.Left, sRect.Top, sRect.Width, sRect.Height)
                 End If
 
         End Select
@@ -983,7 +983,7 @@ nextevent:
 
 #Region "Misc"
 
-    Sub ProcessEventMovement(Id As Integer)
+    Sub ProcessEventMovement(id As Integer)
 
         If Id > Map.EventCount Then Exit Sub
         If Id > Map.MapEvents.Length Then Exit Sub
@@ -991,16 +991,16 @@ nextevent:
         If Map.MapEvents(Id).Moving = 1 Then
             Select Case Map.MapEvents(Id).dir
                 Case DirectionType.Up
-                    Map.MapEvents(Id).YOffset = Map.MapEvents(Id).YOffset - ((ElapsedTime / 1000) * (Map.MapEvents(Id).MovementSpeed * SIZE_X))
+                    Map.MapEvents(Id).YOffset = Map.MapEvents(Id).YOffset - ((ElapsedTime / 1000) * (Map.MapEvents(Id).MovementSpeed * SizeX))
                     If Map.MapEvents(Id).YOffset < 0 Then Map.MapEvents(Id).YOffset = 0
                 Case DirectionType.Down
-                    Map.MapEvents(Id).YOffset = Map.MapEvents(Id).YOffset + ((ElapsedTime / 1000) * (Map.MapEvents(Id).MovementSpeed * SIZE_X))
+                    Map.MapEvents(Id).YOffset = Map.MapEvents(Id).YOffset + ((ElapsedTime / 1000) * (Map.MapEvents(Id).MovementSpeed * SizeX))
                     If Map.MapEvents(Id).YOffset > 0 Then Map.MapEvents(Id).YOffset = 0
                 Case DirectionType.Left
-                    Map.MapEvents(Id).XOffset = Map.MapEvents(Id).XOffset - ((ElapsedTime / 1000) * (Map.MapEvents(Id).MovementSpeed * SIZE_X))
+                    Map.MapEvents(Id).XOffset = Map.MapEvents(Id).XOffset - ((ElapsedTime / 1000) * (Map.MapEvents(Id).MovementSpeed * SizeX))
                     If Map.MapEvents(Id).XOffset < 0 Then Map.MapEvents(Id).XOffset = 0
                 Case DirectionType.Right
-                    Map.MapEvents(Id).XOffset = Map.MapEvents(Id).XOffset + ((ElapsedTime / 1000) * (Map.MapEvents(Id).MovementSpeed * SIZE_X))
+                    Map.MapEvents(Id).XOffset = Map.MapEvents(Id).XOffset + ((ElapsedTime / 1000) * (Map.MapEvents(Id).MovementSpeed * SizeX))
                     If Map.MapEvents(Id).XOffset > 0 Then Map.MapEvents(Id).XOffset = 0
             End Select
             ' Check if completed walking over to the next tile
@@ -1029,7 +1029,7 @@ nextevent:
 
     End Sub
 
-    Friend Function GetColorString(Color As Integer)
+    Friend Function GetColorString(color As Integer)
 
         Select Case Color
             Case 0

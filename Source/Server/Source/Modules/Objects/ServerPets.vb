@@ -9,11 +9,11 @@ Module ServerPets
     Friend Pet() As PetRec
 
     ' PET constants
-    Friend Const PET_BEHAVIOUR_FOLLOW As Byte = 0 'The pet will attack all npcs around
-    Friend Const PET_BEHAVIOUR_GOTO As Byte = 1 'If attacked, the pet will fight back
-    Friend Const PET_ATTACK_BEHAVIOUR_ATTACKONSIGHT As Byte = 2 'The pet will attack all npcs around
-    Friend Const PET_ATTACK_BEHAVIOUR_GUARD As Byte = 3 'If attacked, the pet will fight back
-    Friend Const PET_ATTACK_BEHAVIOUR_DONOTHING As Byte = 4 'The pet will not attack even if attacked
+    Friend Const PetBehaviourFollow As Byte = 0 'The pet will attack all npcs around
+    Friend Const PetBehaviourGoto As Byte = 1 'If attacked, the pet will fight back
+    Friend Const PetAttackBehaviourAttackonsight As Byte = 2 'The pet will attack all npcs around
+    Friend Const PetAttackBehaviourGuard As Byte = 3 'If attacked, the pet will fight back
+    Friend Const PetAttackBehaviourDonothing As Byte = 4 'The pet will not attack even if attacked
 
     Friend Structure PetRec
 
@@ -72,7 +72,7 @@ Module ServerPets
 
     End Sub
 
-    Sub SavePet(PetNum As Integer)
+    Sub SavePet(petNum As Integer)
         Dim filename As String, i As Integer
 
         filename = Application.StartupPath & "\data\pets\pet" & PetNum & ".dat"
@@ -120,7 +120,7 @@ Module ServerPets
         'SavePets()
     End Sub
 
-    Sub LoadPet(PetNum As Integer)
+    Sub LoadPet(petNum As Integer)
         Dim filename As String, i As Integer
 
         filename = Application.StartupPath & "\data\pets\pet" & PetNum & ".dat"
@@ -164,7 +164,7 @@ Module ServerPets
         Next
     End Sub
 
-    Sub ClearPet(PetNum As Integer)
+    Sub ClearPet(petNum As Integer)
 
         Pet(PetNum).Name = ""
 
@@ -195,8 +195,8 @@ Module ServerPets
 
     End Sub
 
-    Sub SendUpdatePetToAll(PetNum As Integer)
-        Dim Buffer = New ByteStream(4)
+    Sub SendUpdatePetToAll(petNum As Integer)
+        Dim buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdatePet)
 
         Buffer.WriteInt32(PetNum)
@@ -233,7 +233,7 @@ Module ServerPets
     End Sub
 
     Sub SendUpdatePetTo(index as integer, petNum As Integer)
-        Dim Buffer = New ByteStream(4)
+        Dim buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdatePet)
 
         Buffer.WriteInt32(petNum)
@@ -269,7 +269,7 @@ Module ServerPets
 
     End Sub
 
-    Friend Sub SendUpdatePlayerPet(index as integer, OwnerOnly As Boolean)
+    Friend Sub SendUpdatePlayerPet(index as integer, ownerOnly As Boolean)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SUpdatePlayerPet)
@@ -321,7 +321,7 @@ Module ServerPets
         Buffer.Dispose()
     End Sub
 
-    Sub SendPetXY(index as integer, X As Integer, Y As Integer)
+    Sub SendPetXy(index as integer, x As Integer, y As Integer)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPetXY)
@@ -349,7 +349,7 @@ Module ServerPets
     Sub Packet_RequestEditPet(index as integer, ByRef data() As Byte)
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
 
-        Dim Buffer = New ByteStream(4)
+        Dim buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPetEditor)
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -435,7 +435,7 @@ Module ServerPets
                         If TempPlayer(Index).PetTargetType = TargetType.Player AndAlso TempPlayer(Index).PetTarget = i Then
                             TempPlayer(Index).PetTarget = 0
                             TempPlayer(Index).PetTargetType = TargetType.None
-                            TempPlayer(Index).PetBehavior = PET_BEHAVIOUR_GOTO
+                            TempPlayer(Index).PetBehavior = PetBehaviourGoto
                             TempPlayer(Index).GoToX = x
                             TempPlayer(Index).GoToY = y
                             ' send target to player
@@ -444,7 +444,7 @@ Module ServerPets
                             TempPlayer(Index).PetTarget = i
                             TempPlayer(Index).PetTargetType = TargetType.Player
                             ' send target to player
-                            TempPlayer(Index).PetBehavior = PET_BEHAVIOUR_FOLLOW
+                            TempPlayer(Index).PetBehavior = PetBehaviourFollow
                             PlayerMsg(Index, "Your " & Trim$(GetPetName(Index)) & " is now following you.", ColorType.BrightGreen)
                         End If
                     Else
@@ -506,7 +506,7 @@ Module ServerPets
             End If
         Next
 
-        TempPlayer(Index).PetBehavior = PET_BEHAVIOUR_GOTO
+        TempPlayer(Index).PetBehavior = PetBehaviourGoto
         TempPlayer(Index).PetTargetType = 0
         TempPlayer(Index).PetTarget = 0
         TempPlayer(Index).GoToX = x
@@ -523,11 +523,11 @@ Module ServerPets
 
         If PetAlive(Index) Then
             Select Case behaviour
-                Case PET_ATTACK_BEHAVIOUR_ATTACKONSIGHT
-                    SetPetBehaviour(Index, PET_ATTACK_BEHAVIOUR_ATTACKONSIGHT)
+                Case PetAttackBehaviourAttackonsight
+                    SetPetBehaviour(Index, PetAttackBehaviourAttackonsight)
                     SendActionMsg(GetPlayerMap(Index), "Agressive Mode!", ColorType.White, 0, GetPetX(Index) * 32, GetPetY(Index) * 32, Index)
-                Case PET_ATTACK_BEHAVIOUR_GUARD
-                    SetPetBehaviour(Index, PET_ATTACK_BEHAVIOUR_GUARD)
+                Case PetAttackBehaviourGuard
+                    SetPetBehaviour(Index, PetAttackBehaviourGuard)
                     SendActionMsg(GetPlayerMap(Index), "Defensive Mode!", ColorType.White, 0, GetPetX(Index) * 32, GetPetY(Index) * 32, Index)
             End Select
         End If
@@ -554,7 +554,7 @@ Module ServerPets
     End Sub
 
     Sub Packet_UsePetStatPoint(index as integer, ByRef data() As Byte)
-        Dim PointType As Byte
+        Dim pointType As Byte
         Dim sMes As String = ""
         dim buffer as New ByteStream(data)
         PointType = Buffer.ReadInt32
@@ -609,11 +609,11 @@ Module ServerPets
 
 #Region "Pet Functions"
 
-    Friend Sub UpdatePetAI()
-        Dim DidWalk As Boolean, GivePetHPTimer As Integer, Playerindex as integer
-        Dim mapNum as Integer, TickCount As Integer, i As Integer, n As Integer
-        Dim DistanceX As Integer, DistanceY As Integer, tmpdir As Integer
-        Dim Target As Integer, TargetTypes As Byte, TargetX As Integer, TargetY As Integer, target_verify As Boolean
+    Friend Sub UpdatePetAi()
+        Dim didWalk As Boolean, givePetHpTimer As Integer, playerindex as integer
+        Dim mapNum as Integer, tickCount As Integer, i As Integer, n As Integer
+        Dim distanceX As Integer, distanceY As Integer, tmpdir As Integer
+        Dim target As Integer, targetTypes As Byte, targetX As Integer, targetY As Integer, targetVerify As Boolean
 
         For MapNum = 1 To MAX_CACHED_MAPS
             For PlayerIndex = 1 To GetPlayersOnline()
@@ -623,7 +623,7 @@ Module ServerPets
                     ' // This is used for ATTACKING ON SIGHT //
 
                     ' If the npc is a attack on sight, search for a player on the map
-                    If GetPetBehaviour(PlayerIndex) <> PET_ATTACK_BEHAVIOUR_DONOTHING Then
+                    If GetPetBehaviour(PlayerIndex) <> PetAttackBehaviourDonothing Then
 
                         ' make sure it's not stunned
                         If Not TempPlayer(PlayerIndex).PetStunDuration > 0 Then
@@ -649,7 +649,7 @@ Module ServerPets
 
                                             ' Are they in range?  if so GET'M!
                                             If DistanceX <= n AndAlso DistanceY <= n Then
-                                                If GetPetBehaviour(PlayerIndex) = PET_ATTACK_BEHAVIOUR_ATTACKONSIGHT Then
+                                                If GetPetBehaviour(PlayerIndex) = PetAttackBehaviourAttackonsight Then
                                                     TempPlayer(PlayerIndex).PetTargetType = TargetType.Pet ' pet
                                                     TempPlayer(PlayerIndex).PetTarget = i
                                                 End If
@@ -665,7 +665,7 @@ Module ServerPets
 
                                             ' Are they in range?  if so GET'M!
                                             If DistanceX <= n AndAlso DistanceY <= n Then
-                                                If GetPetBehaviour(PlayerIndex) = PET_ATTACK_BEHAVIOUR_ATTACKONSIGHT Then
+                                                If GetPetBehaviour(PlayerIndex) = PetAttackBehaviourAttackonsight Then
                                                     TempPlayer(PlayerIndex).PetTargetType = TargetType.Player ' player
                                                     TempPlayer(PlayerIndex).PetTarget = i
                                                 End If
@@ -690,7 +690,7 @@ Module ServerPets
 
                                         ' Are they in range?  if so GET'M!
                                         If DistanceX <= n AndAlso DistanceY <= n Then
-                                            If GetPetBehaviour(PlayerIndex) = PET_ATTACK_BEHAVIOUR_ATTACKONSIGHT Then
+                                            If GetPetBehaviour(PlayerIndex) = PetAttackBehaviourAttackonsight Then
                                                 TempPlayer(PlayerIndex).PetTargetType = TargetType.Npc ' npc
                                                 TempPlayer(PlayerIndex).PetTarget = i
                                             End If
@@ -700,7 +700,7 @@ Module ServerPets
                             End If
                         End If
 
-                        target_verify = False
+                        targetVerify = False
 
                         ' // This is used for Pet walking/targetting //
 
@@ -716,7 +716,7 @@ Module ServerPets
                             TargetTypes = TempPlayer(PlayerIndex).PetTargetType
 
                             ' Check to see if its time for the npc to walk
-                            If GetPetBehaviour(PlayerIndex) <> PET_ATTACK_BEHAVIOUR_DONOTHING Then
+                            If GetPetBehaviour(PlayerIndex) <> PetAttackBehaviourDonothing Then
 
                                 If TargetTypes = TargetType.Player Then ' player
                                     ' Check to see if we are following a player or not
@@ -726,7 +726,7 @@ Module ServerPets
                                         If IsPlaying(Target) AndAlso GetPlayerMap(Target) = MapNum Then
                                             If Target <> PlayerIndex Then
                                                 DidWalk = False
-                                                target_verify = True
+                                                targetVerify = True
                                                 TargetY = GetPlayerY(Target)
                                                 TargetX = GetPlayerX(Target)
                                             End If
@@ -739,7 +739,7 @@ Module ServerPets
                                     If Target > 0 Then
                                         If MapNpc(MapNum).Npc(Target).Num > 0 Then
                                             DidWalk = False
-                                            target_verify = True
+                                            targetVerify = True
                                             TargetY = MapNpc(MapNum).Npc(Target).Y
                                             TargetX = MapNpc(MapNum).Npc(Target).X
                                         Else
@@ -751,7 +751,7 @@ Module ServerPets
                                     If Target > 0 Then
                                         If IsPlaying(Target) AndAlso GetPlayerMap(Target) = MapNum AndAlso PetAlive(Target) Then
                                             DidWalk = False
-                                            target_verify = True
+                                            targetVerify = True
                                             TargetY = GetPetY(Target)
                                             TargetX = GetPetX(Target)
                                         Else
@@ -762,7 +762,7 @@ Module ServerPets
                                 End If
                             End If
 
-                            If target_verify Then
+                            If targetVerify Then
                                 DidWalk = False
 
                                 If IsOneBlockAway(GetPetX(PlayerIndex), GetPetY(PlayerIndex), TargetX, TargetY) Then
@@ -784,7 +784,7 @@ Module ServerPets
                                     DidWalk = PetTryWalk(PlayerIndex, TargetX, TargetY)
                                 End If
 
-                            ElseIf TempPlayer(PlayerIndex).PetBehavior = PET_BEHAVIOUR_GOTO AndAlso target_verify = False Then
+                            ElseIf TempPlayer(PlayerIndex).PetBehavior = PetBehaviourGoto AndAlso targetVerify = False Then
 
                                 If GetPetX(PlayerIndex) = TempPlayer(PlayerIndex).GoToX AndAlso GetPetY(PlayerIndex) = TempPlayer(PlayerIndex).GoToY Then
                                     'Unblock these for the random turning
@@ -808,7 +808,7 @@ Module ServerPets
                                     End If
                                 End If
 
-                            ElseIf TempPlayer(PlayerIndex).PetBehavior = PET_BEHAVIOUR_FOLLOW Then
+                            ElseIf TempPlayer(PlayerIndex).PetBehavior = PetBehaviourFollow Then
 
                                 If IsPetByPlayer(PlayerIndex) Then
                                     'Unblock these to enable random turning
@@ -965,7 +965,7 @@ Module ServerPets
 
     End Sub
 
-    Sub AdoptPet(index as integer, PetNum As Integer)
+    Sub AdoptPet(index as integer, petNum As Integer)
 
         If GetPetNum(Index) = 0 Then
             PlayerMsg(Index, "You have adopted a " & Trim$(Pet(PetNum).Name), ColorType.BrightGreen)
@@ -1008,7 +1008,7 @@ Module ServerPets
         Player(Index).Character(TempPlayer(Index).CurChar).Pet.Points = 0
         Player(Index).Character(TempPlayer(Index).CurChar).Pet.Exp = 0
 
-        Player(Index).Character(TempPlayer(Index).CurChar).Pet.AttackBehaviour = PET_ATTACK_BEHAVIOUR_GUARD 'By default it will guard but this can be changed
+        Player(Index).Character(TempPlayer(Index).CurChar).Pet.AttackBehaviour = PetAttackBehaviourGuard 'By default it will guard but this can be changed
 
         SavePlayer(Index)
 
@@ -1016,7 +1016,7 @@ Module ServerPets
 
     End Sub
 
-    Sub PetMove(index as integer, mapNum as Integer, Dir As Integer, movement As Integer)
+    Sub PetMove(index as integer, mapNum as Integer, dir As Integer, movement As Integer)
         dim buffer as ByteStream
 
         If MapNum < 1 OrElse MapNum > MAX_MAPS OrElse Index <= 0 OrElse Index > MAX_PLAYERS OrElse Dir < DirectionType.Up OrElse Dir > DirectionType.Right OrElse movement < 1 OrElse movement > 2 Then
@@ -1051,7 +1051,7 @@ Module ServerPets
 
     End Sub
 
-    Function CanPetMove(index as integer, mapNum as Integer, Dir As Byte) As Boolean
+    Function CanPetMove(index as integer, mapNum as Integer, dir As Byte) As Boolean
         Dim i As Integer, n As Integer
         Dim x As Integer, y As Integer
 
@@ -1244,7 +1244,7 @@ Module ServerPets
 
     End Function
 
-    Sub PetDir(index as integer, Dir As Integer)
+    Sub PetDir(index as integer, dir As Integer)
         dim buffer as ByteStream
 
         If Index <= 0 OrElse Index > MAX_PLAYERS OrElse Dir < DirectionType.Up OrElse Dir > DirectionType.Right Then Exit Sub
@@ -1263,7 +1263,7 @@ Module ServerPets
 
     End Sub
 
-    Function PetTryWalk(index as integer, TargetX As Integer, TargetY As Integer) As Boolean
+    Function PetTryWalk(index as integer, targetX As Integer, targetY As Integer) As Boolean
         Dim i As Integer, x As Integer, didwalk As Boolean
         Dim mapNum as Integer
 
@@ -1523,11 +1523,11 @@ Module ServerPets
 
     End Function
 
-    Function FindPetPath(mapNum as Integer, index as integer, TargetX As Integer, TargetY As Integer) As Integer
+    Function FindPetPath(mapNum as Integer, index as integer, targetX As Integer, targetY As Integer) As Integer
 
-        Dim tim As Integer, sX As Integer, sY As Integer, pos(,) As Integer, reachable As Boolean, j As Integer, LastSum As Integer, Sum As Integer, FX As Integer, FY As Integer, i As Integer
+        Dim tim As Integer, sX As Integer, sY As Integer, pos(,) As Integer, reachable As Boolean, j As Integer, lastSum As Integer, sum As Integer, fx As Integer, fy As Integer, i As Integer
 
-        Dim path() As Point, LastX As Integer, LastY As Integer, did As Boolean
+        Dim path() As Point, lastX As Integer, lastY As Integer, did As Boolean
 
         'Initialization phase
 
@@ -1748,11 +1748,11 @@ Module ServerPets
 #End Region
 
 #Region "Pet > Npc"
-    Friend Sub TryPetAttackNpc(index as integer, MapNpcNum As Integer)
+    Friend Sub TryPetAttackNpc(index as integer, mapNpcNum As Integer)
         Dim blockAmount As Integer
         Dim npcnum As Integer
         Dim mapNum as Integer
-        Dim Damage As Integer
+        Dim damage As Integer
 
         Damage = 0
 
@@ -1801,11 +1801,11 @@ Module ServerPets
 
     End Sub
 
-    Friend Function CanPetAttackNpc(Attacker As Integer, mapnpcnum As Integer, Optional IsSpell As Boolean = False) As Boolean
+    Friend Function CanPetAttackNpc(attacker As Integer, mapnpcnum As Integer, Optional isSpell As Boolean = False) As Boolean
         Dim mapNum as Integer
         Dim npcnum As Integer
-        Dim NpcX As Integer
-        Dim NpcY As Integer
+        Dim npcX As Integer
+        Dim npcY As Integer
         Dim attackspeed As Integer
 
         If IsPlaying(Attacker) = False OrElse mapnpcnum <= 0 OrElse mapnpcnum > MAX_MAP_NPCS OrElse Not PetAlive(Attacker) Then
@@ -1871,8 +1871,8 @@ Module ServerPets
 
     End Function
 
-    Friend Sub PetAttackNpc(Attacker As Integer, mapnpcnum As Integer, Damage As Integer, Optional Skillnum As Integer = 0, Optional overTime As Boolean = False)
-        Dim Name As String, Exp As Integer
+    Friend Sub PetAttackNpc(attacker As Integer, mapnpcnum As Integer, damage As Integer, Optional skillnum As Integer = 0, Optional overTime As Boolean = False)
+        Dim name As String, exp As Integer
         Dim n As Integer, i As Integer
         Dim mapNum as Integer, npcnum As Integer
 
@@ -2030,9 +2030,9 @@ Module ServerPets
 #End Region
 
 #Region "Npc > Pet"
-    Friend Sub TryNpcAttackPet(MapNpcNum As Integer, index as integer)
+    Friend Sub TryNpcAttackPet(mapNpcNum As Integer, index as integer)
 
-        Dim mapNum as Integer, npcnum As Integer, Damage As Integer
+        Dim mapNum as Integer, npcnum As Integer, damage As Integer
 
         ' Can the npc attack the pet?
 
@@ -2065,7 +2065,7 @@ Module ServerPets
 
     End Sub
 
-    Function CanNpcAttackPet(MapNpcNum As Integer, index as integer) As Boolean
+    Function CanNpcAttackPet(mapNpcNum As Integer, index as integer) As Boolean
         Dim mapNum as Integer
         Dim npcnum As Integer
 
@@ -2120,8 +2120,8 @@ Module ServerPets
 
     End Function
 
-    Sub NpcAttackPet(mapnpcnum As Integer, Victim As Integer, Damage As Integer)
-        Dim Name As String, mapNum as Integer
+    Sub NpcAttackPet(mapnpcnum As Integer, victim As Integer, damage As Integer)
+        Dim name As String, mapNum as Integer
 
         ' Check for subscript out of range
         If mapnpcnum <= 0 OrElse mapnpcnum > MAX_MAP_NPCS OrElse IsPlaying(Victim) = False OrElse Not PetAlive(Victim) Then
@@ -2177,7 +2177,7 @@ Module ServerPets
 #End Region
 
 
-    Function CanPetAttackPlayer(Attacker As Integer, Victim As Integer, Optional IsSkill As Boolean = False) As Boolean
+    Function CanPetAttackPlayer(attacker As Integer, victim As Integer, Optional isSkill As Boolean = False) As Boolean
 
         If Not IsSkill Then
             If GetTimeMs() < TempPlayer(Attacker).PetAttackTimer + 1000 Then Exit Function
@@ -2249,7 +2249,7 @@ Module ServerPets
     End Function
 
     'Pet Vital Stuffs
-    Sub SendPetVital(index as integer, Vital As VitalType)
+    Sub SendPetVital(index as integer, vital As VitalType)
         dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
@@ -2279,11 +2279,11 @@ Module ServerPets
 
     End Sub
 
-    Friend Sub BufferPetSkill(index as integer, SkillSlot As Integer)
-        Dim Skillnum As Integer, MPCost As Integer, LevelReq As Integer
-        Dim mapNum as Integer, SkillCastType As Integer
-        Dim AccessReq As Integer, Range As Integer, HasBuffered As Boolean
-        Dim TargetTypes As Byte, Target As Integer
+    Friend Sub BufferPetSkill(index as integer, skillSlot As Integer)
+        Dim skillnum As Integer, mpCost As Integer, levelReq As Integer
+        Dim mapNum as Integer, skillCastType As Integer
+        Dim accessReq As Integer, range As Integer, hasBuffered As Boolean
+        Dim targetTypes As Byte, target As Integer
 
         ' Prevent subscript out of range
 
@@ -2444,13 +2444,13 @@ Module ServerPets
 
     End Sub
 
-    Friend Sub PetCastSkill(index as integer, Skillslot As Integer, Target As Integer, TargetTypes As Byte, Optional TakeMana As Boolean = True)
-        Dim Skillnum As Integer, MPCost As Integer, LevelReq As Integer
-        Dim mapNum as Integer, Vital As Integer, DidCast As Boolean
-        Dim AccessReq As Integer, i As Integer
-        Dim AoE As Integer, Range As Integer, VitalType As Byte
+    Friend Sub PetCastSkill(index as integer, skillslot As Integer, target As Integer, targetTypes As Byte, Optional takeMana As Boolean = True)
+        Dim skillnum As Integer, mpCost As Integer, levelReq As Integer
+        Dim mapNum as Integer, vital As Integer, didCast As Boolean
+        Dim accessReq As Integer, i As Integer
+        Dim aoE As Integer, range As Integer, vitalType As Byte
         Dim increment As Boolean, x As Integer, y As Integer
-        Dim SkillCastType As Integer
+        Dim skillCastType As Integer
 
         DidCast = False
 
@@ -2732,9 +2732,9 @@ Module ServerPets
 
     End Sub
 
-    Friend Sub SkillPet_Effect(Vital As Byte, increment As Boolean, index as integer, Damage As Integer, Skillnum As Integer)
+    Friend Sub SkillPet_Effect(vital As Byte, increment As Boolean, index as integer, damage As Integer, skillnum As Integer)
         Dim sSymbol As String
-        Dim Colour As Integer
+        Dim colour As Integer
 
         If Damage > 0 Then
             If increment Then
@@ -2774,7 +2774,7 @@ Module ServerPets
 
     End Sub
 
-    Friend Sub AddHoT_Pet(index as integer, Skillnum As Integer)
+    Friend Sub AddHoT_Pet(index as integer, skillnum As Integer)
         Dim i As Integer
 
         For i = 1 To MAX_DOTS
@@ -2798,7 +2798,7 @@ Module ServerPets
 
     End Sub
 
-    Friend Sub AddDoT_Pet(index as integer, Skillnum As Integer, Caster As Integer, AttackerType As Integer)
+    Friend Sub AddDoT_Pet(index as integer, skillnum As Integer, caster As Integer, attackerType As Integer)
         Dim i As Integer
 
         If Not PetAlive(Index) Then Exit Sub
@@ -2827,8 +2827,8 @@ Module ServerPets
 
     End Sub
 
-    Sub PetAttackPlayer(Attacker As Integer, Victim As Integer, Damage As Integer, Optional SkillNum As Integer = 0)
-        Dim Exp As Integer, n As Integer, i As Integer
+    Sub PetAttackPlayer(attacker As Integer, victim As Integer, damage As Integer, Optional skillNum As Integer = 0)
+        Dim exp As Integer, n As Integer, i As Integer
 
         ' Check for subscript out of range
 
@@ -2953,7 +2953,7 @@ Module ServerPets
 
     End Sub
 
-    Function CanPetAttackPet(Attacker As Integer, Victim As Integer, Optional IsSkill As Integer = 0) As Boolean
+    Function CanPetAttackPet(attacker As Integer, victim As Integer, Optional isSkill As Integer = 0) As Boolean
 
         If Not IsSkill Then
             If GetTimeMs() < TempPlayer(Attacker).PetAttackTimer + 1000 Then Exit Function
@@ -3037,8 +3037,8 @@ Module ServerPets
 
     End Function
 
-    Sub PetAttackPet(Attacker As Integer, Victim As Integer, Damage As Integer, Optional Skillnum As Integer = 0)
-        Dim Exp As Integer, n As Integer, i As Integer
+    Sub PetAttackPet(attacker As Integer, victim As Integer, damage As Integer, Optional skillnum As Integer = 0)
+        Dim exp As Integer, n As Integer, i As Integer
 
         ' Check for subscript out of range
 
@@ -3135,7 +3135,7 @@ Module ServerPets
             SendPetVital(Victim, VitalType.HP)
 
             'Set pet to begin attacking the other pet if it isn't dead or dosent have another target
-            If TempPlayer(Victim).PetTarget <= 0 AndAlso TempPlayer(Victim).PetBehavior <> PET_BEHAVIOUR_GOTO Then
+            If TempPlayer(Victim).PetTarget <= 0 AndAlso TempPlayer(Victim).PetBehavior <> PetBehaviourGoto Then
                 TempPlayer(Victim).PetTarget = Attacker
                 TempPlayer(Victim).PetTargetType = TargetType.Pet
             End If
@@ -3165,7 +3165,7 @@ Module ServerPets
 
     End Sub
 
-    Friend Sub StunPet(index as integer, Skillnum As Integer)
+    Friend Sub StunPet(index as integer, skillnum As Integer)
         ' check if it's a stunning spell
 
         If PetAlive(Index) Then
@@ -3255,8 +3255,8 @@ Module ServerPets
 
     End Sub
 
-    Friend Sub TryPetAttackPlayer(index as integer, Victim As Integer)
-        Dim mapNum as Integer, blockAmount As Integer, Damage As Integer
+    Friend Sub TryPetAttackPlayer(index as integer, victim As Integer)
+        Dim mapNum as Integer, blockAmount As Integer, damage As Integer
 
         If GetPlayerMap(Index) <> GetPlayerMap(Victim) Then Exit Sub
 
@@ -3336,8 +3336,8 @@ Module ServerPets
 
     End Function
 
-    Friend Sub TryPetAttackPet(index as integer, Victim As Integer)
-        Dim mapNum as Integer, blockAmount As Integer, Damage As Integer
+    Friend Sub TryPetAttackPet(index as integer, victim As Integer)
+        Dim mapNum as Integer, blockAmount As Integer, damage As Integer
 
         If GetPlayerMap(Index) <> GetPlayerMap(Victim) Then Exit Sub
 
@@ -3384,7 +3384,7 @@ Module ServerPets
 
     End Sub
 
-    Function CanPlayerAttackPet(Attacker As Integer, Victim As Integer, Optional IsSkill As Boolean = False) As Boolean
+    Function CanPlayerAttackPet(attacker As Integer, victim As Integer, Optional isSkill As Boolean = False) As Boolean
 
         If IsSkill = False Then
             ' Check attack timer
@@ -3475,8 +3475,8 @@ Module ServerPets
 
     End Function
 
-    Sub PlayerAttackPet(Attacker As Integer, Victim As Integer, Damage As Integer, Optional Skillnum As Integer = 0)
-        Dim Exp As Integer, n As Integer, i As Integer
+    Sub PlayerAttackPet(attacker As Integer, victim As Integer, damage As Integer, Optional skillnum As Integer = 0)
+        Dim exp As Integer, n As Integer, i As Integer
 
         ' Check for subscript out of range
 
@@ -3541,7 +3541,7 @@ Module ServerPets
             SendPetVital(Victim, VitalType.HP)
 
             'Set pet to begin attacking the other pet if it isn't dead or dosent have another target
-            If TempPlayer(Victim).PetTarget <= 0 AndAlso TempPlayer(Victim).PetBehavior <> PET_BEHAVIOUR_GOTO Then
+            If TempPlayer(Victim).PetTarget <= 0 AndAlso TempPlayer(Victim).PetBehavior <> PetBehaviourGoto Then
                 TempPlayer(Victim).PetTarget = Attacker
                 TempPlayer(Victim).PetTargetType = TargetType.Player
             End If
@@ -3596,7 +3596,7 @@ Module ServerPets
 
     End Function
 
-    Function GetPetVitalRegen(index as integer, Vital As VitalType) As Integer
+    Function GetPetVitalRegen(index as integer, vital As VitalType) As Integer
         Dim i As Integer
 
         If Index <= 0 OrElse Index > MAX_PLAYERS OrElse Not PetAlive(Index) Then
@@ -3616,9 +3616,9 @@ Module ServerPets
 
     End Function
 
-    Friend Sub TryPlayerAttackPet(Attacker As Integer, Victim As Integer)
+    Friend Sub TryPlayerAttackPet(attacker As Integer, victim As Integer)
         Dim blockAmount As Integer, mapNum as Integer
-        Dim Damage As Integer
+        Dim damage As Integer
 
         Damage = 0
 
@@ -3672,9 +3672,9 @@ Module ServerPets
     End Sub
 
     Sub CheckPetLevelUp(index as integer)
-        Dim expRollover As Integer, level_count As Integer
+        Dim expRollover As Integer, levelCount As Integer
 
-        level_count = 0
+        levelCount = 0
 
         Do While GetPetExp(Index) >= GetPetNextLevel(Index)
             expRollover = GetPetExp(Index) - GetPetNextLevel(Index)
@@ -3686,16 +3686,16 @@ Module ServerPets
 
             SetPetPoints(Index, GetPetPoints(Index) + Pet(Player(Index).Character(TempPlayer(Index).CurChar).Pet.Num).LevelPnts)
             SetPetExp(Index, expRollover)
-            level_count = level_count + 1
+            levelCount = levelCount + 1
         Loop
 
-        If level_count > 0 Then
-            If level_count = 1 Then
+        If levelCount > 0 Then
+            If levelCount = 1 Then
                 'singular
-                PlayerMsg(Index, "Your " & Trim$(GetPetName(Index)) & " has gained " & level_count & " level!", ColorType.BrightGreen)
+                PlayerMsg(Index, "Your " & Trim$(GetPetName(Index)) & " has gained " & levelCount & " level!", ColorType.BrightGreen)
             Else
                 'plural
-                PlayerMsg(Index, "Your " & Trim$(GetPetName(Index)) & " has gained " & level_count & " levels!", ColorType.BrightGreen)
+                PlayerMsg(Index, "Your " & Trim$(GetPetName(Index)) & " has gained " & levelCount & " levels!", ColorType.BrightGreen)
             End If
 
             SendPlayerData(Index)
@@ -3704,8 +3704,8 @@ Module ServerPets
 
     End Sub
 
-    Friend Sub PetFireProjectile(index as integer, Spellnum As Integer)
-        Dim ProjectileSlot As Integer, ProjectileNum As Integer
+    Friend Sub PetFireProjectile(index as integer, spellnum As Integer)
+        Dim projectileSlot As Integer, projectileNum As Integer
         Dim mapNum as Integer, i As Integer
 
         ' Prevent subscript out of range
@@ -3785,7 +3785,7 @@ Module ServerPets
 
     End Function
 
-    Friend Sub SetPetLevel(index as integer, Newlvl As Integer)
+    Friend Sub SetPetLevel(index as integer, newlvl As Integer)
         If PetAlive(Index) Then
             Player(Index).Character(TempPlayer(Index).CurChar).Pet.Level = Newlvl
         End If
@@ -3800,7 +3800,7 @@ Module ServerPets
 
     End Function
 
-    Friend Sub SetPetX(index as integer, X As Integer)
+    Friend Sub SetPetX(index as integer, x As Integer)
         If PetAlive(Index) Then
             Player(Index).Character(TempPlayer(Index).CurChar).Pet.X = X
         End If
@@ -3815,7 +3815,7 @@ Module ServerPets
 
     End Function
 
-    Friend Sub SetPetY(index as integer, Y As Integer)
+    Friend Sub SetPetY(index as integer, y As Integer)
         If PetAlive(Index) Then
             Player(Index).Character(TempPlayer(Index).CurChar).Pet.Y = Y
         End If
@@ -3839,13 +3839,13 @@ Module ServerPets
 
     End Function
 
-    Friend Sub SetPetBehaviour(index as integer, Behaviour As Byte)
+    Friend Sub SetPetBehaviour(index as integer, behaviour As Byte)
         If PetAlive(Index) Then
             Player(Index).Character(TempPlayer(Index).CurChar).Pet.AttackBehaviour = Behaviour
         End If
     End Sub
 
-    Friend Function GetPetStat(index as integer, Stat As StatType) As Integer
+    Friend Function GetPetStat(index as integer, stat As StatType) As Integer
         GetPetStat = 0
 
         If PetAlive(Index) Then
@@ -3854,7 +3854,7 @@ Module ServerPets
 
     End Function
 
-    Friend Sub SetPetStat(index as integer, Stat As StatType, Amount As Integer)
+    Friend Sub SetPetStat(index as integer, stat As StatType, amount As Integer)
 
         If PetAlive(Index) Then
             Player(Index).Character(TempPlayer(Index).CurChar).Pet.Stat(Stat) = Amount
@@ -3871,7 +3871,7 @@ Module ServerPets
 
     End Function
 
-    Friend Sub SetPetPoints(index as integer, Amount As Integer)
+    Friend Sub SetPetPoints(index as integer, amount As Integer)
 
         If PetAlive(Index) Then
             Player(Index).Character(TempPlayer(Index).CurChar).Pet.Points = Amount
@@ -3888,13 +3888,13 @@ Module ServerPets
 
     End Function
 
-    Friend Sub SetPetExp(index as integer, Amount As Integer)
+    Friend Sub SetPetExp(index as integer, amount As Integer)
         If PetAlive(Index) Then
             Player(Index).Character(TempPlayer(Index).CurChar).Pet.Exp = Amount
         End If
     End Sub
 
-    Function GetPetVital(index as integer, Vital As VitalType) As Integer
+    Function GetPetVital(index as integer, vital As VitalType) As Integer
 
         If Index > MAX_PLAYERS Then Exit Function
 
@@ -3908,7 +3908,7 @@ Module ServerPets
 
     End Function
 
-    Sub SetPetVital(index as integer, Vital As VitalType, Amount As Integer)
+    Sub SetPetVital(index as integer, vital As VitalType, amount As Integer)
 
         If Index > MAX_PLAYERS Then Exit Sub
 
@@ -3922,7 +3922,7 @@ Module ServerPets
 
     End Sub
 
-    Function GetPetMaxVital(index as integer, Vital As VitalType) As Integer
+    Function GetPetMaxVital(index as integer, vital As VitalType) As Integer
 
         If Index > MAX_PLAYERS Then Exit Function
 

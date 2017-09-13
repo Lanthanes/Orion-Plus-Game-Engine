@@ -3,7 +3,7 @@ Imports ASFW
 Imports SFML.Graphics
 Imports SFML.Window
 
-Module modParties
+Module ModParties
 
 #Region "Types and Globals"
     Friend Party As PartyRec
@@ -17,11 +17,11 @@ Module modParties
 
 #Region "Incoming Packets"
     Sub Packet_PartyInvite(ByRef data() As Byte)
-        Dim Name As String
+        Dim name As String
         dim buffer as New ByteStream(Data)
         Name = Buffer.ReadString
 
-        DialogType = DIALOGUE_TYPE_PARTY
+        DialogType = DialogueTypeParty
 
         DialogMsg1 = "Party Invite"
         DialogMsg2 = Trim$(Name) & " has invited you to a party. Would you like to join?"
@@ -32,7 +32,7 @@ Module modParties
     End Sub
 
     Sub Packet_PartyUpdate(ByRef data() As Byte)
-        Dim I As Integer, InParty As Integer
+        Dim I As Integer, inParty As Integer
         dim buffer as New ByteStream(Data)
         InParty = Buffer.ReadInt32
 
@@ -85,7 +85,7 @@ Module modParties
 #End Region
 
 #Region "Outgoing Packets"
-    Friend Sub SendPartyRequest(Name As String)
+    Friend Sub SendPartyRequest(name As String)
         dim buffer as New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CRequestParty)
         Buffer.WriteString(Name)
@@ -121,7 +121,7 @@ Module modParties
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendPartyChatMsg(Text As String)
+    Friend Sub SendPartyChatMsg(text As String)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPartyChatMsg)
@@ -141,7 +141,7 @@ Module modParties
     End Sub
 
     Friend Sub DrawParty()
-        Dim I As Integer, X As Integer, Y As Integer, barwidth As Integer, playerNum As Integer, theName As String
+        Dim I As Integer, x As Integer, y As Integer, barwidth As Integer, playerNum As Integer, theName As String
         Dim rec(1) As Rectangle
 
         ' render the window

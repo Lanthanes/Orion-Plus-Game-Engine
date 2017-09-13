@@ -1,6 +1,6 @@
 ﻿Imports System.Drawing
 
-Module modVariables
+Module ModVariables
     'char creation/selecting
     Friend SelectedChar As Byte
     Friend MaxChars As Byte
@@ -20,17 +20,17 @@ Module modVariables
     Friend FlashTimer As Integer
 
     ' targetting
-    Friend myTarget As Integer
-    Friend myTargetType As Integer
+    Friend MyTarget As Integer
+    Friend MyTargetType As Integer
 
     ' chat bubble
-    Friend chatBubble(Byte.MaxValue) As ChatBubbleRec
-    Friend chatBubbleindex as integer
+    Friend ChatBubble(Byte.MaxValue) As ChatBubbleRec
+    Friend ChatBubbleindex as integer
 
     ' Cache the Resources in an array
     Friend MapResource() As MapResourceRec
-    Friend Resource_index as integer
-    Friend Resources_Init As Boolean
+    Friend ResourceIndex as integer
+    Friend ResourcesInit As Boolean
 
     ' inv drag + drop
     Friend DragInvSlotNum As Integer
@@ -50,8 +50,8 @@ Module modVariables
     ' gui
     Friend EqX As Integer
     Friend EqY As Integer
-    Friend FPS As Integer
-    Friend LPS As Integer
+    Friend Fps As Integer
+    Friend Lps As Integer
     Friend PingToDraw As String
     Friend ShowRClick As Boolean
 
@@ -59,7 +59,7 @@ Module modVariables
     Friend LastItemDesc As Integer ' Stores the last item we showed in desc
     Friend LastSkillDesc As Integer ' Stores the last skill we showed in desc
     Friend LastBankDesc As Integer ' Stores the last bank item we showed in desc
-    Friend tmpCurrencyItem As Integer
+    Friend TmpCurrencyItem As Integer
     Friend InShop As Integer ' is the player in a shop?
     Friend ShopAction As Byte ' stores the current shop action
     Friend InBank As Integer
@@ -73,7 +73,7 @@ Module modVariables
     Friend InventoryItemSelected As Integer
     Friend SkillBuffer As Integer
     Friend SkillBufferTimer As Integer
-    Friend SkillCD(MAX_PLAYER_SKILLS) As Integer
+    Friend SkillCd(MAX_PLAYER_SKILLS) As Integer
     Friend StunDuration As Integer
     Friend NextlevelExp As Integer
 
@@ -82,7 +82,7 @@ Module modVariables
 
     ' Controls main gameloop
     Friend InGame As Boolean
-    Friend isLogging As Boolean
+    Friend IsLogging As Boolean
     Friend MapData As Boolean
     Friend PlayerData As Boolean
 
@@ -109,18 +109,18 @@ Module modVariables
     Friend GettingMap As Boolean
 
     ' Used to check if FPS needs to be drawn
-    Friend BFPS As Boolean
-    Friend BLPS As Boolean
+    Friend Bfps As Boolean
+    Friend Blps As Boolean
     Friend BLoc As Boolean
 
     ' FPS and Time-based movement vars
     Friend ElapsedTime As Integer
     'Friend ElapsedMTime As Integer
-    Friend GameFPS As Integer
-    Friend GameLPS As Integer
+    Friend GameFps As Integer
+    Friend GameLps As Integer
 
     ' Text vars
-    Friend vbQuote As String
+    Friend VbQuote As String
 
     ' Mouse cursor tile location
     Friend CurX As Integer
@@ -159,7 +159,7 @@ Module modVariables
     Friend MapEditorSlideDir As Integer
 
     ' Maximum classes
-    Friend Max_Classes As Byte
+    Friend MaxClasses As Byte
 
     Friend Camera As Rectangle
     Friend TileView As Rect
@@ -175,16 +175,16 @@ Module modVariables
     Friend AnimationIndex As Byte
 
     ' Editor edited items array
-    Friend Item_Changed(MAX_ITEMS) As Boolean
-    Friend NPC_Changed(MAX_NPCS) As Boolean
-    Friend Resource_Changed(MAX_NPCS) As Boolean
-    Friend Animation_Changed(MAX_ANIMATIONS) As Boolean
-    Friend Skill_Changed(MAX_SKILLS) As Boolean
-    Friend Shop_Changed(MAX_SHOPS) As Boolean
+    Friend ItemChanged(MAX_ITEMS) As Boolean
+    Friend NpcChanged(MAX_NPCS) As Boolean
+    Friend ResourceChanged(MAX_NPCS) As Boolean
+    Friend AnimationChanged(MAX_ANIMATIONS) As Boolean
+    Friend SkillChanged(MAX_SKILLS) As Boolean
+    Friend ShopChanged(MAX_SHOPS) As Boolean
 
     ' New char
-    Friend newCharSprite As Integer
-    Friend newCharClass As Integer
+    Friend NewCharSprite As Integer
+    Friend NewCharClass As Integer
 
     Friend TempMapData() As Byte
 
@@ -202,8 +202,8 @@ Module modVariables
     Friend UpdateNews As Boolean
 
     ' fog
-    Friend fogOffsetX As Integer
-    Friend fogOffsetY As Integer
+    Friend FogOffsetX As Integer
+    Friend FogOffsetY As Integer
 
     'Weather Stuff... events take precedent OVER map settings so we will keep temp map weather settings here.
     Friend CurrentWeather As Integer

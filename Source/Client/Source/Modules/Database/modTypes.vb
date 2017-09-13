@@ -1,4 +1,4 @@
-﻿Module modTypes
+﻿Module ModTypes
     ' options
     Friend Options As New modOptions()
 
@@ -36,7 +36,7 @@
     End Structure
 
     Friend Structure SkillAnim
-        Dim skillnum As Integer
+        Dim Skillnum As Integer
         Dim Timer As Integer
         Dim FramePointer As Integer
     End Structure
@@ -47,14 +47,14 @@
         Dim Classes As Byte
         Dim Sprite As Integer
         Dim Level As Byte
-        Dim EXP As Integer
+        Dim Exp As Integer
         Dim Access As Byte
-        Dim PK As Byte
+        Dim Pk As Byte
         ' Vitals
         Dim Vital() As Integer
         ' Stats
         Dim Stat() As Byte
-        Dim POINTS As Byte
+        Dim Points As Byte
         ' Worn equipment
         Dim Equipment() As Byte
         ' Position
@@ -64,9 +64,9 @@
         Dim Dir As Byte
 
         ' Client use only
-        Dim MaxHP As Integer
-        Dim MaxMP As Integer
-        Dim MaxSP As Integer
+        Dim MaxHp As Integer
+        Dim MaxMp As Integer
+        Dim MaxSp As Integer
         Dim XOffset As Integer
         Dim YOffset As Integer
         Dim Moving As Byte
@@ -197,11 +197,11 @@
 
     Friend Structure ChatBubbleRec
         Dim Msg As String
-        Dim colour As Integer
-        Dim target As Integer
-        Dim targetType As Byte
+        Dim Colour As Integer
+        Dim Target As Integer
+        Dim TargetType As Byte
         Dim Timer As Integer
-        Dim active As Boolean
+        Dim Active As Boolean
     End Structure
 
     Friend Structure TempTileRec
@@ -218,10 +218,10 @@
     End Structure
 
     Friend Structure ActionMsgRec
-        Dim message As String
+        Dim Message As String
         Dim Created As Integer
         Dim Type As Integer
-        Dim color As Integer
+        Dim Color As Integer
         Dim Scroll As Integer
         Dim X As Integer
         Dim Y As Integer

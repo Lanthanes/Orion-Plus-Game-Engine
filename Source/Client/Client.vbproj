@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{531B337C-BC02-44ED-90C2-C448FE5190A2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>OrionClient.My.MyApplication</StartupObject>
-    <RootNamespace>OrionClient</RootNamespace>
+    <StartupObject>Engine.My.MyApplication</StartupObject>
+    <RootNamespace>Engine</RootNamespace>
     <AssemblyName>Orion+ Client</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>

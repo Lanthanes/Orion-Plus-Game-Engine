@@ -1,10 +1,8 @@
 ﻿Imports System.IO
-Imports System.Linq
 Imports ASFW
-Imports ASFW.IO
 Imports ASFW.IO.FileIO
 
-Module ServerDatabase
+Module modDatabase
 
 #Region "Classes"
     Friend Sub CreateClasses()
@@ -1561,13 +1559,13 @@ Module ServerDatabase
 
 #Region "Accounts"
     Function AccountExist(Name As String) As Boolean
-        Return File.Exists(Application.StartupPath & "\Data\Accounts" & Trim$(Name) & ".bin")
+        Return File.Exists(Application.StartupPath & "\Data\Accounts\" & Trim$(Name) & "\Data.bin")
     End Function
 
     Function PasswordOK(Name As String, Password As String) As Boolean
         If Not AccountExist(Name) Then Return False
         Dim reader As New ByteStream()
-        BinaryFile.Load(Application.StartupPath & "\Data\Accounts" & Trim$(Name) & ".bin", reader)
+        BinaryFile.Load(Application.StartupPath & "\Data\Accounts\" & Trim$(Name) & "\Data.bin", reader)
         If reader.ReadString().Trim <> Name.Trim Then Return False
         Return reader.ReadString().Trim.ToUpper = Password.Trim.ToUpper
     End Function
@@ -1598,10 +1596,10 @@ Module ServerDatabase
 
     Sub SavePlayer(index as integer)
         Dim playername As String = Trim$(Player(index).Login)
-        Dim filename As String = Application.StartupPath & "\Data\Accounts" & playername
-        CheckDir(filename) : filename += ".bin"
+        Dim filename As String = Application.StartupPath & "\Data\Accounts\" & playername
+        CheckDir(filename) : filename += "\Data.bin"
 
-        Dim writer As New ByteStream(100)
+        Dim writer As New ByteStream(9 + Player(index).Login.Length + Player(index).Password.Length)
 
         writer.WriteString(Player(index).Login)
         writer.WriteString(Player(index).Password)
@@ -1616,7 +1614,7 @@ Module ServerDatabase
     End Sub
 
     Sub LoadPlayer(index as integer, Name As String)
-        Dim filename As String = Path.Combine(Application.StartupPath, "data", "accounts", Name.Trim(), String.Format("{0}.bin", Name.Trim()))
+        Dim filename As String = Application.StartupPath & "\Data\Accounts\" & Name.Trim() & "\Data.bin"
         ClearPlayer(index)
         Dim reader As New ByteStream()
         BinaryFile.Load(filename, reader)
@@ -1639,7 +1637,7 @@ Module ServerDatabase
 
         Player(index).Access = 0
 
-        For i As Integer = 1 To MAX_CHARS
+        For i = 1 To MAX_CHARS
             ClearCharacter(index, i)
         Next
 
@@ -1649,12 +1647,10 @@ Module ServerDatabase
 
 #Region "Bank"
     Friend Sub LoadBank(index as integer, Name As String)
-        Dim filename As String
+        Dim filename As String = Application.StartupPath & "\Data\Accounts\" & Name.Trim() & "\Bank.bin"
 
         ClearBank(index)
-
-        filename = Path.Combine(Application.StartupPath, "data", "banks", String.Format("{0}.bin", Name.Trim()))
-
+        
         If Not File.Exists(filename) Then
             SaveBank(index)
             Exit Sub
@@ -1680,7 +1676,7 @@ Module ServerDatabase
     End Sub
 
     Sub SaveBank(index as integer)
-        Dim filename = Path.Combine(Application.StartupPath, "data", "banks", String.Format("{0}.bin", Player(index).Login.Trim()))
+        Dim filename = Application.StartupPath & "\Data\Accounts\" & Player(index).Login.Trim() & "\Bank.bin"
 
         Dim writer As New ByteStream(100)
 
@@ -1803,12 +1799,12 @@ Module ServerDatabase
             Player(index).Character(CharNum).Hotbar(i).SlotType = 0
         Next
 
-        ReDim Player(index).Character(CharNum).Switches(MAX_SWITCHES)
-        For i = 1 To MAX_SWITCHES
+        ReDim Player(index).Character(CharNum).Switches(MaxSwitches)
+        For i = 1 To MaxSwitches
             Player(index).Character(CharNum).Switches(i) = 0
         Next
-        ReDim Player(index).Character(CharNum).Variables(MAX_VARIABLES)
-        For i = 1 To MAX_VARIABLES
+        ReDim Player(index).Character(CharNum).Variables(MaxVariables)
+        For i = 1 To MaxVariables
             Player(index).Character(CharNum).Variables(i) = 0
         Next
 
@@ -1881,7 +1877,7 @@ Module ServerDatabase
     End Sub
 
     Sub LoadCharacter(index as integer, CharNum As Integer)
-        Dim filename As String = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Player(index).Login), String.Format("{0}.bin", CharNum))
+        Dim filename As String = Application.StartupPath & "\Data\Accounts\" & Player(index).Login.Trim & "\" & CharNum & ".bin"
 
         ClearCharacter(index, CharNum)
 
@@ -1951,12 +1947,12 @@ Module ServerDatabase
             Player(index).Character(CharNum).Hotbar(i).SlotType = reader.ReadByte()
         Next
 
-        ReDim Player(index).Character(CharNum).Switches(MAX_SWITCHES)
-        For i = 1 To MAX_SWITCHES
+        ReDim Player(index).Character(CharNum).Switches(MaxSwitches)
+        For i = 1 To MaxSwitches
             Player(index).Character(CharNum).Switches(i) = reader.ReadByte()
         Next
-        ReDim Player(index).Character(CharNum).Variables(MAX_VARIABLES)
-        For i = 1 To MAX_VARIABLES
+        ReDim Player(index).Character(CharNum).Variables(MaxVariables)
+        For i = 1 To MaxVariables
             Player(index).Character(CharNum).Variables(i) = reader.ReadInt32()
         Next
 
@@ -2031,7 +2027,7 @@ Module ServerDatabase
     End Sub
 
     Sub SaveCharacter(index as integer, CharNum As Integer)
-        Dim filename As String = Path.Combine(Application.StartupPath, "data", "accounts", Trim$(Player(index).Login), String.Format("{0}.bin", CharNum))
+        Dim filename As String = Application.StartupPath & "\Data\Accounts\" & Player(index).Login.Trim & "\" & CharNum & ".bin"
 
         Dim writer As New ByteStream(100)
 
@@ -2097,11 +2093,11 @@ Module ServerDatabase
             writer.WriteByte(Player(index).Character(CharNum).Hotbar(i).SlotType)
         Next
 
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             writer.WriteByte(Player(index).Character(CharNum).Switches(i))
         Next
 
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             writer.WriteInt32(Player(index).Character(CharNum).Variables(i))
         Next
 
@@ -2165,7 +2161,7 @@ Module ServerDatabase
     End Sub
 
     Function CharExist(index as integer, CharNum As Integer) As Boolean
-        Return Len(Trim$(Player(index).Character(CharNum).Name)) > 0
+        Return Player(index).Character(CharNum).Name.Trim.Length > 0
     End Function
 
     Sub AddChar(index as integer, CharNum As Integer, Name As String, Sex As Byte, ClassNum As Byte, Sprite As Integer)
@@ -2301,59 +2297,51 @@ Module ServerDatabase
 
 #Region "Logs"
 
-    Friend Function GetFileContents(FullPath As String, Optional ByRef ErrInfo As String = "") As String
-        Dim strContents As String
-        Dim objReader As StreamReader
-        strContents = ""
-        If Not File.Exists(FullPath) Then
-            Dim fs As FileStream = File.Create(FullPath)
-            fs.Close()
-            fs.Dispose()
-        End If
+    Friend Function GetFileContents(fullPath As String) As String
+        Dim strContents = ""
+        Dim objReader As StreamReader 
+        If Not File.Exists(FullPath) Then File.Create(FullPath).Dispose()
         Try
             objReader = New StreamReader(FullPath)
             strContents = objReader.ReadToEnd()
             objReader.Close()
-        Catch Ex As Exception
-            ErrInfo = Ex.Message
+        Catch
         End Try
         Return strContents
     End Function
 
-    Friend Function Addlog(strData As String, FN As String, Optional ErrInfo As String = "") As Boolean
+    Friend Function Addlog(strData As String, FN As String) As Boolean
         Dim fullpath As String
-        Dim Contents As String
-        Dim bAns As Boolean = False
+        Dim contents As String
+        Dim bAns = False
         Dim objReader As StreamWriter
         fullpath = Path.Combine(Application.StartupPath, "data", "logs", FN)
-        Contents = GetFileContents(fullpath)
-        Contents = Contents & vbNewLine & strData
+        contents = GetFileContents(fullpath)
+        contents = contents & vbNewLine & strData
         Try
             objReader = New StreamWriter(fullpath)
-            objReader.Write(Contents)
+            objReader.Write(contents)
             objReader.Close()
             bAns = True
-        Catch Ex As Exception
-            ErrInfo = Ex.Message
+        Catch
         End Try
         Return bAns
     End Function
 
-    Friend Function AddTextToFile(strData As String, FN As String, Optional ErrInfo As String = "") As Boolean
+    Friend Function AddTextToFile(strData As String, fn As String) As Boolean
         Dim fullpath As String
-        Dim Contents As String
-        Dim bAns As Boolean = False
+        Dim contents As String
+        Dim bAns = False
         Dim objReader As StreamWriter
         fullpath = Path.Combine(Application.StartupPath, "data", FN)
-        Contents = GetFileContents(fullpath)
-        Contents = Contents & vbNewLine & strData
+        contents = GetFileContents(fullpath)
+        contents = contents & vbNewLine & strData
         Try
             objReader = New StreamWriter(fullpath)
-            objReader.Write(Contents)
+            objReader.Write(contents)
             objReader.Close()
             bAns = True
-        Catch Ex As Exception
-            ErrInfo = Ex.Message
+        Catch
         End Try
         Return bAns
     End Function

@@ -1,12 +1,12 @@
 ﻿Imports ASFW
 
-Friend Module modQuest
+Friend Module ModQuest
 #Region "Global Info"
     'Constants
-    Friend Const MAX_QUESTS As Byte = 250
+    Friend Const MaxQuests As Byte = 250
     'Friend Const MAX_TASKS As Byte = 10
     'Friend Const MAX_REQUIREMENTS As Byte = 10
-    Friend Const EDITOR_TASKS As Byte = 7
+    Friend Const EditorTasks As Byte = 7
 
     'Friend Const QUEST_TYPE_GOSLAY As Byte = 1
     'Friend Const QUEST_TYPE_GOCOLLECT As Byte = 2
@@ -24,20 +24,20 @@ Friend Module modQuest
     'Friend Const QUEST_REPEATABLE As Byte = 3
 
     Friend QuestLogPage As Integer
-    Friend QuestNames(MAX_ACTIVEQUESTS) As String
+    Friend QuestNames(MaxActivequests) As String
 
-    Friend Quest_Changed(MAX_QUESTS) As Boolean
+    Friend QuestChanged(MaxQuests) As Boolean
 
     Friend QuestEditorShow As Boolean
 
     'questlog variables
 
-    Friend Const MAX_ACTIVEQUESTS = 10
+    Friend Const MaxActivequests = 10
 
     Friend QuestLogX As Integer = 150
     Friend QuestLogY As Integer = 100
 
-    Friend pnlQuestLogVisible As Boolean
+    Friend PnlQuestLogVisible As Boolean
     Friend SelectedQuest As Integer
     Friend QuestTaskLogText As String = ""
     Friend ActualTaskText As String = ""
@@ -57,7 +57,7 @@ Friend Module modQuest
     Friend QuestAcceptTag As Integer
 
     'Types
-    Friend Quest(MAX_QUESTS) As QuestRec
+    Friend Quest(MaxQuests) As QuestRec
 
     Friend Structure PlayerQuestRec
         Dim Status As Integer '0=not started, 1=started, 2=completed, 3=completed but repeatable
@@ -107,7 +107,7 @@ Friend Module modQuest
 #End Region
 
 #Region "DataBase"
-    Sub ClearQuest(QuestNum As Integer)
+    Sub ClearQuest(questNum As Integer)
         Dim I As Integer
 
         ' clear the Quest
@@ -163,9 +163,9 @@ Friend Module modQuest
     Sub ClearQuests()
         Dim I As Integer
 
-        ReDim Quest(MAX_QUESTS)
+        ReDim Quest(MaxQuests)
 
-        For I = 1 To MAX_QUESTS
+        For I = 1 To MaxQuests
             ClearQuest(I)
         Next
     End Sub
@@ -177,7 +177,7 @@ Friend Module modQuest
     End Sub
 
     Friend Sub Packet_UpdateQuest(ByRef data() As Byte)
-        Dim QuestNum As Integer
+        Dim questNum As Integer
         dim buffer as New ByteStream(Data)
         QuestNum = Buffer.ReadInt32
 
@@ -233,7 +233,7 @@ Friend Module modQuest
     End Sub
 
     Friend Sub Packet_PlayerQuest(ByRef data() As Byte)
-        Dim QuestNum As Integer
+        Dim questNum As Integer
         dim buffer as New ByteStream(Data)
         QuestNum = Buffer.ReadInt32
 
@@ -249,7 +249,7 @@ Friend Module modQuest
     Friend Sub Packet_PlayerQuests(ByRef data() As Byte)
         Dim I As Integer
         dim buffer as New ByteStream(Data)
-        For I = 1 To MAX_QUESTS
+        For I = 1 To MaxQuests
             Player(MyIndex).PlayerQuest(I).Status = Buffer.ReadInt32
             Player(MyIndex).PlayerQuest(I).ActualTask = Buffer.ReadInt32
             Player(MyIndex).PlayerQuest(I).CurrentCount = Buffer.ReadInt32
@@ -295,7 +295,7 @@ Friend Module modQuest
 
     End Sub
 
-    Friend Sub PlayerHandleQuest(QuestNum As Integer, Order As Integer)
+    Friend Sub PlayerHandleQuest(questNum As Integer, order As Integer)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPlayerHandleQuest)
@@ -306,7 +306,7 @@ Friend Module modQuest
         Buffer.Dispose()
     End Sub
 
-    Friend Sub QuestReset(QuestNum As Integer)
+    Friend Sub QuestReset(questNum As Integer)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CQuestReset)
@@ -320,29 +320,29 @@ Friend Module modQuest
 
 #Region "Support Functions"
     'Tells if the quest is in progress or not
-    Friend Function QuestInProgress(QuestNum As Integer) As Boolean
+    Friend Function QuestInProgress(questNum As Integer) As Boolean
         QuestInProgress = False
-        If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
+        If QuestNum < 1 OrElse QuestNum > MaxQuests Then Exit Function
 
         If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatusType.Started Then 'Status=1 means started
             QuestInProgress = True
         End If
     End Function
 
-    Friend Function QuestCompleted(QuestNum As Integer) As Boolean
+    Friend Function QuestCompleted(questNum As Integer) As Boolean
         QuestCompleted = False
-        If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
+        If QuestNum < 1 OrElse QuestNum > MaxQuests Then Exit Function
 
         If Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatusType.Completed OrElse Player(MyIndex).PlayerQuest(QuestNum).Status = QuestStatusType.Repeatable Then
             QuestCompleted = True
         End If
     End Function
 
-    Friend Function GetQuestNum(QuestName As String) As Integer
+    Friend Function GetQuestNum(questName As String) As Integer
         Dim I As Integer
         GetQuestNum = 0
 
-        For I = 1 To MAX_QUESTS
+        For I = 1 To MaxQuests
             If Trim$(Quest(I).Name) = Trim$(QuestName) Then
                 GetQuestNum = I
                 Exit For
@@ -352,12 +352,12 @@ Friend Module modQuest
 #End Region
 
 #Region "Misc Functions"
-    Friend Function CanStartQuest(QuestNum As Integer) As Boolean
+    Friend Function CanStartQuest(questNum As Integer) As Boolean
         Dim i As Integer
 
         CanStartQuest = False
 
-        If QuestNum < 1 OrElse QuestNum > MAX_QUESTS Then Exit Function
+        If QuestNum < 1 OrElse QuestNum > MaxQuests Then Exit Function
         If QuestInProgress(QuestNum) Then Exit Function
 
         'Check if player has the quest 0 (not started) or 3 (completed but it can be started again)
@@ -375,7 +375,7 @@ Friend Module modQuest
 
                 'Check if previous quest is needed
                 If Quest(QuestNum).Requirement(i) = 2 Then
-                    If Quest(QuestNum).RequirementIndex(i) > 0 AndAlso Quest(QuestNum).RequirementIndex(i) <= MAX_QUESTS Then
+                    If Quest(QuestNum).RequirementIndex(i) > 0 AndAlso Quest(QuestNum).RequirementIndex(i) <= MaxQuests Then
                         If Player(MyIndex).PlayerQuest(Quest(QuestNum).RequirementIndex(i)).Status = QuestStatusType.NotStarted OrElse Player(MyIndex).PlayerQuest(Quest(QuestNum).RequirementIndex(i)).Status = QuestStatusType.Started Then
                             Exit Function
                         End If
@@ -391,7 +391,7 @@ Friend Module modQuest
         End If
     End Function
 
-    Friend Function CanEndQuest(index as integer, QuestNum As Integer) As Boolean
+    Friend Function CanEndQuest(index as integer, questNum As Integer) As Boolean
         CanEndQuest = False
 
         If Player(Index).PlayerQuest(QuestNum).ActualTask >= Quest(QuestNum).Task.Length Then
@@ -430,14 +430,14 @@ Friend Module modQuest
     Friend Sub RefreshQuestLog()
         Dim I As Integer, x As Integer
 
-        For I = 1 To MAX_ACTIVEQUESTS
+        For I = 1 To MaxActivequests
             QuestNames(I) = ""
         Next
 
         x = 1
 
-        For I = 1 To MAX_QUESTS
-            If QuestInProgress(I) AndAlso x < MAX_ACTIVEQUESTS Then
+        For I = 1 To MaxQuests
+            If QuestInProgress(I) AndAlso x < MaxActivequests Then
                 QuestNames(x) = Trim$(Quest(I).Name)
                 x = x + 1
             End If
@@ -450,11 +450,11 @@ Friend Module modQuest
     ' ////////////////////////
 
     Friend Sub LoadQuestlogBox()
-        Dim QuestNum As Integer, CurTask As Integer, I As Integer
+        Dim questNum As Integer, curTask As Integer, I As Integer
 
         If SelectedQuest = 0 Then Exit Sub
 
-        For I = 1 To MAX_QUESTS
+        For I = 1 To MaxQuests
             If Trim$(QuestNames(SelectedQuest)) = Trim$(Quest(I).Name) Then
                 QuestNum = I
             End If
@@ -499,47 +499,47 @@ Friend Module modQuest
         Select Case Quest(QuestNum).Task(CurTask).TaskType
                 'defeat x amount of Npc
             Case QuestType.Slay
-                Dim CurCount As Integer = Player(MyIndex).PlayerQuest(QuestNum).CurrentCount
-                Dim MaxAmount As Integer = Quest(QuestNum).Task(CurTask).Amount
-                Dim NpcName As String = Npc(Quest(QuestNum).Task(CurTask).Npc).Name
+                Dim curCount As Integer = Player(MyIndex).PlayerQuest(QuestNum).CurrentCount
+                Dim maxAmount As Integer = Quest(QuestNum).Task(CurTask).Amount
+                Dim npcName As String = Npc(Quest(QuestNum).Task(CurTask).Npc).Name
                 ActualTaskText = Strings.Get("quests", "questgoslay", CurCount, MaxAmount, NpcName)'"Defeat " & CurCount & "/" & MaxAmount & " " & NpcName
                 'gather x amount of items
             Case QuestType.Collect
-                Dim CurCount As Integer = Player(MyIndex).PlayerQuest(QuestNum).CurrentCount
-                Dim MaxAmount As Integer = Quest(QuestNum).Task(CurTask).Amount
-                Dim ItemName As String = Item(Quest(QuestNum).Task(CurTask).Item).Name
+                Dim curCount As Integer = Player(MyIndex).PlayerQuest(QuestNum).CurrentCount
+                Dim maxAmount As Integer = Quest(QuestNum).Task(CurTask).Amount
+                Dim itemName As String = Item(Quest(QuestNum).Task(CurTask).Item).Name
                 ActualTaskText = Strings.Get("quests", "questgocollect", CurCount, MaxAmount, ItemName)'"Collect " & CurCount & "/" & MaxAmount & " " & ItemName
                 'go talk to npc
             Case QuestType.Talk
-                Dim NpcName As String = Npc(Quest(QuestNum).Task(CurTask).Npc).Name
+                Dim npcName As String = Npc(Quest(QuestNum).Task(CurTask).Npc).Name
                 ActualTaskText = Strings.Get("quests", "questtalkto", NpcName)'"Go talk to  " & NpcName
                 'reach certain map
             Case QuestType.Reach
-                Dim MapName As String = MapNames(Quest(QuestNum).Task(CurTask).Map)
+                Dim mapName As String = MapNames(Quest(QuestNum).Task(CurTask).Map)
                 ActualTaskText = Strings.Get("quests", "questgoto", MapName)'"Go to " & MapName
             Case QuestType.Give
                 'give x amount of items to npc
-                Dim NpcName As String = Npc(Quest(QuestNum).Task(CurTask).Npc).Name
-                Dim CurCount As Integer = Player(MyIndex).PlayerQuest(QuestNum).CurrentCount
-                Dim MaxAmount As Integer = Quest(QuestNum).Task(CurTask).Amount
-                Dim ItemName As String = Item(Quest(QuestNum).Task(CurTask).Item).Name
+                Dim npcName As String = Npc(Quest(QuestNum).Task(CurTask).Npc).Name
+                Dim curCount As Integer = Player(MyIndex).PlayerQuest(QuestNum).CurrentCount
+                Dim maxAmount As Integer = Quest(QuestNum).Task(CurTask).Amount
+                Dim itemName As String = Item(Quest(QuestNum).Task(CurTask).Item).Name
                 ActualTaskText = Strings.Get("quests", "questgive", NpcName, ItemName, CurCount, MaxAmount)'"Give " & NpcName & " the " & ItemName & CurCount & "/" & MaxAmount & " they requested"
                 'defeat certain amount of players
             Case QuestType.Kill
-                Dim CurCount As Integer = Player(MyIndex).PlayerQuest(QuestNum).CurrentCount
-                Dim MaxAmount As Integer = Quest(QuestNum).Task(CurTask).Amount
+                Dim curCount As Integer = Player(MyIndex).PlayerQuest(QuestNum).CurrentCount
+                Dim maxAmount As Integer = Quest(QuestNum).Task(CurTask).Amount
                 ActualTaskText = Strings.Get("quests", "questkill", CurCount, MaxAmount)'"Defeat " & CurCount & "/" & MaxAmount & " Players in Battle"
                 'go collect resources
             Case QuestType.Gather
-                Dim CurCount As Integer = Player(MyIndex).PlayerQuest(QuestNum).CurrentCount
-                Dim MaxAmount As Integer = Quest(QuestNum).Task(CurTask).Amount
-                Dim ResourceName As String = Resource(Quest(QuestNum).Task(CurTask).Resource).Name
+                Dim curCount As Integer = Player(MyIndex).PlayerQuest(QuestNum).CurrentCount
+                Dim maxAmount As Integer = Quest(QuestNum).Task(CurTask).Amount
+                Dim resourceName As String = Resource(Quest(QuestNum).Task(CurTask).Resource).Name
                 ActualTaskText = Strings.Get("quests", "questgather", CurCount, MaxAmount, ResourceName)'"Gather " & CurCount & "/" & MaxAmount & " " & ResourceName
                 'fetch x amount of items from npc
             Case QuestType.Fetch
-                Dim NpcName As String = Item(Quest(QuestNum).Task(CurTask).Npc).Name
-                Dim MaxAmount As Integer = Quest(QuestNum).Task(CurTask).Amount
-                Dim ItemName As String = Item(Quest(QuestNum).Task(CurTask).Item).Name
+                Dim npcName As String = Item(Quest(QuestNum).Task(CurTask).Npc).Name
+                Dim maxAmount As Integer = Quest(QuestNum).Task(CurTask).Amount
+                Dim itemName As String = Item(Quest(QuestNum).Task(CurTask).Item).Name
                 ActualTaskText = Strings.Get("quests", "questfetch", ItemName, MaxAmount, NpcName) '"Fetch " & ItemName & "X" & MaxAmount & " from " & NpcName
             Case Else
                 'ToDo
@@ -563,7 +563,7 @@ Friend Module modQuest
         RenderSprite(QuestSprite, GameWindow, QuestLogX, QuestLogY, 0, 0, QuestGFXInfo.Width, QuestGFXInfo.Height)
 
         'draw quest names
-        For i = 1 To MAX_ACTIVEQUESTS
+        For i = 1 To MaxActivequests
             If Len(Trim$(QuestNames(i))) > 0 Then
                 DrawText(QuestLogX + 7, QuestLogY + y, Trim$(QuestNames(i)), SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
                 y = y + 20

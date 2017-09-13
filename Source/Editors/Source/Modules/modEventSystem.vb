@@ -2,14 +2,14 @@
 Imports SFML.Graphics
 Imports SFML.Window
 
-Friend Module modEventSystem
+Friend Module ModEventSystem
 #Region "Globals"
     ' Temp event storage
-    Friend tmpEvent As EventRec
-    Friend isEdit As Boolean
+    Friend TmpEvent As EventRec
+    Friend IsEdit As Boolean
 
-    Friend curPageNum As Integer
-    Friend curCommand As Integer
+    Friend CurPageNum As Integer
+    Friend CurCommand As Integer
     Friend GraphicSelX As Integer
     Friend GraphicSelY As Integer
     Friend GraphicSelX2 As Integer
@@ -26,7 +26,7 @@ Friend Module modEventSystem
     Friend IsMoveRouteCommand As Boolean
     Friend ListOfEvents() As Integer
 
-    Friend EventReplyID As Integer
+    Friend EventReplyId As Integer
     Friend EventReplyPage As Integer
     Friend EventChatFace As Integer
 
@@ -43,12 +43,12 @@ Friend Module modEventSystem
     Friend AnotherChat As Integer 'Determines if another showtext/showchoices is comming up, if so, dont close the event chatbox...
 
     'constants
-    Friend Switches(MAX_SWITCHES) As String
-    Friend Variables(MAX_VARIABLES) As String
-    Friend Const MAX_SWITCHES As Integer = 500
-    Friend Const MAX_VARIABLES As Integer = 500
+    Friend Switches(MaxSwitches) As String
+    Friend Variables(MaxVariables) As String
+    Friend Const MaxSwitches As Integer = 500
+    Friend Const MaxVariables As Integer = 500
 
-    Friend cpEvent As EventRec
+    Friend CpEvent As EventRec
     Friend EventList() As EventListRec
 
     Friend InEvent As Boolean
@@ -59,7 +59,7 @@ Friend Module modEventSystem
 
 #Region "Types"
     Friend Structure EventCommandRec
-        Dim index as integer
+        Dim Index as integer
         Dim Text1 As String
         Dim Text2 As String
         Dim Text3 As String
@@ -77,7 +77,7 @@ Friend Module modEventSystem
     End Structure
 
     Friend Structure MoveRouteRec
-        Dim index as integer
+        Dim Index as integer
         Dim Data1 As Integer
         Dim Data2 As Integer
         Dim Data3 As Integer
@@ -103,20 +103,20 @@ Friend Module modEventSystem
 
     Friend Structure EventPageRec
         'These are condition variables that decide if the event even appears to the player.
-        Dim chkVariable As Integer
+        Dim ChkVariable As Integer
         Dim Variableindex as integer
         Dim VariableCondition As Integer
         Dim VariableCompare As Integer
-        Dim chkSwitch As Integer
+        Dim ChkSwitch As Integer
         Dim Switchindex as integer
         Dim SwitchCompare As Integer
-        Dim chkHasItem As Integer
+        Dim ChkHasItem As Integer
         Dim HasItemindex as integer
         Dim HasItemAmount As Integer
-        Dim chkSelfSwitch As Integer
+        Dim ChkSelfSwitch As Integer
         Dim SelfSwitchindex as integer
         Dim SelfSwitchCompare As Integer
-        Dim chkPlayerGender As Integer
+        Dim ChkPlayerGender As Integer
         'End Conditions
 
         'Handles the Event Sprite
@@ -167,7 +167,7 @@ Friend Module modEventSystem
 
     Friend Structure MapEventRec
         Dim Name As String
-        Dim dir As Integer
+        Dim Dir As Integer
         Dim X As Integer
         Dim Y As Integer
         Dim GraphicType As Integer
@@ -188,7 +188,7 @@ Friend Module modEventSystem
         Dim ShowDir As Integer
         Dim WalkThrough As Integer
         Dim ShowName As Integer
-        Dim questnum As Integer
+        Dim Questnum As Integer
     End Structure
 
     Friend CopyEvent As EventRec
@@ -211,9 +211,9 @@ Friend Module modEventSystem
         MoveAwayFromPlayer
         StepForward
         StepBack
-        Wait100ms
-        Wait500ms
-        Wait1000ms
+        Wait100Ms
+        Wait500Ms
+        Wait1000Ms
         TurnUp
         TurnDown
         TurnLeft
@@ -224,12 +224,12 @@ Friend Module modEventSystem
         TurnRandom
         TurnTowardPlayer
         TurnAwayFromPlayer
-        SetSpeed8xSlower
-        SetSpeed4xSlower
-        SetSpeed2xSlower
+        SetSpeed8XSlower
+        SetSpeed4XSlower
+        SetSpeed2XSlower
         SetSpeedNormal
-        SetSpeed2xFaster
-        SetSpeed4xFaster
+        SetSpeed2XFaster
+        SetSpeed4XFaster
         SetFreqLowest
         SetFreqLower
         SetFreqNormal
@@ -250,72 +250,72 @@ Friend Module modEventSystem
     ' Event Types
     Friend Enum EventType
         ' Message
-        evAddText = 1
-        evShowText
-        evShowChoices
+        EvAddText = 1
+        EvShowText
+        EvShowChoices
         ' Game Progression
-        evPlayerVar
-        evPlayerSwitch
-        evSelfSwitch
+        EvPlayerVar
+        EvPlayerSwitch
+        EvSelfSwitch
         ' Flow Control
-        evCondition
-        evExitProcess
+        EvCondition
+        EvExitProcess
         ' Player
-        evChangeItems
-        evRestoreHP
-        evRestoreMP
-        evLevelUp
-        evChangeLevel
-        evChangeSkills
-        evChangeClass
-        evChangeSprite
-        evChangeSex
-        evChangePK
+        EvChangeItems
+        EvRestoreHp
+        EvRestoreMp
+        EvLevelUp
+        EvChangeLevel
+        EvChangeSkills
+        EvChangeClass
+        EvChangeSprite
+        EvChangeSex
+        EvChangePk
         ' Movement
-        evWarpPlayer
-        evSetMoveRoute
+        EvWarpPlayer
+        EvSetMoveRoute
         ' Character
-        evPlayAnimation
+        EvPlayAnimation
         ' Music and Sounds
-        evPlayBGM
-        evFadeoutBGM
-        evPlaySound
-        evStopSound
+        EvPlayBgm
+        EvFadeoutBgm
+        EvPlaySound
+        EvStopSound
         'Etc...
-        evCustomScript
-        evSetAccess
+        EvCustomScript
+        EvSetAccess
         'Shop/Bank
-        evOpenBank
-        evOpenShop
+        EvOpenBank
+        EvOpenShop
         'New
-        evGiveExp
-        evShowChatBubble
-        evLabel
-        evGotoLabel
-        evSpawnNpc
-        evFadeIn
-        evFadeOut
-        evFlashWhite
-        evSetFog
-        evSetWeather
-        evSetTint
-        evWait
-        evOpenMail
-        evBeginQuest
-        evEndQuest
-        evQuestTask
-        evShowPicture
-        evHidePicture
-        evWaitMovement
-        evHoldPlayer
-        evReleasePlayer
+        EvGiveExp
+        EvShowChatBubble
+        EvLabel
+        EvGotoLabel
+        EvSpawnNpc
+        EvFadeIn
+        EvFadeOut
+        EvFlashWhite
+        EvSetFog
+        EvSetWeather
+        EvSetTint
+        EvWait
+        EvOpenMail
+        EvBeginQuest
+        EvEndQuest
+        EvQuestTask
+        EvShowPicture
+        EvHidePicture
+        EvWaitMovement
+        EvHoldPlayer
+        EvReleasePlayer
     End Enum
 #End Region
 
 #Region "EventEditor"
     'Event Editor Stuffz Also includes event functions from the map editor (copy/paste/delete)
 
-    Sub CopyEvent_Map(X As Integer, Y As Integer)
+    Sub CopyEvent_Map(x As Integer, y As Integer)
         Dim count As Integer, i As Integer
 
         count = Map.EventCount
@@ -331,8 +331,8 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub PasteEvent_Map(X As Integer, Y As Integer)
-        Dim count As Integer, i As Integer, EventNum As Integer
+    Sub PasteEvent_Map(x As Integer, y As Integer)
+        Dim count As Integer, i As Integer, eventNum As Integer
 
         count = Map.EventCount
         If count > 0 Then
@@ -359,7 +359,7 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub DeleteEvent(X As Integer, Y As Integer)
+    Sub DeleteEvent(x As Integer, y As Integer)
         Dim count As Integer, i As Integer, lowindex as integer
 
         If Not InMapEditor Then Exit Sub
@@ -387,7 +387,7 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub AddEvent(X As Integer, Y As Integer, Optional cancelLoad As Boolean = False)
+    Sub AddEvent(x As Integer, y As Integer, Optional cancelLoad As Boolean = False)
         Dim count As Integer, pageCount As Integer, i As Integer
 
         count = Map.EventCount + 1
@@ -416,7 +416,7 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub ClearEvent(EventNum As Integer)
+    Sub ClearEvent(eventNum As Integer)
         If EventNum > Map.EventCount OrElse EventNum > UBound(Map.MapEvents) Then Exit Sub
         With Map.Events(EventNum)
             .Name = ""
@@ -453,7 +453,7 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub EventEditorInit(EventNum As Integer)
+    Sub EventEditorInit(eventNum As Integer)
         'Dim i As Integer
 
         EditorEvent = EventNum
@@ -547,7 +547,7 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub EventEditorOK()
+    Sub EventEditorOk()
         ' copy the event data from the temp event
 
         Map.Events(EditorEvent) = tmpEvent
@@ -557,7 +557,7 @@ Friend Module modEventSystem
     End Sub
 
     Friend Sub EventListCommands()
-        Dim i As Integer, curlist As Integer, X As Integer, indent As String = "", listleftoff() As Integer, conditionalstage() As Integer
+        Dim i As Integer, curlist As Integer, x As Integer, indent As String = "", listleftoff() As Integer, conditionalstage() As Integer
 
         frmEvents.lstCommands.Items.Clear()
 
@@ -677,13 +677,13 @@ newlist:
                                         End Select
                                     Case 9
                                         Select Case tmpEvent.Pages(curPageNum).CommandList(curlist).Commands(i).ConditionalBranch.Data1
-                                            Case Orion.TimeOfDay.Day
+                                            Case TimeOfDay.Day
                                                 frmEvents.lstCommands.Items.Add(indent & "@>" & "Conditional Branch: Time of Day is Day")
-                                            Case Orion.TimeOfDay.Night
+                                            Case TimeOfDay.Night
                                                 frmEvents.lstCommands.Items.Add(indent & "@>" & "Conditional Branch: Time of Day is Night")
-                                            Case Orion.TimeOfDay.Dawn
+                                            Case TimeOfDay.Dawn
                                                 frmEvents.lstCommands.Items.Add(indent & "@>" & "Conditional Branch: Time of Day is Dawn")
-                                            Case Orion.TimeOfDay.Dusk
+                                            Case TimeOfDay.Dusk
                                                 frmEvents.lstCommands.Items.Add(indent & "@>" & "Conditional Branch: Time of Day is Dusk")
                                         End Select
                                 End Select
@@ -1080,7 +1080,7 @@ newlist:
     End Sub
 
     Sub AddCommand(index as integer)
-        Dim curlist As Integer, i As Integer, X As Integer, curslot As Integer, p As Integer, oldCommandList As CommandListRec
+        Dim curlist As Integer, i As Integer, x As Integer, curslot As Integer, p As Integer, oldCommandList As CommandListRec
 
         If tmpEvent.Pages(curPageNum).CommandListCount = 0 Then
             tmpEvent.Pages(curPageNum).CommandListCount = 1
@@ -1485,7 +1485,7 @@ newlist:
     End Sub
 
     Friend Sub EditEventCommand()
-        Dim i As Integer, X As Integer, curlist As Integer, curslot As Integer
+        Dim i As Integer, x As Integer, curlist As Integer, curslot As Integer
 
         i = frmEvents.lstCommands.SelectedIndex
         If i = -1 Then Exit Sub
@@ -2032,7 +2032,7 @@ newlist:
     End Sub
 
     Friend Sub DeleteEventCommand()
-        Dim i As Integer, X As Integer, curlist As Integer, curslot As Integer, p As Integer, oldCommandList As CommandListRec
+        Dim i As Integer, x As Integer, curlist As Integer, curslot As Integer, p As Integer, oldCommandList As CommandListRec
 
         i = frmEvents.lstCommands.SelectedIndex
         If i = -1 Then Exit Sub
@@ -2336,10 +2336,10 @@ newlist:
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSwitchesAndVariables)
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             Buffer.WriteString(Trim$(Switches(i)))
         Next
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             Buffer.WriteString(Trim$(Variables(i)))
         Next
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -2389,10 +2389,10 @@ newlist:
 
     Sub Packet_EventMove(ByRef data() As Byte)
         Dim id As Integer
-        Dim X As Integer
-        Dim Y As Integer
-        Dim dir As Integer, ShowDir As Integer
-        Dim MovementSpeed As Integer
+        Dim x As Integer
+        Dim y As Integer
+        Dim dir As Integer, showDir As Integer
+        Dim movementSpeed As Integer
         dim buffer as New ByteStream(Data)
         id = Buffer.ReadInt32
         X = Buffer.ReadInt32
@@ -2448,10 +2448,10 @@ newlist:
     Sub Packet_SwitchesAndVariables(ByRef data() As Byte)
         Dim i As Integer
         dim buffer as New ByteStream(Data)
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             Switches(i) = Buffer.ReadString
         Next
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             Variables(i) = Buffer.ReadString
         Next
 
@@ -2460,7 +2460,7 @@ newlist:
     End Sub
 
     Sub Packet_MapEventData(ByRef data() As Byte)
-        Dim i As Integer, X As Integer, Y As Integer, z As Integer, w As Integer
+        Dim i As Integer, x As Integer, y As Integer, z As Integer, w As Integer
 
         dim buffer as New ByteStream(Data)
         'Event Data!
@@ -2810,7 +2810,7 @@ newlist:
 
     Friend Sub DrawEvents()
         Dim rec As Rectangle
-        Dim Width As Integer, Height As Integer, i As Integer, X As Integer, Y As Integer
+        Dim width As Integer, height As Integer, i As Integer, x As Integer, y As Integer
         Dim tX As Integer
         Dim tY As Integer
 
@@ -2924,8 +2924,8 @@ nextevent:
 
     End Sub
 
-    Friend Sub DrawEvent(Id As Integer) ' draw on map, outside the editor
-        Dim X As Integer, Y As Integer, Width As Integer, Height As Integer, sRect As Rectangle, Anim As Integer, spritetop As Integer
+    Friend Sub DrawEvent(id As Integer) ' draw on map, outside the editor
+        Dim x As Integer, y As Integer, width As Integer, height As Integer, sRect As Rectangle, anim As Integer, spritetop As Integer
 
         If Map.MapEvents(Id).Visible = 0 Then Exit Sub
         If InMapEditor Then Exit Sub

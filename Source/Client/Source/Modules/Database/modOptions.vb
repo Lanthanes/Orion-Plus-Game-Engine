@@ -1,4 +1,4 @@
-﻿Friend Structure modOptions
+﻿Friend Structure ModOptions
     dim Username As String
     dim Password As String
     dim SavePass As Boolean
@@ -8,7 +8,7 @@
     dim Sound As Byte
     dim Volume As Single
 
-    dim IP As String
+    dim Ip As String
     dim Port As Integer
     dim ScreenSize As Byte
     dim HighEnd As Byte

@@ -1,11 +1,11 @@
 ﻿Imports System.Drawing
 Imports ASFW
 
-Friend Module modHotBar
+Friend Module ModHotBar
     Friend SelHotbarSlot As Integer
     Friend SelSkillSlot As Boolean
 
-    Friend Const MAX_HOTBAR As Byte = 7
+    Friend Const MaxHotbar As Byte = 7
 
     'hotbar constants
     Friend Const HotbarTop As Byte = 2
@@ -14,21 +14,21 @@ Friend Module modHotBar
 
     Friend Structure HotbarRec
         Dim Slot As Integer
-        Dim sType As Byte
+        Dim SType As Byte
     End Structure
 
-    Friend Function IsHotBarSlot(X As Single, Y As Single) As Integer
+    Friend Function IsHotBarSlot(x As Single, y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
 
         IsHotBarSlot = 0
 
-        For i = 1 To MAX_HOTBAR
+        For i = 1 To MaxHotbar
             With tempRec
                 .Top = HotbarY + HotbarTop
-                .Bottom = .Top + PIC_Y
-                .Left = HotbarX + HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1) Mod MAX_HOTBAR)))
-                .Right = .Left + PIC_X
+                .Bottom = .Top + PicY
+                .Left = HotbarX + HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1) Mod MaxHotbar)))
+                .Right = .Left + PicX
             End With
 
             If X >= tempRec.Left AndAlso X <= tempRec.Right Then
@@ -41,7 +41,7 @@ Friend Module modHotBar
 
     End Function
 
-    Friend Sub SendSetHotbarSlot(Slot As Integer, Num As Integer, Type As Integer)
+    Friend Sub SendSetHotbarSlot(slot As Integer, num As Integer, type As Integer)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSetHotbarSlot)
@@ -54,7 +54,7 @@ Friend Module modHotBar
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendDeleteHotbar(Slot As Integer)
+    Friend Sub SendDeleteHotbar(slot As Integer)
         dim buffer as New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CDeleteHotbarSlot)
 
@@ -64,7 +64,7 @@ Friend Module modHotBar
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendUseHotbarSlot(Slot As Integer)
+    Friend Sub SendUseHotbarSlot(slot As Integer)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CUseHotbarSlot)
@@ -77,11 +77,11 @@ Friend Module modHotBar
 
     Sub DrawHotbar()
         Dim i As Integer, num As Integer, pic As Integer
-        Dim rec As Rectangle, rec_pos As Rectangle
+        Dim rec As Rectangle, recPos As Rectangle
 
         RenderSprite(HotBarSprite, GameWindow, HotbarX, HotbarY, 0, 0, HotBarGFXInfo.Width, HotBarGFXInfo.Height)
 
-        For i = 1 To MAX_HOTBAR
+        For i = 1 To MaxHotbar
             If Player(MyIndex).Hotbar(i).sType = 1 Then
                 num = PlayerSkills(Player(MyIndex).Hotbar(i).Slot)
 
@@ -109,14 +109,14 @@ Friend Module modHotBar
                         rec.Width = 32
                     End If
 
-                    With rec_pos
+                    With recPos
                         .Y = HotbarY + HotbarTop
-                        .Height = PIC_Y
+                        .Height = PicY
                         .X = HotbarX + HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1))))
-                        .Width = PIC_X
+                        .Width = PicX
                     End With
 
-                    RenderSprite(SkillIconsSprite(pic), GameWindow, rec_pos.X, rec_pos.Y, rec.X, rec.Y, rec.Width, rec.Height)
+                    RenderSprite(SkillIconsSprite(pic), GameWindow, recPos.X, recPos.Y, rec.X, rec.Y, rec.Width, rec.Height)
                 End If
 
             ElseIf Player(MyIndex).Hotbar(i).sType = 2 Then
@@ -141,14 +141,14 @@ Friend Module modHotBar
                         .Width = 32
                     End With
 
-                    With rec_pos
+                    With recPos
                         .Y = HotbarY + HotbarTop
-                        .Height = PIC_Y
+                        .Height = PicY
                         .X = HotbarX + HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1))))
-                        .Width = PIC_X
+                        .Width = PicX
                     End With
 
-                    RenderSprite(ItemsSprite(pic), GameWindow, rec_pos.X, rec_pos.Y, rec.X, rec.Y, rec.Width, rec.Height)
+                    RenderSprite(ItemsSprite(pic), GameWindow, recPos.X, recPos.Y, rec.X, rec.Y, rec.Width, rec.Height)
                 End If
             End If
         Next

@@ -1,5 +1,4 @@
-﻿Imports Orion
-Imports ASFW
+﻿Imports ASFW
 
 Module ServerGameLogic
     Function GetTotalMapPlayers(mapNum as Integer) As Integer

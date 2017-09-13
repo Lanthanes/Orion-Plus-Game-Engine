@@ -1,22 +1,22 @@
-﻿Module modUpdateUI
+﻿Module ModUpdateUi
 
 #Region "Defines"
     Friend GameDestroyed As Boolean
     Friend ReloadFrmMain As Boolean
-    Friend pnlRegisterVisible As Boolean
-    Friend pnlCharCreateVisible As Boolean
-    Friend pnlLoginVisible As Boolean
-    Friend pnlCreditsVisible As Boolean
-    Friend frmmenuvisible As Boolean
-    Friend frmmaingamevisible As Boolean
-    Friend pnlloadvisible As Boolean
-    Friend lblnextcharleft As Integer
-    Friend cmbclass() As String
-    Friend txtChatAdd As String
-    Friend chkSavePassChecked As Boolean
-    Friend tempUserName As String
-    Friend tempPassword As String
-    Friend pnlCharSelectVisible As Boolean
+    Friend PnlRegisterVisible As Boolean
+    Friend PnlCharCreateVisible As Boolean
+    Friend PnlLoginVisible As Boolean
+    Friend PnlCreditsVisible As Boolean
+    Friend Frmmenuvisible As Boolean
+    Friend Frmmaingamevisible As Boolean
+    Friend Pnlloadvisible As Boolean
+    Friend Lblnextcharleft As Integer
+    Friend Cmbclass() As String
+    Friend TxtChatAdd As String
+    Friend ChkSavePassChecked As Boolean
+    Friend TempUserName As String
+    Friend TempPassword As String
+    Friend PnlCharSelectVisible As Boolean
     Friend DrawCharSelect As Boolean
 
     'Mapreport
@@ -25,15 +25,15 @@
     Friend Adminvisible As Boolean
 
     'GUI drawing
-    Friend HUDVisible As Boolean
-    Friend pnlCharacterVisible As Boolean
-    Friend pnlInventoryVisible As Boolean
-    Friend pnlSkillsVisible As Boolean
-    Friend pnlBankVisible As Boolean
-    Friend pnlShopVisible As Boolean
-    Friend pnlTradeVisible As Boolean
-    Friend pnlEventChatVisible As Boolean
-    Friend pnlRClickVisible As Boolean
+    Friend HudVisible As Boolean
+    Friend PnlCharacterVisible As Boolean
+    Friend PnlInventoryVisible As Boolean
+    Friend PnlSkillsVisible As Boolean
+    Friend PnlBankVisible As Boolean
+    Friend PnlShopVisible As Boolean
+    Friend PnlTradeVisible As Boolean
+    Friend PnlEventChatVisible As Boolean
+    Friend PnlRClickVisible As Boolean
     Friend OptionsVisible As Boolean
 
     Friend VbKeyRight As Boolean
@@ -44,13 +44,13 @@
     Friend VbKeyControl As Boolean
     Friend VbKeyAlt As Boolean
 
-    Friend picHpWidth As Integer
-    Friend picManaWidth As Integer
-    Friend picEXPWidth As Integer
+    Friend PicHpWidth As Integer
+    Friend PicManaWidth As Integer
+    Friend PicExpWidth As Integer
 
-    Friend lblHPText As String
-    Friend lblManaText As String
-    Friend lblEXPText As String
+    Friend LblHpText As String
+    Friend LblManaText As String
+    Friend LblExpText As String
 
     'Editors
     Friend InitMapEditor As Boolean
@@ -69,17 +69,17 @@
     Friend Tradername As String
 
     'UI Panels Coordinates
-    Friend HUDWindowX As Integer = 0
-    Friend HUDWindowY As Integer = 0
-    Friend HUDFaceX As Integer = 4
-    Friend HUDFaceY As Integer = 4
+    Friend HudWindowX As Integer = 0
+    Friend HudWindowY As Integer = 0
+    Friend HudFaceX As Integer = 4
+    Friend HudFaceY As Integer = 4
     'bars
-    Friend HUDHPBarX As Integer = 110
-    Friend HUDHPBarY As Integer = 10
-    Friend HUDMPBarX As Integer = 110
-    Friend HUDMPBarY As Integer = 30
-    Friend HUDEXPBarX As Integer = 110
-    Friend HUDEXPBarY As Integer = 50
+    Friend HudhpBarX As Integer = 110
+    Friend HudhpBarY As Integer = 10
+    Friend HudmpBarX As Integer = 110
+    Friend HudmpBarY As Integer = 30
+    Friend HudexpBarX As Integer = 110
+    Friend HudexpBarY As Integer = 50
 
     'Set the Chat Position
 
@@ -187,7 +187,7 @@
     Friend SkillDescCastTime As String
     Friend SkillDescCoolDown As String
     Friend SkillDescDamage As String
-    Friend SkillDescAOE As String
+    Friend SkillDescAoe As String
     Friend SkillDescRange As String
     Friend SkillDescReqMp As String
     Friend SkillDescReqLvl As String
@@ -278,7 +278,7 @@
     Friend LoadClassInfo As Boolean
 #End Region
 
-    Sub UpdateUI()
+    Sub UpdateUi()
 
         If ReloadFrmMain = True Then
             ReloadFrmMain = False
@@ -286,8 +286,8 @@
 
         If UpdateNews = True Then
             FrmMenu.lblNews.Text = News
-            FrmMenu.Text = GAME_NAME
-            frmGame.Text = GAME_NAME
+            FrmMenu.Text = GameName
+            frmGame.Text = GameName
             UpdateNews = False
         End If
 
@@ -426,9 +426,9 @@
             DialogMsg1 = "Quest: " & Trim$(Quest(QuestNum).Name)
             DialogMsg2 = QuestMessage
 
-            DialogType = DIALOGUE_TYPE_QUEST
+            DialogType = DialogueTypeQuest
 
-            If QuestNumForStart > 0 AndAlso QuestNumForStart <= MAX_QUESTS Then
+            If QuestNumForStart > 0 AndAlso QuestNumForStart <= MaxQuests Then
                 QuestAcceptTag = QuestNumForStart
             End If
 
@@ -443,15 +443,15 @@
         End If
 
         If UpdateDialog = True Then
-            If DialogType = DIALOGUE_TYPE_BUYHOME OrElse DialogType = DIALOGUE_TYPE_VISIT Then 'house offer & visit
+            If DialogType = DialogueTypeBuyhome OrElse DialogType = DialogueTypeVisit Then 'house offer & visit
                 DialogButton1Text = "Accept"
                 DialogButton2Text = "Decline"
                 DialogPanelVisible = True
-            ElseIf DialogType = DIALOGUE_TYPE_PARTY OrElse DialogType = DIALOGUE_TYPE_TRADE Then
+            ElseIf DialogType = DialogueTypeParty OrElse DialogType = DialogueTypeTrade Then
                 DialogButton1Text = "Accept"
                 DialogButton2Text = "Decline"
                 DialogPanelVisible = True
-            ElseIf DialogType = DIALOGUE_TYPE_QUEST Then
+            ElseIf DialogType = DialogueTypeQuest Then
                 DialogButton1Text = "Accept"
                 DialogButton2Text = "Ok"
                 If QuestAcceptTag > 0 Then
@@ -470,8 +470,8 @@
 
         If ShowRClick = True Then
             RClickname = Player(myTarget).Name
-            RClickX = ConvertMapX(CurX * PIC_X)
-            RClickY = ConvertMapY(CurY * PIC_Y)
+            RClickX = ConvertMapX(CurX * PicX)
+            RClickY = ConvertMapY(CurY * PicY)
             pnlRClickVisible = True
 
             ShowRClick = False

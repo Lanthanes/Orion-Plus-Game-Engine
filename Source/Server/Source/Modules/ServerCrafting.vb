@@ -1,9 +1,8 @@
 ﻿Imports System.IO
 Imports ASFW
-Imports ASFW.IO
 Imports ASFW.IO.FileIO
 
-Friend Module ServerCrafting
+Friend Module modCrafting
 #Region "Globals"
     Friend Recipe(MAX_RECIPE) As RecipeRec
 

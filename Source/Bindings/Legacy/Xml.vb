@@ -24,7 +24,7 @@ Friend Class XmlClass
 
     End Sub
 
-    Friend Sub WriteString(Selection As String, Name As String, Value As String)
+    Friend Sub WriteString(Selection As String, name As String, value As String)
         'Dim xmlDoc As New XmlDocument()
 
         'Check if xml filename is here.
@@ -64,7 +64,7 @@ Friend Class XmlClass
         'xmlDoc = Nothing
     End Sub
 
-    Friend Function ReadString(Selection As String, Name As String, Optional DefaultValue As String = "") As String
+    Friend Function ReadString(Selection As String, name As String, Optional defaultValue As String = "") As String
         'Dim xmlDoc As New XmlDocument()
 
         If Not File.Exists(Filename) Then
@@ -88,7 +88,7 @@ Friend Class XmlClass
         End If
     End Function
 
-    Friend Sub RemoveNode(Selection As String, Name As String)
+    Friend Sub RemoveNode(Selection As String, name As String)
         'Dim xmlDoc As New XmlDocument()
 
         'Remove xml node

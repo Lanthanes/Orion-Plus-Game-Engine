@@ -1,38 +1,38 @@
 ﻿Imports System.Drawing
 Imports ASFW
 
-Friend Module modCrafting
+Friend Module ModCrafting
 #Region "Globals"
 
-    Friend Recipe_Changed(MAX_RECIPE) As Boolean
+    Friend RecipeChanged(MAX_RECIPE) As Boolean
     Friend Recipe(MAX_RECIPE) As RecipeRec
     Friend InitRecipeEditor As Boolean
     Friend InitCrafting As Boolean
     Friend InCraft As Boolean
-    Friend pnlCraftVisible As Boolean
+    Friend PnlCraftVisible As Boolean
 
-    Friend Const RecipeType_Herb As Byte = 0
-    Friend Const RecipeType_Wood As Byte = 1
-    Friend Const RecipeType_Metal As Byte = 2
+    Friend Const RecipeTypeHerb As Byte = 0
+    Friend Const RecipeTypeWood As Byte = 1
+    Friend Const RecipeTypeMetal As Byte = 2
 
     Friend RecipeNames(MAX_RECIPE) As String
 
-    Friend chkKnownOnlyChecked As Boolean
-    Friend chkKnownOnlyEnabled As Boolean
-    Friend btnCraftEnabled As Boolean
-    Friend btnCraftStopEnabled As Boolean
-    Friend nudCraftAmountEnabled As Boolean
-    Friend lstRecipeEnabled As Boolean
+    Friend ChkKnownOnlyChecked As Boolean
+    Friend ChkKnownOnlyEnabled As Boolean
+    Friend BtnCraftEnabled As Boolean
+    Friend BtnCraftStopEnabled As Boolean
+    Friend NudCraftAmountEnabled As Boolean
+    Friend LstRecipeEnabled As Boolean
 
     Friend CraftAmountValue As Byte
     Friend CraftProgressValue As Integer
-    Friend picProductindex as integer
-    Friend lblProductNameText As String
-    Friend lblProductAmountText As String
+    Friend PicProductindex as integer
+    Friend LblProductNameText As String
+    Friend LblProductAmountText As String
 
-    Friend picMaterialIndex(MAX_INGREDIENT) As Integer
-    Friend lblMaterialName(MAX_INGREDIENT) As String
-    Friend lblMaterialAmount(MAX_INGREDIENT) As String
+    Friend PicMaterialIndex(MAX_INGREDIENT) As Integer
+    Friend LblMaterialName(MAX_INGREDIENT) As String
+    Friend LblMaterialAmount(MAX_INGREDIENT) As String
 
     Friend SelectedRecipe As Integer = 0
 
@@ -64,7 +64,7 @@ Friend Module modCrafting
 
     End Sub
 
-    Sub ClearRecipe(Num As Integer)
+    Sub ClearRecipe(num As Integer)
         Recipe(Num).Name = ""
         Recipe(Num).RecipeType = 0
         Recipe(Num).MakeItemNum = 0
@@ -75,10 +75,10 @@ Friend Module modCrafting
         Dim i As Integer
 
         For i = 1 To MAX_RECIPE
-            Recipe_Changed(i) = Nothing
+            RecipeChanged(i) = Nothing
         Next
 
-        ReDim Recipe_Changed(MAX_RECIPE)
+        ReDim RecipeChanged(MAX_RECIPE)
     End Sub
 #End Region
 
@@ -159,7 +159,7 @@ Friend Module modCrafting
         Buffer.Dispose()
     End Sub
 
-    Sub SendSaveRecipe(RecipeNum As Integer)
+    Sub SendSaveRecipe(recipeNum As Integer)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveRecipe)
@@ -182,7 +182,7 @@ Friend Module modCrafting
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendCraftIt(RecipeName As String, Amount As Integer)
+    Friend Sub SendCraftIt(recipeName As String, amount As Integer)
         dim buffer as New ByteStream(4), i As Integer
         Dim recipeindex as integer
 
@@ -265,7 +265,7 @@ Friend Module modCrafting
         pnlCraftVisible = True
     End Sub
 
-    Sub LoadRecipe(RecipeName As String)
+    Sub LoadRecipe(recipeName As String)
         Dim recipeindex as integer
 
         recipeindex = GetRecipeIndex(RecipeName)
@@ -290,7 +290,7 @@ Friend Module modCrafting
 
     End Sub
 
-    Function GetRecipeIndex(RecipeName As String) As Integer
+    Function GetRecipeIndex(recipeName As String) As Integer
         Dim i As Integer
 
         GetRecipeIndex = 0

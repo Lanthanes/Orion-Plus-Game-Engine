@@ -9,7 +9,7 @@ Friend Class frmEvents
         cmbCondition_PlayerVarIndex.Enabled = False
         cmbCondition_PlayerVarIndex.Items.Clear()
 
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             cmbCondition_PlayerVarIndex.Items.Add(i & ". " & Variables(i))
         Next
         cmbCondition_PlayerVarIndex.SelectedIndex = 0
@@ -20,7 +20,7 @@ Friend Class frmEvents
         cmbCondition_PlayerSwitch.Enabled = False
         cmbCondition_PlayerSwitch.Items.Clear()
 
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             cmbCondition_PlayerSwitch.Items.Add(i & ". " & Switches(i))
         Next
         cmbCondition_PlayerSwitch.SelectedIndex = 0
@@ -87,13 +87,13 @@ Friend Class frmEvents
 
         cmbSwitch.Items.Clear()
 
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             cmbSwitch.Items.Add(i & ". " & Switches(i))
         Next
         cmbSwitch.SelectedIndex = 0
         cmbVariable.Items.Clear()
 
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             cmbVariable.Items.Add(i & ". " & Variables(i))
         Next
         cmbVariable.SelectedIndex = 0
@@ -1193,13 +1193,13 @@ Friend Class frmEvents
         pnlVariableSwitches.Height = Height
         lstSwitches.Items.Clear()
 
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             lstSwitches.Items.Add(CStr(i) & ". " & Trim$(Switches(i)))
         Next
         lstSwitches.SelectedIndex = 0
         lstVariables.Items.Clear()
 
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             lstVariables.Items.Add(CStr(i) & ". " & Trim$(Variables(i)))
         Next
         lstVariables.SelectedIndex = 0
@@ -1210,7 +1210,7 @@ Friend Class frmEvents
         Select Case RenameType
             Case 1
                 'Variable
-                If RenameIndex > 0 AndAlso RenameIndex <= MAX_VARIABLES + 1 Then
+                If RenameIndex > 0 AndAlso RenameIndex <= MaxVariables + 1 Then
                     Variables(RenameIndex) = txtRename.Text
                     FraRenaming.Visible = False
                     fraLabeling.Visible = True
@@ -1219,7 +1219,7 @@ Friend Class frmEvents
                 End If
             Case 2
                 'Switch
-                If RenameIndex > 0 AndAlso RenameIndex <= MAX_SWITCHES + 1 Then
+                If RenameIndex > 0 AndAlso RenameIndex <= MaxSwitches + 1 Then
                     Switches(RenameIndex) = txtRename.Text
                     FraRenaming.Visible = False
                     fraLabeling.Visible = True
@@ -1229,13 +1229,13 @@ Friend Class frmEvents
         End Select
         lstSwitches.Items.Clear()
 
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             lstSwitches.Items.Add(CStr(i) & ". " & Trim$(Switches(i)))
         Next
         lstSwitches.SelectedIndex = 0
         lstVariables.Items.Clear()
 
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             lstVariables.Items.Add(CStr(i) & ". " & Trim$(Variables(i)))
         Next
         lstVariables.SelectedIndex = 0
@@ -1247,13 +1247,13 @@ Friend Class frmEvents
         RenameIndex = 0
         lstSwitches.Items.Clear()
 
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             lstSwitches.Items.Add(CStr(i) & ". " & Trim$(Switches(i)))
         Next
         lstSwitches.SelectedIndex = 0
         lstVariables.Items.Clear()
 
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             lstVariables.Items.Add(CStr(i) & ". " & Trim$(Variables(i)))
         Next
         lstVariables.SelectedIndex = 0
@@ -1264,7 +1264,7 @@ Friend Class frmEvents
     End Sub
 
     Private Sub LstVariables_DoubleClick(sender As Object, e As EventArgs) Handles lstVariables.DoubleClick
-        If lstVariables.SelectedIndex > -1 AndAlso lstVariables.SelectedIndex < MAX_VARIABLES Then
+        If lstVariables.SelectedIndex > -1 AndAlso lstVariables.SelectedIndex < MaxVariables Then
             FraRenaming.Visible = True
             fraLabeling.Visible = False
             lblEditing.Text = "Editing Variable #" & CStr(lstVariables.SelectedIndex + 1)
@@ -1275,7 +1275,7 @@ Friend Class frmEvents
     End Sub
 
     Private Sub LstSwitches_DoubleClick(sender As Object, e As EventArgs) Handles lstSwitches.DoubleClick
-        If lstSwitches.SelectedIndex > -1 AndAlso lstSwitches.SelectedIndex < MAX_SWITCHES Then
+        If lstSwitches.SelectedIndex > -1 AndAlso lstSwitches.SelectedIndex < MaxSwitches Then
             FraRenaming.Visible = True
             fraLabeling.Visible = False
             lblEditing.Text = "Editing Switch #" & CStr(lstSwitches.SelectedIndex + 1)
@@ -1286,7 +1286,7 @@ Friend Class frmEvents
     End Sub
 
     Private Sub BtnRenameVariable_Click(sender As Object, e As EventArgs) Handles btnRenameVariable.Click
-        If lstVariables.SelectedIndex > -1 AndAlso lstVariables.SelectedIndex < MAX_VARIABLES Then
+        If lstVariables.SelectedIndex > -1 AndAlso lstVariables.SelectedIndex < MaxVariables Then
             FraRenaming.Visible = True
             fraLabeling.Visible = False
             lblEditing.Text = "Editing Variable #" & CStr(lstVariables.SelectedIndex + 1)
@@ -1297,7 +1297,7 @@ Friend Class frmEvents
     End Sub
 
     Private Sub BtnRenameSwitch_Click(sender As Object, e As EventArgs) Handles btnRenameSwitch.Click
-        If lstSwitches.SelectedIndex > -1 AndAlso lstSwitches.SelectedIndex < MAX_SWITCHES Then
+        If lstSwitches.SelectedIndex > -1 AndAlso lstSwitches.SelectedIndex < MaxSwitches Then
             FraRenaming.Visible = True
             lblEditing.Text = "Editing Switch #" & CStr(lstSwitches.SelectedIndex + 1)
             txtRename.Text = Switches(lstSwitches.SelectedIndex + 1)

@@ -1,4 +1,4 @@
-﻿Friend Class frmOptions
+﻿Friend Class FrmOptions
 #Region "Options"
 
     Private Sub scrlVolume_ValueChanged(sender As Object, e As EventArgs) Handles scrlVolume.ValueChanged

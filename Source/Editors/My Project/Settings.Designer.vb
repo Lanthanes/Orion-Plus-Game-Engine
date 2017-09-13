@@ -36,12 +36,12 @@ Namespace My
     End Sub
 #End If
 #End Region
-
-        Friend Shared ReadOnly Property [Default]() As MySettings
+        
+        Public Shared ReadOnly Property [Default]() As MySettings
             Get
-
+                
 #If _MyType = "WindowsForms" Then
-                If Not addedHandler Then
+               If Not addedHandler Then
                     SyncLock addedHandlerLockObject
                         If Not addedHandler Then
                             AddHandler My.Application.Shutdown, AddressOf AutoSaveSettings
@@ -64,9 +64,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.Editors.My.MySettings
+        Friend ReadOnly Property Settings() As Global.Engine.My.MySettings
             Get
-                Return Global.Editors.My.MySettings.Default
+                Return Global.Engine.My.MySettings.Default
             End Get
         End Property
     End Module

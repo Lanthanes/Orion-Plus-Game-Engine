@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{332AA7A4-686D-4808-BA75-55D705118314}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>Editors.My.MyApplication</StartupObject>
-    <RootNamespace>Editors</RootNamespace>
+    <StartupObject>Engine.My.MyApplication</StartupObject>
+    <RootNamespace>Engine</RootNamespace>
     <AssemblyName>Editors</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>

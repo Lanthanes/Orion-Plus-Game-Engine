@@ -4,15 +4,15 @@ Imports ASFW
 Imports SFML.Graphics
 Imports SFML.Window
 
-Friend Module modProjectiles
+Friend Module ModProjectiles
 #Region "Defines"
-    Friend Const MAX_PROJECTILES As Integer = 255
-    Friend Projectiles(MAX_PROJECTILES) As ProjectileRec
-    Friend MapProjectiles(MAX_PROJECTILES) As MapProjectileRec
+    Friend Const MaxProjectiles As Integer = 255
+    Friend Projectiles(MaxProjectiles) As ProjectileRec
+    Friend MapProjectiles(MaxProjectiles) As MapProjectileRec
     Friend NumProjectiles As Integer
     Friend InitProjectileEditor As Boolean
-    Friend Const EDITOR_PROJECTILE As Byte = 10
-    Friend Projectile_Changed(MAX_PROJECTILES) As Boolean
+    Friend Const EditorProjectile As Byte = 10
+    Friend ProjectileChanged(MaxProjectiles) As Boolean
 #End Region
 
 #Region "Types"
@@ -30,7 +30,7 @@ Friend Module modProjectiles
         Dim OwnerType As Byte
         Dim X As Integer
         Dim Y As Integer
-        Dim dir As Byte
+        Dim Dir As Byte
         Dim Range As Integer
         Dim TravelTime As Integer
         Dim Timer As Integer
@@ -49,7 +49,7 @@ Friend Module modProjectiles
 
     End Sub
 
-    Sub SendClearProjectile(ProjectileNum As Integer, Collisionindex as integer, CollisionType As Byte, CollisionZone As Integer)
+    Sub SendClearProjectile(projectileNum As Integer, collisionindex as integer, collisionType As Byte, collisionZone As Integer)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CClearProjectile)
@@ -68,7 +68,7 @@ Friend Module modProjectiles
 #Region "Recieving"
 
     Friend Sub HandleUpdateProjectile(ByRef data() As Byte)
-        Dim ProjectileNum As Integer
+        Dim projectileNum As Integer
         dim buffer as New ByteStream(Data)
         ProjectileNum = Buffer.ReadInt32
 
@@ -108,7 +108,7 @@ Friend Module modProjectiles
     Sub ClearProjectiles()
         Dim i As Integer
 
-        For i = 1 To MAX_PROJECTILES
+        For i = 1 To MaxProjectiles
             ClearProjectile(i)
         Next
 
@@ -124,7 +124,7 @@ Friend Module modProjectiles
 
     End Sub
 
-    Sub ClearMapProjectile(ProjectileNum As Integer)
+    Sub ClearMapProjectile(projectileNum As Integer)
 
         MapProjectiles(ProjectileNum).ProjectileNum = 0
         MapProjectiles(ProjectileNum).Owner = 0
@@ -145,7 +145,7 @@ Friend Module modProjectiles
 
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "projectiles\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "projectiles\" & i & GfxExt)
 
             NumProjectiles = NumProjectiles + 1
             i = i + 1
@@ -155,16 +155,16 @@ Friend Module modProjectiles
 
     End Sub
 
-    Friend Sub DrawProjectile(ProjectileNum As Integer)
+    Friend Sub DrawProjectile(projectileNum As Integer)
         Dim rec As Rect
-        Dim CanClearProjectile As Boolean
-        Dim Collisionindex as integer
-        Dim CollisionType As Byte
-        Dim CollisionZone As Integer
-        Dim XOffset As Integer, YOffset As Integer
-        Dim X As Integer, Y As Integer
+        Dim canClearProjectile As Boolean
+        Dim collisionindex as integer
+        Dim collisionType As Byte
+        Dim collisionZone As Integer
+        Dim xOffset As Integer, yOffset As Integer
+        Dim x As Integer, y As Integer
         Dim i As Integer
-        Dim Sprite As Integer
+        Dim sprite As Integer
 
         ' check to see if it's time to move the Projectile
         If GetTickCount() > MapProjectiles(ProjectileNum).TravelTime Then
@@ -254,24 +254,24 @@ Friend Module modProjectiles
         With rec
             .Top = 0
             .Bottom = ProjectileGFXInfo(Sprite).Height
-            .Left = MapProjectiles(ProjectileNum).dir * PIC_X
-            .Right = .Left + PIC_X
+            .Left = MapProjectiles(ProjectileNum).dir * PicX
+            .Right = .Left + PicX
         End With
 
         'Find the offset
         Select Case MapProjectiles(ProjectileNum).dir
             Case DirectionType.Up
-                YOffset = ((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_Y
+                YOffset = ((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PicY
             Case DirectionType.Down
-                YOffset = -((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_Y
+                YOffset = -((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PicY
             Case DirectionType.Left
-                XOffset = ((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_X
+                XOffset = ((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PicX
             Case DirectionType.Right
-                XOffset = -((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PIC_X
+                XOffset = -((MapProjectiles(ProjectileNum).TravelTime - GetTickCount()) / Projectiles(MapProjectiles(ProjectileNum).ProjectileNum).Speed) * PicX
         End Select
 
-        X = ConvertMapX(X * PIC_X)
-        Y = ConvertMapY(Y * PIC_Y)
+        X = ConvertMapX(X * PicX)
+        Y = ConvertMapY(Y * PicY)
 
         Dim tmpSprite As Sprite = New Sprite(ProjectileGFX(Sprite))
         tmpSprite.TextureRect = New IntRect(rec.Left, rec.Top, 32, 32)

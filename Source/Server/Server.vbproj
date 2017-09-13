@@ -8,7 +8,7 @@
     <ProjectGuid>{B554FD23-0844-49D1-A05A-D79CEAD3FA7A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <StartupObject>Sub Main</StartupObject>
-    <RootNamespace>OrionServer</RootNamespace>
+    <RootNamespace>Engine</RootNamespace>
     <AssemblyName>Orion+ Server</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Console</MyType>

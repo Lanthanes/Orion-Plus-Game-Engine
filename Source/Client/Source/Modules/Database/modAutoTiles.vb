@@ -1,29 +1,27 @@
-﻿Imports SFML.Graphics
-
-Friend Module modAutoTiles
+﻿Friend Module modAutoTiles
 #Region "Globals and Types"
     ' Autotiles
-    Friend Const AUTO_INNER As Byte = 1
-    Friend Const AUTO_OUTER As Byte = 2
-    Friend Const AUTO_HORIZONTAL As Byte = 3
-    Friend Const AUTO_VERTICAL As Byte = 4
-    Friend Const AUTO_FILL As Byte = 5
+    Friend Const AutoInner As Byte = 1
+    Friend Const AutoOuter As Byte = 2
+    Friend Const AutoHorizontal As Byte = 3
+    Friend Const AutoVertical As Byte = 4
+    Friend Const AutoFill As Byte = 5
 
     ' Autotile types
-    Friend Const AUTOTILE_NONE As Byte = 0
-    Friend Const AUTOTILE_NORMAL As Byte = 1
-    Friend Const AUTOTILE_FAKE As Byte = 2
-    Friend Const AUTOTILE_ANIM As Byte = 3
-    Friend Const AUTOTILE_CLIFF As Byte = 4
-    Friend Const AUTOTILE_WATERFALL As Byte = 5
+    Friend Const AutotileNone As Byte = 0
+    Friend Const AutotileNormal As Byte = 1
+    Friend Const AutotileFake As Byte = 2
+    Friend Const AutotileAnim As Byte = 3
+    Friend Const AutotileCliff As Byte = 4
+    Friend Const AutotileWaterfall As Byte = 5
 
     ' Rendering
-    Friend Const RENDER_STATE_NONE As Integer = 0
-    Friend Const RENDER_STATE_NORMAL As Integer = 1
-    Friend Const RENDER_STATE_AUTOTILE As Integer = 2
+    Friend Const RenderStateNone As Integer = 0
+    Friend Const RenderStateNormal As Integer = 1
+    Friend Const RenderStateAutotile As Integer = 2
 
     ' autotiling
-    Friend AutoInner(4) As PointRec
+    Friend AutoIn(4) As PointRec
     Friend AutoNw(4) As PointRec
     Friend AutoNe(4) As PointRec
     Friend AutoSw(4) As PointRec
@@ -42,9 +40,9 @@ Friend Module modAutoTiles
 
     Friend Structure QuarterTileRec
         Dim QuarterTile() As PointRec '1 To 4
-        Dim renderState As Byte
-        Dim srcX() As Integer '1 To 4
-        Dim srcY() As Integer '1 To 4
+        Dim RenderState As Byte
+        Dim SrcX() As Integer '1 To 4
+        Dim SrcY() As Integer '1 To 4
     End Structure
 
     Friend Structure AutotileRec
@@ -73,24 +71,24 @@ Friend Module modAutoTiles
     '\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     '   All of this code is for auto tiles and the math behind generating them.
     '\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    Friend Sub PlaceAutotile(layerNum As Integer, X As Integer, Y As Integer, tileQuarter As Byte, autoTileLetter As String)
+    Friend Sub PlaceAutotile(layerNum As Integer, x As Integer, y As Integer, tileQuarter As Byte, autoTileLetter As String)
 
         If layerNum > LayerType.Count - 1 Then
             layerNum = layerNum - (LayerType.Count - 1)
             With Autotile(X, Y).ExLayer(layerNum).QuarterTile(tileQuarter)
                 Select Case autoTileLetter
                     Case "a"
-                        .X = AutoInner(1).X
-                        .Y = AutoInner(1).Y
+                        .X = AutoIn(1).X
+                        .Y = AutoIn(1).Y
                     Case "b"
-                        .X = AutoInner(2).X
-                        .Y = AutoInner(2).Y
+                        .X = AutoIn(2).X
+                        .Y = AutoIn(2).Y
                     Case "c"
-                        .X = AutoInner(3).X
-                        .Y = AutoInner(3).Y
+                        .X = AutoIn(3).X
+                        .Y = AutoIn(3).Y
                     Case "d"
-                        .X = AutoInner(4).X
-                        .Y = AutoInner(4).Y
+                        .X = AutoIn(4).X
+                        .Y = AutoIn(4).Y
                     Case "e"
                         .X = AutoNw(1).X
                         .Y = AutoNw(1).Y
@@ -145,17 +143,17 @@ Friend Module modAutoTiles
             With Autotile(X, Y).Layer(layerNum).QuarterTile(tileQuarter)
                 Select Case autoTileLetter
                     Case "a"
-                        .X = AutoInner(1).X
-                        .Y = AutoInner(1).Y
+                        .X = AutoIn(1).X
+                        .Y = AutoIn(1).Y
                     Case "b"
-                        .X = AutoInner(2).X
-                        .Y = AutoInner(2).Y
+                        .X = AutoIn(2).X
+                        .Y = AutoIn(2).Y
                     Case "c"
-                        .X = AutoInner(3).X
-                        .Y = AutoInner(3).Y
+                        .X = AutoIn(3).X
+                        .Y = AutoIn(3).Y
                     Case "d"
-                        .X = AutoInner(4).X
-                        .Y = AutoInner(4).Y
+                        .X = AutoIn(4).X
+                        .Y = AutoIn(4).Y
                     Case "e"
                         .X = AutoNw(1).X
                         .Y = AutoNw(1).Y
@@ -211,7 +209,7 @@ Friend Module modAutoTiles
     End Sub
 
     Friend Sub InitAutotiles()
-        Dim X As Integer, Y As Integer, layerNum As Integer
+        Dim x As Integer, y As Integer, layerNum As Integer
         ' Procedure used to cache autotile positions. All positioning is
         ' independant from the tileset. Calculations are convoluted and annoying.
         ' Maths is not my strong point. Luckily we're caching them so it's a one-off
@@ -221,30 +219,30 @@ Friend Module modAutoTiles
         ' First, we need to re-size the array
 
         ReDim Autotile(Map.MaxX,Map.MaxY)
-        For X = 0 To Map.MaxX
-            For Y = 0 To Map.MaxY
-                ReDim Autotile(X, Y).Layer(LayerType.Count - 1)
+        For x = 0 To Map.MaxX
+            For y = 0 To Map.MaxY
+                ReDim Autotile(x, y).Layer(LayerType.Count - 1)
                 For i = 0 To LayerType.Count - 1
-                    ReDim Autotile(X, Y).Layer(i).srcX(4)
-                    ReDim Autotile(X, Y).Layer(i).srcY(4)
-                    ReDim Autotile(X, Y).Layer(i).QuarterTile(4)
+                    ReDim Autotile(x, y).Layer(i).srcX(4)
+                    ReDim Autotile(x, y).Layer(i).srcY(4)
+                    ReDim Autotile(x, y).Layer(i).QuarterTile(4)
                 Next
             Next
         Next
 
         ' Inner tiles (Top right subtile region)
         ' NW - a
-        AutoInner(1).X = 32
-        AutoInner(1).Y = 0
+        AutoIn(1).X = 32
+        AutoIn(1).Y = 0
         ' NE - b
-        AutoInner(2).X = 48
-        AutoInner(2).Y = 0
+        AutoIn(2).X = 48
+        AutoIn(2).Y = 0
         ' SW - c
-        AutoInner(3).X = 32
-        AutoInner(3).Y = 16
+        AutoIn(3).X = 32
+        AutoIn(3).Y = 16
         ' SE - d
-        AutoInner(4).X = 48
-        AutoInner(4).Y = 16
+        AutoIn(4).X = 48
+        AutoIn(4).Y = 16
         ' Outer Tiles - NW (bottom subtile region)
         ' NW - e
         AutoNw(1).X = 0
@@ -298,20 +296,20 @@ Friend Module modAutoTiles
         AutoSe(4).X = 48
         AutoSe(4).Y = 80
 
-        For X = 0 To Map.MaxX
-            For Y = 0 To Map.MaxY
+        For x = 0 To Map.MaxX
+            For y = 0 To Map.MaxY
                 For layerNum = 1 To LayerType.Count - 1
                     ' calculate the subtile positions and place them
-                    CalculateAutotile(X, Y, layerNum)
+                    CalculateAutotile(x, y, layerNum)
                     ' cache the rendering state of the tiles and set them
-                    CacheRenderState(X, Y, layerNum)
+                    CacheRenderState(x, y, layerNum)
                 Next
             Next
         Next
 
     End Sub
 
-    Friend Sub CacheRenderState(X As Integer, Y As Integer, layerNum As Integer)
+    Friend Sub CacheRenderState(x As Integer, y As Integer, layerNum As Integer)
         Dim quarterNum As Integer
 
         ' exit out early
@@ -321,28 +319,28 @@ Friend Module modAutoTiles
         With Map.Tile(X, Y)
             ' check if the tile can be rendered
             If .Layer(layerNum).Tileset <= 0 OrElse .Layer(layerNum).Tileset > NumTileSets Then
-                Autotile(X, Y).Layer(layerNum).renderState = RENDER_STATE_NONE
+                Autotile(X, Y).Layer(layerNum).renderState = RenderStateNone
                 Exit Sub
             End If
             ' check if it's a key - hide mask if key is closed
             If layerNum = LayerType.Mask Then
                 If .Type = TileType.Key Then
                     If TempTile(X, Y).DoorOpen = False Then
-                        Autotile(X, Y).Layer(layerNum).renderState = RENDER_STATE_NONE
+                        Autotile(X, Y).Layer(layerNum).renderState = RenderStateNone
                         Exit Sub
                     Else
-                        Autotile(X, Y).Layer(layerNum).renderState = RENDER_STATE_NORMAL
+                        Autotile(X, Y).Layer(layerNum).renderState = RenderStateNormal
                         Exit Sub
                     End If
                 End If
             End If
             ' check if it needs to be rendered as an autotile
-            If .Layer(layerNum).AutoTile = AUTOTILE_NONE OrElse .Layer(layerNum).AutoTile = AUTOTILE_FAKE Then
+            If .Layer(layerNum).AutoTile = AutotileNone OrElse .Layer(layerNum).AutoTile = AutotileFake Then
                 'ReDim Autotile(X, Y).Layer(MapLayer.Count - 1)
                 ' default to... default
-                Autotile(X, Y).Layer(layerNum).renderState = RENDER_STATE_NORMAL
+                Autotile(X, Y).Layer(layerNum).renderState = RenderStateNormal
             Else
-                Autotile(X, Y).Layer(layerNum).renderState = RENDER_STATE_AUTOTILE
+                Autotile(X, Y).Layer(layerNum).renderState = RenderStateAutotile
                 ' cache tileset positioning
                 For quarterNum = 1 To 4
                     Autotile(X, Y).Layer(layerNum).srcX(quarterNum) = (Map.Tile(X, Y).Layer(layerNum).X * 32) + Autotile(X, Y).Layer(layerNum).QuarterTile(quarterNum).X
@@ -354,7 +352,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateAutotile(X As Integer, Y As Integer, layerNum As Integer)
+    Friend Sub CalculateAutotile(x As Integer, y As Integer, layerNum As Integer)
         ' Right, so we've split the tile block in to an easy to remember
         ' collection of letters. We now need to do the calculations to find
         ' out which little lettered block needs to be rendered. We do this
@@ -368,7 +366,7 @@ Friend Module modAutoTiles
         ' Okay, we have autotiling but which one?
         Select Case Map.Tile(X, Y).Layer(layerNum).AutoTile
                 ' Normal or animated - same difference
-            Case AUTOTILE_NORMAL, AUTOTILE_ANIM
+            Case AutotileNormal, AutotileAnim
                 ' North West Quarter
                 CalculateNW_Normal(layerNum, X, Y)
                 ' North East Quarter
@@ -378,7 +376,7 @@ Friend Module modAutoTiles
                 ' South East Quarter
                 CalculateSE_Normal(layerNum, X, Y)
                 ' Cliff
-            Case AUTOTILE_CLIFF
+            Case AutotileCliff
                 ' North West Quarter
                 CalculateNW_Cliff(layerNum, X, Y)
                 ' North East Quarter
@@ -388,7 +386,7 @@ Friend Module modAutoTiles
                 ' South East Quarter
                 CalculateSE_Cliff(layerNum, X, Y)
                 ' Waterfalls
-            Case AUTOTILE_WATERFALL
+            Case AutotileWaterfall
                 ' North West Quarter
                 CalculateNW_Waterfall(layerNum, X, Y)
                 ' North East Quarter
@@ -398,15 +396,13 @@ Friend Module modAutoTiles
                 ' South East Quarter
                 CalculateSE_Waterfall(layerNum, X, Y)
                 ' Anything else
-            Case Else
-                ' Don't need to render anything... it's fake or not an autotile
         End Select
         ' End If
 
     End Sub
 
     ' Normal autotiling
-    Friend Sub CalculateNW_Normal(layerNum As Integer, X As Integer, Y As Integer)
+    Friend Sub CalculateNW_Normal(layerNum As Integer, x As Integer, y As Integer)
         Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
@@ -418,32 +414,32 @@ Friend Module modAutoTiles
         ' West
         If CheckTileMatch(layerNum, X, Y, X - 1, Y) Then tmpTile(3) = True
         ' Calculate Situation - Inner
-        If Not tmpTile(2) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(2) AndAlso Not tmpTile(3) Then situation = AutoInner
         ' Horizontal
-        If Not tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If Not tmpTile(2) AndAlso tmpTile(3) Then situation = AutoHorizontal
         ' Vertical
-        If tmpTile(2) AndAlso Not tmpTile(3) Then situation = AUTO_VERTICAL
+        If tmpTile(2) AndAlso Not tmpTile(3) Then situation = AutoVertical
         ' Outer
-        If Not tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_OUTER
+        If Not tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoOuter
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
         ' Actually place the subtile
         Select Case situation
-            Case AUTO_INNER
+            Case AutoInner
                 PlaceAutotile(layerNum, X, Y, 1, "e")
-            Case AUTO_OUTER
+            Case AutoOuter
                 PlaceAutotile(layerNum, X, Y, 1, "a")
-            Case AUTO_HORIZONTAL
+            Case AutoHorizontal
                 PlaceAutotile(layerNum, X, Y, 1, "i")
-            Case AUTO_VERTICAL
+            Case AutoVertical
                 PlaceAutotile(layerNum, X, Y, 1, "m")
-            Case AUTO_FILL
+            Case AutoFill
                 PlaceAutotile(layerNum, X, Y, 1, "q")
         End Select
 
     End Sub
 
-    Friend Sub CalculateNE_Normal(layerNum As Integer, X As Integer, Y As Integer)
+    Friend Sub CalculateNE_Normal(layerNum As Integer, x As Integer, y As Integer)
         Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
@@ -455,32 +451,32 @@ Friend Module modAutoTiles
         ' East
         If CheckTileMatch(layerNum, X, Y, X + 1, Y) Then tmpTile(3) = True
         ' Calculate Situation - Inner
-        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoInner
         ' Horizontal
-        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AutoHorizontal
         ' Vertical
-        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_VERTICAL
+        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoVertical
         ' Outer
-        If tmpTile(1) AndAlso Not tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_OUTER
+        If tmpTile(1) AndAlso Not tmpTile(2) AndAlso tmpTile(3) Then situation = AutoOuter
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
         ' Actually place the subtile
         Select Case situation
-            Case AUTO_INNER
+            Case AutoInner
                 PlaceAutotile(layerNum, X, Y, 2, "j")
-            Case AUTO_OUTER
+            Case AutoOuter
                 PlaceAutotile(layerNum, X, Y, 2, "b")
-            Case AUTO_HORIZONTAL
+            Case AutoHorizontal
                 PlaceAutotile(layerNum, X, Y, 2, "f")
-            Case AUTO_VERTICAL
+            Case AutoVertical
                 PlaceAutotile(layerNum, X, Y, 2, "r")
-            Case AUTO_FILL
+            Case AutoFill
                 PlaceAutotile(layerNum, X, Y, 2, "n")
         End Select
 
     End Sub
 
-    Friend Sub CalculateSW_Normal(layerNum As Integer, X As Integer, Y As Integer)
+    Friend Sub CalculateSW_Normal(layerNum As Integer, x As Integer, y As Integer)
         Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
@@ -492,32 +488,32 @@ Friend Module modAutoTiles
         ' South
         If CheckTileMatch(layerNum, X, Y, X, Y + 1) Then tmpTile(3) = True
         ' Calculate Situation - Inner
-        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoInner
         ' Horizontal
-        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoHorizontal
         ' Vertical
-        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AUTO_VERTICAL
+        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AutoVertical
         ' Outer
-        If tmpTile(1) AndAlso Not tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_OUTER
+        If tmpTile(1) AndAlso Not tmpTile(2) AndAlso tmpTile(3) Then situation = AutoOuter
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
         ' Actually place the subtile
         Select Case situation
-            Case AUTO_INNER
+            Case AutoInner
                 PlaceAutotile(layerNum, X, Y, 3, "o")
-            Case AUTO_OUTER
+            Case AutoOuter
                 PlaceAutotile(layerNum, X, Y, 3, "c")
-            Case AUTO_HORIZONTAL
+            Case AutoHorizontal
                 PlaceAutotile(layerNum, X, Y, 3, "s")
-            Case AUTO_VERTICAL
+            Case AutoVertical
                 PlaceAutotile(layerNum, X, Y, 3, "g")
-            Case AUTO_FILL
+            Case AutoFill
                 PlaceAutotile(layerNum, X, Y, 3, "k")
         End Select
 
     End Sub
 
-    Friend Sub CalculateSE_Normal(layerNum As Integer, X As Integer, Y As Integer)
+    Friend Sub CalculateSE_Normal(layerNum As Integer, x As Integer, y As Integer)
         Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
@@ -529,33 +525,33 @@ Friend Module modAutoTiles
         ' East
         If CheckTileMatch(layerNum, X, Y, X + 1, Y) Then tmpTile(3) = True
         ' Calculate Situation - Inner
-        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoInner
         ' Horizontal
-        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AutoHorizontal
         ' Vertical
-        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_VERTICAL
+        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoVertical
         ' Outer
-        If tmpTile(1) AndAlso Not tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_OUTER
+        If tmpTile(1) AndAlso Not tmpTile(2) AndAlso tmpTile(3) Then situation = AutoOuter
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
         ' Actually place the subtile
         Select Case situation
-            Case AUTO_INNER
+            Case AutoInner
                 PlaceAutotile(layerNum, X, Y, 4, "t")
-            Case AUTO_OUTER
+            Case AutoOuter
                 PlaceAutotile(layerNum, X, Y, 4, "d")
-            Case AUTO_HORIZONTAL
+            Case AutoHorizontal
                 PlaceAutotile(layerNum, X, Y, 4, "p")
-            Case AUTO_VERTICAL
+            Case AutoVertical
                 PlaceAutotile(layerNum, X, Y, 4, "l")
-            Case AUTO_FILL
+            Case AutoFill
                 PlaceAutotile(layerNum, X, Y, 4, "h")
         End Select
 
     End Sub
 
     ' Waterfall autotiling
-    Friend Sub CalculateNW_Waterfall(layerNum As Integer, X As Integer, Y As Integer)
+    Friend Sub CalculateNW_Waterfall(layerNum As Integer, x As Integer, y As Integer)
         Dim tmpTile As Boolean
         ' West
 
@@ -571,7 +567,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateNE_Waterfall(layerNum As Integer, X As Integer, Y As Integer)
+    Friend Sub CalculateNE_Waterfall(layerNum As Integer, x As Integer, y As Integer)
         Dim tmpTile As Boolean
         ' East
 
@@ -587,7 +583,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateSW_Waterfall(layerNum As Integer, X As Integer, Y As Integer)
+    Friend Sub CalculateSW_Waterfall(layerNum As Integer, x As Integer, y As Integer)
         Dim tmpTile As Boolean
         ' West
 
@@ -603,7 +599,7 @@ Friend Module modAutoTiles
 
     End Sub
 
-    Friend Sub CalculateSE_Waterfall(layerNum As Integer, X As Integer, Y As Integer)
+    Friend Sub CalculateSE_Waterfall(layerNum As Integer, x As Integer, y As Integer)
         Dim tmpTile As Boolean
         ' East
 
@@ -620,7 +616,7 @@ Friend Module modAutoTiles
     End Sub
 
     ' Cliff autotiling
-    Friend Sub CalculateNW_Cliff(layerNum As Integer, X As Integer, Y As Integer)
+    Friend Sub CalculateNW_Cliff(layerNum As Integer, x As Integer, y As Integer)
         Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
@@ -631,30 +627,30 @@ Friend Module modAutoTiles
         If CheckTileMatch(layerNum, X, Y, X, Y - 1) Then tmpTile(2) = True
         ' West
         If CheckTileMatch(layerNum, X, Y, X - 1, Y) Then tmpTile(3) = True
-        situation = AUTO_FILL
+        situation = AutoFill
         ' Calculate Situation - Horizontal
-        If Not tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If Not tmpTile(2) AndAlso tmpTile(3) Then situation = AutoHorizontal
         ' Vertical
-        If tmpTile(2) AndAlso Not tmpTile(3) Then situation = AUTO_VERTICAL
+        If tmpTile(2) AndAlso Not tmpTile(3) Then situation = AutoVertical
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
         ' Inner
-        If Not tmpTile(2) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(2) AndAlso Not tmpTile(3) Then situation = AutoInner
         ' Actually place the subtile
         Select Case situation
-            Case AUTO_INNER
+            Case AutoInner
                 PlaceAutotile(layerNum, X, Y, 1, "e")
-            Case AUTO_HORIZONTAL
+            Case AutoHorizontal
                 PlaceAutotile(layerNum, X, Y, 1, "i")
-            Case AUTO_VERTICAL
+            Case AutoVertical
                 PlaceAutotile(layerNum, X, Y, 1, "m")
-            Case AUTO_FILL
+            Case AutoFill
                 PlaceAutotile(layerNum, X, Y, 1, "q")
         End Select
 
     End Sub
 
-    Friend Sub CalculateNE_Cliff(layerNum As Integer, X As Integer, Y As Integer)
+    Friend Sub CalculateNE_Cliff(layerNum As Integer, x As Integer, y As Integer)
         Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
@@ -665,30 +661,30 @@ Friend Module modAutoTiles
         If CheckTileMatch(layerNum, X, Y, X + 1, Y - 1) Then tmpTile(2) = True
         ' East
         If CheckTileMatch(layerNum, X, Y, X + 1, Y) Then tmpTile(3) = True
-        situation = AUTO_FILL
+        situation = AutoFill
         ' Calculate Situation - Horizontal
-        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AutoHorizontal
         ' Vertical
-        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_VERTICAL
+        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoVertical
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
         ' Inner
-        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoInner
         ' Actually place the subtile
         Select Case situation
-            Case AUTO_INNER
+            Case AutoInner
                 PlaceAutotile(layerNum, X, Y, 2, "j")
-            Case AUTO_HORIZONTAL
+            Case AutoHorizontal
                 PlaceAutotile(layerNum, X, Y, 2, "f")
-            Case AUTO_VERTICAL
+            Case AutoVertical
                 PlaceAutotile(layerNum, X, Y, 2, "r")
-            Case AUTO_FILL
+            Case AutoFill
                 PlaceAutotile(layerNum, X, Y, 2, "n")
         End Select
 
     End Sub
 
-    Friend Sub CalculateSW_Cliff(layerNum As Integer, X As Integer, Y As Integer)
+    Friend Sub CalculateSW_Cliff(layerNum As Integer, x As Integer, y As Integer)
         Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
@@ -699,30 +695,30 @@ Friend Module modAutoTiles
         If CheckTileMatch(layerNum, X, Y, X - 1, Y + 1) Then tmpTile(2) = True
         ' South
         If CheckTileMatch(layerNum, X, Y, X, Y + 1) Then tmpTile(3) = True
-        situation = AUTO_FILL
+        situation = AutoFill
         ' Calculate Situation - Horizontal
-        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoHorizontal
         ' Vertical
-        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AUTO_VERTICAL
+        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AutoVertical
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
         ' Inner
-        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoInner
         ' Actually place the subtile
         Select Case situation
-            Case AUTO_INNER
+            Case AutoInner
                 PlaceAutotile(layerNum, X, Y, 3, "o")
-            Case AUTO_HORIZONTAL
+            Case AutoHorizontal
                 PlaceAutotile(layerNum, X, Y, 3, "s")
-            Case AUTO_VERTICAL
+            Case AutoVertical
                 PlaceAutotile(layerNum, X, Y, 3, "g")
-            Case AUTO_FILL
+            Case AutoFill
                 PlaceAutotile(layerNum, X, Y, 3, "k")
         End Select
 
     End Sub
 
-    Friend Sub CalculateSE_Cliff(layerNum As Integer, X As Integer, Y As Integer)
+    Friend Sub CalculateSE_Cliff(layerNum As Integer, x As Integer, y As Integer)
         Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
@@ -733,30 +729,30 @@ Friend Module modAutoTiles
         If CheckTileMatch(layerNum, X, Y, X + 1, Y + 1) Then tmpTile(2) = True
         ' East
         If CheckTileMatch(layerNum, X, Y, X + 1, Y) Then tmpTile(3) = True
-        situation = AUTO_FILL
+        situation = AutoFill
         ' Calculate Situation -  Horizontal
-        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AUTO_HORIZONTAL
+        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AutoHorizontal
         ' Vertical
-        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_VERTICAL
+        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoVertical
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AUTO_FILL
+        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
         ' Inner
-        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AUTO_INNER
+        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoInner
         ' Actually place the subtile
         Select Case situation
-            Case AUTO_INNER
+            Case AutoInner
                 PlaceAutotile(layerNum, X, Y, 4, "t")
-            Case AUTO_HORIZONTAL
+            Case AutoHorizontal
                 PlaceAutotile(layerNum, X, Y, 4, "p")
-            Case AUTO_VERTICAL
+            Case AutoVertical
                 PlaceAutotile(layerNum, X, Y, 4, "l")
-            Case AUTO_FILL
+            Case AutoFill
                 PlaceAutotile(layerNum, X, Y, 4, "h")
         End Select
 
     End Sub
 
-    Friend Function CheckTileMatch(layerNum As Integer, X1 As Integer, Y1 As Integer, X2 As Integer, Y2 As Integer) As Boolean
+    Friend Function CheckTileMatch(layerNum As Integer, x1 As Integer, y1 As Integer, x2 As Integer, y2 As Integer) As Boolean
         ' we'll exit out early if true
         'Dim exTile As Boolean
 
@@ -769,7 +765,7 @@ Friend Module modAutoTiles
         End If
 
         ' fakes ALWAYS return true
-        If Map.Tile(X2, Y2).Layer(layerNum).AutoTile = AUTOTILE_FAKE Then
+        If Map.Tile(X2, Y2).Layer(layerNum).AutoTile = AutotileFake Then
             CheckTileMatch = True
             Exit Function
         End If
@@ -800,8 +796,8 @@ Friend Module modAutoTiles
         End If
     End Function
 
-    Friend Sub DrawAutoTile(layerNum As Integer, destX As Integer, destY As Integer, quarterNum As Integer, X As Integer, Y As Integer, Optional forceFrame As Integer = 0, Optional strict As Boolean = True)
-        Dim YOffset As Integer, XOffset As Integer
+    Friend Sub DrawAutoTile(layerNum As Integer, destX As Integer, destY As Integer, quarterNum As Integer, x As Integer, y As Integer, Optional forceFrame As Integer = 0, Optional strict As Boolean = True)
+        Dim yOffset As Integer, xOffset As Integer
         'Dim tmpSprite As Sprite
 
         If GettingMap Then Exit Sub
@@ -828,12 +824,12 @@ Friend Module modAutoTiles
         End If
 
         Select Case Map.Tile(X, Y).Layer(layerNum).AutoTile
-            Case AUTOTILE_WATERFALL
-                YOffset = (WaterfallFrame - 1) * 32
-            Case AUTOTILE_ANIM
-                XOffset = AutoTileFrame * 64
-            Case AUTOTILE_CLIFF
-                YOffset = -32
+            Case AutotileWaterfall
+                yOffset = (WaterfallFrame - 1) * 32
+            Case AutotileAnim
+                xOffset = AutoTileFrame * 64
+            Case AutotileCliff
+                yOffset = -32
         End Select
 
         ' Draw the quarter
@@ -842,6 +838,6 @@ Friend Module modAutoTiles
 
         'GameWindow.Draw(TileSetSprite(Map.Tile(X, Y).Layer(layerNum).Tileset))
         If Map.Tile(X, Y).Layer Is Nothing Then Exit Sub
-        RenderSprite(TileSetSprite(Map.Tile(X, Y).Layer(layerNum).Tileset), GameWindow, destX, destY, Autotile(X, Y).Layer(layerNum).srcX(quarterNum) + XOffset, Autotile(X, Y).Layer(layerNum).srcY(quarterNum) + YOffset, 16, 16)
+        RenderSprite(TileSetSprite(Map.Tile(X, Y).Layer(layerNum).Tileset), GameWindow, destX, destY, Autotile(X, Y).Layer(layerNum).srcX(quarterNum) + xOffset, Autotile(X, Y).Layer(layerNum).srcY(quarterNum) + yOffset, 16, 16)
     End Sub
 End Module

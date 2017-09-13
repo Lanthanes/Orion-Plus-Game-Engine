@@ -7,23 +7,23 @@ Friend Module ServerEvents
     Friend Switches() As String
     Friend Variables() As String
 
-    Friend Const MAX_SWITCHES As Integer = 500
-    Friend Const MAX_VARIABLES As Integer = 500
+    Friend Const MaxSwitches As Integer = 500
+    Friend Const MaxVariables As Integer = 500
 
     Friend Const PathfindingType As Integer = 1
 
     'Effect Constants - Used for event options...
-    Friend Const EFFECT_TYPE_FADEIN As Integer = 2
-    Friend Const EFFECT_TYPE_FADEOUT As Integer = 1
-    Friend Const EFFECT_TYPE_FLASH As Integer = 3
-    Friend Const EFFECT_TYPE_FOG As Integer = 4
-    Friend Const EFFECT_TYPE_WEATHER As Integer = 5
-    Friend Const EFFECT_TYPE_TINT As Integer = 6
+    Friend Const EffectTypeFadein As Integer = 2
+    Friend Const EffectTypeFadeout As Integer = 1
+    Friend Const EffectTypeFlash As Integer = 3
+    Friend Const EffectTypeFog As Integer = 4
+    Friend Const EffectTypeWeather As Integer = 5
+    Friend Const EffectTypeTint As Integer = 6
 #End Region
 
 #Region "Structures"
     Structure MoveRouteStruct
-        Dim index as integer
+        Dim Index as integer
         Dim Data1 As Integer
         Dim Data2 As Integer
         Dim Data3 As Integer
@@ -108,23 +108,23 @@ Friend Module ServerEvents
 
     Structure EventPageStruct
         'These are condition variables that decide if the event even appears to the player.
-        Dim chkVariable As Integer
+        Dim ChkVariable As Integer
         Dim Variableindex as integer
         Dim VariableCondition As Integer
         Dim VariableCompare As Integer
 
-        Dim chkSwitch As Integer
+        Dim ChkSwitch As Integer
         Dim Switchindex as integer
         Dim SwitchCompare As Integer
 
-        Dim chkHasItem As Integer
+        Dim ChkHasItem As Integer
         Dim HasItemindex as integer
         Dim HasItemAmount As Integer
 
-        Dim chkSelfSwitch As Integer
+        Dim ChkSelfSwitch As Integer
         Dim SelfSwitchindex as integer
         Dim SelfSwitchCompare As Integer
-        Dim chkPlayerGender As Integer
+        Dim ChkPlayerGender As Integer
         'End Conditions
 
         'Handles the Event Sprite
@@ -178,8 +178,8 @@ Friend Module ServerEvents
     End Structure
 
     Friend Structure GlobalMapEventsStruct
-        Dim EventID As Integer
-        Dim PageID As Integer
+        Dim EventId As Integer
+        Dim PageId As Integer
         Dim X As Integer
         Dim Y As Integer
     End Structure
@@ -204,8 +204,8 @@ Friend Module ServerEvents
         Dim MovementSpeed As Integer
         Dim Position As Integer
         Dim Visible As Integer
-        Dim EventID As Integer
-        Dim PageID As Integer
+        Dim EventId As Integer
+        Dim PageId As Integer
 
         'Server Only Options
         Dim MoveType As Integer
@@ -233,10 +233,10 @@ Friend Module ServerEvents
         Dim Active As Integer
         Dim CurList As Integer
         Dim CurSlot As Integer
-        Dim EventID As Integer
-        Dim PageID As Integer
+        Dim EventId As Integer
+        Dim PageId As Integer
         Dim WaitingForResponse As Integer
-        Dim EventMovingID As Integer
+        Dim EventMovingId As Integer
         Dim EventMovingType As Integer
         Dim ActionTimer As Integer
         Dim ListLeftOff() As Integer
@@ -254,9 +254,9 @@ Friend Module ServerEvents
         MoveAwayFromPlayer
         StepForward
         StepBack
-        Wait100ms
-        Wait500ms
-        Wait1000ms
+        Wait100Ms
+        Wait500Ms
+        Wait1000Ms
         TurnUp
         TurnDown
         TurnLeft
@@ -267,12 +267,12 @@ Friend Module ServerEvents
         TurnRandom
         TurnTowardPlayer
         TurnAwayFromPlayer
-        SetSpeed8xSlower
-        SetSpeed4xSlower
-        SetSpeed2xSlower
+        SetSpeed8XSlower
+        SetSpeed4XSlower
+        SetSpeed2XSlower
         SetSpeedNormal
-        SetSpeed2xFaster
-        SetSpeed4xFaster
+        SetSpeed2XFaster
+        SetSpeed4XFaster
         SetFreqLowest
         SetFreqLower
         SetFreqNormal
@@ -293,65 +293,65 @@ Friend Module ServerEvents
     ' Event Types
     Friend Enum EventType
         ' Message
-        evAddText = 1
-        evShowText
-        evShowChoices
+        EvAddText = 1
+        EvShowText
+        EvShowChoices
         ' Game Progression
-        evPlayerVar
-        evPlayerSwitch
-        evSelfSwitch
+        EvPlayerVar
+        EvPlayerSwitch
+        EvSelfSwitch
         ' Flow Control
-        evCondition
-        evExitProcess
+        EvCondition
+        EvExitProcess
         ' Player
-        evChangeItems
-        evRestoreHP
-        evRestoreMP
-        evLevelUp
-        evChangeLevel
-        evChangeSkills
-        evChangeClass
-        evChangeSprite
-        evChangeSex
-        evChangePK
+        EvChangeItems
+        EvRestoreHp
+        EvRestoreMp
+        EvLevelUp
+        EvChangeLevel
+        EvChangeSkills
+        EvChangeClass
+        EvChangeSprite
+        EvChangeSex
+        EvChangePk
         ' Movement
-        evWarpPlayer
-        evSetMoveRoute
+        EvWarpPlayer
+        EvSetMoveRoute
         ' Character
-        evPlayAnimation
+        EvPlayAnimation
         ' Music and Sounds
-        evPlayBGM
-        evFadeoutBGM
-        evPlaySound
-        evStopSound
+        EvPlayBgm
+        EvFadeoutBgm
+        EvPlaySound
+        EvStopSound
         'Etc...
-        evCustomScript
-        evSetAccess
+        EvCustomScript
+        EvSetAccess
         'Shop/Bank
-        evOpenBank
-        evOpenShop
+        EvOpenBank
+        EvOpenShop
         'New
-        evGiveExp
-        evShowChatBubble
-        evLabel
-        evGotoLabel
-        evSpawnNpc
-        evFadeIn
-        evFadeOut
-        evFlashWhite
-        evSetFog
-        evSetWeather
-        evSetTint
-        evWait
-        evOpenMail
-        evBeginQuest
-        evEndQuest
-        evQuestTask
-        evShowPicture
-        evHidePicture
-        evWaitMovement
-        evHoldPlayer
-        evReleasePlayer
+        EvGiveExp
+        EvShowChatBubble
+        EvLabel
+        EvGotoLabel
+        EvSpawnNpc
+        EvFadeIn
+        EvFadeOut
+        EvFlashWhite
+        EvSetFog
+        EvSetWeather
+        EvSetTint
+        EvWait
+        EvOpenMail
+        EvBeginQuest
+        EvEndQuest
+        EvQuestTask
+        EvShowPicture
+        EvHidePicture
+        EvWaitMovement
+        EvHoldPlayer
+        EvReleasePlayer
     End Enum
 #End Region
 
@@ -365,7 +365,7 @@ Friend Module ServerEvents
 
         myXml.NewXmlDocument()
 
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             Switches(i) = ""
         Next
 
@@ -381,7 +381,7 @@ Friend Module ServerEvents
 
         myXml.NewXmlDocument()
 
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             Variables(i) = ""
         Next
 
@@ -397,7 +397,7 @@ Friend Module ServerEvents
 
         myXml.LoadXml()
 
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             myXml.WriteString("Switches", "Switch" & i & "Name", Switches(i))
         Next
 
@@ -413,7 +413,7 @@ Friend Module ServerEvents
 
         myXml.LoadXml()
 
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             myXml.WriteString("Variables", "Variable" & i & "Name", Variables(i))
         Next
 
@@ -434,7 +434,7 @@ Friend Module ServerEvents
 
         myXml.LoadXml()
 
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             Switches(i) = myXml.ReadString("Switches", "Switch" & i & "Name")
         Next
 
@@ -455,7 +455,7 @@ Friend Module ServerEvents
 
         myXml.LoadXml()
 
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             Variables(i) = myXml.ReadString("Variables", "Variable" & i & "Name")
         Next
 
@@ -465,7 +465,7 @@ Friend Module ServerEvents
 #End Region
 
 #Region "Movement"
-    Function CanEventMove(index as integer, mapNum as Integer, x As Integer, y As Integer, eventID As Integer, WalkThrough As Integer, Dir As Byte, Optional globalevent As Boolean = False) As Boolean
+    Function CanEventMove(index as integer, mapNum as Integer, x As Integer, y As Integer, eventId As Integer, walkThrough As Integer, dir As Byte, Optional globalevent As Boolean = False) As Boolean
         Dim i As Integer
         Dim n As Integer, z As Integer, begineventprocessing As Boolean
 
@@ -828,7 +828,7 @@ Friend Module ServerEvents
 
     End Function
 
-    Sub EventDir(Playerindex as integer, mapNum as Integer, eventID As Integer, Dir As Integer, Optional globalevent As Boolean = False)
+    Sub EventDir(playerindex as integer, mapNum as Integer, eventId As Integer, dir As Integer, Optional globalevent As Boolean = False)
         dim buffer as New ByteStream(4)
         Dim eventindex as integer, i As Integer
 
@@ -878,7 +878,7 @@ Friend Module ServerEvents
 
     End Sub
 
-    Sub EventMove(index as integer, mapNum as Integer, eventID As Integer, Dir As Integer, movementspeed As Integer, Optional globalevent As Boolean = False)
+    Sub EventMove(index as integer, mapNum as Integer, eventId As Integer, dir As Integer, movementspeed As Integer, Optional globalevent As Boolean = False)
         dim buffer as New ByteStream(4)
         Dim eventindex as integer, i As Integer
 
@@ -1129,10 +1129,10 @@ Friend Module ServerEvents
 
     End Function
 
-    Function CanEventMoveTowardsPlayer(playerID As Integer, mapNum as Integer, eventID As Integer) As Integer
-        Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, didwalk As Boolean, WalkThrough As Integer
-        Dim tim As Integer, sX As Integer, sY As Integer, pos(,) As Integer, reachable As Boolean, j As Integer, LastSum As Integer, Sum As Integer, FX As Integer, FY As Integer
-        Dim path() As Point, LastX As Integer, LastY As Integer, did As Boolean
+    Function CanEventMoveTowardsPlayer(playerId As Integer, mapNum as Integer, eventId As Integer) As Integer
+        Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, didwalk As Boolean, walkThrough As Integer
+        Dim tim As Integer, sX As Integer, sY As Integer, pos(,) As Integer, reachable As Boolean, j As Integer, lastSum As Integer, sum As Integer, fx As Integer, fy As Integer
+        Dim path() As Point, lastX As Integer, lastY As Integer, did As Boolean
         'This does not work for global events so this MUST be a player one....
 
         'This Event returns a direction, 4 is not a valid direction so we assume fail unless otherwise told.
@@ -1493,8 +1493,8 @@ Friend Module ServerEvents
 
     End Function
 
-    Function CanEventMoveAwayFromPlayer(playerID As Integer, mapNum as Integer, eventID As Integer) As Integer
-        Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, didwalk As Boolean, WalkThrough As Integer
+    Function CanEventMoveAwayFromPlayer(playerId As Integer, mapNum as Integer, eventId As Integer) As Integer
+        Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, didwalk As Boolean, walkThrough As Integer
         'This does not work for global events so this MUST be a player one....
 
         'This Event returns a direction, 5 is not a valid direction so we assume fail unless otherwise told.
@@ -1670,7 +1670,7 @@ Friend Module ServerEvents
 
     End Function
 
-    Function GetDirToPlayer(playerID As Integer, mapNum as Integer, eventID As Integer) As Integer
+    Function GetDirToPlayer(playerId As Integer, mapNum as Integer, eventId As Integer) As Integer
         Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, distance As Integer
         'This does not work for global events so this MUST be a player one....
 
@@ -1713,7 +1713,7 @@ Friend Module ServerEvents
 
     End Function
 
-    Function GetDirAwayFromPlayer(playerID As Integer, mapNum as Integer, eventID As Integer) As Integer
+    Function GetDirAwayFromPlayer(playerId As Integer, mapNum as Integer, eventId As Integer) As Integer
         Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, distance As Integer
         'This does not work for global events so this MUST be a player one....
 
@@ -1760,7 +1760,7 @@ Friend Module ServerEvents
 
 #Region "Incoming Packets"
     Sub Packet_EventChatReply(index as integer, ByRef data() As Byte)
-        Dim eventID As Integer, pageID As Integer, reply As Integer, i As Integer
+        Dim eventId As Integer, pageId As Integer, reply As Integer, i As Integer
         dim buffer as New ByteStream(data)
         Addlog("Recieved CMSG: CEventChatReply", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CEventChatReply")
@@ -1887,11 +1887,11 @@ Friend Module ServerEvents
         Addlog("Recieved CMSG: CSwitchesAndVariables", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CSwitchesAndVariables")
 
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             Switches(i) = Buffer.ReadString
         Next
 
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             Variables(i) = Buffer.ReadString
         Next
 
@@ -1907,7 +1907,7 @@ Friend Module ServerEvents
 #End Region
 
 #Region "Outgoing Packets"
-    Sub SendSpecialEffect(index as integer, EffectType As Integer, Optional Data1 As Integer = 0, Optional Data2 As Integer = 0, Optional Data3 As Integer = 0, Optional Data4 As Integer = 0)
+    Sub SendSpecialEffect(index as integer, effectType As Integer, Optional data1 As Integer = 0, Optional data2 As Integer = 0, Optional data3 As Integer = 0, Optional data4 As Integer = 0)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SSpecialEffect)
@@ -1916,22 +1916,22 @@ Friend Module ServerEvents
         Console.WriteLine("Sent SMSG: SPecialEffect")
 
         Select Case EffectType
-            Case EFFECT_TYPE_FADEIN
+            Case EffectTypeFadein
                 Buffer.WriteInt32(EffectType)
-            Case EFFECT_TYPE_FADEOUT
+            Case EffectTypeFadeout
                 Buffer.WriteInt32(EffectType)
-            Case EFFECT_TYPE_FLASH
+            Case EffectTypeFlash
                 Buffer.WriteInt32(EffectType)
-            Case EFFECT_TYPE_FOG
+            Case EffectTypeFog
                 Buffer.WriteInt32(EffectType)
                 Buffer.WriteInt32(Data1) 'fognum
                 Buffer.WriteInt32(Data2) 'fog movement speed
                 Buffer.WriteInt32(Data3) 'opacity
-            Case EFFECT_TYPE_WEATHER
+            Case EffectTypeWeather
                 Buffer.WriteInt32(EffectType)
                 Buffer.WriteInt32(Data1) 'weather type
                 Buffer.WriteInt32(Data2) 'weather intensity
-            Case EFFECT_TYPE_TINT
+            Case EffectTypeTint
                 Buffer.WriteInt32(EffectType)
                 Buffer.WriteInt32(Data1) 'red
                 Buffer.WriteInt32(Data2) 'green
@@ -1952,11 +1952,11 @@ Friend Module ServerEvents
         Addlog("Sent SMSG: SSwitchesAndVariables", PACKET_LOG)
         Console.WriteLine("Sent SMSG: SSwitchesAndVariables")
 
-        For i = 1 To MAX_SWITCHES
+        For i = 1 To MaxSwitches
             Buffer.WriteString(Trim(Switches(i)))
         Next
 
-        For i = 1 To MAX_VARIABLES
+        For i = 1 To MaxVariables
             Buffer.WriteString(Trim(Variables(i)))
         Next
 
@@ -2106,7 +2106,7 @@ Friend Module ServerEvents
 #End Region
 
 #Region "Misc"
-    Friend Sub GivePlayerEXP(index as integer, Exp As Integer)
+    Friend Sub GivePlayerExp(index as integer, exp As Integer)
         ' give the exp
 
         SetPlayerExp(Index, GetPlayerExp(Index) + Exp)
@@ -2128,7 +2128,7 @@ Friend Module ServerEvents
 
     End Sub
 
-    Friend Sub CustomScript(index as integer, caseID As Integer, mapNum as Integer, EventId As Integer)
+    Friend Sub CustomScript(index as integer, caseId As Integer, mapNum as Integer, eventId As Integer)
 
         Select Case caseID
 

@@ -22,7 +22,7 @@ Module ServerParties
         Next
     End Sub
 
-    Sub SendPartyInvite(index as integer, Target As Integer)
+    Sub SendPartyInvite(index as integer, target As Integer)
         dim buffer as New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPartyInvite)
 
@@ -166,7 +166,7 @@ Module ServerParties
         ReDim Party(PartyNum).Member(MAX_PARTY_MEMBERS)
     End Sub
 
-    Friend Sub PartyMsg(partyNum as Integer, Msg As String)
+    Friend Sub PartyMsg(partyNum as Integer, msg As String)
         Dim i As Integer
 
         ' send message to all people
@@ -244,7 +244,7 @@ Module ServerParties
         End If
     End Sub
 
-    Friend Sub Party_Invite(index as integer, Target As Integer)
+    Friend Sub Party_Invite(index as integer, target As Integer)
         Dim partyNum as Integer, i As Integer
 
         ' check if the person is a valid target
@@ -301,7 +301,7 @@ Module ServerParties
         End If
     End Sub
 
-    Friend Sub Party_InviteAccept(index as integer, Target As Integer)
+    Friend Sub Party_InviteAccept(index as integer, target As Integer)
         Dim partyNum as Integer, i As Integer
 
         ' check if already in a party
@@ -361,7 +361,7 @@ Module ServerParties
         End If
     End Sub
 
-    Friend Sub Party_InviteDecline(index as integer, Target As Integer)
+    Friend Sub Party_InviteDecline(index as integer, target As Integer)
         PlayerMsg(Index, String.Format("{0} has declined to join your party.", GetPlayerName(Target)), ColorType.BrightRed)
         PlayerMsg(Target, "You declined to join the party.", ColorType.Yellow)
         ' clear the invitation
@@ -407,7 +407,7 @@ Module ServerParties
         Party_CountMembers(PartyNum)
     End Sub
 
-    Friend Sub Party_ShareExp(partyNum as Integer, Exp As Integer, index as integer, mapNum as Integer)
+    Friend Sub Party_ShareExp(partyNum as Integer, exp As Integer, index as integer, mapNum as Integer)
         Dim expShare As Integer, leftOver As Integer, i As Integer, tmpindex as integer, loseMemberCount As Byte
 
         ' check if it's worth sharing

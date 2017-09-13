@@ -1,9 +1,8 @@
 ﻿Imports ASFW
-Imports Orion
 
 Friend Module ServerEventLogic
     Friend Sub RemoveDeadEvents()
-        Dim i As Integer, mapNum as Integer, Buffer As New ByteStream(4), x As Integer, id As Integer, page As Integer, compare As Integer
+        Dim i As Integer, mapNum as Integer, x As Integer, id As Integer, page As Integer, compare As Integer
 
         For i = 1 To GetPlayersOnline()
             If Gettingmap = True Then Exit Sub
@@ -12,8 +11,7 @@ Friend Module ServerEventLogic
                 TempPlayer(i).EventMap.CurrentEvents = 0
                 Exit Sub
             End If
-
-            MapNum = GetPlayerMap(i)
+            
             If TempPlayer(i).EventMap.CurrentEvents > 0 Then 'And Map(MapNum).Events IsNot Nothing Then
                 MapNum = GetPlayerMap(i)
 
@@ -93,7 +91,7 @@ Friend Module ServerEventLogic
                             If Map(MapNum).Events(id).Globals = 1 AndAlso TempPlayer(i).EventMap.EventPages(x).Visible = 0 Then TempEventMap(MapNum).Events(id).Active = 0
 
                             If TempPlayer(i).EventMap.EventPages(x).Visible = 0 Then
-                                Buffer = New ByteStream(4)
+                                dim Buffer as New ByteStream(4)
                                 Buffer.WriteInt32(ServerPackets.SSpawnEvent)
                                 Buffer.WriteInt32(id)
                                 With TempPlayer(i).EventMap.EventPages(x)
@@ -1880,17 +1878,17 @@ Friend Module ServerEventLogic
                                                                 SpawnNpc(Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1, GetPlayerMap(i))
                                                             End If
                                                         Case EventType.evFadeIn
-                                                            SendSpecialEffect(i, EFFECT_TYPE_FADEIN)
+                                                            SendSpecialEffect(i, EffectTypeFadein)
                                                         Case EventType.evFadeOut
-                                                            SendSpecialEffect(i, EFFECT_TYPE_FADEOUT)
+                                                            SendSpecialEffect(i, EffectTypeFadeout)
                                                         Case EventType.evFlashWhite
-                                                            SendSpecialEffect(i, EFFECT_TYPE_FLASH)
+                                                            SendSpecialEffect(i, EffectTypeFlash)
                                                         Case EventType.evSetFog
-                                                            SendSpecialEffect(i, EFFECT_TYPE_FOG, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data2, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data3)
+                                                            SendSpecialEffect(i, EffectTypeFog, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data2, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data3)
                                                         Case EventType.evSetWeather
-                                                            SendSpecialEffect(i, EFFECT_TYPE_WEATHER, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data2)
+                                                            SendSpecialEffect(i, EffectTypeWeather, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data2)
                                                         Case EventType.evSetTint
-                                                            SendSpecialEffect(i, EFFECT_TYPE_TINT, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data2, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data3, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data4)
+                                                            SendSpecialEffect(i, EffectTypeTint, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data2, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data3, Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data4)
                                                         Case EventType.evWait
                                                             .ActionTimer = GetTimeMs() + Map(GetPlayerMap(i)).Events(.EventID).Pages(.PageID).CommandList(.CurList).Commands(.CurSlot).Data1
                                                         Case EventType.evOpenMail

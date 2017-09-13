@@ -1,29 +1,29 @@
 ﻿Imports System.Drawing
 Imports ASFW
 
-Module modPets
+Module ModPets
 #Region "Globals etc"
     Friend Pet() As PetRec
 
     Friend Const PetbarTop As Byte = 2
     Friend Const PetbarLeft As Byte = 2
     Friend Const PetbarOffsetX As Byte = 4
-    Friend Const MAX_PETBAR As Byte = 7
+    Friend Const MaxPetbar As Byte = 7
     Friend Const PetHpBarWidth As Integer = 129
     Friend Const PetMpBarWidth As Integer = 129
 
     Friend PetSkillBuffer As Integer
     Friend PetSkillBufferTimer As Integer
-    Friend PetSkillCD() As Integer
+    Friend PetSkillCd() As Integer
 
     Friend ShowPetStats As Boolean
 
     'Pet Constants
-    Friend Const PET_BEHAVIOUR_FOLLOW As Byte = 0 'The pet will attack all npcs around
-    Friend Const PET_BEHAVIOUR_GOTO As Byte = 1 'If attacked, the pet will fight back
-    Friend Const PET_ATTACK_BEHAVIOUR_ATTACKONSIGHT As Byte = 2 'The pet will attack all npcs around
-    Friend Const PET_ATTACK_BEHAVIOUR_GUARD As Byte = 3 'If attacked, the pet will fight back
-    Friend Const PET_ATTACK_BEHAVIOUR_DONOTHING As Byte = 4 'The pet will not attack even if attacked
+    Friend Const PetBehaviourFollow As Byte = 0 'The pet will attack all npcs around
+    Friend Const PetBehaviourGoto As Byte = 1 'If attacked, the pet will fight back
+    Friend Const PetAttackBehaviourAttackonsight As Byte = 2 'The pet will attack all npcs around
+    Friend Const PetAttackBehaviourGuard As Byte = 3 'If attacked, the pet will fight back
+    Friend Const PetAttackBehaviourDonothing As Byte = 4 'The pet will not attack even if attacked
 
     Friend Structure PetRec
         Dim Num As Integer
@@ -62,11 +62,11 @@ Module modPets
         Dim Y As Integer
         Dim Dir As Integer
         Dim MaxHp As Integer
-        Dim MaxMP As Integer
+        Dim MaxMp As Integer
         Dim Alive As Byte
         Dim AttackBehaviour As Integer
         Dim Exp As Integer
-        Dim TNL As Integer
+        Dim Tnl As Integer
 
         'Client Use Only
         Dim XOffset As Integer
@@ -114,7 +114,7 @@ Module modPets
 
     End Sub
 
-    Sub SendTrainPetStat(StatNum As Byte)
+    Sub SendTrainPetStat(statNum As Byte)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPetUseStatPoint)
@@ -241,8 +241,8 @@ Module modPets
     End Sub
 
     Friend Sub Packet_PetMove(ByRef data() As Byte)
-        Dim i As Integer, X As Integer, Y As Integer
-        Dim dir As Integer, Movement As Integer
+        Dim i As Integer, x As Integer, y As Integer
+        Dim dir As Integer, movement As Integer
         dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
         X = Buffer.ReadInt32
@@ -260,13 +260,13 @@ Module modPets
 
             Select Case .Dir
                 Case DirectionType.Up
-                    .YOffset = PIC_Y
+                    .YOffset = PicY
                 Case DirectionType.Down
-                    .YOffset = PIC_Y * -1
+                    .YOffset = PicY * -1
                 Case DirectionType.Left
-                    .XOffset = PIC_X
+                    .XOffset = PicX
                 Case DirectionType.Right
-                    .XOffset = PIC_X * -1
+                    .XOffset = PicX * -1
             End Select
         End With
 
@@ -346,19 +346,19 @@ Module modPets
 
             Select Case Player(Index).Pet.Dir
                 Case DirectionType.Up
-                    Player(Index).Pet.YOffset = Player(Index).Pet.YOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
+                    Player(Index).Pet.YOffset = Player(Index).Pet.YOffset - ((ElapsedTime / 1000) * (WalkSpeed * SizeX))
                     If Player(Index).Pet.YOffset < 0 Then Player(Index).Pet.YOffset = 0
 
                 Case DirectionType.Down
-                    Player(Index).Pet.YOffset = Player(Index).Pet.YOffset + ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
+                    Player(Index).Pet.YOffset = Player(Index).Pet.YOffset + ((ElapsedTime / 1000) * (WalkSpeed * SizeX))
                     If Player(Index).Pet.YOffset > 0 Then Player(Index).Pet.YOffset = 0
 
                 Case DirectionType.Left
-                    Player(Index).Pet.XOffset = Player(Index).Pet.XOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
+                    Player(Index).Pet.XOffset = Player(Index).Pet.XOffset - ((ElapsedTime / 1000) * (WalkSpeed * SizeX))
                     If Player(Index).Pet.XOffset < 0 Then Player(Index).Pet.XOffset = 0
 
                 Case DirectionType.Right
-                    Player(Index).Pet.XOffset = Player(Index).Pet.XOffset + ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
+                    Player(Index).Pet.XOffset = Player(Index).Pet.XOffset + ((ElapsedTime / 1000) * (WalkSpeed * SizeX))
                     If Player(Index).Pet.XOffset > 0 Then Player(Index).Pet.XOffset = 0
 
             End Select
@@ -389,7 +389,7 @@ Module modPets
 
     End Sub
 
-    Friend Sub PetMove(X As Integer, Y As Integer)
+    Friend Sub PetMove(x As Integer, y As Integer)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPetMove)
@@ -406,8 +406,8 @@ Module modPets
 
 #Region "Drawing"
     Friend Sub DrawPet(index as integer)
-        Dim Anim As Byte, X As Integer, Y As Integer
-        Dim Sprite As Integer, spriteleft As Integer
+        Dim anim As Byte, x As Integer, y As Integer
+        Dim sprite As Integer, spriteleft As Integer
         Dim srcrec As Rectangle
         Dim attackspeed As Integer
 
@@ -468,15 +468,15 @@ Module modPets
         srcrec = New Rectangle((Anim) * (CharacterGFXInfo(Sprite).Width / 4), spriteleft * (CharacterGFXInfo(Sprite).Height / 4), (CharacterGFXInfo(Sprite).Width / 4), (CharacterGFXInfo(Sprite).Height / 4))
 
         ' Calculate the X
-        X = Player(Index).Pet.X * PIC_X + Player(Index).Pet.XOffset - ((CharacterGFXInfo(Sprite).Width / 4 - 32) / 2)
+        X = Player(Index).Pet.X * PicX + Player(Index).Pet.XOffset - ((CharacterGFXInfo(Sprite).Width / 4 - 32) / 2)
 
         ' Is the player's height more than 32..?
         If (CharacterGFXInfo(Sprite).Height / 4) > 32 Then
             ' Create a 32 pixel offset for larger sprites
-            Y = Player(Index).Pet.Y * PIC_Y + Player(Index).Pet.YOffset - ((CharacterGFXInfo(Sprite).Width / 4) - 32)
+            Y = Player(Index).Pet.Y * PicY + Player(Index).Pet.YOffset - ((CharacterGFXInfo(Sprite).Width / 4) - 32)
         Else
             ' Proceed as normal
-            Y = Player(Index).Pet.Y * PIC_Y + Player(Index).Pet.YOffset
+            Y = Player(Index).Pet.Y * PicY + Player(Index).Pet.YOffset
         End If
 
         ' render the actual sprite
@@ -485,10 +485,10 @@ Module modPets
     End Sub
 
     Friend Sub DrawPlayerPetName(index as integer)
-        Dim TextX As Integer
-        Dim TextY As Integer
+        Dim textX As Integer
+        Dim textY As Integer
         Dim color As SFML.Graphics.Color, backcolor As SFML.Graphics.Color
-        Dim Name As String
+        Dim name As String
 
         ' Check access level
         If GetPlayerPK(Index) = False Then
@@ -517,12 +517,12 @@ Module modPets
 
         Name = Trim$(GetPlayerName(Index)) & "'s " & Trim$(Pet(Player(Index).Pet.Num).Name)
         ' calc pos
-        TextX = ConvertMapX(Player(Index).Pet.X * PIC_X) + Player(Index).Pet.XOffset + (PIC_X \ 2) - GetTextWidth(Name) / 2
+        TextX = ConvertMapX(Player(Index).Pet.X * PicX) + Player(Index).Pet.XOffset + (PicX \ 2) - GetTextWidth(Name) / 2
         If Pet(Player(Index).Pet.Num).Sprite < 1 OrElse Pet(Player(Index).Pet.Num).Sprite > NumCharacters Then
-            TextY = ConvertMapY(Player(Index).Pet.Y * PIC_Y) + Player(Index).Pet.YOffset - 16
+            TextY = ConvertMapY(Player(Index).Pet.Y * PicY) + Player(Index).Pet.YOffset - 16
         Else
             ' Determine location for text
-            TextY = ConvertMapY(Player(Index).Pet.Y * PIC_Y) + Player(Index).Pet.YOffset - (CharacterGFXInfo(Pet(Player(Index).Pet.Num).Sprite).Height / 4) + 16
+            TextY = ConvertMapY(Player(Index).Pet.Y * PicY) + Player(Index).Pet.YOffset - (CharacterGFXInfo(Pet(Player(Index).Pet.Num).Sprite).Height / 4) + 16
         End If
 
         ' Draw name
@@ -532,7 +532,7 @@ Module modPets
 
     Sub DrawPetBar()
         Dim skillnum As Integer, skillpic As Integer
-        Dim rec As Rectangle, rec_pos As Rectangle
+        Dim rec As Rectangle, recPos As Rectangle
 
         If Not HasPet(MyIndex) Then Exit Sub
 
@@ -568,14 +568,14 @@ Module modPets
                         rec.Width = 32
                     End If
 
-                    With rec_pos
+                    With recPos
                         .Y = PetbarY + PetbarTop
-                        .Height = PIC_Y
+                        .Height = PicY
                         .X = PetbarX + PetbarLeft + ((PetbarOffsetX - 2) + 32) * (((i - 1) + 3))
-                        .Width = PIC_X
+                        .Width = PicX
                     End With
 
-                    RenderSprite(SkillIconsSprite(skillpic), GameWindow, rec_pos.X, rec_pos.Y, rec.X, rec.Y, rec.Width, rec.Height)
+                    RenderSprite(SkillIconsSprite(skillpic), GameWindow, recPos.X, recPos.Y, rec.X, rec.Y, rec.Width, rec.Height)
                 End If
             Next
         End If
@@ -640,19 +640,19 @@ Module modPets
         End If
     End Function
 
-    Friend Function IsPetBarSlot(X As Single, Y As Single) As Integer
+    Friend Function IsPetBarSlot(x As Single, y As Single) As Integer
         Dim tempRec As Rect
         Dim i As Integer
 
         IsPetBarSlot = 0
 
-        For i = 1 To MAX_PETBAR
+        For i = 1 To MaxPetbar
 
             With tempRec
                 .Top = PetbarY + PetbarTop
-                .Bottom = .Top + PIC_Y
-                .Left = PetbarX + PetbarLeft + ((PetbarOffsetX + 32) * (((i - 1) Mod MAX_PETBAR)))
-                .Right = .Left + PIC_X
+                .Bottom = .Top + PicY
+                .Left = PetbarX + PetbarLeft + ((PetbarOffsetX + 32) * (((i - 1) Mod MaxPetbar)))
+                .Right = .Left + PicX
             End With
 
             If X >= tempRec.Left AndAlso X <= tempRec.Right Then

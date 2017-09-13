@@ -542,13 +542,13 @@ Module modLoop
                 ' variables
                 .cmbPlayerVar.Items.Clear()
                 .cmbPlayerVar.Items.Add("None")
-                For i = 1 To MAX_VARIABLES
+                For i = 1 To MaxVariables
                     .cmbPlayerVar.Items.Add(i & ". " & Variables(i))
                 Next
                 ' variables
                 .cmbPlayerSwitch.Items.Clear()
                 .cmbPlayerSwitch.Items.Add("None")
-                For i = 1 To MAX_SWITCHES
+                For i = 1 To MaxSwitches
                     .cmbPlayerSwitch.Items.Add(i & ". " & Switches(i))
                 Next
                 ' name

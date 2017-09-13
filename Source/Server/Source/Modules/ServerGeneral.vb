@@ -1,5 +1,4 @@
 ﻿Imports System.IO
-Imports Orion
 
 Module ServerGeneral
     Friend Declare Function GetQueueStatus Lib "user32" (fuFlags As Integer) As Integer
@@ -63,8 +62,8 @@ Module ServerGeneral
         ClearQuests()
 
         'event
-        ReDim Switches(MAX_SWITCHES)
-        ReDim Variables(MAX_VARIABLES)
+        ReDim Switches(MaxSwitches)
+        ReDim Variables(MaxVariables)
         ReDim TempEventMap(MAX_CACHED_MAPS)
 
         'Housing
@@ -92,8 +91,8 @@ Module ServerGeneral
             'multi char
             ReDim Player(i).Character(MAX_CHARS)
             For x = 1 To MAX_CHARS
-                ReDim Player(i).Character(x).Switches(MAX_SWITCHES)
-                ReDim Player(i).Character(x).Variables(MAX_VARIABLES)
+                ReDim Player(i).Character(x).Switches(MaxSwitches)
+                ReDim Player(i).Character(x).Variables(MaxVariables)
                 ReDim Player(i).Character(x).Vital(VitalType.Count - 1)
                 ReDim Player(i).Character(x).Stat(StatType.Count - 1)
                 ReDim Player(i).Character(x).Equipment(EquipmentType.Count - 1)
@@ -167,16 +166,12 @@ Module ServerGeneral
         CheckDir(Path.Combine(Application.StartupPath, "data", "accounts"))
         CheckDir(Path.Combine(Application.StartupPath, "data", "resources"))
         CheckDir(Path.Combine(Application.StartupPath, "data", "animations"))
-        CheckDir(Path.Combine(Application.StartupPath, "data", "banks"))
         CheckDir(Path.Combine(Application.StartupPath, "data", "logs"))
         CheckDir(Path.Combine(Application.StartupPath, "data", "quests"))
         CheckDir(Path.Combine(Application.StartupPath, "data", "recipes"))
         CheckDir(Path.Combine(Application.StartupPath, "data", "pets"))
         CheckDir(Path.Combine(Application.StartupPath, "data", "projectiles"))
-
-        ' set quote character
-        vbQuote = Chr(34) ' "
-
+        
         ' load options, set if they dont exist
         If Not File.Exists(Path.Combine(Application.StartupPath, "Data", "Config.xml")) Then
 
@@ -249,7 +244,7 @@ Module ServerGeneral
         Socket.StartListening(Options.Port, 5, 1)
 
         ' Starts the server loop
-        ServerLoop.ServerLoop()
+        ServerLoop()
 
     End Sub
 

@@ -2,7 +2,7 @@
 Imports ASFW
 Imports Orion
 
-Friend Module modTime
+Friend Module ModTime
     Sub Packet_Clock(ByRef data() As Byte)
         dim buffer as New ByteStream(Data)
         Time.Instance.GameSpeed = Buffer.ReadInt32()

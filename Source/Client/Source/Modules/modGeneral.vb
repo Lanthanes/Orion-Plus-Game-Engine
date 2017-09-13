@@ -2,9 +2,9 @@
 Imports System.Threading
 Imports System.Windows.Forms
 
-Module modGeneral
+Module ModGeneral
 
-    Friend started As Boolean
+    Friend Started As Boolean
 
     Friend Function GetTickCount() As Integer
         Return Environment.TickCount
@@ -28,8 +28,8 @@ Module modGeneral
         ClearAutotiles()
 
         'Housing
-        ReDim House(MAX_HOUSES)
-        ReDim HouseConfig(MAX_HOUSES)
+        ReDim House(MaxHouses)
+        ReDim HouseConfig(MaxHouses)
 
         'quests
         ClearQuests()
@@ -52,8 +52,8 @@ Module modGeneral
 
         ClearBank()
 
-        ReDim MapProjectiles(MAX_PROJECTILES)
-        ReDim Projectiles(MAX_PROJECTILES)
+        ReDim MapProjectiles(MaxProjectiles)
+        ReDim Projectiles(MaxProjectiles)
 
         ClearItems()
 
@@ -70,7 +70,7 @@ Module modGeneral
         vbQuote = Chr(34) ' "
 
         ' Update the form with the game's name before it's loaded
-        frmGame.Text = GAME_NAME
+        frmGame.Text = GameName
 
         SetStatus(Strings.Get("loadscreen", "options"))
 
@@ -86,7 +86,7 @@ Module modGeneral
 
         SetStatus(Strings.Get("loadscreen", "network"))
 
-        FrmMenu.Text = GAME_NAME
+        FrmMenu.Text = GameName
 
         ' DX7 Master Object is already created, early binding
         SetStatus(Strings.Get("loadscreen", "graphics"))
@@ -143,7 +143,7 @@ Module modGeneral
         GameLoop()
     End Sub
 
-    Friend Function IsLoginLegal(Username As String, Password As String) As Boolean
+    Friend Function IsLoginLegal(username As String, password As String) As Boolean
         Return Len(Trim$(Username)) >= 3 AndAlso Len(Trim$(Password)) >= 3
     End Function
 
@@ -154,7 +154,7 @@ Module modGeneral
         For i = 1 To Len(sInput)
 
             If (Asc(Mid$(sInput, i, 1))) < 32 OrElse Asc(Mid$(sInput, i, 1)) > 126 Then
-                MsgBox(Strings.Get("mainmenu", "stringlegal"), vbOKOnly, GAME_NAME)
+                MsgBox(Strings.Get("mainmenu", "stringlegal"), vbOKOnly, GameName)
                 IsStringLegal = False
                 Exit Function
             End If
@@ -174,15 +174,15 @@ Module modGeneral
         StopMusic()
     End Sub
 
-    Friend Sub SetStatus(Caption As String)
+    Friend Sub SetStatus(caption As String)
         FrmMenu.lblStatus.Text = Caption
     End Sub
 
-    Friend Sub MenuState(State As Integer)
+    Friend Sub MenuState(state As Integer)
         pnlloadvisible = True
         frmmenuvisible = False
         Select Case State
-            Case MENU_STATE_ADDCHAR
+            Case MenuStateAddchar
                 pnlCharCreateVisible = False
                 pnlLoginVisible = False
                 pnlRegisterVisible = False
@@ -198,7 +198,7 @@ Module modGeneral
                     End If
                 End If
 
-            Case MENU_STATE_NEWACCOUNT
+            Case MenuStateNewaccount
                 pnlLoginVisible = False
                 pnlCharCreateVisible = False
                 pnlRegisterVisible = False
@@ -209,7 +209,7 @@ Module modGeneral
                     SendNewAccount(FrmMenu.txtRuser.Text, FrmMenu.txtRPass.Text)
                 End If
 
-            Case MENU_STATE_LOGIN
+            Case MenuStateLogin
                 pnlLoginVisible = False
                 pnlCharCreateVisible = False
                 pnlRegisterVisible = False
@@ -260,31 +260,31 @@ Module modGeneral
 
     End Function
 
-    Friend Sub RePositionGUI()
+    Friend Sub RePositionGui()
 
         'first change the tiles
         If Options.ScreenSize = 0 Then ' 800x600
-            SCREEN_MAPX = 25
-            SCREEN_MAPY = 19
+            ScreenMapx = 25
+            ScreenMapy = 19
         ElseIf Options.ScreenSize = 1 Then '1024x768
-            SCREEN_MAPX = 31
-            SCREEN_MAPY = 24
+            ScreenMapx = 31
+            ScreenMapy = 24
         ElseIf Options.ScreenSize = 2 Then
-            SCREEN_MAPX = 35
-            SCREEN_MAPY = 26
+            ScreenMapx = 35
+            ScreenMapy = 26
         End If
 
         'then the window
-        frmGame.ClientSize = New Drawing.Size((SCREEN_MAPX) * PIC_X + PIC_X, (SCREEN_MAPY) * PIC_Y + PIC_Y)
-        frmGame.picscreen.Width = (SCREEN_MAPX) * PIC_X + PIC_X
-        frmGame.picscreen.Height = (SCREEN_MAPY) * PIC_Y + PIC_Y
+        frmGame.ClientSize = New Drawing.Size((ScreenMapx) * PicX + PicX, (ScreenMapy) * PicY + PicY)
+        frmGame.picscreen.Width = (ScreenMapx) * PicX + PicX
+        frmGame.picscreen.Height = (ScreenMapy) * PicY + PicY
 
-        HalfX = ((SCREEN_MAPX) \ 2) * PIC_X
-        HalfY = ((SCREEN_MAPY) \ 2) * PIC_Y
-        ScreenX = (SCREEN_MAPX) * PIC_X
-        ScreenY = (SCREEN_MAPY) * PIC_Y
+        HalfX = ((ScreenMapx) \ 2) * PicX
+        HalfY = ((ScreenMapy) \ 2) * PicY
+        ScreenX = (ScreenMapx) * PicX
+        ScreenY = (ScreenMapy) * PicY
 
-        GameWindow.SetView(New SFML.Graphics.View(New SFML.Graphics.FloatRect(0, 0, (SCREEN_MAPX) * PIC_X + PIC_X, (SCREEN_MAPY) * PIC_Y + PIC_Y)))
+        GameWindow.SetView(New SFML.Graphics.View(New SFML.Graphics.FloatRect(0, 0, (ScreenMapx) * PicX + PicX, (ScreenMapy) * PicY + PicY)))
 
         'Then we can recalculate the positions
 
@@ -345,7 +345,7 @@ Module modGeneral
         End
     End Sub
 
-    Friend Sub CheckDir(DirPath As String)
+    Friend Sub CheckDir(dirPath As String)
 
         If Not IO.Directory.Exists(DirPath) Then
             IO.Directory.CreateDirectory(DirPath)
@@ -354,7 +354,7 @@ Module modGeneral
     End Sub
 
     Friend Function GetExceptionInfo(ex As Exception) As String
-        Dim Result As String
+        Dim result As String
         Dim hr As Integer = Runtime.InteropServices.Marshal.GetHRForException(ex)
         Result = ex.GetType.ToString & "(0x" & hr.ToString("X8") & "): " & ex.Message & Environment.NewLine & ex.StackTrace & Environment.NewLine
         Dim st As StackTrace = New StackTrace(ex, True)

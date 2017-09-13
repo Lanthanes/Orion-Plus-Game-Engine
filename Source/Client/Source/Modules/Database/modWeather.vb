@@ -4,15 +4,15 @@ Imports SFML.Audio
 Imports SFML.Graphics
 Imports SFML.Window
 
-Friend Module modWeather
-    Friend Const MAX_WEATHER_PARTICLES As Integer = 100
+Friend Module ModWeather
+    Friend Const MaxWeatherParticles As Integer = 100
 
-    Friend WeatherParticle(MAX_WEATHER_PARTICLES) As WeatherParticleRec
+    Friend WeatherParticle(MaxWeatherParticles) As WeatherParticleRec
     Friend WeatherSoundPlayer As Sound
     Friend CurWeatherMusic As String
 
     Friend Structure WeatherParticleRec
-        Dim type As Integer
+        Dim Type As Integer
         Dim X As Integer
         Dim Y As Integer
         Dim Velocity As Integer
@@ -29,7 +29,7 @@ Friend Module modWeather
             x = Rand(1, 101 - CurrentWeatherIntensity)
             If x = 1 Then
                 'Add a new particle
-                For i = 1 To MAX_WEATHER_PARTICLES
+                For i = 1 To MaxWeatherParticles
                     If WeatherParticle(i).InUse = 0 Then
                         If Rand(1, 3) = 1 Then
                             WeatherParticle(i).InUse = 1
@@ -59,7 +59,7 @@ Friend Module modWeather
                 PlayExtraSound("Thunder.ogg")
             End If
         End If
-        For i = 1 To MAX_WEATHER_PARTICLES
+        For i = 1 To MaxWeatherParticles
             If WeatherParticle(i).InUse = 1 Then
                 If WeatherParticle(i).X > TileView.Right * 32 OrElse WeatherParticle(i).Y > TileView.Bottom * 32 Then
                     WeatherParticle(i).InUse = 0
@@ -91,9 +91,9 @@ Friend Module modWeather
     End Sub
 
     Friend Sub DrawWeather()
-        Dim i As Integer, SpriteLeft As Integer
+        Dim i As Integer, spriteLeft As Integer
 
-        For i = 1 To MAX_WEATHER_PARTICLES
+        For i = 1 To MaxWeatherParticles
             If WeatherParticle(i).InUse Then
                 If WeatherParticle(i).type = WeatherType.Storm Then
                     SpriteLeft = 0
@@ -134,8 +134,8 @@ Friend Module modWeather
 
     End Sub
 
-    Sub PlayWeatherSound(FileName As String, Optional Looped As Boolean = False)
-        If Not Options.Sound = 1 OrElse Not File.Exists(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
+    Sub PlayWeatherSound(fileName As String, Optional looped As Boolean = False)
+        If Not Options.Sound = 1 OrElse Not File.Exists(Application.StartupPath & SoundPath & FileName) Then Exit Sub
         If CurWeatherMusic = FileName Then Exit Sub
 
         dim buffer as SoundBuffer
@@ -145,7 +145,7 @@ Friend Module modWeather
             WeatherSoundPlayer.Stop()
         End If
 
-        buffer = New SoundBuffer(Application.StartupPath & SOUND_PATH & FileName)
+        buffer = New SoundBuffer(Application.StartupPath & SoundPath & FileName)
         WeatherSoundPlayer.SoundBuffer = buffer
         If Looped = True Then
             WeatherSoundPlayer.Loop() = True

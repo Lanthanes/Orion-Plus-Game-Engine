@@ -4,9 +4,9 @@ Imports ASFW
 Imports SFML.Graphics
 Imports SFML.Window
 
-Friend Module modHousing
+Friend Module ModHousing
 #Region "Globals & Types"
-    Friend MAX_HOUSES As Integer = 100
+    Friend MaxHouses As Integer = 100
 
     Friend FurnitureCount As Integer
     Friend FurnitureHouse As Integer
@@ -17,7 +17,7 @@ Friend Module modHousing
     Friend HouseConfig() As HouseRec
     Friend Furniture() As FurnitureRec
     Friend NumFurniture As Integer
-    Friend House_Changed(MAX_HOUSES) As Boolean
+    Friend HouseChanged(MaxHouses) As Boolean
     Friend HouseEdit As Boolean
 
     Structure HouseRec
@@ -46,7 +46,7 @@ Friend Module modHousing
     Sub Packet_HouseConfigurations(ByRef data() As Byte)
         Dim i As Integer
         dim buffer as New ByteStream(Data)
-        For i = 1 To MAX_HOUSES
+        For i = 1 To MaxHouses
             HouseConfig(i).ConfigName = Buffer.ReadString
             HouseConfig(i).BaseMap = Buffer.ReadInt32
             HouseConfig(i).MaxFurniture = Buffer.ReadInt32
@@ -64,7 +64,7 @@ Friend Module modHousing
 
         Buffer.Dispose()
 
-        DialogType = DIALOGUE_TYPE_BUYHOME
+        DialogType = DialogueTypeBuyhome
         If HouseConfig(i).MaxFurniture > 0 Then
             ' ask to buy house
             DialogMsg1 = "Would you like to buy the house: " & Trim$(HouseConfig(i).ConfigName)
@@ -87,7 +87,7 @@ Friend Module modHousing
         dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
 
-        DialogType = DIALOGUE_TYPE_VISIT
+        DialogType = DialogueTypeVisit
 
         DialogMsg1 = "You have been invited to visit " & Trim$(GetPlayerName(i)) & "'s house."
         DialogMsg2 = ""
@@ -121,7 +121,7 @@ Friend Module modHousing
     Sub Packet_EditHouses(ByRef data() As Byte)
         dim buffer as New ByteStream(Data)
         Dim i As Integer
-        For i = 1 To MAX_HOUSES
+        For i = 1 To MaxHouses
             With House(i)
                 .ConfigName = Trim$(Buffer.ReadString)
                 .BaseMap = Buffer.ReadInt32
@@ -150,7 +150,7 @@ Friend Module modHousing
 
     End Sub
 
-    Friend Sub SendBuyHouse(Accepted As Byte)
+    Friend Sub SendBuyHouse(accepted As Byte)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CBuyHouse)
@@ -160,7 +160,7 @@ Friend Module modHousing
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendInvite(Name As String)
+    Friend Sub SendInvite(name As String)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CVisit)
@@ -170,7 +170,7 @@ Friend Module modHousing
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendVisit(Accepted As Byte)
+    Friend Sub SendVisit(accepted As Byte)
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CAcceptVisit)
@@ -186,7 +186,7 @@ Friend Module modHousing
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "Furniture\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "Furniture\" & i & GfxExt)
             NumFurniture = NumFurniture + 1
             i = i + 1
         End While
@@ -194,9 +194,9 @@ Friend Module modHousing
         If NumFurniture = 0 Then Exit Sub
     End Sub
 
-    Friend Sub DrawFurniture(index as integer, Layer As Integer)
-        Dim i As Integer, ItemNum As Integer
-        Dim X As Integer, Y As Integer, Width As Integer, Height As Integer, X1 As Integer, Y1 As Integer
+    Friend Sub DrawFurniture(index as integer, layer As Integer)
+        Dim i As Integer, itemNum As Integer
+        Dim x As Integer, y As Integer, width As Integer, height As Integer, x1 As Integer, y1 As Integer
 
         ItemNum = Furniture(Index).ItemNum
 

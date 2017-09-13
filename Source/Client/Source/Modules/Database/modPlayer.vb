@@ -1,6 +1,6 @@
 ﻿Imports ASFW
 
-Module modPlayer
+Module ModPlayer
     Function IsPlaying(index as integer) As Boolean
 
         ' if the player doesn't exist, the name will equal 0
@@ -17,7 +17,7 @@ Module modPlayer
     End Function
 
     Sub CheckAttack()
-        Dim attackspeed As Integer, X As Integer, Y As Integer
+        Dim attackspeed As Integer, x As Integer, y As Integer
         dim buffer as New ByteStream(4)
 
         If VbKeyControl Then
@@ -98,19 +98,19 @@ Module modPlayer
             Select Case GetPlayerDir(MyIndex)
                 Case DirectionType.Up
                     SendPlayerMove()
-                    Player(MyIndex).YOffset = PIC_Y
+                    Player(MyIndex).YOffset = PicY
                     SetPlayerY(MyIndex, GetPlayerY(MyIndex) - 1)
                 Case DirectionType.Down
                     SendPlayerMove()
-                    Player(MyIndex).YOffset = PIC_Y * -1
+                    Player(MyIndex).YOffset = PicY * -1
                     SetPlayerY(MyIndex, GetPlayerY(MyIndex) + 1)
                 Case DirectionType.Left
                     SendPlayerMove()
-                    Player(MyIndex).XOffset = PIC_X
+                    Player(MyIndex).XOffset = PicX
                     SetPlayerX(MyIndex, GetPlayerX(MyIndex) - 1)
                 Case DirectionType.Right
                     SendPlayerMove()
-                    Player(MyIndex).XOffset = PIC_X * -1
+                    Player(MyIndex).XOffset = PicX * -1
                     SetPlayerX(MyIndex, GetPlayerX(MyIndex) + 1)
             End Select
 
@@ -315,8 +315,8 @@ Module modPlayer
 
     End Function
 
-    Function CheckDirection(Direction As Byte) As Boolean
-        Dim X As Integer, Y As Integer
+    Function CheckDirection(direction As Byte) As Boolean
+        Dim x As Integer, y As Integer
         Dim i As Integer, z As Integer
 
         CheckDirection = False
@@ -422,12 +422,12 @@ Module modPlayer
     End Function
 
     Sub ProcessMovement(index as integer)
-        Dim MovementSpeed As Integer
+        Dim movementSpeed As Integer
 
         ' Check if player is walking, and if so process moving them over
         Select Case Player(Index).Moving
-            Case MovementType.Walking : MovementSpeed = ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
-            Case MovementType.Running : MovementSpeed = ((ElapsedTime / 1000) * (RUN_SPEED * SIZE_X))
+            Case MovementType.Walking : MovementSpeed = ((ElapsedTime / 1000) * (WalkSpeed * SizeX))
+            Case MovementType.Running : MovementSpeed = ((ElapsedTime / 1000) * (RunSpeed * SizeX))
             Case Else : Exit Sub
         End Select
 
@@ -477,7 +477,7 @@ Module modPlayer
         GetPlayerDir = Player(Index).Dir
     End Function
 
-    Function GetPlayerGatherSkillLvl(index as integer, SkillSlot As Integer) As Integer
+    Function GetPlayerGatherSkillLvl(index as integer, skillSlot As Integer) As Integer
 
         GetPlayerGatherSkillLvl = 0
 
@@ -486,7 +486,7 @@ Module modPlayer
         GetPlayerGatherSkillLvl = Player(Index).GatherSkills(SkillSlot).SkillLevel
     End Function
 
-    Function GetPlayerGatherSkillExp(index as integer, SkillSlot As Integer) As Integer
+    Function GetPlayerGatherSkillExp(index as integer, skillSlot As Integer) As Integer
 
         GetPlayerGatherSkillExp = 0
 
@@ -495,7 +495,7 @@ Module modPlayer
         GetPlayerGatherSkillExp = Player(Index).GatherSkills(SkillSlot).SkillCurExp
     End Function
 
-    Function GetPlayerGatherSkillMaxExp(index as integer, SkillSlot As Integer) As Integer
+    Function GetPlayerGatherSkillMaxExp(index as integer, skillSlot As Integer) As Integer
 
         GetPlayerGatherSkillMaxExp = 0
 
@@ -554,22 +554,22 @@ Module modPlayer
         GetPlayerInvItemNum = PlayerInv(invslot).Num
     End Function
 
-    Sub SetPlayerName(index as integer, Name As String)
+    Sub SetPlayerName(index as integer, name As String)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Name = Name
     End Sub
 
-    Sub SetPlayerClass(index as integer, Classnum As Integer)
+    Sub SetPlayerClass(index as integer, classnum As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Classes = Classnum
     End Sub
 
-    Sub SetPlayerPOINTS(index as integer, POINTS As Integer)
+    Sub SetPlayerPoints(index as integer, points As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).POINTS = POINTS
     End Sub
 
-    Sub SetPlayerStat(index as integer, Stat As StatType, Value As Integer)
+    Sub SetPlayerStat(index as integer, stat As StatType, value As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         If Value <= 0 Then Value = 1
         If Value > Byte.MaxValue Then Value = Byte.MaxValue
@@ -587,28 +587,28 @@ Module modPlayer
         GetPlayerInvItemValue = PlayerInv(invslot).Value
     End Function
 
-    Sub SetPlayerInvItemValue(index as integer, invslot As Integer, ItemValue As Integer)
+    Sub SetPlayerInvItemValue(index as integer, invslot As Integer, itemValue As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         PlayerInv(invslot).Value = ItemValue
     End Sub
 
-    Function GetPlayerPOINTS(index as integer) As Integer
+    Function GetPlayerPoints(index as integer) As Integer
         GetPlayerPOINTS = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerPOINTS = Player(Index).POINTS
     End Function
 
-    Sub SetPlayerAccess(index as integer, Access As Integer)
+    Sub SetPlayerAccess(index as integer, access As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Access = Access
     End Sub
 
-    Sub SetPlayerPK(index as integer, PK As Integer)
+    Sub SetPlayerPk(index as integer, pk As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).PK = PK
     End Sub
 
-    Sub SetPlayerVital(index as integer, Vital As VitalType, Value As Integer)
+    Sub SetPlayerVital(index as integer, vital As VitalType, value As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Vital(Vital) = Value
 
@@ -617,7 +617,7 @@ Module modPlayer
         End If
     End Sub
 
-    Function GetPlayerMaxVital(index as integer, Vital As VitalType) As Integer
+    Function GetPlayerMaxVital(index as integer, vital As VitalType) As Integer
         GetPlayerMaxVital = 0
         If Index > MAX_PLAYERS Then Exit Function
 
@@ -632,37 +632,37 @@ Module modPlayer
 
     End Function
 
-    Sub SetPlayerX(index as integer, X As Integer)
+    Sub SetPlayerX(index as integer, x As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).X = X
     End Sub
 
-    Sub SetPlayerY(index as integer, Y As Integer)
+    Sub SetPlayerY(index as integer, y As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Y = Y
     End Sub
 
-    Sub SetPlayerSprite(index as integer, Sprite As Integer)
+    Sub SetPlayerSprite(index as integer, sprite As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Sprite = Sprite
     End Sub
 
-    Sub SetPlayerExp(index as integer, EXP As Integer)
+    Sub SetPlayerExp(index as integer, exp As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).EXP = EXP
     End Sub
 
-    Sub SetPlayerLevel(index as integer, Level As Integer)
+    Sub SetPlayerLevel(index as integer, level As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Level = Level
     End Sub
 
-    Sub SetPlayerDir(index as integer, Dir As Integer)
+    Sub SetPlayerDir(index as integer, dir As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Dir = Dir
     End Sub
 
-    Function GetPlayerVital(index as integer, Vital As VitalType) As Integer
+    Function GetPlayerVital(index as integer, vital As VitalType) As Integer
         GetPlayerVital = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerVital = Player(Index).Vital(Vital)
@@ -692,13 +692,13 @@ Module modPlayer
         GetPlayerLevel = Player(Index).Level
     End Function
 
-    Function GetPlayerEquipment(index as integer, EquipmentSlot As EquipmentType) As Byte
+    Function GetPlayerEquipment(index as integer, equipmentSlot As EquipmentType) As Byte
         GetPlayerEquipment = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerEquipment = Player(Index).Equipment(EquipmentSlot)
     End Function
 
-    Function GetPlayerStat(index as integer, Stat As StatType) As Integer
+    Function GetPlayerStat(index as integer, stat As StatType) As Integer
         GetPlayerStat = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerStat = Player(Index).Stat(Stat)
@@ -727,13 +727,13 @@ Module modPlayer
         GetPlayerAccess = Player(Index).Access
     End Function
 
-    Function GetPlayerPK(index as integer) As Integer
+    Function GetPlayerPk(index as integer) As Integer
         GetPlayerPK = 0
         If Index > MAX_PLAYERS Then Exit Function
         GetPlayerPK = Player(Index).PK
     End Function
 
-    Sub SetPlayerEquipment(index as integer, InvNum As Integer, EquipmentSlot As EquipmentType)
+    Sub SetPlayerEquipment(index as integer, invNum As Integer, equipmentSlot As EquipmentType)
         If Index < 1 OrElse Index > MAX_PLAYERS Then Exit Sub
         Player(Index).Equipment(EquipmentSlot) = InvNum
     End Sub
@@ -796,9 +796,9 @@ Module modPlayer
             Next
         Next
 
-        ReDim Player(Index).PlayerQuest(MAX_QUESTS)
+        ReDim Player(Index).PlayerQuest(MaxQuests)
 
-        ReDim Player(Index).Hotbar(MAX_HOTBAR)
+        ReDim Player(Index).Hotbar(MaxHotbar)
 
         ReDim Player(Index).GatherSkills(ResourceSkills.Count - 1)
 

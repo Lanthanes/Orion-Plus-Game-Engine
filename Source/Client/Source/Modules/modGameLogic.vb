@@ -4,18 +4,18 @@ Imports System.Windows.Forms
 Imports ASFW
 Imports Orion
 
-Module modGameLogic
+Module ModGameLogic
     Friend GameRand As New Random()
 
     Sub GameLoop()
         Dim i As Integer
         Dim dest As Point = New Point(frmGame.PointToScreen(frmGame.picscreen.Location))
         Dim g As Graphics = frmGame.picscreen.CreateGraphics
-        Dim starttime As Integer, Tick As Integer, fogtmr As Integer
-        Dim tmpfps As Integer, tmplps As Integer, WalkTimer As Integer, FrameTime As Integer
+        Dim starttime As Integer, tick As Integer, fogtmr As Integer
+        Dim tmpfps As Integer, tmplps As Integer, walkTimer As Integer, frameTime As Integer
         Dim tmr10000 As Integer, tmr1000 As Integer, tmrweather As Integer
         Dim tmr100 As Integer, tmr500 As Integer, tmrconnect As Integer
-        Dim rendercount As Integer, Fadetmr As Integer
+        Dim rendercount As Integer, fadetmr As Integer
 
         starttime = GetTickCount()
         FrmMenu.lblNextChar.Left = lblnextcharleft
@@ -274,7 +274,7 @@ Module modGameLogic
                     Application.DoEvents()
 
                     If GettingMap Then
-                        Dim font As New Font(Environment.GetFolderPath(Environment.SpecialFolder.Fonts) + "\" + FONT_NAME, FONT_SIZE)
+                        Dim font As New Font(Environment.GetFolderPath(Environment.SpecialFolder.Fonts) + "\" + FontName, FontSize)
                         g.DrawString(Strings.Get("gamegui", "maprecieve"), font, Brushes.DarkCyan, frmGame.picscreen.Width - 130, 5)
                     End If
 
@@ -323,8 +323,8 @@ Module modGameLogic
     End Sub
 
     Sub ClearTempTile()
-        Dim X As Integer
-        Dim Y As Integer
+        Dim x As Integer
+        Dim y As Integer
         ReDim TempTile(Map.MaxX,Map.MaxY)
 
         For X = 0 To Map.MaxX
@@ -335,26 +335,26 @@ Module modGameLogic
 
     End Sub
 
-    Sub ProcessNpcMovement(MapNpcNum As Integer)
+    Sub ProcessNpcMovement(mapNpcNum As Integer)
 
         ' Check if NPC is walking, and if so process moving them over
         If MapNpc(MapNpcNum).Moving = MovementType.Walking Then
 
             Select Case MapNpc(MapNpcNum).Dir
                 Case DirectionType.Up
-                    MapNpc(MapNpcNum).YOffset = MapNpc(MapNpcNum).YOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
+                    MapNpc(MapNpcNum).YOffset = MapNpc(MapNpcNum).YOffset - ((ElapsedTime / 1000) * (WalkSpeed * SizeX))
                     If MapNpc(MapNpcNum).YOffset < 0 Then MapNpc(MapNpcNum).YOffset = 0
 
                 Case DirectionType.Down
-                    MapNpc(MapNpcNum).YOffset = MapNpc(MapNpcNum).YOffset + ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
+                    MapNpc(MapNpcNum).YOffset = MapNpc(MapNpcNum).YOffset + ((ElapsedTime / 1000) * (WalkSpeed * SizeX))
                     If MapNpc(MapNpcNum).YOffset > 0 Then MapNpc(MapNpcNum).YOffset = 0
 
                 Case DirectionType.Left
-                    MapNpc(MapNpcNum).XOffset = MapNpc(MapNpcNum).XOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
+                    MapNpc(MapNpcNum).XOffset = MapNpc(MapNpcNum).XOffset - ((ElapsedTime / 1000) * (WalkSpeed * SizeX))
                     If MapNpc(MapNpcNum).XOffset < 0 Then MapNpc(MapNpcNum).XOffset = 0
 
                 Case DirectionType.Right
-                    MapNpc(MapNpcNum).XOffset = MapNpc(MapNpcNum).XOffset + ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
+                    MapNpc(MapNpcNum).XOffset = MapNpc(MapNpcNum).XOffset + ((ElapsedTime / 1000) * (WalkSpeed * SizeX))
                     If MapNpc(MapNpcNum).XOffset > 0 Then MapNpc(MapNpcNum).XOffset = 0
 
             End Select
@@ -417,7 +417,7 @@ Module modGameLogic
         pnlloadvisible = False
     End Function
 
-    Friend Sub CreateActionMsg(message As String, color As Integer, MsgType As Byte, X As Integer, Y As Integer)
+    Friend Sub CreateActionMsg(message As String, color As Integer, msgType As Byte, x As Integer, y As Integer)
 
         ActionMsgIndex = ActionMsgIndex + 1
         If ActionMsgIndex >= Byte.MaxValue Then ActionMsgIndex = 1
@@ -439,7 +439,7 @@ Module modGameLogic
 
     End Sub
 
-    Friend Function Rand(MaxNumber As Integer, Optional MinNumber As Integer = 0) As Integer
+    Friend Function Rand(maxNumber As Integer, Optional minNumber As Integer = 0) As Integer
         If MinNumber > MaxNumber Then
             Dim t As Integer = MinNumber
             MinNumber = MaxNumber
@@ -450,7 +450,7 @@ Module modGameLogic
     End Function
 
     ' BitWise Operators for directional blocking
-    Friend Sub SetDirBlock(ByRef blockvar As Byte, ByRef Dir As Byte, block As Boolean)
+    Friend Sub SetDirBlock(ByRef blockvar As Byte, ByRef dir As Byte, block As Boolean)
         If block Then
             blockvar = blockvar Or (2 ^ Dir)
         Else
@@ -458,11 +458,11 @@ Module modGameLogic
         End If
     End Sub
 
-    Friend Function IsDirBlocked(ByRef blockvar As Byte, ByRef Dir As Byte) As Boolean
+    Friend Function IsDirBlocked(ByRef blockvar As Byte, ByRef dir As Byte) As Boolean
         Return Not (Not blockvar AndAlso (2 ^ Dir))
     End Function
 
-    Friend Function ConvertCurrency(Amount As Integer) As String
+    Friend Function ConvertCurrency(amount As Integer) As String
 
         If Int(Amount) < 10000 Then
             ConvertCurrency = Amount
@@ -477,11 +477,11 @@ Module modGameLogic
     End Function
 
     Sub HandlePressEnter()
-        Dim ChatText As String
-        Dim Name As String
+        Dim chatText As String
+        Dim name As String
         Dim i As Integer
         Dim n As Integer
-        Dim Command() As String
+        Dim command() As String
         dim buffer as ByteStream
         ChatText = Trim$(ChatInput.CurrentMessage)
         Name = ""
@@ -681,7 +681,7 @@ Module modGameLogic
                     n = Command(1)
 
                     ' Check to make sure its a valid map #
-                    If n > 0 AndAlso n <= MAX_QUESTS Then
+                    If n > 0 AndAlso n <= MaxQuests Then
                         QuestReset(n)
                     Else
                         AddText(Strings.Get("adminchatcommand", "wrongquestnr"), QColorType.AlertColor)
@@ -931,7 +931,7 @@ Continue1:
         Buffer.Dispose()
     End Sub
 
-    Friend Sub UpdateDescWindow(itemnum As Integer, Amount As Integer, InvNum As Integer, WindowType As Byte)
+    Friend Sub UpdateDescWindow(itemnum As Integer, amount As Integer, invNum As Integer, windowType As Byte)
         Dim theName As String = "", tmpRarity As Integer
 
         If Item(itemnum).Randomize <> 0 AndAlso InvNum <> 0 Then
@@ -965,22 +965,22 @@ Continue1:
         ' set the name
         Select Case tmpRarity
             Case 0 ' White
-                ItemDescRarityColor = ITEM_RARITY_COLOR_0
+                ItemDescRarityColor = ItemRarityColor0
                 ItemDescRarityBackColor = SFML.Graphics.Color.Black
             Case 1 ' green
-                ItemDescRarityColor = ITEM_RARITY_COLOR_1
+                ItemDescRarityColor = ItemRarityColor1
                 ItemDescRarityBackColor = SFML.Graphics.Color.Black
             Case 2 ' blue
-                ItemDescRarityColor = ITEM_RARITY_COLOR_2
+                ItemDescRarityColor = ItemRarityColor2
                 ItemDescRarityBackColor = SFML.Graphics.Color.Black
             Case 3 ' red
-                ItemDescRarityColor = ITEM_RARITY_COLOR_3
+                ItemDescRarityColor = ItemRarityColor3
                 ItemDescRarityBackColor = SFML.Graphics.Color.Black
             Case 4 ' purple
-                ItemDescRarityColor = ITEM_RARITY_COLOR_4
+                ItemDescRarityColor = ItemRarityColor4
                 ItemDescRarityBackColor = SFML.Graphics.Color.Black
             Case 5 'gold
-                ItemDescRarityColor = ITEM_RARITY_COLOR_5
+                ItemDescRarityColor = ItemRarityColor5
                 ItemDescRarityBackColor = SFML.Graphics.Color.Black
         End Select
 
@@ -1270,19 +1270,19 @@ Continue1:
         GetBankItemNum = Bank.Item(bankslot).Num
     End Function
 
-    Friend Sub SetBankItemNum(Bankslot As Byte, itemnum As Integer)
+    Friend Sub SetBankItemNum(bankslot As Byte, itemnum As Integer)
         Bank.Item(Bankslot).Num = itemnum
     End Sub
 
-    Friend Function GetBankItemValue(Bankslot As Byte) As Integer
+    Friend Function GetBankItemValue(bankslot As Byte) As Integer
         GetBankItemValue = Bank.Item(Bankslot).Value
     End Function
 
-    Friend Sub SetBankItemValue(Bankslot As Byte, ItemValue As Integer)
+    Friend Sub SetBankItemValue(bankslot As Byte, itemValue As Integer)
         Bank.Item(Bankslot).Value = ItemValue
     End Sub
 
-    Friend Sub ClearActionMsg(Index As Byte)
+    Friend Sub ClearActionMsg(index As Byte)
         ActionMsg(Index).message = ""
         ActionMsg(Index).Created = 0
         ActionMsg(Index).Type = 0
@@ -1345,8 +1345,8 @@ Continue1:
 
     Friend Sub CheckAnimInstance(index as integer)
         Dim looptime As Integer
-        Dim Layer As Integer, Sound As String
-        Dim FrameCount As Integer
+        Dim layer As Integer, sound As String
+        Dim frameCount As Integer
 
         ' if doesn't exist then exit sub
         If AnimInstance(Index).Animation <= 0 Then Exit Sub
@@ -1408,7 +1408,7 @@ Continue1:
         g.Dispose()
     End Sub
 
-    Friend Sub AddChatBubble(target As Integer, targetType As Byte, Msg As String, colour As Integer)
+    Friend Sub AddChatBubble(target As Integer, targetType As Byte, msg As String, colour As Integer)
         Dim i As Integer, index as integer
 
         ' set the global index

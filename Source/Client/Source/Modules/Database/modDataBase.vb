@@ -3,8 +3,8 @@ Imports System.Windows.Forms
 Imports System.Drawing
 Imports System.Linq
 
-Module modDataBase
-    Friend Function GetFileContents(FullPath As String, Optional ByRef ErrInfo As String = "") As String
+Module ModDataBase
+    Friend Function GetFileContents(fullPath As String, Optional ByRef errInfo As String = "") As String
         Dim strContents As String
         Dim objReader As StreamReader
         strContents = ""
@@ -12,7 +12,7 @@ Module modDataBase
             objReader = New StreamReader(FullPath)
             strContents = objReader.ReadToEnd()
             objReader.Close()
-        Catch Ex As Exception
+        Catch ex As Exception
             ErrInfo = Ex.Message
         End Try
         Return strContents
@@ -23,7 +23,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "\tilesets\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "\tilesets\" & i & GfxExt)
             NumTileSets = NumTileSets + 1
             i = i + 1
         End While
@@ -35,7 +35,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "characters\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "characters\" & i & GfxExt)
             NumCharacters = NumCharacters + 1
             i = i + 1
         End While
@@ -47,7 +47,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "paperdolls\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "paperdolls\" & i & GfxExt)
             NumPaperdolls = NumPaperdolls + 1
             i = i + 1
         End While
@@ -59,7 +59,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "animations\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "animations\" & i & GfxExt)
             NumAnimations = NumAnimations + 1
             i = i + 1
         End While
@@ -71,7 +71,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "Items\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "Items\" & i & GfxExt)
             NumItems = NumItems + 1
             i = i + 1
         End While
@@ -83,7 +83,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "Resources\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "Resources\" & i & GfxExt)
             NumResources = NumResources + 1
             i = i + 1
         End While
@@ -95,7 +95,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "SkillIcons\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "SkillIcons\" & i & GfxExt)
             NumSkillIcons = NumSkillIcons + 1
             i = i + 1
         End While
@@ -107,7 +107,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "Faces\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "Faces\" & i & GfxExt)
             NumFaces = NumFaces + 1
             i = i + 1
         End While
@@ -119,7 +119,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "Fogs\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "Fogs\" & i & GfxExt)
             NumFogs = NumFogs + 1
             i = i + 1
         End While
@@ -131,7 +131,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "Emotes\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "Emotes\" & i & GfxExt)
             NumEmotes = NumEmotes + 1
             i = i + 1
         End While
@@ -143,7 +143,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "Panoramas\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "Panoramas\" & i & GfxExt)
             NumPanorama = NumPanorama + 1
             i = i + 1
         End While
@@ -155,7 +155,7 @@ Module modDataBase
         Dim i As Integer
         i = 1
 
-        While File.Exists(Application.StartupPath & GFX_PATH & "Parallax\" & i & GFX_EXT)
+        While File.Exists(Application.StartupPath & GfxPath & "Parallax\" & i & GfxExt)
             NumParallax = NumParallax + 1
             i = i + 1
         End While
@@ -164,9 +164,9 @@ Module modDataBase
     End Sub
 
     Friend Sub CacheMusic()
-        Dim Files As String() = Directory.GetFiles(Application.StartupPath & MUSIC_PATH, "*.ogg")
-        Dim MaxNum As String = Directory.GetFiles(Application.StartupPath & MUSIC_PATH, "*.ogg").Count
-        Dim Counter As Integer = 1
+        Dim files As String() = Directory.GetFiles(Application.StartupPath & MusicPath, "*.ogg")
+        Dim maxNum As String = Directory.GetFiles(Application.StartupPath & MusicPath, "*.ogg").Count
+        Dim counter As Integer = 1
 
         For Each FileName In Files
             ReDim Preserve MusicCache(Counter)
@@ -179,9 +179,9 @@ Module modDataBase
     End Sub
 
     Friend Sub CacheSound()
-        Dim Files As String() = Directory.GetFiles(Application.StartupPath & SOUND_PATH, "*.ogg")
-        Dim MaxNum As String = Directory.GetFiles(Application.StartupPath & SOUND_PATH, "*.ogg").Count
-        Dim Counter As Integer = 1
+        Dim files As String() = Directory.GetFiles(Application.StartupPath & SoundPath, "*.ogg")
+        Dim maxNum As String = Directory.GetFiles(Application.StartupPath & SoundPath, "*.ogg").Count
+        Dim counter As Integer = 1
 
         For Each FileName In Files
             ReDim Preserve SoundCache(Counter)
@@ -315,8 +315,8 @@ Module modDataBase
         SyncLock MapLock
             Map.Name = ""
             Map.Tileset = 1
-            Map.MaxX = SCREEN_MAPX
-            Map.MaxY = SCREEN_MAPY
+            Map.MaxX = ScreenMapx
+            Map.MaxY = ScreenMapy
             Map.BootMap = 0
             Map.BootX = 0
             Map.BootY = 0
@@ -331,8 +331,8 @@ Module modDataBase
             ReDim Map.Npc(MAX_MAP_NPCS)
             ReDim Map.Tile(Map.MaxX,Map.MaxY)
 
-            For x = 0 To SCREEN_MAPX
-                For y = 0 To SCREEN_MAPY
+            For x = 0 To ScreenMapx
+                For y = 0 To ScreenMapy
                     ReDim Map.Tile(x, y).Layer(LayerType.Count - 1)
                     For l = 0 To LayerType.Count - 1
                         Map.Tile(x, y).Layer(l).Tileset = 0
@@ -421,9 +421,9 @@ Module modDataBase
 
     Friend Sub ClearChanged_Item()
         For i = 1 To MAX_ITEMS
-            Item_Changed(i) = Nothing
+            ItemChanged(i) = Nothing
         Next i
-        ReDim Item_Changed(MAX_ITEMS)
+        ReDim ItemChanged(MAX_ITEMS)
     End Sub
 
     Sub ClearItems()
@@ -441,9 +441,9 @@ Module modDataBase
 #Region "Resources"
     Friend Sub ClearChanged_Resource()
         For i = 1 To MAX_RESOURCES
-            Resource_Changed(i) = Nothing
+            ResourceChanged(i) = Nothing
         Next i
-        ReDim Resource_Changed(MAX_RESOURCES)
+        ReDim ResourceChanged(MAX_RESOURCES)
     End Sub
 
     Sub ClearResource(index as integer)
