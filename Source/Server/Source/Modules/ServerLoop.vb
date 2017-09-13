@@ -209,25 +209,25 @@ Module ServerLoop
 
     Private Sub UpdateNpcAI()
         Dim i As Integer, x As Integer, n As Integer, x1 As Integer, y1 As Integer
-        Dim MapNum As Integer, TickCount As Integer
+        Dim mapNum As Integer, TickCount As Integer
         Dim Damage As Integer
         Dim DistanceX As Integer, DistanceY As Integer
         Dim NpcNum As Integer
         Dim Target As Integer, TargetTypes As Byte, TargetX As Integer, TargetY As Integer, target_verify As Boolean
         Dim Resource_index As Integer
 
-        For MapNum = 1 To MAX_CACHED_MAPS
+        For mapNum = 1 To MAX_CACHED_MAPS
 
             If ServerDestroyed Then Exit Sub
 
             '  Close the doors
-            If TickCount > TempTile(MapNum).DoorTimer + 5000 Then
+            If TickCount > TempTile(mapNum).DoorTimer + 5000 Then
 
-                For x1 = 0 To Map(MapNum).MaxX
-                    For y1 = 0 To Map(MapNum).MaxY
-                        If Map(MapNum).Tile(x1, y1).Type = TileType.Key AndAlso TempTile(MapNum).DoorOpen(x1, y1) = True Then
-                            TempTile(MapNum).DoorOpen(x1, y1) = False
-                            SendMapKeyToMap(MapNum, x1, y1, 0)
+                For x1 = 0 To Map(mapNum).MaxX
+                    For y1 = 0 To Map(mapNum).MaxY
+                        If Map(mapNum).Tile(x1, y1).Type = TileType.Key AndAlso TempTile(mapNum).DoorOpen(x1, y1) = True Then
+                            TempTile(mapNum).DoorOpen(x1, y1) = False
+                            SendMapKeyToMap(mapNum, x1, y1, 0)
                         End If
                     Next
                 Next
@@ -236,19 +236,19 @@ Module ServerLoop
 
             ' Respawning Resources
             If ResourceCache Is Nothing Then Exit Sub
-            If ResourceCache(MapNum).Resource_Count > 0 Then
-                For i = 1 To ResourceCache(MapNum).Resource_Count
+            If ResourceCache(mapNum).ResourceCount > 0 Then
+                For i = 1 To ResourceCache(mapNum).ResourceCount
 
-                    Resource_index = Map(MapNum).Tile(ResourceCache(MapNum).ResourceData(i).X, ResourceCache(MapNum).ResourceData(i).Y).Data1
+                    Resource_index = Map(mapNum).Tile(ResourceCache(mapNum).ResourceData(i).X, ResourceCache(mapNum).ResourceData(i).Y).Data1
 
                     If Resource_index > 0 Then
-                        If ResourceCache(MapNum).ResourceData(i).ResourceState = 1 OrElse ResourceCache(MapNum).ResourceData(i).Cur_Health < 1 Then  ' dead or fucked up
-                            If ResourceCache(MapNum).ResourceData(i).ResourceTimer + (Resource(Resource_index).RespawnTime * 1000) < GetTimeMs() Then
-                                ResourceCache(MapNum).ResourceData(i).ResourceTimer = GetTimeMs()
-                                ResourceCache(MapNum).ResourceData(i).ResourceState = 0 ' normal
+                        If ResourceCache(mapNum).ResourceData(i).ResourceState = 1 OrElse ResourceCache(mapNum).ResourceData(i).CurHealth < 1 Then  ' dead or fucked up
+                            If ResourceCache(mapNum).ResourceData(i).ResourceTimer + (Resource(Resource_index).RespawnTime * 1000) < GetTimeMs() Then
+                                ResourceCache(mapNum).ResourceData(i).ResourceTimer = GetTimeMs()
+                                ResourceCache(mapNum).ResourceData(i).ResourceState = 0 ' normal
                                 ' re-set health to resource root
-                                ResourceCache(MapNum).ResourceData(i).Cur_Health = Resource(Resource_index).Health
-                                SendResourceCacheToMap(MapNum, i)
+                                ResourceCache(mapNum).ResourceData(i).CurHealth = Resource(Resource_index).Health
+                                SendResourceCacheToMap(mapNum, i)
                             End If
                         End If
                     End If
@@ -257,18 +257,18 @@ Module ServerLoop
 
             If ServerDestroyed Then Exit Sub
 
-            If PlayersOnMap(MapNum) = True Then
+            If PlayersOnMap(mapNum) = True Then
                 TickCount = GetTimeMs()
 
                 For x = 1 To MAX_MAP_NPCS
-                    NpcNum = MapNpc(MapNum).Npc(x).Num
+                    NpcNum = MapNpc(mapNum).Npc(x).Num
 
                     ' check if they've completed casting, and if so set the actual skill going
-                    If MapNpc(MapNum).Npc(x).SkillBuffer > 0 AndAlso Map(MapNum).Npc(x) > 0 AndAlso MapNpc(MapNum).Npc(x).Num > 0 Then
-                        If GetTimeMs() > MapNpc(MapNum).Npc(x).SkillBufferTimer + (Skill(Npc(NpcNum).Skill(MapNpc(MapNum).Npc(x).SkillBuffer)).CastTime * 1000) Then
-                            CastNpcSkill(x, MapNum, MapNpc(MapNum).Npc(x).SkillBuffer)
-                            MapNpc(MapNum).Npc(x).SkillBuffer = 0
-                            MapNpc(MapNum).Npc(x).SkillBufferTimer = 0
+                    If MapNpc(mapNum).Npc(x).SkillBuffer > 0 AndAlso Map(mapNum).Npc(x) > 0 AndAlso MapNpc(mapNum).Npc(x).Num > 0 Then
+                        If GetTimeMs() > MapNpc(mapNum).Npc(x).SkillBufferTimer + (Skill(Npc(NpcNum).Skill(MapNpc(mapNum).Npc(x).SkillBuffer)).CastTime * 1000) Then
+                            CastNpcSkill(x, mapNum, MapNpc(mapNum).Npc(x).SkillBuffer)
+                            MapNpc(mapNum).Npc(x).SkillBuffer = 0
+                            MapNpc(mapNum).Npc(x).SkillBufferTimer = 0
                         End If
 
                     Else
@@ -276,21 +276,21 @@ Module ServerLoop
                         ' // This is used for ATTACKING ON SIGHT //
                         ' /////////////////////////////////////////
                         ' Make sure theres a npc with the map
-                        If Map(MapNum).Npc(x) > 0 AndAlso MapNpc(MapNum).Npc(x).Num > 0 Then
+                        If Map(mapNum).Npc(x) > 0 AndAlso MapNpc(mapNum).Npc(x).Num > 0 Then
 
                             ' If the npc is a attack on sight, search for a player on the map
                             If Npc(NpcNum).Behaviour = NpcBehavior.AttackOnSight OrElse Npc(NpcNum).Behaviour = NpcBehavior.Guard Then
 
                                 ' make sure it's not stunned
-                                If Not MapNpc(MapNum).Npc(x).StunDuration > 0 Then
+                                If Not MapNpc(mapNum).Npc(x).StunDuration > 0 Then
 
                                     For i = 1 To GetPlayersOnline()
                                         If IsPlaying(i) Then
-                                            If GetPlayerMap(i) = MapNum AndAlso MapNpc(MapNum).Npc(x).Target = 0 AndAlso GetPlayerAccess(i) <= AdminType.Monitor Then
+                                            If GetPlayerMap(i) = mapNum AndAlso MapNpc(mapNum).Npc(x).Target = 0 AndAlso GetPlayerAccess(i) <= AdminType.Monitor Then
                                                 If PetAlive(i) Then
                                                     n = Npc(NpcNum).Range
-                                                    DistanceX = MapNpc(MapNum).Npc(x).X - Player(i).Character(TempPlayer(i).CurChar).Pet.X
-                                                    DistanceY = MapNpc(MapNum).Npc(x).Y - Player(i).Character(TempPlayer(i).CurChar).Pet.Y
+                                                    DistanceX = MapNpc(mapNum).Npc(x).X - Player(i).Character(TempPlayer(i).CurChar).Pet.X
+                                                    DistanceY = MapNpc(mapNum).Npc(x).Y - Player(i).Character(TempPlayer(i).CurChar).Pet.Y
 
                                                     ' Make sure we get a positive value
                                                     If DistanceX < 0 Then DistanceX = DistanceX * -1
@@ -302,14 +302,14 @@ Module ServerLoop
                                                             If Len(Trim$(Npc(NpcNum).AttackSay)) > 0 Then
                                                                 PlayerMsg(i, Trim$(Npc(NpcNum).Name) & " says: " & Trim$(Npc(NpcNum).AttackSay), QColorType.SayColor)
                                                             End If
-                                                            MapNpc(MapNum).Npc(x).TargetType = TargetType.Pet
-                                                            MapNpc(MapNum).Npc(x).Target = i
+                                                            MapNpc(mapNum).Npc(x).TargetType = TargetType.Pet
+                                                            MapNpc(mapNum).Npc(x).Target = i
                                                         End If
                                                     End If
                                                 Else
                                                     n = Npc(NpcNum).Range
-                                                    DistanceX = MapNpc(MapNum).Npc(x).X - GetPlayerX(i)
-                                                    DistanceY = MapNpc(MapNum).Npc(x).Y - GetPlayerY(i)
+                                                    DistanceX = MapNpc(mapNum).Npc(x).X - GetPlayerX(i)
+                                                    DistanceY = MapNpc(mapNum).Npc(x).Y - GetPlayerY(i)
 
                                                     ' Make sure we get a positive value
                                                     If DistanceX < 0 Then DistanceX = DistanceX * -1
@@ -321,8 +321,8 @@ Module ServerLoop
                                                             If Len(Trim$(Npc(NpcNum).AttackSay)) > 0 Then
                                                                 PlayerMsg(i, CheckGrammar(Trim$(Npc(NpcNum).Name), 1) & " says, '" & Trim$(Npc(NpcNum).AttackSay) & "' to you.", ColorType.Yellow)
                                                             End If
-                                                            MapNpc(MapNum).Npc(x).TargetType = TargetType.Player
-                                                            MapNpc(MapNum).Npc(x).Target = i
+                                                            MapNpc(mapNum).Npc(x).TargetType = TargetType.Player
+                                                            MapNpc(mapNum).Npc(x).Target = i
                                                         End If
                                                     End If
                                                 End If
@@ -331,16 +331,16 @@ Module ServerLoop
                                     Next
 
                                     ' Check if target was found for NPC targetting
-                                    If MapNpc(MapNum).Npc(x).Target = 0 AndAlso Npc(NpcNum).Faction > 0 Then
+                                    If MapNpc(mapNum).Npc(x).Target = 0 AndAlso Npc(NpcNum).Faction > 0 Then
                                         ' search for npc of another faction to target
                                         For i = 1 To MAX_MAP_NPCS
                                             ' exist?
-                                            If MapNpc(MapNum).Npc(i).Num > 0 Then
+                                            If MapNpc(mapNum).Npc(i).Num > 0 Then
                                                 ' different faction?
-                                                If Npc(MapNpc(MapNum).Npc(i).Num).Faction > 0 AndAlso Npc(MapNpc(MapNum).Npc(i).Num).Faction <> Npc(NpcNum).Faction Then
+                                                If Npc(MapNpc(mapNum).Npc(i).Num).Faction > 0 AndAlso Npc(MapNpc(mapNum).Npc(i).Num).Faction <> Npc(NpcNum).Faction Then
                                                     n = Npc(NpcNum).Range
-                                                    DistanceX = MapNpc(MapNum).Npc(x).X - CLng(MapNpc(MapNum).Npc(i).X)
-                                                    DistanceY = MapNpc(MapNum).Npc(x).Y - CLng(MapNpc(MapNum).Npc(i).Y)
+                                                    DistanceX = MapNpc(mapNum).Npc(x).X - CLng(MapNpc(mapNum).Npc(i).X)
+                                                    DistanceY = MapNpc(mapNum).Npc(x).Y - CLng(MapNpc(mapNum).Npc(i).Y)
 
                                                     ' Make sure we get a positive value
                                                     If DistanceX < 0 Then DistanceX = DistanceX * -1
@@ -348,8 +348,8 @@ Module ServerLoop
 
                                                     ' Are they in range?  if so GET'M!
                                                     If DistanceX <= n AndAlso DistanceY <= n AndAlso Npc(NpcNum).Behaviour = NpcBehavior.AttackOnSight Then
-                                                        MapNpc(MapNum).Npc(x).TargetType = 2 ' npc
-                                                        MapNpc(MapNum).Npc(x).Target = i
+                                                        MapNpc(mapNum).Npc(x).TargetType = 2 ' npc
+                                                        MapNpc(mapNum).Npc(x).Target = i
                                                     End If
                                                 End If
                                             End If
@@ -365,17 +365,17 @@ Module ServerLoop
                         ' // This is used for NPC walking/targetting //
                         ' /////////////////////////////////////////////
                         ' Make sure theres a npc with the map
-                        If Map(MapNum).Npc(x) > 0 AndAlso MapNpc(MapNum).Npc(x).Num > 0 Then
-                            If MapNpc(MapNum).Npc(x).StunDuration > 0 Then
+                        If Map(mapNum).Npc(x) > 0 AndAlso MapNpc(mapNum).Npc(x).Num > 0 Then
+                            If MapNpc(mapNum).Npc(x).StunDuration > 0 Then
                                 ' check if we can unstun them
-                                If GetTimeMs() > MapNpc(MapNum).Npc(x).StunTimer + (MapNpc(MapNum).Npc(x).StunDuration * 1000) Then
-                                    MapNpc(MapNum).Npc(x).StunDuration = 0
-                                    MapNpc(MapNum).Npc(x).StunTimer = 0
+                                If GetTimeMs() > MapNpc(mapNum).Npc(x).StunTimer + (MapNpc(mapNum).Npc(x).StunDuration * 1000) Then
+                                    MapNpc(mapNum).Npc(x).StunDuration = 0
+                                    MapNpc(mapNum).Npc(x).StunTimer = 0
                                 End If
                             Else
 
-                                Target = MapNpc(MapNum).Npc(x).Target
-                                TargetTypes = MapNpc(MapNum).Npc(x).TargetType
+                                Target = MapNpc(mapNum).Npc(x).Target
+                                TargetTypes = MapNpc(mapNum).Npc(x).TargetType
 
                                 ' Check to see if its time for the npc to walk
                                 If Npc(NpcNum).Behaviour <> NpcBehavior.ShopKeeper AndAlso Npc(NpcNum).Behaviour <> NpcBehavior.Quest Then
@@ -383,60 +383,60 @@ Module ServerLoop
                                         ' Check to see if we are following a player or not
                                         If Target > 0 Then
                                             ' Check if the player is even playing, if so follow'm
-                                            If IsPlaying(Target) AndAlso GetPlayerMap(Target) = MapNum Then
+                                            If IsPlaying(Target) AndAlso GetPlayerMap(Target) = mapNum Then
                                                 target_verify = True
                                                 TargetY = GetPlayerY(Target)
                                                 TargetX = GetPlayerX(Target)
                                             Else
-                                                MapNpc(MapNum).Npc(x).TargetType = 0 ' clear
-                                                MapNpc(MapNum).Npc(x).Target = 0
+                                                MapNpc(mapNum).Npc(x).TargetType = 0 ' clear
+                                                MapNpc(mapNum).Npc(x).Target = 0
                                             End If
                                         End If
                                     ElseIf TargetTypes = TargetType.Npc Then 'npc
                                         If Target > 0 Then
-                                            If MapNpc(MapNum).Npc(Target).Num > 0 Then
+                                            If MapNpc(mapNum).Npc(Target).Num > 0 Then
                                                 target_verify = True
-                                                TargetY = MapNpc(MapNum).Npc(Target).Y
-                                                TargetX = MapNpc(MapNum).Npc(Target).X
+                                                TargetY = MapNpc(mapNum).Npc(Target).Y
+                                                TargetX = MapNpc(mapNum).Npc(Target).X
                                             Else
-                                                MapNpc(MapNum).Npc(x).TargetType = 0 ' clear
-                                                MapNpc(MapNum).Npc(x).Target = 0
+                                                MapNpc(mapNum).Npc(x).TargetType = 0 ' clear
+                                                MapNpc(mapNum).Npc(x).Target = 0
                                             End If
                                         End If
                                     ElseIf TargetTypes = TargetType.Pet Then
                                         If Target > 0 Then
-                                            If IsPlaying(Target) = True AndAlso GetPlayerMap(Target) = MapNum AndAlso PetAlive(Target) Then
+                                            If IsPlaying(Target) = True AndAlso GetPlayerMap(Target) = mapNum AndAlso PetAlive(Target) Then
                                                 target_verify = True
                                                 TargetY = Player(Target).Character(TempPlayer(Target).CurChar).Pet.Y
                                                 TargetX = Player(Target).Character(TempPlayer(Target).CurChar).Pet.X
                                             Else
-                                                MapNpc(MapNum).Npc(x).TargetType = 0 ' clear
-                                                MapNpc(MapNum).Npc(x).Target = 0
+                                                MapNpc(mapNum).Npc(x).TargetType = 0 ' clear
+                                                MapNpc(mapNum).Npc(x).Target = 0
                                             End If
                                         End If
                                     End If
 
                                     If target_verify Then
                                         'Gonna make the npcs smarter.. Implementing a pathfinding algorithm.. we shall see what happens.
-                                        If IsOneBlockAway(TargetX, TargetY, CLng(MapNpc(MapNum).Npc(x).X), CLng(MapNpc(MapNum).Npc(x).Y)) = False Then
+                                        If IsOneBlockAway(TargetX, TargetY, CLng(MapNpc(mapNum).Npc(x).X), CLng(MapNpc(mapNum).Npc(x).Y)) = False Then
 
-                                            i = FindNpcPath(MapNum, x, TargetX, TargetY)
+                                            i = FindNpcPath(mapNum, x, TargetX, TargetY)
                                             If i < 4 Then 'Returned an answer. Move the NPC
-                                                If CanNpcMove(MapNum, x, i) Then
-                                                    NpcMove(MapNum, x, i, MovementType.Walking)
+                                                If CanNpcMove(mapNum, x, i) Then
+                                                    NpcMove(mapNum, x, i, MovementType.Walking)
                                                 End If
                                             Else 'No good path found. Move randomly
                                                 i = Int(Rnd() * 4)
                                                 If i = 1 Then
                                                     i = Int(Rnd() * 4)
 
-                                                    If CanNpcMove(MapNum, x, i) Then
-                                                        NpcMove(MapNum, x, i, MovementType.Walking)
+                                                    If CanNpcMove(mapNum, x, i) Then
+                                                        NpcMove(mapNum, x, i, MovementType.Walking)
                                                     End If
                                                 End If
                                             End If
                                         Else
-                                            NpcDir(MapNum, x, GetNpcDir(TargetX, TargetY, CLng(MapNpc(MapNum).Npc(x).X), CLng(MapNpc(MapNum).Npc(x).Y)))
+                                            NpcDir(mapNum, x, GetNpcDir(TargetX, TargetY, CLng(MapNpc(mapNum).Npc(x).X), CLng(MapNpc(mapNum).Npc(x).Y)))
                                         End If
                                     Else
                                         i = Int(Rnd() * 4)
@@ -444,8 +444,8 @@ Module ServerLoop
                                         If i = 1 Then
                                             i = Int(Rnd() * 4)
 
-                                            If CanNpcMove(MapNum, x, i) Then
-                                                NpcMove(MapNum, x, i, MovementType.Walking)
+                                            If CanNpcMove(mapNum, x, i) Then
+                                                NpcMove(mapNum, x, i, MovementType.Walking)
                                             End If
                                         End If
                                     End If
@@ -459,9 +459,9 @@ Module ServerLoop
                     ' // This is used for npcs to attack targets //
                     ' /////////////////////////////////////////////
                     ' Make sure theres a npc with the map
-                    If Map(MapNum).Npc(x) > 0 AndAlso MapNpc(MapNum).Npc(x).Num > 0 Then
-                        Target = MapNpc(MapNum).Npc(x).Target
-                        TargetTypes = MapNpc(MapNum).Npc(x).TargetType
+                    If Map(mapNum).Npc(x) > 0 AndAlso MapNpc(mapNum).Npc(x).Num > 0 Then
+                        Target = MapNpc(mapNum).Npc(x).Target
+                        TargetTypes = MapNpc(mapNum).Npc(x).TargetType
 
                         ' Check if the npc can attack the targeted player player
                         If Target > 0 Then
@@ -469,12 +469,12 @@ Module ServerLoop
                             If TargetTypes = TargetType.Player Then ' player
 
                                 ' Is the target playing and on the same map?
-                                If IsPlaying(Target) AndAlso GetPlayerMap(Target) = MapNum Then
-                                    If IsPlaying(Target) AndAlso GetPlayerMap(Target) = MapNum Then
+                                If IsPlaying(Target) AndAlso GetPlayerMap(Target) = mapNum Then
+                                    If IsPlaying(Target) AndAlso GetPlayerMap(Target) = mapNum Then
                                         If Random(1, 3) = 1 Then
-                                            Dim skillnum As Byte = RandomNpcAttack(MapNum, x)
+                                            Dim skillnum As Byte = RandomNpcAttack(mapNum, x)
                                             If skillnum > 0 Then
-                                                BufferNpcSkill(MapNum, x, skillnum)
+                                                BufferNpcSkill(mapNum, x, skillnum)
                                             Else
                                                 TryNpcAttackPlayer(x, Target) ', Damage)
                                             End If
@@ -483,35 +483,35 @@ Module ServerLoop
                                         End If
                                     Else
                                         ' Player left map or game, set target to 0
-                                        MapNpc(MapNum).Npc(x).Target = 0
-                                        MapNpc(MapNum).Npc(x).TargetType = 0 ' clear
+                                        MapNpc(mapNum).Npc(x).Target = 0
+                                        MapNpc(mapNum).Npc(x).TargetType = 0 ' clear
 
                                     End If
                                 Else
                                     ' Player left map or game, set target to 0
-                                    MapNpc(MapNum).Npc(x).Target = 0
-                                    MapNpc(MapNum).Npc(x).TargetType = 0 ' clear
+                                    MapNpc(mapNum).Npc(x).Target = 0
+                                    MapNpc(mapNum).Npc(x).TargetType = 0 ' clear
                                 End If
                             ElseIf TargetTypes = TargetType.Npc Then
-                                If MapNpc(MapNum).Npc(Target).Num > 0 Then ' npc exists
+                                If MapNpc(mapNum).Npc(Target).Num > 0 Then ' npc exists
                                     'Can the npc attack the npc?
-                                    If CanNpcAttackNpc(MapNum, x, Target) Then
+                                    If CanNpcAttackNpc(mapNum, x, Target) Then
                                         Damage = Npc(NpcNum).Stat(StatType.Strength) - CLng(Npc(Target).Stat(StatType.Endurance))
                                         If Damage < 1 Then Damage = 1
-                                        NpcAttackNpc(MapNum, x, Target, Damage)
+                                        NpcAttackNpc(mapNum, x, Target, Damage)
                                     End If
                                 Else
                                     ' npc is dead or non-existant
-                                    MapNpc(MapNum).Npc(x).Target = 0
-                                    MapNpc(MapNum).Npc(x).TargetType = 0 ' clear
+                                    MapNpc(mapNum).Npc(x).Target = 0
+                                    MapNpc(mapNum).Npc(x).TargetType = 0 ' clear
                                 End If
                             ElseIf TargetTypes = TargetType.Pet Then
-                                If IsPlaying(Target) AndAlso GetPlayerMap(Target) = MapNum AndAlso PetAlive(Target) Then
+                                If IsPlaying(Target) AndAlso GetPlayerMap(Target) = mapNum AndAlso PetAlive(Target) Then
                                     TryNpcAttackPet(x, Target)
                                 Else
                                     ' Player left map or game, set target to 0
-                                    MapNpc(MapNum).Npc(x).Target = 0
-                                    MapNpc(MapNum).Npc(x).TargetType = 0 ' clear
+                                    MapNpc(mapNum).Npc(x).Target = 0
+                                    MapNpc(mapNum).Npc(x).TargetType = 0 ' clear
                                 End If
                             End If
                         End If
@@ -521,23 +521,23 @@ Module ServerLoop
                     ' // This is used for regenerating NPC's HP //
                     ' ////////////////////////////////////////////
                     ' Check to see if we want to regen some of the npc's hp
-                    If MapNpc(MapNum).Npc(x).Num > 0 AndAlso TickCount > GiveNPCHPTimer + 10000 Then
-                        If MapNpc(MapNum).Npc(x).Vital(VitalType.HP) > 0 Then
-                            MapNpc(MapNum).Npc(x).Vital(VitalType.HP) = MapNpc(MapNum).Npc(x).Vital(VitalType.HP) + GetNpcVitalRegen(NpcNum, VitalType.HP)
+                    If MapNpc(mapNum).Npc(x).Num > 0 AndAlso TickCount > GiveNPCHPTimer + 10000 Then
+                        If MapNpc(mapNum).Npc(x).Vital(VitalType.HP) > 0 Then
+                            MapNpc(mapNum).Npc(x).Vital(VitalType.HP) = MapNpc(mapNum).Npc(x).Vital(VitalType.HP) + GetNpcVitalRegen(NpcNum, VitalType.HP)
 
                             ' Check if they have more then they should and if so just set it to max
-                            If MapNpc(MapNum).Npc(x).Vital(VitalType.HP) > GetNpcMaxVital(NpcNum, VitalType.HP) Then
-                                MapNpc(MapNum).Npc(x).Vital(VitalType.HP) = GetNpcMaxVital(NpcNum, VitalType.HP)
+                            If MapNpc(mapNum).Npc(x).Vital(VitalType.HP) > GetNpcMaxVital(NpcNum, VitalType.HP) Then
+                                MapNpc(mapNum).Npc(x).Vital(VitalType.HP) = GetNpcMaxVital(NpcNum, VitalType.HP)
                             End If
                         End If
                     End If
 
-                    If MapNpc(MapNum).Npc(x).Num > 0 AndAlso TickCount > GiveNPCMPTimer + 10000 AndAlso MapNpc(MapNum).Npc(x).Vital(VitalType.MP) > 0 Then
-                        MapNpc(MapNum).Npc(x).Vital(VitalType.MP) = MapNpc(MapNum).Npc(x).Vital(VitalType.MP) + GetNpcVitalRegen(NpcNum, VitalType.MP)
+                    If MapNpc(mapNum).Npc(x).Num > 0 AndAlso TickCount > GiveNPCMPTimer + 10000 AndAlso MapNpc(mapNum).Npc(x).Vital(VitalType.MP) > 0 Then
+                        MapNpc(mapNum).Npc(x).Vital(VitalType.MP) = MapNpc(mapNum).Npc(x).Vital(VitalType.MP) + GetNpcVitalRegen(NpcNum, VitalType.MP)
 
                         ' Check if they have more then they should and if so just set it to max
-                        If MapNpc(MapNum).Npc(x).Vital(VitalType.MP) > GetNpcMaxVital(NpcNum, VitalType.MP) Then
-                            MapNpc(MapNum).Npc(x).Vital(VitalType.MP) = GetNpcMaxVital(NpcNum, VitalType.MP)
+                        If MapNpc(mapNum).Npc(x).Vital(VitalType.MP) > GetNpcMaxVital(NpcNum, VitalType.MP) Then
+                            MapNpc(mapNum).Npc(x).Vital(VitalType.MP) = GetNpcMaxVital(NpcNum, VitalType.MP)
                         End If
                     End If
 
@@ -545,19 +545,19 @@ Module ServerLoop
                     ' // This is used for checking if an NPC is dead or not //
                     ' ////////////////////////////////////////////////////////
                     ' Check if the npc is dead or not
-                    If MapNpc(MapNum).Npc(x).Num > 0 AndAlso MapNpc(MapNum).Npc(x).Vital(VitalType.HP) <= 0 Then
-                        MapNpc(MapNum).Npc(x).Num = 0
-                        MapNpc(MapNum).Npc(x).SpawnWait = GetTimeMs()
-                        MapNpc(MapNum).Npc(x).Vital(VitalType.HP) = 0
+                    If MapNpc(mapNum).Npc(x).Num > 0 AndAlso MapNpc(mapNum).Npc(x).Vital(VitalType.HP) <= 0 Then
+                        MapNpc(mapNum).Npc(x).Num = 0
+                        MapNpc(mapNum).Npc(x).SpawnWait = GetTimeMs()
+                        MapNpc(mapNum).Npc(x).Vital(VitalType.HP) = 0
                     End If
 
                     ' //////////////////////////////////////
                     ' // This is used for spawning an NPC //
                     ' //////////////////////////////////////
                     ' Check if we are supposed to spawn an npc or not
-                    If MapNpc(MapNum).Npc(x).Num = 0 AndAlso Map(MapNum).Npc(x) > 0 Then
-                        If TickCount > MapNpc(MapNum).Npc(x).SpawnWait + (Npc(Map(MapNum).Npc(x)).SpawnSecs * 1000) Then
-                            SpawnNpc(x, MapNum)
+                    If MapNpc(mapNum).Npc(x).Num = 0 AndAlso Map(mapNum).Npc(x) > 0 Then
+                        If TickCount > MapNpc(mapNum).Npc(x).SpawnWait + (Npc(Map(mapNum).Npc(x)).SpawnSecs * 1000) Then
+                            SpawnNpc(x, mapNum)
                         End If
                     End If
                 Next
@@ -599,113 +599,113 @@ Module ServerLoop
 
     End Function
 
-    Friend Function HandleCloseSocket(Index As Integer) As Boolean
-        Socket.Disconnect(Index)
+    Friend Function HandleCloseSocket(index As Integer) As Boolean
+        Socket.Disconnect(index)
         HandleCloseSocket = True
     End Function
 
-    Friend Function HandlePlayerHouse(Index As Integer) As Boolean
-        Player(Index).Character(TempPlayer(Index).CurChar).InHouse = 0
-        PlayerWarp(Index, Player(Index).Character(TempPlayer(Index).CurChar).LastMap, Player(Index).Character(TempPlayer(Index).CurChar).LastX, Player(Index).Character(TempPlayer(Index).CurChar).LastY)
-        PlayerMsg(Index, "Your visitation has ended. Possibly due to a disconnection. You are being warped back to your previous location.", ColorType.Yellow)
+    Friend Function HandlePlayerHouse(index As Integer) As Boolean
+        Player(index).Character(TempPlayer(index).CurChar).InHouse = 0
+        PlayerWarp(index, Player(index).Character(TempPlayer(index).CurChar).LastMap, Player(index).Character(TempPlayer(index).CurChar).LastX, Player(index).Character(TempPlayer(index).CurChar).LastY)
+        PlayerMsg(index, "Your visitation has ended. Possibly due to a disconnection. You are being warped back to your previous location.", ColorType.Yellow)
         HandlePlayerHouse = True
     End Function
 
-    Friend Function HandlePetSkill(Index As Integer) As Boolean
-        PetCastSkill(Index, TempPlayer(Index).PetskillBuffer.Skill, TempPlayer(Index).PetskillBuffer.Target, TempPlayer(Index).PetskillBuffer.TargetTypes, True)
-        TempPlayer(Index).PetskillBuffer.Skill = 0
-        TempPlayer(Index).PetskillBuffer.Timer = 0
-        TempPlayer(Index).PetskillBuffer.Target = 0
-        TempPlayer(Index).PetskillBuffer.TargetTypes = 0
+    Friend Function HandlePetSkill(index As Integer) As Boolean
+        PetCastSkill(index, TempPlayer(index).PetskillBuffer.Skill, TempPlayer(index).PetskillBuffer.Target, TempPlayer(index).PetskillBuffer.TargetTypes, True)
+        TempPlayer(index).PetskillBuffer.Skill = 0
+        TempPlayer(index).PetskillBuffer.Timer = 0
+        TempPlayer(index).PetskillBuffer.Target = 0
+        TempPlayer(index).PetskillBuffer.TargetTypes = 0
         HandlePetSkill = True
     End Function
 
-    Friend Function HandlePlayerCraft(Index As Integer) As Boolean
-        TempPlayer(Index).CraftIt = 0
-        TempPlayer(Index).CraftTimer = 0
-        TempPlayer(Index).CraftTimeNeeded = 0
-        UpdateCraft(Index)
+    Friend Function HandlePlayerCraft(index As Integer) As Boolean
+        TempPlayer(index).CraftIt = 0
+        TempPlayer(index).CraftTimer = 0
+        TempPlayer(index).CraftTimeNeeded = 0
+        UpdateCraft(index)
         HandlePlayerCraft = True
     End Function
 
-    Friend Function HandleClearStun(Index As Integer) As Boolean
-        TempPlayer(Index).StunDuration = 0
-        TempPlayer(Index).StunTimer = 0
-        SendStunned(Index)
+    Friend Function HandleClearStun(index As Integer) As Boolean
+        TempPlayer(index).StunDuration = 0
+        TempPlayer(index).StunTimer = 0
+        SendStunned(index)
         HandleClearStun = True
     End Function
 
-    Friend Function HandleClearPetStun(Index As Integer) As Boolean
-        TempPlayer(Index).PetStunDuration = 0
-        TempPlayer(Index).PetStunTimer = 0
+    Friend Function HandleClearPetStun(index As Integer) As Boolean
+        TempPlayer(index).PetStunDuration = 0
+        TempPlayer(index).PetStunTimer = 0
         HandleClearPetStun = True
     End Function
 
-    Friend Function HandleStopPetRegen(Index As Integer) As Boolean
-        TempPlayer(Index).PetstopRegen = False
-        TempPlayer(Index).PetstopRegenTimer = 0
+    Friend Function HandleStopPetRegen(index As Integer) As Boolean
+        TempPlayer(index).PetstopRegen = False
+        TempPlayer(index).PetstopRegenTimer = 0
         HandleStopPetRegen = True
     End Function
 
-    Friend Function HandleCastSkill(Index As Integer) As Boolean
-        CastSkill(Index, TempPlayer(Index).SkillBuffer)
-        TempPlayer(Index).SkillBuffer = 0
-        TempPlayer(Index).SkillBufferTimer = 0
+    Friend Function HandleCastSkill(index As Integer) As Boolean
+        CastSkill(index, TempPlayer(index).SkillBuffer)
+        TempPlayer(index).SkillBuffer = 0
+        TempPlayer(index).SkillBufferTimer = 0
         HandleCastSkill = True
     End Function
 
-    Friend Sub CastSkill(Index As Integer, SkillSlot As Integer)
+    Friend Sub CastSkill(index As Integer, SkillSlot As Integer)
         ' Set up some basic variables we'll be using.
-        Dim SkillId = GetPlayerSkill(Index, SkillSlot)
+        Dim SkillId = GetPlayerSkill(index, SkillSlot)
 
         ' Preventative checks
-        If Not IsPlaying(Index) OrElse SkillSlot <= 0 OrElse SkillSlot > MAX_PLAYER_SKILLS OrElse Not HasSkill(Index, SkillId) Then Exit Sub
+        If Not IsPlaying(index) OrElse SkillSlot <= 0 OrElse SkillSlot > MAX_PLAYER_SKILLS OrElse Not HasSkill(index, SkillId) Then Exit Sub
 
         ' Check if the player is able to cast the spell.
-        If GetPlayerVital(Index, VitalType.MP) < Skill(SkillId).MpCost Then
-            PlayerMsg(Index, "Not enough mana!", ColorType.BrightRed)
+        If GetPlayerVital(index, VitalType.MP) < Skill(SkillId).MpCost Then
+            PlayerMsg(index, "Not enough mana!", ColorType.BrightRed)
             Exit Sub
-        ElseIf GetPlayerLevel(Index) < Skill(SkillId).LevelReq Then
-            PlayerMsg(Index, String.Format("You must be level {0} to use this skill.", Skill(SkillId).LevelReq), ColorType.BrightRed)
+        ElseIf GetPlayerLevel(index) < Skill(SkillId).LevelReq Then
+            PlayerMsg(index, String.Format("You must be level {0} to use this skill.", Skill(SkillId).LevelReq), ColorType.BrightRed)
             Exit Sub
-        ElseIf GetPlayerAccess(Index) < Skill(SkillId).AccessReq Then
-            PlayerMsg(Index, "You must be an administrator to use this skill.", ColorType.BrightRed)
+        ElseIf GetPlayerAccess(index) < Skill(SkillId).AccessReq Then
+            PlayerMsg(index, "You must be an administrator to use this skill.", ColorType.BrightRed)
             Exit Sub
-        ElseIf Not Skill(SkillId).ClassReq = 0 AndAlso GetPlayerClass(Index) <> Skill(SkillId).ClassReq Then
-            PlayerMsg(Index, String.Format("Only {0} can use this skill.", CheckGrammar((Classes(Skill(SkillId).ClassReq).Name.Trim()))), ColorType.BrightRed)
+        ElseIf Not Skill(SkillId).ClassReq = 0 AndAlso GetPlayerClass(index) <> Skill(SkillId).ClassReq Then
+            PlayerMsg(index, String.Format("Only {0} can use this skill.", CheckGrammar((Classes(Skill(SkillId).ClassReq).Name.Trim()))), ColorType.BrightRed)
             Exit Sub
-        ElseIf Skill(SkillId).Range > 0 AndAlso Not IsTargetOnMap(Index) Then
+        ElseIf Skill(SkillId).Range > 0 AndAlso Not IsTargetOnMap(index) Then
             Exit Sub
-        ElseIf Skill(SkillId).Range > 0 AndAlso Not IsInSkillRange(Index, SkillId) AndAlso Skill(SkillId).IsProjectile = 0 Then
-            PlayerMsg(Index, "Target not in range.", ColorType.BrightRed)
-            SendClearSkillBuffer(Index)
+        ElseIf Skill(SkillId).Range > 0 AndAlso Not IsInSkillRange(index, SkillId) AndAlso Skill(SkillId).IsProjectile = 0 Then
+            PlayerMsg(index, "Target not in range.", ColorType.BrightRed)
+            SendClearSkillBuffer(index)
             Exit Sub
         End If
 
         ' Determine what kind of Skill Type we're dealing with and move on to the appropriate methods.
         If Skill(SkillId).IsProjectile = 1 Then
-            PlayerFireProjectile(Index, SkillId)
+            PlayerFireProjectile(index, SkillId)
         Else
-            If Skill(SkillId).Range = 0 AndAlso Not Skill(SkillId).IsAoE Then HandleSelfCastSkill(Index, SkillId)
-            If Skill(SkillId).Range = 0 AndAlso Skill(SkillId).IsAoE Then HandleSelfCastAoESkill(Index, SkillId)
-            If Skill(SkillId).Range > 0 AndAlso Skill(SkillId).IsAoE Then HandleTargetedAoESkill(Index, SkillId)
-            If Skill(SkillId).Range > 0 AndAlso Not Skill(SkillId).IsAoE Then HandleTargetedSkill(Index, SkillId)
+            If Skill(SkillId).Range = 0 AndAlso Not Skill(SkillId).IsAoE Then HandleSelfCastSkill(index, SkillId)
+            If Skill(SkillId).Range = 0 AndAlso Skill(SkillId).IsAoE Then HandleSelfCastAoESkill(index, SkillId)
+            If Skill(SkillId).Range > 0 AndAlso Skill(SkillId).IsAoE Then HandleTargetedAoESkill(index, SkillId)
+            If Skill(SkillId).Range > 0 AndAlso Not Skill(SkillId).IsAoE Then HandleTargetedSkill(index, SkillId)
         End If
 
         ' Do everything we need to do at the end of the cast.
-        FinalizeCast(Index, GetPlayerSkillSlot(Index, SkillId), Skill(SkillId).MpCost)
+        FinalizeCast(index, GetPlayerSkillSlot(index, SkillId), Skill(SkillId).MpCost)
     End Sub
 
-    Private Sub HandleSelfCastAoESkill(Index As Integer, SkillId As Integer)
+    Private Sub HandleSelfCastAoESkill(index As Integer, SkillId As Integer)
 
         ' Set up some variables we'll definitely be using.
-        Dim CenterX = GetPlayerX(Index)
-        Dim CenterY = GetPlayerY(Index)
+        Dim CenterX = GetPlayerX(index)
+        Dim CenterY = GetPlayerY(index)
 
         ' Determine what kind of spell we're dealing with and process it.
         Select Case Skill(SkillId).Type
             Case SkillType.DamageHp, SkillType.DamageMp, SkillType.HealHp, SkillType.HealMp
-                HandleAoE(Index, SkillId, CenterX, CenterY)
+                HandleAoE(index, SkillId, CenterX, CenterY)
 
             Case Else
                 Throw New NotImplementedException()
@@ -713,22 +713,22 @@ Module ServerLoop
 
     End Sub
 
-    Private Sub HandleTargetedAoESkill(Index As Integer, SkillId As Integer)
+    Private Sub HandleTargetedAoESkill(index As Integer, SkillId As Integer)
 
         ' Set up some variables we'll definitely be using.
         Dim CenterX As Integer
         Dim CenterY As Integer
         Dim TargetType As TargetType
-        Select Case TempPlayer(Index).TargetType
+        Select Case TempPlayer(index).TargetType
             Case TargetType.Npc
                 TargetType = TargetType.Npc
-                CenterX = MapNpc(GetPlayerMap(Index)).Npc(TempPlayer(Index).Target).X
-                CenterY = MapNpc(GetPlayerMap(Index)).Npc(TempPlayer(Index).Target).Y
+                CenterX = MapNpc(GetPlayerMap(index)).Npc(TempPlayer(index).Target).X
+                CenterY = MapNpc(GetPlayerMap(index)).Npc(TempPlayer(index).Target).Y
 
             Case TargetType.Player
                 TargetType = TargetType.Player
-                CenterX = GetPlayerX(TempPlayer(Index).Target)
-                CenterY = GetPlayerY(TempPlayer(Index).Target)
+                CenterX = GetPlayerX(TempPlayer(index).Target)
+                CenterY = GetPlayerY(TempPlayer(index).Target)
 
             Case Else
                 Throw New NotImplementedException()
@@ -738,37 +738,37 @@ Module ServerLoop
         ' Determine what kind of spell we're dealing with and process it.
         Select Case Skill(SkillId).Type
             Case SkillType.HealMp, SkillType.DamageHp, SkillType.DamageMp, SkillType.HealHp
-                HandleAoE(Index, SkillId, CenterX, CenterY)
+                HandleAoE(index, SkillId, CenterX, CenterY)
 
             Case Else
                 Throw New NotImplementedException()
         End Select
     End Sub
 
-    Private Sub HandleSelfCastSkill(Index As Integer, SkillId As Integer)
+    Private Sub HandleSelfCastSkill(index As Integer, SkillId As Integer)
         ' Determine what kind of spell we're dealing with and process it.
         Select Case Skill(SkillId).Type
             Case SkillType.HealHp
-                SkillPlayer_Effect(VitalType.HP, True, Index, Skill(SkillId).Vital, SkillId)
+                SkillPlayer_Effect(VitalType.HP, True, index, Skill(SkillId).Vital, SkillId)
             Case SkillType.HealMp
-                SkillPlayer_Effect(VitalType.MP, True, Index, Skill(SkillId).Vital, SkillId)
+                SkillPlayer_Effect(VitalType.MP, True, index, Skill(SkillId).Vital, SkillId)
             Case SkillType.Warp
-                SendAnimation(GetPlayerMap(Index), Skill(SkillId).SkillAnim, 0, 0, Enums.TargetType.Player, Index)
-                PlayerWarp(Index, Skill(SkillId).Map, Skill(SkillId).X, Skill(SkillId).Y)
+                SendAnimation(GetPlayerMap(index), Skill(SkillId).SkillAnim, 0, 0, TargetType.Player, index)
+                PlayerWarp(index, Skill(SkillId).Map, Skill(SkillId).X, Skill(SkillId).Y)
             Case Else
                 Throw New NotImplementedException()
         End Select
 
         ' Play our animation.
-        SendAnimation(GetPlayerMap(Index), Skill(SkillId).SkillAnim, 0, 0, Enums.TargetType.Player, Index)
+        SendAnimation(GetPlayerMap(index), Skill(SkillId).SkillAnim, 0, 0, TargetType.Player, index)
     End Sub
 
-    Private Sub HandleTargetedSkill(Index As Integer, SkillId As Integer)
+    Private Sub HandleTargetedSkill(index As Integer, SkillId As Integer)
         ' Set up some variables we'll definitely be using.
         Dim Vital As VitalType
         Dim DealsDamage As Boolean
         Dim Amount = Skill(SkillId).Vital
-        Dim Target = TempPlayer(Index).Target
+        Dim Target = TempPlayer(index).Target
 
         ' Determine what vital we need to adjust and how.
         Select Case Skill(SkillId).Type
@@ -792,23 +792,23 @@ Module ServerLoop
                 Throw New NotImplementedException
         End Select
 
-        Select Case TempPlayer(Index).TargetType
+        Select Case TempPlayer(index).TargetType
             Case TargetType.Npc
                 ' Deal with damaging abilities.
-                If DealsDamage AndAlso CanPlayerAttackNpc(Index, Target, True) Then SkillNpc_Effect(Vital, False, Target, Amount, SkillId, GetPlayerMap(Index))
+                If DealsDamage AndAlso CanPlayerAttackNpc(index, Target, True) Then SkillNpc_Effect(Vital, False, Target, Amount, SkillId, GetPlayerMap(index))
 
                 ' Deal with healing abilities
-                If Not DealsDamage Then SkillNpc_Effect(Vital, True, Target, Amount, SkillId, GetPlayerMap(Index))
+                If Not DealsDamage Then SkillNpc_Effect(Vital, True, Target, Amount, SkillId, GetPlayerMap(index))
 
                 ' Handle our NPC death if it kills them
-                If IsNpcDead(GetPlayerMap(Index), TempPlayer(Index).Target) Then
-                    HandlePlayerKillNpc(GetPlayerMap(Index), Index, TempPlayer(Index).Target)
+                If IsNpcDead(GetPlayerMap(index), TempPlayer(index).Target) Then
+                    HandlePlayerKillNpc(GetPlayerMap(index), index, TempPlayer(index).Target)
                 End If
 
             Case TargetType.Player
 
                 ' Deal with damaging abilities.
-                If DealsDamage AndAlso CanPlayerAttackPlayer(Index, Target, True) Then SkillPlayer_Effect(Vital, False, Target, Amount, SkillId)
+                If DealsDamage AndAlso CanPlayerAttackPlayer(index, Target, True) Then SkillPlayer_Effect(Vital, False, Target, Amount, SkillId)
 
                 ' Deal with healing abilities
                 If Not DealsDamage Then SkillPlayer_Effect(Vital, True, Target, Amount, SkillId)
@@ -818,10 +818,10 @@ Module ServerLoop
                     OnDeath(Target)
 
                     ' Handle PK stuff.
-                    HandlePlayerKilledPK(Index, Target)
+                    HandlePlayerKilledPK(index, Target)
 
                     ' Handle our quest system stuff.
-                    CheckTasks(Index, QuestType.Kill, 0)
+                    CheckTasks(index, QuestType.Kill, 0)
                 End If
             Case Else
                 Throw New NotImplementedException()
@@ -829,15 +829,15 @@ Module ServerLoop
         End Select
 
         ' Play our animation.
-        SendAnimation(GetPlayerMap(Index), Skill(SkillId).SkillAnim, 0, 0, TempPlayer(Index).TargetType, Target)
+        SendAnimation(GetPlayerMap(index), Skill(SkillId).SkillAnim, 0, 0, TempPlayer(index).TargetType, Target)
     End Sub
 
-    Private Sub HandleAoE(Index As Integer, SkillId As Integer, X As Integer, Y As Integer)
+    Private Sub HandleAoE(index As Integer, SkillId As Integer, X As Integer, Y As Integer)
         ' Get some basic things set up.
-        Dim Map = GetPlayerMap(Index)
+        Dim Map = GetPlayerMap(index)
         Dim Range = Skill(SkillId).Range
         Dim Amount = Skill(SkillId).Vital
-        Dim Vital As Enums.VitalType
+        Dim Vital As VitalType
         Dim DealsDamage As Boolean
 
         ' Determine what vital we need to adjust and how.
@@ -863,27 +863,27 @@ Module ServerLoop
         End Select
 
         ' Loop through all online players on the current map.
-        For Each id In TempPlayer.Where(Function(p) p.InGame).Select(Function(p, i) i + 1).Where(Function(i) GetPlayerMap(i) = Map AndAlso i <> Index).ToArray()
+        For Each id In TempPlayer.Where(Function(p) p.InGame).Select(Function(p, i) i + 1).Where(Function(i) GetPlayerMap(i) = Map AndAlso i <> index).ToArray()
             If IsInRange(Range, X, Y, GetPlayerX(id), GetPlayerY(id)) Then
 
                 ' Deal with damaging abilities.
-                If DealsDamage AndAlso CanPlayerAttackPlayer(Index, id, True) Then SkillPlayer_Effect(Vital, False, id, Amount, SkillId)
+                If DealsDamage AndAlso CanPlayerAttackPlayer(index, id, True) Then SkillPlayer_Effect(Vital, False, id, Amount, SkillId)
 
                 ' Deal with healing abilities
                 If Not DealsDamage Then SkillPlayer_Effect(Vital, True, id, Amount, SkillId)
 
                 ' Send our animation to the map.
-                SendAnimation(Map, Skill(SkillId).SkillAnim, 0, 0, Enums.TargetType.Player, id)
+                SendAnimation(Map, Skill(SkillId).SkillAnim, 0, 0, TargetType.Player, id)
 
                 If IsPlayerDead(id) Then
                     ' Actually kill the player.
                     OnDeath(id)
 
                     ' Handle PK stuff.
-                    HandlePlayerKilledPK(Index, id)
+                    HandlePlayerKilledPK(index, id)
 
                     ' Handle our quest system stuff.
-                    CheckTasks(Index, QuestType.Kill, 0)
+                    CheckTasks(index, QuestType.Kill, 0)
                 End If
             End If
         Next
@@ -893,53 +893,53 @@ Module ServerLoop
             If IsInRange(Range, X, Y, MapNpc(Map).Npc(id).X, MapNpc(Map).Npc(id).Y) Then
 
                 ' Deal with damaging abilities.
-                If DealsDamage AndAlso CanPlayerAttackNpc(Index, id, True) Then SkillNpc_Effect(Vital, False, id, Amount, SkillId, Map)
+                If DealsDamage AndAlso CanPlayerAttackNpc(index, id, True) Then SkillNpc_Effect(Vital, False, id, Amount, SkillId, Map)
 
                 ' Deal with healing abilities
                 If Not DealsDamage Then SkillNpc_Effect(Vital, True, id, Amount, SkillId, Map)
 
                 ' Send our animation to the map.
-                SendAnimation(Map, Skill(SkillId).SkillAnim, 0, 0, Enums.TargetType.Npc, id)
+                SendAnimation(Map, Skill(SkillId).SkillAnim, 0, 0, TargetType.Npc, id)
 
                 ' Handle our NPC death if it kills them
                 If IsNpcDead(Map, id) Then
-                    HandlePlayerKillNpc(Map, Index, id)
+                    HandlePlayerKillNpc(Map, index, id)
                 End If
             End If
         Next
     End Sub
 
-    Private Sub FinalizeCast(Index As Integer, SkillSlot As Integer, SkillCost As Integer)
-        SetPlayerVital(Index, VitalType.MP, GetPlayerVital(Index, VitalType.MP) - SkillCost)
-        SendVital(Index, VitalType.MP)
-        TempPlayer(Index).SkillCD(SkillSlot) = GetTimeMs() + (Skill(SkillSlot).CdTime * 1000)
-        SendCooldown(Index, SkillSlot)
+    Private Sub FinalizeCast(index As Integer, SkillSlot As Integer, SkillCost As Integer)
+        SetPlayerVital(index, VitalType.MP, GetPlayerVital(index, VitalType.MP) - SkillCost)
+        SendVital(index, VitalType.MP)
+        TempPlayer(index).SkillCd(SkillSlot) = GetTimeMs() + (Skill(SkillSlot).CdTime * 1000)
+        SendCooldown(index, SkillSlot)
     End Sub
 
-    Private Function IsTargetOnMap(Index As Integer) As Boolean
-        If TempPlayer(Index).TargetType = TargetType.Player Then
-            If GetPlayerMap(TempPlayer(Index).Target) = GetPlayerMap(Index) Then IsTargetOnMap = True
-        ElseIf TempPlayer(Index).TargetType = TargetType.Npc Then
-            If TempPlayer(Index).Target > 0 AndAlso TempPlayer(Index).Target <= MAX_MAP_NPCS AndAlso MapNpc(GetPlayerMap(Index)).Npc(TempPlayer(Index).Target).Vital(VitalType.HP) > 0 Then IsTargetOnMap = True
+    Private Function IsTargetOnMap(index As Integer) As Boolean
+        If TempPlayer(index).TargetType = TargetType.Player Then
+            If GetPlayerMap(TempPlayer(index).Target) = GetPlayerMap(index) Then IsTargetOnMap = True
+        ElseIf TempPlayer(index).TargetType = TargetType.Npc Then
+            If TempPlayer(index).Target > 0 AndAlso TempPlayer(index).Target <= MAX_MAP_NPCS AndAlso MapNpc(GetPlayerMap(index)).Npc(TempPlayer(index).Target).Vital(VitalType.HP) > 0 Then IsTargetOnMap = True
         End If
     End Function
 
-    Private Function IsInSkillRange(Index As Integer, SkillId As Integer) As Boolean
+    Private Function IsInSkillRange(index As Integer, SkillId As Integer) As Boolean
         Dim TargetX As Integer
         Dim TargetY As Integer
 
-        If TempPlayer(Index).TargetType = TargetType.Player Then
-            TargetX = GetPlayerX(TempPlayer(Index).Target)
-            TargetY = GetPlayerY(TempPlayer(Index).Target)
-        ElseIf TempPlayer(Index).TargetType = TargetType.Npc Then
-            TargetX = MapNpc(GetPlayerMap(Index)).Npc(TempPlayer(Index).Target).X
-            TargetY = MapNpc(GetPlayerMap(Index)).Npc(TempPlayer(Index).Target).Y
+        If TempPlayer(index).TargetType = TargetType.Player Then
+            TargetX = GetPlayerX(TempPlayer(index).Target)
+            TargetY = GetPlayerY(TempPlayer(index).Target)
+        ElseIf TempPlayer(index).TargetType = TargetType.Npc Then
+            TargetX = MapNpc(GetPlayerMap(index)).Npc(TempPlayer(index).Target).X
+            TargetY = MapNpc(GetPlayerMap(index)).Npc(TempPlayer(index).Target).Y
         End If
 
-        IsInSkillRange = IsInRange(Skill(SkillId).Range, GetPlayerX(Index), GetPlayerY(Index), TargetX, TargetY)
+        IsInSkillRange = IsInRange(Skill(SkillId).Range, GetPlayerX(index), GetPlayerY(index), TargetX, TargetY)
     End Function
 
-    Friend Sub CastNpcSkill(NpcNum As Integer, MapNum As Integer, skillslot As Integer)
+    Friend Sub CastNpcSkill(NpcNum As Integer, mapNum As Integer, skillslot As Integer)
         Dim skillnum As Integer, MPCost As Integer
         Dim Vital As Integer, DidCast As Boolean
         Dim i As Integer
@@ -955,12 +955,12 @@ Module ServerLoop
         ' Prevent subscript out of range
         If skillslot <= 0 OrElse skillslot > MAX_NPC_SKILLS Then Exit Sub
 
-        skillnum = GetNpcSkill(MapNpc(MapNum).Npc(NpcNum).Num, skillslot)
+        skillnum = GetNpcSkill(MapNpc(mapNum).Npc(NpcNum).Num, skillslot)
 
         MPCost = Skill(skillnum).MpCost
 
         ' Check if they have enough MP
-        If MapNpc(MapNum).Npc(NpcNum).Vital(Enums.VitalType.MP) < MPCost Then Exit Sub
+        If MapNpc(mapNum).Npc(NpcNum).Vital(Enums.VitalType.MP) < MPCost Then Exit Sub
 
         ' find out what kind of skill it is! self cast, target or AOE
         If Skill(skillnum).IsProjectile = 1 Then
@@ -1003,11 +1003,11 @@ Module ServerLoop
 
             Case 1, 3 ' self-cast AOE & targetted AOE
                 If SkillCastType = 1 Then
-                    x = MapNpc(MapNum).Npc(NpcNum).X
-                    y = MapNpc(MapNum).Npc(NpcNum).Y
+                    x = MapNpc(mapNum).Npc(NpcNum).X
+                    y = MapNpc(mapNum).Npc(NpcNum).Y
                 ElseIf SkillCastType = 3 Then
-                    TargetType = MapNpc(MapNum).Npc(NpcNum).TargetType
-                    Target = MapNpc(MapNum).Npc(NpcNum).Target
+                    TargetType = MapNpc(mapNum).Npc(NpcNum).TargetType
+                    Target = MapNpc(mapNum).Npc(NpcNum).Target
 
                     If TargetType = 0 Then Exit Sub
                     If Target = 0 Then Exit Sub
@@ -1016,8 +1016,8 @@ Module ServerLoop
                         x = GetPlayerX(Target)
                         y = GetPlayerY(Target)
                     Else
-                        x = MapNpc(MapNum).Npc(Target).X
-                        y = MapNpc(MapNum).Npc(Target).Y
+                        x = MapNpc(mapNum).Npc(Target).X
+                        y = MapNpc(mapNum).Npc(Target).Y
                     End If
 
                     If Not IsInRange(range, x, y, GetPlayerX(NpcNum), GetPlayerY(NpcNum)) Then
@@ -1029,11 +1029,11 @@ Module ServerLoop
                         DidCast = True
                         For i = 1 To GetPlayersOnline()
                             If IsPlaying(i) Then
-                                If GetPlayerMap(i) = MapNum Then
+                                If GetPlayerMap(i) = mapNum Then
                                     If IsInRange(AoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
                                         If CanNpcAttackPlayer(NpcNum, i) Then
-                                            SendAnimation(MapNum, Skill(skillnum).SkillAnim, 0, 0, Enums.TargetType.Player, i)
-                                            PlayerMsg(i, Trim(Npc(MapNpc(MapNum).Npc(NpcNum).Num).Name) & " uses " & Trim(Skill(skillnum).Name) & "!", ColorType.Yellow)
+                                            SendAnimation(mapNum, Skill(skillnum).SkillAnim, 0, 0, Enums.TargetType.Player, i)
+                                            PlayerMsg(i, Trim(Npc(MapNpc(mapNum).Npc(NpcNum).Num).Name) & " uses " & Trim(Skill(skillnum).Name) & "!", ColorType.Yellow)
                                             SkillPlayer_Effect(Enums.VitalType.HP, False, i, Vital, skillnum)
                                         End If
                                     End If
@@ -1041,13 +1041,13 @@ Module ServerLoop
                             End If
                         Next
                         For i = 1 To MAX_MAP_NPCS
-                            If MapNpc(MapNum).Npc(i).Num > 0 Then
-                                If MapNpc(MapNum).Npc(i).Vital(Enums.VitalType.HP) > 0 Then
-                                    If IsInRange(AoE, x, y, MapNpc(MapNum).Npc(i).X, MapNpc(MapNum).Npc(i).Y) Then
+                            If MapNpc(mapNum).Npc(i).Num > 0 Then
+                                If MapNpc(mapNum).Npc(i).Vital(Enums.VitalType.HP) > 0 Then
+                                    If IsInRange(AoE, x, y, MapNpc(mapNum).Npc(i).X, MapNpc(mapNum).Npc(i).Y) Then
                                         If CanPlayerAttackNpc(NpcNum, i, True) Then
-                                            SendAnimation(MapNum, Skill(skillnum).SkillAnim, 0, 0, Enums.TargetType.Npc, i)
-                                            SkillNpc_Effect(Enums.VitalType.HP, False, i, Vital, skillnum, MapNum)
-                                            If Global.OrionServer.Types.Skill(skillnum).KnockBack = 1 Then
+                                            SendAnimation(mapNum, Skill(skillnum).SkillAnim, 0, 0, Enums.TargetType.Npc, i)
+                                            SkillNpc_Effect(Enums.VitalType.HP, False, i, Vital, skillnum, mapNum)
+                                            If Skill(skillnum).KnockBack = 1 Then
                                                 KnockBackNpc(NpcNum, Target, skillnum)
                                             End If
                                         End If
@@ -1076,9 +1076,9 @@ Module ServerLoop
                             End If
                         Next
                         For i = 1 To MAX_MAP_NPCS
-                            If MapNpc(MapNum).Npc(i).Num > 0 AndAlso MapNpc(MapNum).Npc(i).Vital(Enums.VitalType.HP) > 0 Then
-                                If IsInRange(AoE, x, y, MapNpc(MapNum).Npc(i).X, MapNpc(MapNum).Npc(i).Y) Then
-                                    SkillNpc_Effect(VitalType, increment, i, Vital, skillnum, MapNum)
+                            If MapNpc(mapNum).Npc(i).Num > 0 AndAlso MapNpc(mapNum).Npc(i).Vital(Enums.VitalType.HP) > 0 Then
+                                If IsInRange(AoE, x, y, MapNpc(mapNum).Npc(i).X, MapNpc(mapNum).Npc(i).Y) Then
+                                    SkillNpc_Effect(VitalType, increment, i, Vital, skillnum, mapNum)
                                 End If
                             End If
                         Next
@@ -1086,34 +1086,34 @@ Module ServerLoop
 
             Case 2 ' targetted
 
-                TargetType = MapNpc(MapNum).Npc(NpcNum).TargetType
-                Target = MapNpc(MapNum).Npc(NpcNum).Target
+                TargetType = MapNpc(mapNum).Npc(NpcNum).TargetType
+                Target = MapNpc(mapNum).Npc(NpcNum).Target
 
                 If TargetType = 0 OrElse Target = 0 Then Exit Sub
 
-                If MapNpc(MapNum).Npc(NpcNum).TargetType = Enums.TargetType.Player Then
+                If MapNpc(mapNum).Npc(NpcNum).TargetType = Enums.TargetType.Player Then
                     x = GetPlayerX(Target)
                     y = GetPlayerY(Target)
                 Else
-                    x = MapNpc(MapNum).Npc(Target).X
-                    y = MapNpc(MapNum).Npc(Target).Y
+                    x = MapNpc(mapNum).Npc(Target).X
+                    y = MapNpc(mapNum).Npc(Target).Y
                 End If
 
-                If Not IsInRange(range, MapNpc(MapNum).Npc(NpcNum).X, MapNpc(MapNum).Npc(NpcNum).Y, x, y) Then Exit Sub
+                If Not IsInRange(range, MapNpc(mapNum).Npc(NpcNum).X, MapNpc(mapNum).Npc(NpcNum).Y, x, y) Then Exit Sub
 
                 Select Case Skill(skillnum).Type
                     Case SkillType.DamageHp
-                        If MapNpc(MapNum).Npc(NpcNum).TargetType = Enums.TargetType.Player Then
+                        If MapNpc(mapNum).Npc(NpcNum).TargetType = Enums.TargetType.Player Then
                             If CanNpcAttackPlayer(NpcNum, Target) AndAlso Vital > 0 Then
-                                SendAnimation(MapNum, Skill(skillnum).SkillAnim, 0, 0, Enums.TargetType.Player, Target)
-                                PlayerMsg(Target, Trim(Npc(MapNpc(MapNum).Npc(NpcNum).Num).Name) & " uses " & Trim(Skill(skillnum).Name) & "!", ColorType.Yellow)
+                                SendAnimation(mapNum, Skill(skillnum).SkillAnim, 0, 0, Enums.TargetType.Player, Target)
+                                PlayerMsg(Target, Trim(Npc(MapNpc(mapNum).Npc(NpcNum).Num).Name) & " uses " & Trim(Skill(skillnum).Name) & "!", ColorType.Yellow)
                                 SkillPlayer_Effect(Enums.VitalType.HP, False, Target, Vital, skillnum)
                                 DidCast = True
                             End If
                         Else
                             If CanPlayerAttackNpc(NpcNum, Target, True) AndAlso Vital > 0 Then
-                                SendAnimation(MapNum, Skill(skillnum).SkillAnim, 0, 0, Enums.TargetType.Npc, Target)
-                                SkillNpc_Effect(Enums.VitalType.HP, False, i, Vital, skillnum, MapNum)
+                                SendAnimation(mapNum, Skill(skillnum).SkillAnim, 0, 0, Enums.TargetType.Npc, Target)
+                                SkillNpc_Effect(Enums.VitalType.HP, False, i, Vital, skillnum, mapNum)
 
                                 If Skill(skillnum).KnockBack = 1 Then
                                     KnockBackNpc(NpcNum, Target, skillnum)
@@ -1145,10 +1145,10 @@ Module ServerLoop
                         Else
                             If Skill(skillnum).Type = SkillType.DamageMp Then
                                 If CanPlayerAttackNpc(NpcNum, Target, True) Then
-                                    SkillNpc_Effect(VitalType, increment, Target, Vital, skillnum, MapNum)
+                                    SkillNpc_Effect(VitalType, increment, Target, Vital, skillnum, mapNum)
                                 End If
                             Else
-                                SkillNpc_Effect(VitalType, increment, Target, Vital, skillnum, MapNum)
+                                SkillNpc_Effect(VitalType, increment, Target, Vital, skillnum, mapNum)
                             End If
                         End If
                 End Select
@@ -1159,19 +1159,19 @@ Module ServerLoop
         End Select
 
         If DidCast Then
-            MapNpc(MapNum).Npc(NpcNum).Vital(Enums.VitalType.MP) = MapNpc(MapNum).Npc(NpcNum).Vital(Enums.VitalType.MP) - MPCost
-            SendMapNpcVitals(MapNum, NpcNum)
-            MapNpc(MapNum).Npc(NpcNum).SkillCD(skillslot) = GetTimeMs() + (Skill(skillnum).CdTime * 1000)
+            MapNpc(mapNum).Npc(NpcNum).Vital(Enums.VitalType.MP) = MapNpc(mapNum).Npc(NpcNum).Vital(Enums.VitalType.MP) - MPCost
+            SendMapNpcVitals(mapNum, NpcNum)
+            MapNpc(mapNum).Npc(NpcNum).SkillCd(skillslot) = GetTimeMs() + (Skill(skillnum).CdTime * 1000)
         End If
     End Sub
 
-    Friend Sub SkillPlayer_Effect(Vital As Byte, increment As Boolean, Index As Integer, Damage As Integer, Skillnum As Integer)
+    Friend Sub SkillPlayer_Effect(Vital As Byte, increment As Boolean, index As Integer, Damage As Integer, Skillnum As Integer)
         Dim sSymbol As String
         Dim Colour As Integer
 
         If Damage > 0 Then
             ' Calculate for Magic Resistance.
-            Damage = Damage - ((GetPlayerStat(Index, StatType.Spirit) * 2) + (GetPlayerLevel(Index) * 3))
+            Damage = Damage - ((GetPlayerStat(index, StatType.Spirit) * 2) + (GetPlayerLevel(index) * 3))
 
             If increment Then
                 sSymbol = "+"
@@ -1183,39 +1183,39 @@ Module ServerLoop
             End If
 
             ' Deal with stun effects.
-            If Skill(Skillnum).StunDuration > 0 Then StunPlayer(Index, Skillnum)
+            If Skill(Skillnum).StunDuration > 0 Then StunPlayer(index, Skillnum)
 
-            SendActionMsg(GetPlayerMap(Index), sSymbol & Damage, Colour, ActionMsgType.Scroll, GetPlayerX(Index) * 32, GetPlayerY(Index) * 32)
-            If increment Then SetPlayerVital(Index, Vital, GetPlayerVital(Index, Vital) + Damage)
-            If Not increment Then SetPlayerVital(Index, Vital, GetPlayerVital(Index, Vital) - Damage)
-            SendVital(Index, Vital)
+            SendActionMsg(GetPlayerMap(index), sSymbol & Damage, Colour, ActionMsgType.Scroll, GetPlayerX(index) * 32, GetPlayerY(index) * 32)
+            If increment Then SetPlayerVital(index, Vital, GetPlayerVital(index, Vital) + Damage)
+            If Not increment Then SetPlayerVital(index, Vital, GetPlayerVital(index, Vital) - Damage)
+            SendVital(index, Vital)
         End If
     End Sub
 
-    Friend Sub SkillNpc_Effect(Vital As Byte, increment As Boolean, Index As Integer, Damage As Integer, skillnum As Integer, MapNum As Integer)
+    Friend Sub SkillNpc_Effect(vital As Byte, increment As Boolean, index As Integer, damage As Integer, skillnum As Integer, mapNum As Integer)
         Dim sSymbol As String
-        Dim Color As Integer
+        Dim color As Integer
 
-        If Index <= 0 OrElse Index > MAX_MAP_NPCS OrElse Damage < 0 OrElse MapNpc(MapNum).Npc(Index).Vital(Vital) <= 0 Then Exit Sub
+        If index <= 0 OrElse index > MAX_MAP_NPCS OrElse damage < 0 OrElse MapNpc(mapNum).Npc(index).Vital(vital) <= 0 Then Exit Sub
 
-        If Damage > 0 Then
+        If damage > 0 Then
             If increment Then
                 sSymbol = "+"
-                If Vital = VitalType.HP Then Color = ColorType.BrightGreen
-                If Vital = VitalType.MP Then Color = ColorType.BrightBlue
+                If vital = VitalType.HP Then color = ColorType.BrightGreen
+                If vital = VitalType.MP Then color = ColorType.BrightBlue
             Else
                 sSymbol = "-"
-                Color = ColorType.BrightRed
+                color = ColorType.BrightRed
             End If
 
             ' Deal with Stun and Knockback effects.
-            If Skill(skillnum).KnockBack = 1 Then KnockBackNpc(Index, Index, skillnum)
-            If Skill(skillnum).StunDuration > 0 Then StunNPC(Index, MapNum, skillnum)
+            If Skill(skillnum).KnockBack = 1 Then KnockBackNpc(index, index, skillnum)
+            If Skill(skillnum).StunDuration > 0 Then StunNPC(index, mapNum, skillnum)
 
-            SendActionMsg(MapNum, sSymbol & Damage, Color, ActionMsgType.Scroll, MapNpc(MapNum).Npc(Index).X * 32, MapNpc(MapNum).Npc(Index).Y * 32)
-            If increment Then MapNpc(MapNum).Npc(Index).Vital(Vital) = MapNpc(MapNum).Npc(Index).Vital(Vital) + Damage
-            If Not increment Then MapNpc(MapNum).Npc(Index).Vital(Vital) = MapNpc(MapNum).Npc(Index).Vital(Vital) - Damage
-            SendMapNpcVitals(MapNum, Index)
+            SendActionMsg(mapNum, sSymbol & damage, color, ActionMsgType.Scroll, MapNpc(mapNum).Npc(index).X * 32, MapNpc(mapNum).Npc(index).Y * 32)
+            If increment Then MapNpc(mapNum).Npc(index).Vital(vital) = MapNpc(mapNum).Npc(index).Vital(vital) + damage
+            If Not increment Then MapNpc(mapNum).Npc(index).Vital(vital) = MapNpc(mapNum).Npc(index).Vital(vital) - damage
+            SendMapNpcVitals(mapNum, index)
         End If
     End Sub
 End Module

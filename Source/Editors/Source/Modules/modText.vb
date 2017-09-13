@@ -8,8 +8,8 @@ Module modText
     Friend Const MyChatTextLimit As Integer = 55
     Friend Const MyAmountValueLimit As Integer = 3
     Friend Const AllChatLineWidth As Integer = 55
-    Friend FirstLineIndex As Integer = 0
-    Friend LastLineIndex As Integer = 0
+    Friend FirstLineindex as integer = 0
+    Friend LastLineindex as integer = 0
     Friend ScrollMod As Integer = 0
 
     ' Game text buffer
@@ -69,7 +69,7 @@ Module modText
         DrawText(TextX, TextY, Trim$(Npc(npcNum).Name), color, backcolor, GameWindow)
     End Sub
 
-    Friend Sub DrawEventName(Index As Integer)
+    Friend Sub DrawEventName(index as integer)
         Dim TextX As Integer
         Dim TextY As Integer
         Dim color As Color, backcolor As Color
@@ -272,10 +272,10 @@ Module modText
     Friend Function Explode(str As String, splitChars As Char()) As String()
 
         Dim parts As New List(Of String)()
-        Dim startIndex As Integer = 0
+        Dim startindex as integer = 0
         Explode = Nothing
         While True
-            Dim index As Integer = str.IndexOfAny(splitChars, startIndex)
+            Dim index as integer = str.IndexOfAny(splitChars, startIndex)
 
             If index = -1 Then
                 parts.Add(str.Substring(startIndex))

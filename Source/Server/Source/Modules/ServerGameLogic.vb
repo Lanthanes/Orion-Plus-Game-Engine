@@ -2,7 +2,7 @@
 Imports ASFW
 
 Module ServerGameLogic
-    Function GetTotalMapPlayers(MapNum As Integer) As Integer
+    Function GetTotalMapPlayers(mapNum as Integer) As Integer
         Dim i As Integer, n As Integer
         n = 0
 
@@ -61,7 +61,7 @@ Module ServerGameLogic
         FindPlayer = 0
     End Function
 
-    Sub SpawnItem(itemNum As Integer, ItemVal As Integer, MapNum As Integer, x As Integer, y As Integer)
+    Sub SpawnItem(itemNum As Integer, ItemVal As Integer, mapNum as Integer, x As Integer, y As Integer)
         Dim i As Integer
 
         ' Check for subscript out of range
@@ -75,9 +75,9 @@ Module ServerGameLogic
         SpawnItemSlot(i, itemNum, ItemVal, MapNum, x, y)
     End Sub
 
-    Sub SpawnItemSlot(MapItemSlot As Integer, itemNum As Integer, ItemVal As Integer, MapNum As Integer, x As Integer, y As Integer)
+    Sub SpawnItemSlot(MapItemSlot As Integer, itemNum As Integer, ItemVal As Integer, mapNum as Integer, x As Integer, y As Integer)
         Dim i As Integer
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         ' Check for subscript out of range
         If MapItemSlot <= 0 OrElse MapItemSlot > MAX_MAP_ITEMS OrElse itemNum < 0 OrElse itemNum > MAX_ITEMS OrElse MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS Then Exit Sub
@@ -109,7 +109,7 @@ Module ServerGameLogic
         Buffer.Dispose()
     End Sub
 
-    Function FindOpenMapItemSlot(MapNum As Integer) As Integer
+    Function FindOpenMapItemSlot(mapNum as Integer) As Integer
         Dim i As Integer
         FindOpenMapItemSlot = 0
 
@@ -134,7 +134,7 @@ Module ServerGameLogic
 
     End Sub
 
-    Sub SpawnMapItems(MapNum As Integer)
+    Sub SpawnMapItems(mapNum as Integer)
         Dim x As Integer
         Dim y As Integer
 
@@ -163,29 +163,29 @@ Module ServerGameLogic
 
     End Sub
 
-    Friend Sub SpawnNpc(MapNpcNum As Integer, MapNum As Integer)
-        Dim Buffer As New ByteStream(4)
-        Dim NpcNum As Integer
-        Dim i As Integer
+    Friend Sub SpawnNpc(mapNpcNum As Integer, mapNum as Integer)
+        dim buffer as New ByteStream(4)
+        Dim npcNum As Integer
         Dim x As Integer
         Dim y As Integer
-        Dim Spawned As Boolean
+        Dim i = 0
+        Dim spawned As Boolean
 
         ' Check for subscript out of range
         If MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS Then Exit Sub
 
-        NpcNum = Map(MapNum).Npc(MapNpcNum)
+        npcNum = Map(MapNum).Npc(MapNpcNum)
 
-        If NpcNum > 0 Then
-            If Not Npc(NpcNum).SpawnTime = Time.Instance.TimeOfDay AndAlso Not Npc(NpcNum).SpawnTime = 4 Then Exit Sub
+        If npcNum > 0 Then
+            If Not Npc(npcNum).SpawnTime = Time.Instance.TimeOfDay AndAlso Not Npc(npcNum).SpawnTime = 4 Then Exit Sub
 
-            MapNpc(MapNum).Npc(MapNpcNum).Num = NpcNum
+            MapNpc(MapNum).Npc(MapNpcNum).Num = npcNum
             MapNpc(MapNum).Npc(MapNpcNum).Target = 0
             MapNpc(MapNum).Npc(MapNpcNum).TargetType = 0 ' clear
 
-            MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.HP) = GetNpcMaxVital(NpcNum, VitalType.HP)
-            MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.MP) = GetNpcMaxVital(NpcNum, VitalType.MP)
-            MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.SP) = GetNpcMaxVital(NpcNum, VitalType.SP)
+            MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.HP) = GetNpcMaxVital(npcNum, VitalType.HP)
+            MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.MP) = GetNpcMaxVital(npcNum, VitalType.MP)
+            MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.SP) = GetNpcMaxVital(npcNum, VitalType.SP)
 
             MapNpc(MapNum).Npc(MapNpcNum).Dir = Int(Rnd() * 4)
 
@@ -197,16 +197,16 @@ Module ServerGameLogic
                             MapNpc(MapNum).Npc(MapNpcNum).X = x
                             MapNpc(MapNum).Npc(MapNpcNum).Y = y
                             MapNpc(MapNum).Npc(MapNpcNum).Dir = Map(MapNum).Tile(x, y).Data2
-                            Spawned = True
+                            spawned = True
                             Exit For
                         End If
                     End If
                 Next y
             Next x
 
-            If Not Spawned Then
+            If Not spawned Then
                 ' Well try 100 times to randomly place the sprite
-                For i = 1 To 100
+                While i < 100
                     x = Random(0, Map(MapNum).MaxX)
                     y = Random(0, Map(MapNum).MaxY)
 
@@ -217,56 +217,57 @@ Module ServerGameLogic
                     If NpcTileIsOpen(MapNum, x, y) Then
                         MapNpc(MapNum).Npc(MapNpcNum).X = x
                         MapNpc(MapNum).Npc(MapNpcNum).Y = y
-                        Spawned = True
-                        Exit For
+                        spawned = True
+                        Exit while
                     End If
-                Next
+                    i += 1
+                End While
             End If
 
             ' Didn't spawn, so now we'll just try to find a free tile
-            If Not Spawned Then
+            If Not spawned Then
                 For x = 0 To Map(MapNum).MaxX
                     For y = 0 To Map(MapNum).MaxY
                         If NpcTileIsOpen(MapNum, x, y) Then
                             MapNpc(MapNum).Npc(MapNpcNum).X = x
                             MapNpc(MapNum).Npc(MapNpcNum).Y = y
-                            Spawned = True
+                            spawned = True
                         End If
                     Next
                 Next
             End If
 
             ' If we suceeded in spawning then send it to everyone
-            If Spawned Then
-                Buffer.WriteInt32(ServerPackets.SSpawnNpc)
-                Buffer.WriteInt32(MapNpcNum)
-                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Num)
-                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).X)
-                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Y)
-                Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Dir)
+            If spawned Then
+                buffer.WriteInt32(ServerPackets.SSpawnNpc)
+                buffer.WriteInt32(MapNpcNum)
+                buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Num)
+                buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).X)
+                buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Y)
+                buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Dir)
 
                 Addlog("Recieved SMSG: SSpawnNpc", PACKET_LOG)
                 Console.WriteLine("Recieved SMSG: SSpawnNpc")
 
                 For i = 1 To VitalType.Count - 1
-                    Buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Vital(i))
+                    buffer.WriteInt32(MapNpc(MapNum).Npc(MapNpcNum).Vital(i))
                 Next
 
-                SendDataToMap(MapNum, Buffer.Data, Buffer.Head)
+                SendDataToMap(MapNum, buffer.Data, buffer.Head)
             End If
 
             SendMapNpcVitals(MapNum, MapNpcNum)
         End If
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 
     Friend Function Random(low As Int32, high As Int32) As Integer
-        Static RandomNumGen As New System.Random
-        Return RandomNumGen.Next(low, high + 1)
+        Static randomNumGen As New Random
+        Return randomNumGen.Next(low, high + 1)
     End Function
 
-    Friend Function NpcTileIsOpen(MapNum As Integer, x As Integer, y As Integer) As Boolean
+    Friend Function NpcTileIsOpen(mapNum as Integer, x As Integer, y As Integer) As Boolean
         Dim LoopI As Integer
         NpcTileIsOpen = True
 
@@ -309,7 +310,7 @@ Module ServerGameLogic
         End If
     End Function
 
-    Function CanNpcMove(MapNum As Integer, MapNpcNum As Integer, Dir As Byte) As Boolean
+    Function CanNpcMove(mapNum as Integer, MapNpcNum As Integer, Dir As Byte) As Boolean
         Dim i As Integer
         Dim n As Integer
         Dim x As Integer
@@ -463,8 +464,8 @@ Module ServerGameLogic
 
     End Function
 
-    Sub NpcMove(MapNum As Integer, MapNpcNum As Integer, Dir As Integer, Movement As Integer)
-        Dim Buffer As New ByteStream(4)
+    Sub NpcMove(mapNum as Integer, MapNpcNum As Integer, Dir As Integer, Movement As Integer)
+        dim buffer as New ByteStream(4)
 
         ' Check for subscript out of range
         If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Dir < DirectionType.Up OrElse Dir > DirectionType.Right OrElse Movement < 1 OrElse Movement > 2 Then
@@ -535,8 +536,8 @@ Module ServerGameLogic
         Buffer.Dispose()
     End Sub
 
-    Sub NpcDir(MapNum As Integer, MapNpcNum As Integer, Dir As Integer)
-        Dim Buffer As New ByteStream(4)
+    Sub NpcDir(mapNum as Integer, MapNpcNum As Integer, Dir As Integer)
+        dim buffer as New ByteStream(4)
 
         ' Check for subscript out of range
         If MapNum <= 0 OrElse MapNum > MAX_CACHED_MAPS OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Dir < DirectionType.Up OrElse Dir > DirectionType.Right Then
@@ -566,7 +567,7 @@ Module ServerGameLogic
 
     End Sub
 
-    Sub SpawnMapNpcs(MapNum As Integer)
+    Sub SpawnMapNpcs(mapNum as Integer)
         Dim i As Integer
 
         For i = 1 To MAX_MAP_NPCS
@@ -575,9 +576,9 @@ Module ServerGameLogic
 
     End Sub
 
-    Sub SendMapNpcsToMap(MapNum As Integer)
+    Sub SendMapNpcsToMap(mapNum as Integer)
         Dim i As Integer
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapNpcData)
 

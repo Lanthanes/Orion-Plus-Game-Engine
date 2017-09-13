@@ -328,12 +328,12 @@ Module modDataBase
             Map.Right = 0
             Map.Up = 0
 
-            ReDim Map.Npc(0 To MAX_MAP_NPCS)
-            ReDim Map.Tile(0 To Map.MaxX, 0 To Map.MaxY)
+            ReDim Map.Npc(MAX_MAP_NPCS)
+            ReDim Map.Tile(Map.MaxX,Map.MaxY)
 
             For x = 0 To SCREEN_MAPX
                 For y = 0 To SCREEN_MAPY
-                    ReDim Map.Tile(x, y).Layer(0 To LayerType.Count - 1)
+                    ReDim Map.Tile(x, y).Layer(LayerType.Count - 1)
                     For l = 0 To LayerType.Count - 1
                         Map.Tile(x, y).Layer(l).Tileset = 0
                         Map.Tile(x, y).Layer(l).X = 0
@@ -357,7 +357,7 @@ Module modDataBase
 
     End Sub
 
-    Sub ClearMapItem(Index As Integer)
+    Sub ClearMapItem(index as integer)
         MapItem(Index).Frame = 0
         MapItem(Index).Num = 0
         MapItem(Index).Value = 0
@@ -365,7 +365,7 @@ Module modDataBase
         MapItem(Index).Y = 0
     End Sub
 
-    Sub ClearMapNpc(Index As Integer)
+    Sub ClearMapNpc(index as integer)
         MapNpc(Index).Attacking = 0
         MapNpc(Index).AttackTimer = 0
         MapNpc(Index).Dir = 0
@@ -402,7 +402,7 @@ Module modDataBase
 #End Region
 
 #Region "Items"
-    Friend Sub ClearItem(Index As Integer)
+    Friend Sub ClearItem(index as integer)
         'Index = Index - 1
         Item(Index) = Nothing
         Item(Index) = New ItemRec
@@ -413,8 +413,8 @@ Module modDataBase
             ReDim Item(Index).Stat_Req(x)
         Next
 
-        ReDim Item(Index).FurnitureBlocks(0 To 3, 0 To 3)
-        ReDim Item(Index).FurnitureFringe(0 To 3, 0 To 3)
+        ReDim Item(Index).FurnitureBlocks(3,3)
+        ReDim Item(Index).FurnitureFringe(3,3)
 
         Item(Index).Name = ""
     End Sub
@@ -423,7 +423,7 @@ Module modDataBase
         For i = 1 To MAX_ITEMS
             Item_Changed(i) = Nothing
         Next i
-        ReDim Item_Changed(0 To MAX_ITEMS)
+        ReDim Item_Changed(MAX_ITEMS)
     End Sub
 
     Sub ClearItems()
@@ -443,10 +443,10 @@ Module modDataBase
         For i = 1 To MAX_RESOURCES
             Resource_Changed(i) = Nothing
         Next i
-        ReDim Resource_Changed(0 To MAX_RESOURCES)
+        ReDim Resource_Changed(MAX_RESOURCES)
     End Sub
 
-    Sub ClearResource(Index As Integer)
+    Sub ClearResource(index as integer)
         Resource(Index) = Nothing
         Resource(Index) = New ResourceRec
         Resource(Index).Name = ""
@@ -474,7 +474,7 @@ Module modDataBase
 
     End Sub
 
-    Sub ClearNpc(Index As Integer)
+    Sub ClearNpc(index as integer)
         Npc(Index) = Nothing
         Npc(Index) = New NpcRec
 
@@ -493,7 +493,7 @@ Module modDataBase
 #End Region
 
 #Region "Animations"
-    Sub ClearAnimation(Index As Integer)
+    Sub ClearAnimation(index as integer)
         Animation(Index) = Nothing
         Animation(Index) = New AnimationRec
         For x = 0 To 1
@@ -545,7 +545,7 @@ Module modDataBase
         Next
     End Sub
 
-    Sub ClearAnimInstance(index As Integer)
+    Sub ClearAnimInstance(index as integer)
         AnimInstance(index).Animation = 0
         AnimInstance(index).X = 0
         AnimInstance(index).Y = 0
@@ -575,7 +575,7 @@ Module modDataBase
 
     End Sub
 
-    Sub ClearSkill(Index As Integer)
+    Sub ClearSkill(index as integer)
         Skill(Index) = Nothing
         Skill(Index) = New SkillRec
         Skill(Index).Name = ""
@@ -583,7 +583,7 @@ Module modDataBase
 #End Region
 
 #Region "Shops"
-    Sub ClearShop(Index As Integer)
+    Sub ClearShop(index as integer)
         Shop(Index) = Nothing
         Shop(Index) = New ShopRec
         Shop(Index).Name = ""

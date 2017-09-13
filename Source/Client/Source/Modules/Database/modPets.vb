@@ -80,7 +80,7 @@ Module modPets
 #End Region
 
 #Region "Database"
-    Sub ClearPet(Index As Integer)
+    Sub ClearPet(index as integer)
 
         Pet(Index).Name = ""
 
@@ -102,8 +102,8 @@ Module modPets
 #End Region
 
 #Region "Outgoing Packets"
-    Friend Sub SendPetBehaviour(Index As Integer)
-        Dim Buffer As New ByteStream(4)
+    Friend Sub SendPetBehaviour(index as integer)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSetBehaviour)
 
@@ -115,7 +115,7 @@ Module modPets
     End Sub
 
     Sub SendTrainPetStat(StatNum As Byte)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPetUseStatPoint)
 
@@ -127,7 +127,7 @@ Module modPets
     End Sub
 
     Sub SendRequestPets()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestPets)
 
@@ -137,7 +137,7 @@ Module modPets
     End Sub
 
     Sub SendUsePetSkill(skill As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPetSkill)
         Buffer.WriteInt32(skill)
@@ -150,7 +150,7 @@ Module modPets
     End Sub
 
     Sub SendSummonPet()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSummonPet)
 
@@ -160,7 +160,7 @@ Module modPets
     End Sub
 
     Sub SendReleasePet()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CReleasePet)
 
@@ -171,9 +171,9 @@ Module modPets
 #End Region
 
 #Region "Incoming Packets"
-    Friend Sub Packet_UpdatePlayerPet(ByRef Data() As Byte)
-        Dim n As Integer, i As Long
-        Dim Buffer As New ByteStream(Data)
+    Friend Sub Packet_UpdatePlayerPet(ByRef data() As Byte)
+        Dim n As Integer, i As Integer
+        dim buffer as New ByteStream(Data)
         n = Buffer.ReadInt32
 
         'pet
@@ -207,9 +207,9 @@ Module modPets
         Buffer.Dispose()
     End Sub
 
-    Friend Sub Packet_UpdatePet(ByRef Data() As Byte)
+    Friend Sub Packet_UpdatePet(ByRef data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         n = Buffer.ReadInt32
 
         With Pet(n)
@@ -240,10 +240,10 @@ Module modPets
 
     End Sub
 
-    Friend Sub Packet_PetMove(ByRef Data() As Byte)
+    Friend Sub Packet_PetMove(ByRef data() As Byte)
         Dim i As Integer, X As Integer, Y As Integer
         Dim dir As Integer, Movement As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
         X = Buffer.ReadInt32
         Y = Buffer.ReadInt32
@@ -273,10 +273,10 @@ Module modPets
         Buffer.Dispose()
     End Sub
 
-    Friend Sub Packet_PetDir(ByRef Data() As Byte)
+    Friend Sub Packet_PetDir(ByRef data() As Byte)
         Dim i As Integer
         Dim dir As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
         dir = Buffer.ReadInt32
 
@@ -285,9 +285,9 @@ Module modPets
         Buffer.Dispose()
     End Sub
 
-    Friend Sub Packet_PetVital(ByRef Data() As Byte)
+    Friend Sub Packet_PetVital(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
 
         If Buffer.ReadInt32 = 1 Then
@@ -302,14 +302,14 @@ Module modPets
 
     End Sub
 
-    Friend Sub Packet_ClearPetSkillBuffer(ByRef Data() As Byte)
+    Friend Sub Packet_ClearPetSkillBuffer(ByRef data() As Byte)
         PetSkillBuffer = 0
         PetSkillBufferTimer = 0
     End Sub
 
-    Friend Sub Packet_PetAttack(ByRef Data() As Byte)
+    Friend Sub Packet_PetAttack(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
 
         ' Set pet to attacking
@@ -319,17 +319,17 @@ Module modPets
         Buffer.Dispose()
     End Sub
 
-    Friend Sub Packet_PetXY(ByRef Data() As Byte)
+    Friend Sub Packet_PetXY(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         Player(i).Pet.X = Buffer.ReadInt32
         Player(i).Pet.Y = Buffer.ReadInt32
 
         Buffer.Dispose()
     End Sub
 
-    Friend Sub Packet_PetExperience(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Friend Sub Packet_PetExperience(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         Player(MyIndex).Pet.Exp = Buffer.ReadInt32
         Player(MyIndex).Pet.TNL = Buffer.ReadInt32
 
@@ -338,7 +338,7 @@ Module modPets
 #End Region
 
 #Region "Movement"
-    Sub ProcessPetMovement(Index As Integer)
+    Sub ProcessPetMovement(index as integer)
 
         ' Check if pet is walking, and if so process moving them over
 
@@ -390,7 +390,7 @@ Module modPets
     End Sub
 
     Friend Sub PetMove(X As Integer, Y As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPetMove)
 
@@ -405,7 +405,7 @@ Module modPets
 #End Region
 
 #Region "Drawing"
-    Friend Sub DrawPet(Index As Integer)
+    Friend Sub DrawPet(index as integer)
         Dim Anim As Byte, X As Integer, Y As Integer
         Dim Sprite As Integer, spriteleft As Integer
         Dim srcrec As Rectangle
@@ -484,7 +484,7 @@ Module modPets
 
     End Sub
 
-    Friend Sub DrawPlayerPetName(Index As Integer)
+    Friend Sub DrawPlayerPetName(index as integer)
         Dim TextX As Integer
         Dim TextY As Integer
         Dim color As SFML.Graphics.Color, backcolor As SFML.Graphics.Color
@@ -623,7 +623,7 @@ Module modPets
 #End Region
 
 #Region "Misc"
-    Friend Function PetAlive(index As Integer) As Boolean
+    Friend Function PetAlive(index as integer) As Boolean
         PetAlive = False
 
         If Player(index).Pet.Alive = 1 Then
@@ -632,7 +632,7 @@ Module modPets
 
     End Function
 
-    Friend Function HasPet(index As Integer) As Boolean
+    Friend Function HasPet(index as integer) As Boolean
         HasPet = False
 
         If Player(index).Pet.Num > 0 Then

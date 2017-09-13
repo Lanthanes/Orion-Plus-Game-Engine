@@ -46,30 +46,30 @@ Module modLoop
 
         InitGraphics()
 
-        ReDim Autotile(0 To Map.MaxX, 0 To Map.MaxY)
+        ReDim Autotile(Map.MaxX,Map.MaxY)
 
         For X = 0 To Map.MaxX
             For Y = 0 To Map.MaxY
-                ReDim Autotile(X, Y).Layer(0 To LayerType.Count - 1)
+                ReDim Autotile(X, Y).Layer(LayerType.Count - 1)
                 For i = 0 To LayerType.Count - 1
-                    ReDim Autotile(X, Y).Layer(i).srcX(0 To 4)
-                    ReDim Autotile(X, Y).Layer(i).srcY(0 To 4)
-                    ReDim Autotile(X, Y).Layer(i).QuarterTile(0 To 4)
+                    ReDim Autotile(X, Y).Layer(i).srcX(4)
+                    ReDim Autotile(X, Y).Layer(i).srcY(4)
+                    ReDim Autotile(X, Y).Layer(i).QuarterTile(4)
                 Next
             Next
         Next
 
         ''Housing
-        ReDim House(0 To MAX_HOUSES)
-        ReDim HouseConfig(0 To MAX_HOUSES)
+        ReDim House(MAX_HOUSES)
+        ReDim HouseConfig(MAX_HOUSES)
 
         'quests
         ReDim Quest(MAX_QUESTS)
         ClearQuests()
 
-        ReDim Map.Npc(0 To MAX_MAP_NPCS)
+        ReDim Map.Npc(MAX_MAP_NPCS)
 
-        ReDim Item(0 To MAX_ITEMS)
+        ReDim Item(MAX_ITEMS)
         For i = 0 To MAX_ITEMS
             For x = 0 To StatType.Count - 1
                 ReDim Item(i).Add_Stat(x)
@@ -78,11 +78,11 @@ Module modLoop
                 ReDim Item(i).Stat_Req(x)
             Next
 
-            ReDim Item(i).FurnitureBlocks(0 To 3, 0 To 3)
-            ReDim Item(i).FurnitureFringe(0 To 3, 0 To 3)
+            ReDim Item(i).FurnitureBlocks(3,3)
+            ReDim Item(i).FurnitureFringe(3,3)
         Next
 
-        ReDim Npc(0 To MAX_NPCS)
+        ReDim Npc(MAX_NPCS)
         For i = 0 To MAX_NPCS
             For x = 0 To StatType.Count - 1
                 ReDim Npc(i).Stat(x)
@@ -95,21 +95,21 @@ Module modLoop
             ReDim Npc(i).Skill(6)
         Next
 
-        ReDim MapNpc(0 To MAX_MAP_NPCS)
+        ReDim MapNpc(MAX_MAP_NPCS)
         For i = 0 To MAX_MAP_NPCS
             For x = 0 To VitalType.Count - 1
                 ReDim MapNpc(i).Vital(x)
             Next
         Next
 
-        ReDim Shop(0 To MAX_SHOPS)
+        ReDim Shop(MAX_SHOPS)
         For i = 0 To MAX_SHOPS
             For x = 0 To MAX_TRADES
                 ReDim Shop(i).TradeItem(x)
             Next
         Next
 
-        ReDim Animation(0 To MAX_ANIMATIONS)
+        ReDim Animation(MAX_ANIMATIONS)
         For i = 0 To MAX_ANIMATIONS
             For x = 0 To 1
                 ReDim Animation(i).Sprite(x)

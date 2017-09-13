@@ -36,7 +36,7 @@
     'Distance between mountains and the map limit, so the player can walk freely when teleport between maps
     Private Const MountainBorder As Byte = 5
 
-    Friend Tile(0 To TilePrefab.Count - 1) As TileRec
+    Friend Tile(TilePrefab.Count - 1) As TileRec
     Friend Detail() As DetailRec
     Friend ResourcesNum As String
     Private Resources() As String
@@ -103,7 +103,7 @@
         ReDim Tile(TilePrefab.Count - 1)
         For Prefab = 1 To TilePrefab.Count - 1
 
-            ReDim Tile(Prefab).Layer(0 To LayerType.Count - 1)
+            ReDim Tile(Prefab).Layer(LayerType.Count - 1)
             For Layer = 1 To LayerType.Count - 1
                 Tile(Prefab).Layer(Layer).Tileset = Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "Tileset"))
                 Tile(Prefab).Layer(Layer).X = Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "X"))
@@ -135,8 +135,8 @@
         Dim DetailCount As Integer
         DetailCount = UBound(Detail) + 1
 
-        ReDim Preserve Detail(0 To DetailCount)
-        ReDim Preserve Detail(DetailCount).Tile.Layer(0 To LayerType.Count - 1)
+        ReDim Preserve Detail(DetailCount)
+        ReDim Preserve Detail(DetailCount).Tile.Layer(LayerType.Count - 1)
 
         Detail(DetailCount).DetailBase = Prefab
         Detail(DetailCount).Tile.Type = TileType
@@ -146,7 +146,7 @@
     End Sub
 
     Sub LoadDetails()
-        ReDim Detail(0 To 1)
+        ReDim Detail(1)
 
         'Detail config area
         'Use: LoadDetail TilePrefab, Tileset, StartTilesetX, StartTilesetY, TileType, EndTilesetX, EndTilesetY

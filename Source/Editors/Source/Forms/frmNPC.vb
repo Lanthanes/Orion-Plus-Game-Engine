@@ -20,7 +20,7 @@
     End Sub
 
     Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-        Dim tmpIndex As Integer
+        Dim tmpindex as integer
 
         If EditorIndex <= 0 Then Exit Sub
 
@@ -42,7 +42,7 @@
 
 #Region "Properties"
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
-        Dim tmpIndex As Integer
+        Dim tmpindex as integer
 
         If EditorIndex = 0 Then Exit Sub
 

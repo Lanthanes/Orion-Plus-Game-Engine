@@ -33,14 +33,14 @@ Namespace Global.Orion
     Friend Delegate Sub HandleTimeEvent(ByRef source As Time)
 
     Friend Class Time
-        Private Shared mInstance As Time = Nothing
+        Private Shared _mInstance As Time = Nothing
         Friend Shared ReadOnly Property Instance As Time
             Get
-                If (mInstance Is Nothing) Then
-                    mInstance = New Time()
+                If (_mInstance Is Nothing) Then
+                    _mInstance = New Time()
                 End If
 
-                Return mInstance
+                Return _mInstance
             End Get
         End Property
 
@@ -48,20 +48,18 @@ Namespace Global.Orion
         Friend Event OnTimeOfDayChanged As HandleTimeEvent
         Friend Event OnTimeSync As HandleTimeEvent
 
-        Private mTimer As Timer
+        Private ReadOnly _mTimer As Timer
 
-        Private mTime As Date
+        Private _mTime As Date
         Friend Property Time As Date
             Get
-                Return mTime
+                Return _mTime
             End Get
-            Set(value As Date)
-                mTime = value
+            Set
+                _mTime = value
 
                 Dim newTimeOfDay As TimeOfDay = GetTimeOfDay(Time.Hour)
-                If (TimeOfDay <> newTimeOfDay) Then
-                    TimeOfDay = newTimeOfDay
-                End If
+                If (TimeOfDay <> newTimeOfDay) Then TimeOfDay = newTimeOfDay
 
                 RaiseEvent OnTimeChanged(Me)
             End Set
@@ -86,9 +84,9 @@ Namespace Global.Orion
             Set(value As Integer)
                 mSyncInterval = value
 
-                mTimer.Stop()
-                mTimer.Interval = mSyncInterval
-                mTimer.Start()
+                _mTimer.Stop()
+                _mTimer.Interval = mSyncInterval
+                _mTimer.Start()
                 RaiseEvent OnTimeSync(Me)
             End Set
         End Property
@@ -107,11 +105,11 @@ Namespace Global.Orion
         Friend Sub New()
             mSyncInterval = 6000.0
 
-            mTimer = New Timer(SyncInterval)
+            _mTimer = New Timer(SyncInterval)
 
-            AddHandler mTimer.Elapsed, AddressOf Me.HandleTimerElapsed
+            AddHandler _mTimer.Elapsed, AddressOf HandleTimerElapsed
 
-            mTimer.Start()
+            _mTimer.Start()
         End Sub
 
         Private Sub HandleTimerElapsed(sender As Object, e As ElapsedEventArgs)
@@ -119,7 +117,7 @@ Namespace Global.Orion
         End Sub
 
         Public Overrides Function ToString() As String
-            Return Me.ToString("h:mm:ss tt")
+            Return ToString("h:mm:ss tt")
         End Function
 
         Friend Overloads Function ToString(ByRef format As String) As String

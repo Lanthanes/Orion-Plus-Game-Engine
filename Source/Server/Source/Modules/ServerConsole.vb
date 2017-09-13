@@ -40,7 +40,7 @@ Module ServerConsole
                     If parts.Length < 3 Then Continue While
 #Region " Body "
                     Dim Name As String = parts(1)
-                    Dim PIndex As Integer = FindPlayer(Name)
+                    Dim Pindex as integer = FindPlayer(Name)
                     Dim Power As Integer : Integer.TryParse(parts(2), Power)
 
                     If Not PIndex > 0 Then
@@ -81,7 +81,7 @@ Module ServerConsole
                     If parts.Length < 2 Then Continue While
 #Region " Body "
                     Dim Name As String = parts(1)
-                    Dim PIndex As Integer = FindPlayer(Name)
+                    Dim Pindex as integer = FindPlayer(Name)
                     If Not PIndex > 0 Then
                         Console.WriteLine("Player name is empty or invalid. [Name not found]")
                     Else
@@ -93,7 +93,7 @@ Module ServerConsole
                     If parts.Length < 2 Then Continue While
 #Region " Body "
                     Dim Name As String = parts(1)
-                    Dim PIndex As Integer = FindPlayer(Name)
+                    Dim Pindex as integer = FindPlayer(Name)
                     If Not PIndex > 0 Then : Console.WriteLine("Player name is empty or invalid. [Name not found]")
                     Else : ServerBanIndex(PIndex) : End If
 #End Region

@@ -684,7 +684,7 @@ Friend Class FrmMenu
         pnlloadvisible = True
         frmmenuvisible = False
 
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(8)
         Buffer.WriteInt32(ClientPackets.CUseChar)
         Buffer.WriteInt32(SelectedChar)
@@ -699,7 +699,7 @@ Friend Class FrmMenu
     Private Sub BtnDelChar_Click(sender As Object, e As EventArgs) Handles btnDelChar.Click
         Dim result1 As DialogResult = MessageBox.Show("Sure you want to delete character " & SelectedChar & "?", "You sure?", MessageBoxButtons.YesNo)
         If result1 = DialogResult.Yes Then
-            Dim Buffer As New ByteStream(4)
+            dim buffer as New ByteStream(4)
             Buffer.WriteInt32(ClientPackets.CDelChar)
             Buffer.WriteInt32(SelectedChar)
             Socket.SendData(Buffer.Data, Buffer.Head)

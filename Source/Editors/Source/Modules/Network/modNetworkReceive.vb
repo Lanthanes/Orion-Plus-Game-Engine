@@ -86,9 +86,9 @@ Module modNetworkReceive
         ' Do nothing we didnt want it anyway >.> ~SpiceyWolf
     End Sub
 
-    Private Sub Packet_AlertMSG(ByRef Data() As Byte)
+    Private Sub Packet_AlertMSG(ByRef data() As Byte)
         Dim Msg As String
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         Msg = Buffer.ReadString
 
         Buffer.Dispose()
@@ -98,30 +98,30 @@ Module modNetworkReceive
         CloseEditor()
     End Sub
 
-    Private Sub Packet_KeyPair(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_KeyPair(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         EKeyPair.ImportKeyString(Buffer.ReadString())
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_LoginOk(ByRef Data() As Byte)
+    Private Sub Packet_LoginOk(ByRef data() As Byte)
         InitEditor = True
     End Sub
 
-    Private Sub Packet_ClassesData(ByRef Data() As Byte)
+    Private Sub Packet_ClassesData(ByRef data() As Byte)
         Dim i As Integer
         Dim z As Integer, X As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         ' Max classes
         Max_Classes = Buffer.ReadInt32
-        ReDim Classes(0 To Max_Classes)
+        ReDim Classes(Max_Classes)
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Stat(0 To StatType.Count - 1)
+            ReDim Classes(i).Stat(StatType.Count - 1)
         Next
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Vital(0 To VitalType.Count - 1)
+            ReDim Classes(i).Vital(VitalType.Count - 1)
         Next
 
         For i = 1 To Max_Classes
@@ -137,7 +137,7 @@ Module modNetworkReceive
                 ' get array size
                 z = Buffer.ReadInt32
                 ' redim array
-                ReDim .MaleSprite(0 To z)
+                ReDim .MaleSprite(z)
                 ' loop-receive data
                 For X = 0 To z
                     .MaleSprite(X) = Buffer.ReadInt32
@@ -146,7 +146,7 @@ Module modNetworkReceive
                 ' get array size
                 z = Buffer.ReadInt32
                 ' redim array
-                ReDim .FemaleSprite(0 To z)
+                ReDim .FemaleSprite(z)
                 ' loop-receive data
                 For X = 0 To z
                     .FemaleSprite(X) = Buffer.ReadInt32
@@ -178,9 +178,9 @@ Module modNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_MapData(ByRef Data() As Byte)
+    Private Sub Packet_MapData(ByRef data() As Byte)
         Dim X As Integer, Y As Integer, i As Integer
-        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
+        dim buffer as New ByteStream(Compression.DecompressBytes(Data))
 
         MapData = False
 
@@ -217,7 +217,7 @@ Module modNetworkReceive
                 Map.Panorama = Buffer.ReadInt32
                 Map.Parallax = Buffer.ReadInt32
 
-                ReDim Map.Tile(0 To Map.MaxX, 0 To Map.MaxY)
+                ReDim Map.Tile(Map.MaxX,Map.MaxY)
 
                 For X = 1 To MAX_MAP_NPCS
                     Map.Npc(X) = Buffer.ReadInt32
@@ -230,7 +230,7 @@ Module modNetworkReceive
                         Map.Tile(X, Y).Data3 = Buffer.ReadInt32
                         Map.Tile(X, Y).DirBlock = Buffer.ReadInt32
 
-                        ReDim Map.Tile(X, Y).Layer(0 To LayerType.Count - 1)
+                        ReDim Map.Tile(X, Y).Layer(LayerType.Count - 1)
 
                         For i = 0 To LayerType.Count - 1
                             Map.Tile(X, Y).Layer(i).Tileset = Buffer.ReadInt32
@@ -248,7 +248,7 @@ Module modNetworkReceive
                 Map.EventCount = Buffer.ReadInt32
 
                 If Map.EventCount > 0 Then
-                    ReDim Map.Events(0 To Map.EventCount)
+                    ReDim Map.Events(Map.EventCount)
                     For i = 1 To Map.EventCount
                         With Map.Events(i)
                             .Name = Trim(Buffer.ReadString)
@@ -258,7 +258,7 @@ Module modNetworkReceive
                             .PageCount = Buffer.ReadInt32
                         End With
                         If Map.Events(i).PageCount > 0 Then
-                            ReDim Map.Events(i).Pages(0 To Map.Events(i).PageCount)
+                            ReDim Map.Events(i).Pages(Map.Events(i).PageCount)
                             For X = 1 To Map.Events(i).PageCount
                                 With Map.Events(i).Pages(X)
                                     .chkVariable = Buffer.ReadInt32
@@ -295,7 +295,7 @@ Module modNetworkReceive
                                     .RepeatMoveRoute = Buffer.ReadInt32
 
                                     If .MoveRouteCount > 0 Then
-                                        ReDim Map.Events(i).Pages(X).MoveRoute(0 To .MoveRouteCount)
+                                        ReDim Map.Events(i).Pages(X).MoveRoute(.MoveRouteCount)
                                         For Y = 1 To .MoveRouteCount
                                             .MoveRoute(Y).Index = Buffer.ReadInt32
                                             .MoveRoute(Y).Data1 = Buffer.ReadInt32
@@ -321,12 +321,12 @@ Module modNetworkReceive
                                 End With
 
                                 If Map.Events(i).Pages(X).CommandListCount > 0 Then
-                                    ReDim Map.Events(i).Pages(X).CommandList(0 To Map.Events(i).Pages(X).CommandListCount)
+                                    ReDim Map.Events(i).Pages(X).CommandList(Map.Events(i).Pages(X).CommandListCount)
                                     For Y = 1 To Map.Events(i).Pages(X).CommandListCount
                                         Map.Events(i).Pages(X).CommandList(Y).CommandCount = Buffer.ReadInt32
                                         Map.Events(i).Pages(X).CommandList(Y).ParentList = Buffer.ReadInt32
                                         If Map.Events(i).Pages(X).CommandList(Y).CommandCount > 0 Then
-                                            ReDim Map.Events(i).Pages(X).CommandList(Y).Commands(0 To Map.Events(i).Pages(X).CommandList(Y).CommandCount)
+                                            ReDim Map.Events(i).Pages(X).CommandList(Y).Commands(Map.Events(i).Pages(X).CommandList(Y).CommandCount)
                                             For z = 1 To Map.Events(i).Pages(X).CommandList(Y).CommandCount
                                                 With Map.Events(i).Pages(X).CommandList(Y).Commands(z)
                                                     .Index = Buffer.ReadInt32
@@ -394,7 +394,7 @@ Module modNetworkReceive
                 Resources_Init = False
 
                 If Resource_Index > 0 Then
-                    ReDim MapResource(0 To Resource_Index)
+                    ReDim MapResource(Resource_Index)
 
                     For i = 0 To Resource_Index
                         MapResource(i).ResourceState = Buffer.ReadInt32
@@ -404,7 +404,7 @@ Module modNetworkReceive
 
                     Resources_Init = True
                 Else
-                    ReDim MapResource(0 To 1)
+                    ReDim MapResource(1)
                 End If
             End If
 
@@ -432,9 +432,9 @@ Module modNetworkReceive
         GettingMap = False
     End Sub
 
-    Private Sub Packet_MapNPCData(ByRef Data() As Byte)
+    Private Sub Packet_MapNPCData(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
 
         For i = 1 To MAX_MAP_NPCS
 
@@ -452,9 +452,9 @@ Module modNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_MapNPCUpdate(ByRef Data() As Byte)
+    Private Sub Packet_MapNPCUpdate(ByRef data() As Byte)
         Dim NpcNum As Integer
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(Data)
 
         NpcNum = Buffer.ReadInt32
@@ -471,17 +471,17 @@ Module modNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_EditItem(ByRef Data() As Byte)
-        Dim Buffer As ByteStream
+    Private Sub Packet_EditItem(ByRef data() As Byte)
+        dim buffer as ByteStream
         Buffer = New ByteStream(Data)
         InitItemEditor = True
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_UpdateItem(ByRef Data() As Byte)
+    Private Sub Packet_UpdateItem(ByRef data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         n = Buffer.ReadInt32
 
         ' Update the item
@@ -544,16 +544,16 @@ Module modNetworkReceive
 
     End Sub
 
-    Private Sub Packet_NPCEditor(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_NPCEditor(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         InitNPCEditor = True
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_UpdateNPC(ByRef Data() As Byte)
+    Private Sub Packet_UpdateNPC(ByRef data() As Byte)
         Dim i As Integer, x As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
 
         i = Buffer.ReadInt32
         ' Update the Npc
@@ -597,17 +597,17 @@ Module modNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_EditMap(ByRef Data() As Byte)
+    Private Sub Packet_EditMap(ByRef data() As Byte)
         InitMapEditor = True
     End Sub
 
-    Private Sub Packet_EditShop(ByRef Data() As Byte)
+    Private Sub Packet_EditShop(ByRef data() As Byte)
         InitShopEditor = True
     End Sub
 
-    Private Sub Packet_UpdateShop(ByRef Data() As Byte)
+    Private Sub Packet_UpdateShop(ByRef data() As Byte)
         Dim shopnum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         shopnum = Buffer.ReadInt32
 
         Shop(shopnum).BuyRate = Buffer.ReadInt32()
@@ -626,13 +626,13 @@ Module modNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_EditSkill(ByRef Data() As Byte)
+    Private Sub Packet_EditSkill(ByRef data() As Byte)
         InitSkillEditor = True
     End Sub
 
-    Private Sub Packet_UpdateSkill(ByRef Data() As Byte)
+    Private Sub Packet_UpdateSkill(ByRef data() As Byte)
         Dim skillnum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         skillnum = Buffer.ReadInt32
 
         Skill(skillnum).AccessReq = Buffer.ReadInt32()
@@ -670,13 +670,13 @@ Module modNetworkReceive
 
     End Sub
 
-    Private Sub Packet_ResourceEditor(ByRef Data() As Byte)
+    Private Sub Packet_ResourceEditor(ByRef data() As Byte)
         InitResourceEditor = True
     End Sub
 
-    Private Sub Packet_UpdateResource(ByRef Data() As Byte)
+    Private Sub Packet_UpdateResource(ByRef data() As Byte)
         Dim ResourceNum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         ResourceNum = Buffer.ReadInt32
 
         Resource(ResourceNum).Animation = Buffer.ReadInt32()
@@ -701,13 +701,13 @@ Module modNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_EditAnimation(ByRef Data() As Byte)
+    Private Sub Packet_EditAnimation(ByRef data() As Byte)
         InitAnimationEditor = True
     End Sub
 
-    Private Sub Packet_UpdateAnimation(ByRef Data() As Byte)
+    Private Sub Packet_UpdateAnimation(ByRef data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         n = Buffer.ReadInt32
         ' Update the Animation
         For i = 0 To UBound(Animation(n).Frames)
@@ -734,22 +734,22 @@ Module modNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_GameData(ByRef Data() As Byte)
+    Private Sub Packet_GameData(ByRef data() As Byte)
         Dim n As Integer, i As Integer, z As Integer, x As Integer, a As Integer, b As Integer
-        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
+        dim buffer as New ByteStream(Compression.DecompressBytes(Data))
 
         '\\\Read Class Data\\\
 
         ' Max classes
         Max_Classes = Buffer.ReadInt32
-        ReDim Classes(0 To Max_Classes)
+        ReDim Classes(Max_Classes)
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Stat(0 To StatType.Count - 1)
+            ReDim Classes(i).Stat(StatType.Count - 1)
         Next
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Vital(0 To VitalType.Count - 1)
+            ReDim Classes(i).Vital(VitalType.Count - 1)
         Next
 
         For i = 1 To Max_Classes
@@ -765,7 +765,7 @@ Module modNetworkReceive
                 ' get array size
                 z = Buffer.ReadInt32
                 ' redim array
-                ReDim .MaleSprite(0 To z)
+                ReDim .MaleSprite(z)
                 ' loop-receive data
                 For x = 0 To z
                     .MaleSprite(x) = Buffer.ReadInt32
@@ -774,7 +774,7 @@ Module modNetworkReceive
                 ' get array size
                 z = Buffer.ReadInt32
                 ' redim array
-                ReDim .FemaleSprite(0 To z)
+                ReDim .FemaleSprite(z)
                 ' loop-receive data
                 For x = 0 To z
                     .FemaleSprite(x) = Buffer.ReadInt32
@@ -1072,9 +1072,9 @@ Module modNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Mapreport(ByRef Data() As Byte)
+    Private Sub Packet_Mapreport(ByRef data() As Byte)
         Dim I As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For I = 1 To MAX_MAPS
             MapNames(I) = Trim(Buffer.ReadString())
         Next
@@ -1084,9 +1084,9 @@ Module modNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_MapNames(ByRef Data() As Byte)
+    Private Sub Packet_MapNames(ByRef data() As Byte)
         Dim I As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For I = 1 To MAX_MAPS
             MapNames(I) = Trim(Buffer.ReadString())
         Next
@@ -1094,13 +1094,13 @@ Module modNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_ClassEditor(ByRef Data() As Byte)
+    Private Sub Packet_ClassEditor(ByRef data() As Byte)
         InitClassEditor = True
     End Sub
 
-    Private Sub Packet_AutoMapper(ByRef Data() As Byte)
+    Private Sub Packet_AutoMapper(ByRef data() As Byte)
         Dim Layer As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         MapStart = Buffer.ReadInt32
         MapSize = Buffer.ReadInt32
         MapX = Buffer.ReadInt32
@@ -1117,7 +1117,7 @@ Module modNetworkReceive
         myXml.WriteString("Resources", "ResourcesNum", Buffer.ReadString())
 
         For Prefab = 1 To TilePrefab.Count - 1
-            ReDim Tile(Prefab).Layer(0 To LayerType.Count - 1)
+            ReDim Tile(Prefab).Layer(LayerType.Count - 1)
 
             Layer = Buffer.ReadInt32()
             myXml.WriteString("Prefab" & Prefab, "Layer" & Layer & "Tileset", Buffer.ReadInt32)

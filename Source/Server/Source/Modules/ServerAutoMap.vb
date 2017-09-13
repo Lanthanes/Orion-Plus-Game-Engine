@@ -38,7 +38,7 @@ Module ServerAutoMap
     'Distance between mountains and the map limit, so the player can walk freely when teleport between maps
     Private Const MountainBorder As Byte = 5
 
-    Friend Tile(0 To TilePrefab.Count - 1) As TileRec
+    Friend Tile(TilePrefab.Count - 1) As TileRec
     Friend Detail() As DetailRec
     Friend ResourcesNum As String
     Private Resources() As String
@@ -103,7 +103,7 @@ Module ServerAutoMap
         ReDim Tile(TilePrefab.Count - 1)
         For Prefab = 1 To TilePrefab.Count - 1
 
-            ReDim Tile(Prefab).Layer(0 To LayerType.Count - 1)
+            ReDim Tile(Prefab).Layer(LayerType.Count - 1)
             For Layer = 1 To LayerType.Count - 1
                 Tile(Prefab).Layer(Layer).Tileset = Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "Tileset"))
                 Tile(Prefab).Layer(Layer).X = Val(myXml.ReadString("Prefab" & Prefab, "Layer" & Layer & "X"))
@@ -154,8 +154,8 @@ Module ServerAutoMap
 
         DetailCount = UBound(Detail) + 1
 
-        ReDim Preserve Detail(0 To DetailCount)
-        ReDim Preserve Detail(DetailCount).Tile.Layer(0 To LayerType.Count - 1)
+        ReDim Preserve Detail(DetailCount)
+        ReDim Preserve Detail(DetailCount).Tile.Layer(LayerType.Count - 1)
 
         Detail(DetailCount).DetailBase = Prefab
         Detail(DetailCount).Tile.Type = TileType
@@ -168,7 +168,7 @@ Module ServerAutoMap
     ''' Here a user can define which details to add
     ''' </summary>
     Sub LoadDetails()
-        ReDim Detail(0 To 1)
+        ReDim Detail(1)
 
         'Detail config area
         'Use: LoadDetail TilePrefab, Tileset, StartTilesetX, StartTilesetY, TileType, EndTilesetX, EndTilesetY
@@ -187,7 +187,7 @@ Module ServerAutoMap
         HaveDetails = Not (Prefab = TilePrefab.Water OrElse Prefab = TilePrefab.River)
     End Function
 
-    Sub AddTile(Prefab As TilePrefab, MapNum As Integer, X As Integer, Y As Integer)
+    Sub AddTile(Prefab As TilePrefab, mapNum as Integer, X As Integer, Y As Integer)
         Dim TileDest As TileRec
         Dim CleanNextTiles As Boolean
         Dim i As Integer
@@ -197,7 +197,7 @@ Module ServerAutoMap
         TileDest = Map(MapNum).Tile(X, Y)
         TileDest.Type = Tile(Prefab).Type
 
-        ReDim Preserve TileDest.Layer(0 To LayerType.Count - 1)
+        ReDim Preserve TileDest.Layer(LayerType.Count - 1)
 
         For i = 1 To LayerType.Count - 1
             If Tile(Prefab).Layer(i).Tileset <> 0 OrElse CleanNextTiles Then
@@ -211,10 +211,10 @@ Module ServerAutoMap
                 If Random(1, DetailFreq) = 1 Then
                     Dim DetailNum As Integer
                     Dim Details() As Integer
-                    ReDim Details(0 To 1)
+                    ReDim Details(1)
                     For i = 1 To UBound(Detail)
                         If Detail(i).DetailBase = Prefab Then
-                            ReDim Preserve Details(0 To UBound(Details) + 1)
+                            ReDim Preserve Details(UBound(Details) + 1)
                             Details(UBound(Details)) = i
                         End If
                     Next i
@@ -233,19 +233,19 @@ Module ServerAutoMap
         MapOrientation(MapNum).Tile(X, Y) = Prefab
     End Sub
 
-    Function CanPlaceResource(MapNum As Integer, X As Integer, Y As Integer) As Boolean
+    Function CanPlaceResource(mapNum as Integer, X As Integer, Y As Integer) As Boolean
         If MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Grass OrElse MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Overgrass OrElse (MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Mountain AndAlso Not Map(MapNum).Tile(X, Y).Type = TileType.Blocked) Then
             CanPlaceResource = True
         End If
     End Function
 
-    Function CanPlaceOvergrass(MapNum As Integer, X As Integer, Y As Integer) As Boolean
+    Function CanPlaceOvergrass(mapNum as Integer, X As Integer, Y As Integer) As Boolean
         If MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Grass OrElse (MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Mountain AndAlso Not Map(MapNum).Tile(X, Y).Type = TileType.Blocked) Then
             CanPlaceOvergrass = True
         End If
     End Function
 
-    Sub MakeResource(MapNum As Integer)
+    Sub MakeResource(mapNum as Integer)
         Dim x As Integer, y As Integer
 
         For x = 1 To Map(MapNum).MaxX - 1
@@ -302,7 +302,7 @@ Module ServerAutoMap
         Application.DoEvents()
     End Sub
 
-    Sub MakeOvergrass(MapNum As Integer)
+    Sub MakeOvergrass(mapNum as Integer)
         Dim StartX As Integer, StartY As Integer
         Dim TotalOvergrass As Integer
         'Dim MapSize As Integer
@@ -380,7 +380,7 @@ Module ServerAutoMap
 
     End Sub
 
-    Sub PaintOvergrass(MapNum As Integer, X As Integer, Y As Integer, BrushSizeX As Integer, BrushSizeY As Integer)
+    Sub PaintOvergrass(mapNum as Integer, X As Integer, Y As Integer, BrushSizeX As Integer, BrushSizeY As Integer)
         Dim pX As Integer, pY As Integer
 
         For pX = X - BrushSizeX To X + BrushSizeX
@@ -400,7 +400,7 @@ Module ServerAutoMap
         Next pX
     End Sub
 
-    Sub PaintTile(Prefab As TilePrefab, MapNum As Integer, X As Integer, Y As Integer, BrushSizeX As Integer, BrushSizeY As Integer, Optional HumanMade As Boolean = True, Optional OnlyTo As TilePrefab = 0)
+    Sub PaintTile(Prefab As TilePrefab, mapNum as Integer, X As Integer, Y As Integer, BrushSizeX As Integer, BrushSizeY As Integer, Optional HumanMade As Boolean = True, Optional OnlyTo As TilePrefab = 0)
         Dim pX As Integer, pY As Integer
         For pX = X - BrushSizeX To X + BrushSizeX
             For pY = Y - BrushSizeY To Y + BrushSizeY
@@ -428,7 +428,7 @@ Module ServerAutoMap
         Next pX
     End Sub
 
-    Sub PaintRiver(MapNum As Integer, X As Integer, Y As Integer, RiverDir As Byte, RiverWidth As Integer)
+    Sub PaintRiver(mapNum as Integer, X As Integer, Y As Integer, RiverDir As Byte, RiverWidth As Integer)
         Dim pX As Integer, pY As Integer
         If RiverDir = DirectionType.Down Then
             For pX = X - RiverWidth To X + RiverWidth
@@ -579,7 +579,7 @@ SelectMap:
         Application.DoEvents()
     End Sub
 
-    Sub PlaceMountain(MapNum As Integer, X As Integer, Y As Integer, MountainPrefab As MountainTile)
+    Sub PlaceMountain(mapNum as Integer, X As Integer, Y As Integer, MountainPrefab As MountainTile)
         Dim OldX As Integer, OldY As Integer
 
         OldX = Tile(TilePrefab.Mountain).Layer(2).X
@@ -592,7 +592,7 @@ SelectMap:
     End Sub
 
 
-    Sub MarkMountain(MapNum As Integer, X As Integer, Y As Integer, Width As Integer, Height As Integer)
+    Sub MarkMountain(mapNum as Integer, X As Integer, Y As Integer, Width As Integer, Height As Integer)
         Dim pX As Integer, pY As Integer
         For pX = X - Int(Width / 2) To X + Int(Width / 2)
             For pY = Y - Int(Height / 2) To Y + Int(Height / 2)
@@ -605,7 +605,7 @@ SelectMap:
         Next pX
     End Sub
 
-    Sub MakeMapMountains(MapNum As Integer)
+    Sub MakeMapMountains(mapNum as Integer)
         Dim MountainMinAreaWidth As Integer, MountainMinAreaHeight As Integer
         Dim MountainMinSize As Integer, MountainMinArea As Integer
         Dim MountainSize As Integer
@@ -707,7 +707,7 @@ Important:
         End If
     End Sub
 
-    Function GetMountainPrefab(MapNum As Integer, X As Integer, Y As Integer) As MountainTile
+    Function GetMountainPrefab(mapNum as Integer, X As Integer, Y As Integer) As MountainTile
         Dim VerticalPos As Byte
         Dim MountainPrefab As MountainTile
         If MapOrientation(MapNum).Tile(X, Y) = TilePrefab.Mountain Then
@@ -769,7 +769,7 @@ Important:
         End If
     End Function
 
-    Function ValidMountainPosition(MapNum As Integer, X As Integer, Y As Integer, Width As Integer, Height As Integer) As Boolean
+    Function ValidMountainPosition(mapNum as Integer, X As Integer, Y As Integer, Width As Integer, Height As Integer) As Boolean
         Dim pX As Integer, pY As Integer
         ValidMountainPosition = True
         For pX = X - Int(Width / 2) To X + Int(Width / 2)
@@ -804,7 +804,7 @@ Important:
         Application.DoEvents()
     End Sub
 
-    Sub MakeMap(MapNum As Integer, Prefab As MapPrefab)
+    Sub MakeMap(mapNum as Integer, Prefab As MapPrefab)
         Dim x As Integer, y As Integer
         Dim TileX As Integer, TileY As Integer
         Dim TileStartX As Integer, TileStartY As Integer
@@ -1049,7 +1049,7 @@ Important:
 
     End Sub
 
-    Sub MakePath(MapNum As Integer, X As Integer, Y As Integer, Dir As Byte, Optional Steps As Integer = 1)
+    Sub MakePath(mapNum as Integer, X As Integer, Y As Integer, Dir As Byte, Optional Steps As Integer = 1)
         Dim PathEnd As Boolean
         Dim BrushX As Integer, BrushY As Integer
         Dim i As Byte
@@ -1151,7 +1151,7 @@ ChangeDir:
         Loop
     End Sub
 
-    Function CheckPath(MapNum As Integer, X As Integer, Y As Integer, Dir As Byte) As Boolean
+    Function CheckPath(mapNum as Integer, X As Integer, Y As Integer, Dir As Byte) As Boolean
         Dim SizeX As Integer, SizeY As Integer
         Select Case Dir
             Case DirectionType.Up, DirectionType.Down : SizeX = 1
@@ -1175,7 +1175,7 @@ ChangeDir:
         Next pX
     End Function
 
-    Function SearchForPreviousPaths(MapNum As Integer, X As Integer, Y As Integer) As Boolean
+    Function SearchForPreviousPaths(mapNum as Integer, X As Integer, Y As Integer) As Boolean
         Dim pX As Integer, pY As Integer
         For pX = X - 10 To X + 10
             For pY = Y - 10 To Y + 10
@@ -1191,7 +1191,7 @@ ChangeDir:
         Next pX
     End Function
 
-    Sub MakeMapPaths(MapNum As Integer)
+    Sub MakeMapPaths(mapNum as Integer)
         Dim x As Integer, y As Integer
         Dim StartX() As Integer = {0}, StartY() As Integer = {0}
         Dim LocationCount As Integer
@@ -1214,8 +1214,8 @@ ChangeDir:
                 If Not SearchForPreviousPaths(MapNum, x, y) Then
                     PaintTile(TilePrefab.Passing, MapNum, x, y, 1, 1, , TilePrefab.Grass)
                     LocationCount = LocationCount + 1
-                    ReDim Preserve StartX(0 To LocationCount)
-                    ReDim Preserve StartY(0 To LocationCount)
+                    ReDim Preserve StartX(LocationCount)
+                    ReDim Preserve StartY(LocationCount)
                     StartX(LocationCount) = x
                     StartY(LocationCount) = y
                 End If
@@ -1287,11 +1287,11 @@ ChangeDir:
         LoadTilePrefab()
         LoadDetails()
 
-        Dim mapnum As Integer = MapStart
+        Dim mapNum as Integer = MapStart
         Dim TotalMaps As Integer
         TotalMaps = (Size * Size)
 
-        ReDim MapOrientation(0 To MapStart + TotalMaps)
+        ReDim MapOrientation(MapStart + TotalMaps)
 
         tick = GetTimeMs()
 
@@ -1300,8 +1300,8 @@ ChangeDir:
 
             Map(mapnum).MaxX = MapX
             Map(mapnum).MaxY = MapY
-            ReDim Map(mapnum).Tile(0 To Map(mapnum).MaxX, 0 To Map(mapnum).MaxY)
-            ReDim MapOrientation(mapnum).Tile(0 To Map(mapnum).MaxX, 0 To Map(mapnum).MaxY)
+            ReDim Map(mapnum).Tile(Map(mapnum).MaxX,Map(mapnum).MaxY)
+            ReDim MapOrientation(mapnum).Tile(Map(mapnum).MaxX,Map(mapnum).MaxY)
             ClearTempTile(mapnum)
 
             ' // Down teleport \\

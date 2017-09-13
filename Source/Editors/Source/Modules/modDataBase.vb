@@ -6,7 +6,7 @@ Module ClientDataBase
     Sub ClearTempTile()
         Dim X As Integer
         Dim Y As Integer
-        ReDim TempTile(0 To Map.MaxX, 0 To Map.MaxY)
+        ReDim TempTile(Map.MaxX,Map.MaxY)
 
         For X = 0 To Map.MaxX
             For Y = 0 To Map.MaxY
@@ -54,7 +54,7 @@ Module ClientDataBase
             i = i + 1
         End While
 
-        ReDim TilesetsClr(0 To NumTileSets)
+        ReDim TilesetsClr(NumTileSets)
 
         For i = 1 To NumTileSets
             tmp = New Bitmap(Application.StartupPath & GFX_PATH & "\tilesets\" & i & GFX_EXT)
@@ -222,12 +222,12 @@ Module ClientDataBase
             Map.Right = 0
             Map.Up = 0
 
-            ReDim Map.Npc(0 To MAX_MAP_NPCS)
-            ReDim Map.Tile(0 To Map.MaxX, 0 To Map.MaxY)
+            ReDim Map.Npc(MAX_MAP_NPCS)
+            ReDim Map.Tile(Map.MaxX,Map.MaxY)
 
             For x = 0 To SCREEN_MAPX
                 For y = 0 To SCREEN_MAPY
-                    ReDim Map.Tile(x, y).Layer(0 To LayerType.Count - 1)
+                    ReDim Map.Tile(x, y).Layer(LayerType.Count - 1)
                     For l = 0 To LayerType.Count - 1
                         Map.Tile(x, y).Layer(l).Tileset = 0
                         Map.Tile(x, y).Layer(l).X = 0
@@ -251,7 +251,7 @@ Module ClientDataBase
 
     End Sub
 
-    Sub ClearMapItem(Index As Integer)
+    Sub ClearMapItem(index as integer)
         MapItem(Index).Frame = 0
         MapItem(Index).Num = 0
         MapItem(Index).Value = 0
@@ -259,7 +259,7 @@ Module ClientDataBase
         MapItem(Index).Y = 0
     End Sub
 
-    Sub ClearMapNpc(Index As Integer)
+    Sub ClearMapNpc(index as integer)
         MapNpc(Index).Attacking = 0
         MapNpc(Index).AttackTimer = 0
         MapNpc(Index).Dir = 0
@@ -287,7 +287,7 @@ Module ClientDataBase
 
     End Sub
 
-    Friend Sub ClearItem(Index As Integer)
+    Friend Sub ClearItem(index as integer)
         Index = Index - 1
         Item(Index) = Nothing
         Item(Index) = New ItemRec
@@ -298,8 +298,8 @@ Module ClientDataBase
             ReDim Item(Index).Stat_Req(x)
         Next
 
-        ReDim Item(Index).FurnitureBlocks(0 To 3, 0 To 3)
-        ReDim Item(Index).FurnitureFringe(0 To 3, 0 To 3)
+        ReDim Item(Index).FurnitureBlocks(3,3)
+        ReDim Item(Index).FurnitureFringe(3,3)
 
         Item(Index).Name = ""
     End Sub
@@ -308,7 +308,7 @@ Module ClientDataBase
         For i = 1 To MAX_ITEMS
             Item_Changed(i) = Nothing
         Next i
-        ReDim Item_Changed(0 To MAX_ITEMS)
+        ReDim Item_Changed(MAX_ITEMS)
     End Sub
 
     Sub ClearItems()
@@ -324,10 +324,10 @@ Module ClientDataBase
         For i = 1 To MAX_RESOURCES
             Resource_Changed(i) = Nothing
         Next i
-        ReDim Resource_Changed(0 To MAX_RESOURCES)
+        ReDim Resource_Changed(MAX_RESOURCES)
     End Sub
 
-    Sub ClearResource(Index As Integer)
+    Sub ClearResource(index as integer)
         Resource(Index) = Nothing
         Resource(Index) = New ResourceRec
         Resource(Index).Name = ""
@@ -351,19 +351,19 @@ Module ClientDataBase
 
     End Sub
 
-    Sub ClearNpc(Index As Integer)
+    Sub ClearNpc(index as integer)
         Npc(Index) = Nothing
         Npc(Index).Name = ""
         Npc(Index).AttackSay = ""
-        ReDim Npc(Index).Stat(0 To StatType.Count - 1)
-        ReDim Npc(Index).Skill(0 To MAX_NPC_SKILLS)
+        ReDim Npc(Index).Stat(StatType.Count - 1)
+        ReDim Npc(Index).Skill(MAX_NPC_SKILLS)
 
         ReDim Npc(Index).DropItem(5)
         ReDim Npc(Index).DropItemValue(5)
         ReDim Npc(Index).DropChance(5)
     End Sub
 
-    Sub ClearAnimation(Index As Integer)
+    Sub ClearAnimation(index as integer)
         Animation(Index) = Nothing
         Animation(Index) = New AnimationRec
         For x = 0 To 1
@@ -399,13 +399,13 @@ Module ClientDataBase
 
     End Sub
 
-    Sub ClearSkill(Index As Integer)
+    Sub ClearSkill(index as integer)
         Skill(Index) = Nothing
         Skill(Index) = New SkillRec
         Skill(Index).Name = ""
     End Sub
 
-    Sub ClearShop(Index As Integer)
+    Sub ClearShop(index as integer)
         Shop(Index) = Nothing
         Shop(Index) = New ShopRec
         Shop(Index).Name = ""

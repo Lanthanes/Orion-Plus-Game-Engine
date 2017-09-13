@@ -130,7 +130,7 @@
         Dim Events() As EventRec
 
         Dim WeatherType As Byte
-        Dim FogIndex As Integer
+        Dim Fogindex as integer
         Dim WeatherIntensity As Integer
         Dim FogAlpha As Byte
         Dim FogSpeed As Byte

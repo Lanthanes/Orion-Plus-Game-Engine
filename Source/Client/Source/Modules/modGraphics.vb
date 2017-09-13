@@ -681,7 +681,7 @@ Module modGraphics
         End If
     End Sub
 
-    Friend Sub LoadTexture(Index As Integer, TexType As Byte)
+    Friend Sub LoadTexture(index as integer, TexType As Byte)
 
         If TexType = 1 Then 'tilesets
             If Index < 0 OrElse Index > NumTileSets Then Exit Sub
@@ -1038,7 +1038,7 @@ Module modGraphics
         ConvertMapY = Y - (TileView.Top * PIC_Y) - Camera.Top
     End Function
 
-    Friend Sub DrawPlayer(Index As Integer)
+    Friend Sub DrawPlayer(index as integer)
         Dim Anim As Byte, X As Integer, Y As Integer
         Dim Spritenum As Integer, spriteleft As Integer
         Dim attackspeed As Integer, AttackSprite As Byte
@@ -1422,7 +1422,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawBlood(Index As Integer)
+    Friend Sub DrawBlood(index as integer)
         Dim dest As Point = New Point(frmGame.PointToScreen(frmGame.picscreen.Location))
         Dim srcrec As Rectangle
         Dim destrec As Rectangle
@@ -2107,7 +2107,7 @@ Module modGraphics
         GameWindow.Display()
     End Sub
 
-    Friend Sub DrawPanorama(Index As Integer)
+    Friend Sub DrawPanorama(index as integer)
         If Map.Moral = MapMoralType.Indoors Then Exit Sub
 
         If Index < 1 OrElse Index > NumParallax Then Exit Sub
@@ -2129,7 +2129,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawParallax(Index As Integer)
+    Friend Sub DrawParallax(index as integer)
         Dim horz As Integer = 0
         Dim vert As Integer = 0
 
@@ -2296,14 +2296,14 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub DrawAnimation(Index As Integer, Layer As Integer)
+    Friend Sub DrawAnimation(index as integer, Layer As Integer)
 
         Dim Sprite As Integer
         Dim sRECT As Rectangle
         Dim width As Integer, height As Integer
         Dim FrameCount As Integer
         Dim X As Integer, Y As Integer
-        Dim lockindex As Integer
+        Dim lockindex as integer
 
         If AnimInstance(Index).Animation = 0 Then
             ClearAnimInstance(Index)

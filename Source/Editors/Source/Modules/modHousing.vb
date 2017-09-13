@@ -11,13 +11,13 @@ Friend Module modHousing
     Friend FurnitureCount As Integer
     Friend FurnitureHouse As Integer
     Friend FurnitureSelected As Integer
-    Friend HouseTileIndex As Integer
+    Friend HouseTileindex as integer
 
     Friend House() As HouseRec
     Friend HouseConfig() As HouseRec
     Friend Furniture() As FurnitureRec
     Friend NumFurniture As Integer
-    Friend House_Changed(0 To MAX_HOUSES) As Boolean
+    Friend House_Changed(MAX_HOUSES) As Boolean
     Friend HouseEdit As Boolean
 
     Structure HouseRec
@@ -36,16 +36,16 @@ Friend Module modHousing
     End Structure
 
     Structure PlayerHouseRec
-        Dim HouseIndex As Integer
+        Dim Houseindex as integer
         Dim FurnitureCount As Integer
         Dim Furniture() As FurnitureRec
     End Structure
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_HouseConfigurations(ByRef Data() As Byte)
+    Sub Packet_HouseConfigurations(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For i = 1 To MAX_HOUSES
             HouseConfig(i).ConfigName = Buffer.ReadString
             HouseConfig(i).BaseMap = Buffer.ReadInt32
@@ -56,9 +56,9 @@ Friend Module modHousing
 
     End Sub
 
-    Sub Packet_Furniture(ByRef Data() As Byte)
+    Sub Packet_Furniture(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         FurnitureHouse = Buffer.ReadInt32
         FurnitureCount = Buffer.ReadInt32
 
@@ -75,9 +75,9 @@ Friend Module modHousing
 
     End Sub
 
-    Sub Packet_EditHouses(ByRef Data() As Byte)
+    Sub Packet_EditHouses(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For i = 1 To MAX_HOUSES
             With House(i)
                 .ConfigName = Trim$(Buffer.ReadString)
@@ -98,7 +98,7 @@ Friend Module modHousing
 
 #Region "Outgoing Packets"
     Friend Sub SendRequestEditHouse()
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -110,7 +110,7 @@ Friend Module modHousing
     End Sub
 
     Friend Sub SendBuyHouse(Accepted As Byte)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CBuyHouse)
@@ -121,7 +121,7 @@ Friend Module modHousing
     End Sub
 
     Friend Sub SendInvite(Name As String)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CVisit)
@@ -132,7 +132,7 @@ Friend Module modHousing
     End Sub
 
     Friend Sub SendVisit(Accepted As Byte)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CAcceptVisit)
@@ -216,7 +216,7 @@ Friend Module modHousing
             House_Changed(i) = Nothing
         Next i
 
-        ReDim House_Changed(0 To MAX_HOUSES)
+        ReDim House_Changed(MAX_HOUSES)
     End Sub
 
 #End Region
@@ -234,7 +234,7 @@ Friend Module modHousing
         If NumFurniture = 0 Then Exit Sub
     End Sub
 
-    Friend Sub DrawFurniture(Index As Integer, Layer As Integer)
+    Friend Sub DrawFurniture(index as integer, Layer As Integer)
         Dim i As Integer, ItemNum As Integer
         Dim X As Integer, Y As Integer, Width As Integer, Height As Integer, X1 As Integer, Y1 As Integer
 

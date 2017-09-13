@@ -4,7 +4,7 @@ Imports ASFW
 Friend Module modCrafting
 #Region "Globals"
 
-    Friend Recipe_Changed(0 To MAX_RECIPE) As Boolean
+    Friend Recipe_Changed(MAX_RECIPE) As Boolean
     Friend Recipe(MAX_RECIPE) As RecipeRec
     Friend InitRecipeEditor As Boolean
     Friend InitCrafting As Boolean
@@ -26,7 +26,7 @@ Friend Module modCrafting
 
     Friend CraftAmountValue As Byte
     Friend CraftProgressValue As Integer
-    Friend picProductIndex As Integer
+    Friend picProductindex as integer
     Friend lblProductNameText As String
     Friend lblProductAmountText As String
 
@@ -76,7 +76,7 @@ Friend Module modCrafting
             Recipe_Changed(i) = Nothing
         Next
 
-        ReDim Recipe_Changed(0 To MAX_RECIPE)
+        ReDim Recipe_Changed(MAX_RECIPE)
     End Sub
 #End Region
 
@@ -179,9 +179,9 @@ Friend Module modCrafting
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_UpdateRecipe(ByRef Data() As Byte)
+    Sub Packet_UpdateRecipe(ByRef data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         'recipe index
         n = Buffer.ReadInt32
 
@@ -202,7 +202,7 @@ Friend Module modCrafting
 
     End Sub
 
-    Sub Packet_RecipeEditor(ByRef Data() As Byte)
+    Sub Packet_RecipeEditor(ByRef data() As Byte)
         InitRecipeEditor = True
     End Sub
 
@@ -210,7 +210,7 @@ Friend Module modCrafting
 
 #Region "OutGoing Packets"
     Sub SendRequestRecipes()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestRecipes)
 
@@ -219,7 +219,7 @@ Friend Module modCrafting
     End Sub
 
     Sub SendRequestEditRecipes()
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditRecipes)
@@ -229,7 +229,7 @@ Friend Module modCrafting
     End Sub
 
     Sub SendSaveRecipe(RecipeNum As Integer)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveRecipe)

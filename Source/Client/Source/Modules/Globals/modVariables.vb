@@ -8,8 +8,8 @@ Module modVariables
     Friend TotalOnline As Integer
 
     ' for directional blocking
-    Friend DirArrowX(0 To 4) As Byte
-    Friend DirArrowY(0 To 4) As Byte
+    Friend DirArrowX(4) As Byte
+    Friend DirArrowY(4) As Byte
 
     Friend TilesetsClr() As Color
     Friend LastTileset As Byte
@@ -24,12 +24,12 @@ Module modVariables
     Friend myTargetType As Integer
 
     ' chat bubble
-    Friend chatBubble(0 To Byte.MaxValue) As ChatBubbleRec
-    Friend chatBubbleIndex As Integer
+    Friend chatBubble(Byte.MaxValue) As ChatBubbleRec
+    Friend chatBubbleindex as integer
 
     ' Cache the Resources in an array
     Friend MapResource() As MapResourceRec
-    Friend Resource_Index As Integer
+    Friend Resource_index as integer
     Friend Resources_Init As Boolean
 
     ' inv drag + drop
@@ -55,7 +55,7 @@ Module modVariables
     Friend PingToDraw As String
     Friend ShowRClick As Boolean
 
-    Friend InvItemFrame(0 To MAX_INV) As Byte ' Used for animated items
+    Friend InvItemFrame(MAX_INV) As Byte ' Used for animated items
     Friend LastItemDesc As Integer ' Stores the last item we showed in desc
     Friend LastSkillDesc As Integer ' Stores the last skill we showed in desc
     Friend LastBankDesc As Integer ' Stores the last bank item we showed in desc
@@ -67,13 +67,13 @@ Module modVariables
     Friend HideGui As Boolean
 
     ' Player variables
-    Friend MyIndex As Integer ' Index of actual player
-    Friend PlayerInv(0 To MAX_INV) As PlayerInvRec   ' Inventory
-    Friend PlayerSkills(0 To MAX_PLAYER_SKILLS) As Byte
+    Friend Myindex as integer ' Index of actual player
+    Friend PlayerInv(MAX_INV) As PlayerInvRec   ' Inventory
+    Friend PlayerSkills(MAX_PLAYER_SKILLS) As Byte
     Friend InventoryItemSelected As Integer
     Friend SkillBuffer As Integer
     Friend SkillBufferTimer As Integer
-    Friend SkillCD(0 To MAX_PLAYER_SKILLS) As Integer
+    Friend SkillCD(MAX_PLAYER_SKILLS) As Integer
     Friend StunDuration As Integer
     Friend NextlevelExp As Integer
 
@@ -130,9 +130,9 @@ Module modVariables
 
     ' Game editors
     Friend Editor As Byte
-    Friend EditorIndex As Integer
-    Friend AnimEditorFrame(0 To 1) As Integer
-    Friend AnimEditorTimer(0 To 1) As Integer
+    Friend Editorindex as integer
+    Friend AnimEditorFrame(1) As Integer
+    Friend AnimEditorTimer(1) As Integer
 
     ' Used to check if in editor or not and variables for use in editor
     Friend SpawnNpcNum As Byte

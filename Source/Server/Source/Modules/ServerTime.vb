@@ -1,7 +1,7 @@
 ﻿Imports ASFW
 Imports Orion
 
-Friend Module ServerTime
+Friend Module modTime
     Sub InitTime()
         ' Add handlers to time events
         AddHandler Time.Instance.OnTimeChanged, AddressOf HandleTimeChanged
@@ -27,8 +27,8 @@ Friend Module ServerTime
         SendGameClockToAll()
     End Sub
 
-    Sub SendGameClockTo(Index As Integer)
-        Dim Buffer As New ByteStream(4)
+    Sub SendGameClockTo(index as integer)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SClock)
         Buffer.WriteInt32(Time.Instance.GameSpeed)
@@ -54,8 +54,8 @@ Friend Module ServerTime
         Next
     End Sub
 
-    Sub SendTimeTo(Index As Integer)
-        Dim Buffer As New ByteStream(4)
+    Sub SendTimeTo(index as integer)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.STime)
         Buffer.WriteByte(Time.Instance.TimeOfDay)

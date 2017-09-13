@@ -2,8 +2,8 @@ Imports System.IO
 Imports System.Xml
 
 Class Language
-    Private _loaded As Boolean = False
-    Private loadedStrings As New Dictionary(Of String, Dictionary(Of String, String))()
+    Private ReadOnly _loaded As Boolean = False
+    Private ReadOnly _loadedStrings As New Dictionary(Of String, Dictionary(Of String, String))()
     Friend Sub New(filename As String)
         If File.Exists(filename) Then
             Dim xmlDoc As New XmlDocument()
@@ -13,13 +13,13 @@ Class Language
             Dim nodes As XmlNodeList = xmlDoc.SelectNodes("//Strings").Item(0).ChildNodes
             For Each node As XmlNode In nodes
                 If Not node.NodeType = XmlNodeType.Comment Then
-                    If Not loadedStrings.ContainsKey(node.Name.ToLower()) Then
-                        loadedStrings.Add(node.Name.ToLower(), New Dictionary(Of String, String)())
+                    If Not _loadedStrings.ContainsKey(node.Name.ToLower()) Then
+                        _loadedStrings.Add(node.Name.ToLower(), New Dictionary(Of String, String)())
                     End If
                     For Each childNode As XmlNode In node.ChildNodes
                         If Not childNode.NodeType = XmlNodeType.Comment Then
-                            If Not loadedStrings(node.Name.ToLower()).ContainsKey(childNode.Attributes("id").Value.ToLower()) Then
-                                loadedStrings(node.Name.ToLower()).Add(childNode.Attributes("id").Value.ToLower(), childNode.FirstChild.Value)
+                            If Not _loadedStrings(node.Name.ToLower()).ContainsKey(childNode.Attributes("id").Value.ToLower()) Then
+                                _loadedStrings(node.Name.ToLower()).Add(childNode.Attributes("id").Value.ToLower(), childNode.FirstChild.Value)
                             End If
                         End If
                     Next
@@ -35,8 +35,8 @@ Class Language
     End Function
 
     Friend Function HasString(section As String, id As String) As Boolean
-        If loadedStrings.ContainsKey(section.ToLower()) Then
-            If loadedStrings(section.ToLower()).ContainsKey(id.ToLower()) Then
+        If _loadedStrings.ContainsKey(section.ToLower()) Then
+            If _loadedStrings(section.ToLower()).ContainsKey(id.ToLower()) Then
                 Return True
             End If
         End If
@@ -45,7 +45,7 @@ Class Language
 
     Friend Function GetString(section As String, id As String, ParamArray args As Object()) As String
         Try
-            Return String.Format(loadedStrings(section.ToLower())(id.ToLower()), args)
+            Return String.Format(_loadedStrings(section.ToLower())(id.ToLower()), args)
         Catch generatedExceptionName As FormatException
             Return "Format Exception!"
         End Try

@@ -31,18 +31,12 @@ Module BufferUtility
 
     'Convert a Unicode String to Unicode
     Function Conv_Uni(inx As String) As String
-        Dim i As Integer
-        Conv_Uni = ""
-
-        If inx = vbNullString OrElse inx = "" Then
-            Conv_Uni = "I miss this."
-            Return Conv_Uni
-            Exit Function
-        End If
-
+        If inx = vbNullString OrElse inx = "" Then return "I miss this."
+        
+        Dim ret = ""
         For i = 0 To inx.Length - 1
-            Conv_Uni += AscW(inx.Chars(i)) & ";"
+            ret += AscW(inx.Chars(i)) & ";"
         Next
-
+        Return ret
     End Function
 End Module

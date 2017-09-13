@@ -1,4 +1,5 @@
 Imports System.IO
+Imports System.Windows.Forms
 
 Friend NotInheritable Class Strings
     Private Sub New()
@@ -14,65 +15,14 @@ Friend NotInheritable Class Strings
     Private Shared SelectedLanguage As Language
 
     Friend Shared Sub Init(component As OrionComponent, language As String)
-        Dim langDir As String = ""
-        Dim defaultFile As String = ""
-        Dim strComponent As String = ""
-
-        Select Case component
-            Case OrionComponent.Client
-                strComponent = "Client"
-                'defaultFile = Properties.Resources.Client_English
-
-                If Not Directory.Exists("Data") Then
-                    Directory.CreateDirectory("Data")
-                End If
-
-                langDir = Path.Combine("Data", "languages")
-                If Not Directory.Exists(langDir) Then
-                    Directory.CreateDirectory(langDir)
-                End If
-                Exit Select
-            Case OrionComponent.Editor
-                strComponent = "Editor"
-                'defaultFile = Properties.Resources.Editor_English
-
-                If Not Directory.Exists("Data") Then
-                    Directory.CreateDirectory("Data")
-                End If
-
-                langDir = Path.Combine("Data", "languages")
-                If Not Directory.Exists(langDir) Then
-                    Directory.CreateDirectory(langDir)
-                End If
-                Exit Select
-            Case OrionComponent.Server
-                strComponent = "Server"
-                'defaultFile = Properties.Resources.Server_English
-
-                If Not Directory.Exists("data") Then
-                    Directory.CreateDirectory("data")
-                End If
-
-                langDir = Path.Combine("data", "languages")
-                If Not Directory.Exists(langDir) Then
-                    Directory.CreateDirectory(langDir)
-                End If
-                Exit Select
-            Case Else
-                Throw New ArgumentOutOfRangeException(NameOf(component), component, Nothing)
-        End Select
-
-        'If we don't have the default language file, load it from resources
-        If Not File.Exists(Path.Combine(langDir, strComponent & Convert.ToString("_English.xml"))) Then
-            'Copy Client.English.xml from resources
-            File.WriteAllText(Path.Combine(langDir, strComponent & Convert.ToString("_English.xml")), defaultFile)
-        End If
-
-        DefaultLanguage = New Language(Path.Combine(langDir, strComponent & Convert.ToString("._English.xml")))
-        If File.Exists(Path.Combine(langDir, (Convert.ToString(strComponent & Convert.ToString("_")) & language) + ".xml")) Then
-            SelectedLanguage = New Language(Path.Combine(langDir, (Convert.ToString(strComponent & Convert.ToString("_")) & language) + ".xml"))
-        End If
-
+        Dim path As String = Application.StartupPath & "\Data\"
+        If Not Directory.Exists(path) then Directory.CreateDirectory(path)
+        path += "Languages\"
+        If Not Directory.Exists(path) then Directory.CreateDirectory(path)
+        
+        DefaultLanguage = New Language(path & component.ToString() & "_English.xml")
+        dim fPath as string =  path & component.ToString() & "_" & language & ".xml"
+        if file.Exists(fPath) Then SelectedLanguage = New Language(fPath)
     End Sub
 
     Friend Shared Function [Get](section As String, id As String, ParamArray args As Object()) As String

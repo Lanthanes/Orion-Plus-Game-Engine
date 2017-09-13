@@ -11,7 +11,7 @@
     End Sub
 
     Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-        Dim tmpIndex As Integer
+        Dim tmpindex as integer
 
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
 
@@ -163,7 +163,7 @@
     End Sub
 
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
-        Dim tmpIndex As Integer
+        Dim tmpindex as integer
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
         tmpIndex = lstIndex.SelectedIndex
         Item(EditorIndex).Name = Trim$(txtName.Text)
@@ -422,7 +422,7 @@
 
     Private Sub PicFurniture_MouseDown(sender As Object, e As MouseEventArgs) Handles picFurniture.MouseDown
         If EditorIndex = 0 OrElse EditorIndex > MAX_ITEMS Then Exit Sub
-        Dim X As Long, Y As Long
+        Dim X As Integer, Y As Integer
         X = e.X / 32
         Y = e.Y / 32
 

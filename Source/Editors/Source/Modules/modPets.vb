@@ -78,7 +78,7 @@ Module modPets
 
 #Region "Outgoing Packets"
     Sub SendRequestPets()
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CRequestPets)
@@ -88,7 +88,7 @@ Module modPets
     End Sub
 
     Friend Sub SendRequestEditPet()
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.CRequestEditPet)
@@ -100,7 +100,7 @@ Module modPets
     End Sub
 
     Friend Sub SendSavePet(petNum As Integer)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Dim i As Integer
 
         Buffer = New ByteStream(4)
@@ -140,13 +140,13 @@ Module modPets
 #End Region
 
 #Region "Incoming Packets"
-    Friend Sub Packet_PetEditor(ByRef Data() As Byte)
+    Friend Sub Packet_PetEditor(ByRef data() As Byte)
         InitPetEditor = True
     End Sub
 
-    Friend Sub Packet_UpdatePet(ByRef Data() As Byte)
-        Dim n As Integer, i As Long
-        Dim Buffer As New ByteStream(Data)
+    Friend Sub Packet_UpdatePet(ByRef data() As Byte)
+        Dim n As Integer, i As Integer
+        dim buffer as New ByteStream(Data)
         n = Buffer.ReadInt32
 
         ReDim Pet(n).Stat(StatType.Count - 1)
@@ -182,7 +182,7 @@ Module modPets
 #End Region
 
 #Region "DataBase"
-    Sub ClearPet(Index As Integer)
+    Sub ClearPet(index as integer)
 
         Pet(Index).Name = ""
 

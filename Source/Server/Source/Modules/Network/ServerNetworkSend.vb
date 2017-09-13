@@ -2,8 +2,8 @@
 Imports ASFW.IO
 
 Module ServerNetworkSend
-    Sub AlertMsg(Index As Integer, Msg As String)
-        Dim Buffer As ByteStream
+    Sub AlertMsg(index as integer, Msg As String)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SAlertMsg)
         Buffer.WriteString(Msg)
@@ -16,7 +16,7 @@ Module ServerNetworkSend
     End Sub
 
     Sub GlobalMsg(Msg As String)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SGlobalMsg)
@@ -30,8 +30,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub PlayerMsg(Index As Integer, Msg As String, Colour As Integer)
-        Dim Buffer As ByteStream
+    Sub PlayerMsg(index as integer, Msg As String, Colour As Integer)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPlayerMsg)
         'Buffer.WriteString(Msg)
@@ -45,7 +45,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendAnimations(Index As Integer)
+    Sub SendAnimations(index as integer)
         Dim i As Integer
 
         For i = 1 To MAX_ANIMATIONS
@@ -58,9 +58,9 @@ Module ServerNetworkSend
 
     End Sub
 
-    Sub SendNewCharClasses(Index As Integer)
+    Sub SendNewCharClasses(index as integer)
         Dim i As Integer, n As Integer, q As Integer
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SNewCharClasses)
         Buffer.WriteInt32(Max_Classes)
@@ -117,8 +117,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendCloseTrade(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendCloseTrade(index as integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SCloseTrade)
@@ -130,8 +130,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendExp(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendExp(index as integer)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPlayerEXP)
@@ -146,7 +146,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendLoadCharOk(index As Integer)
+    Sub SendLoadCharOk(index as integer)
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SLoadCharOk)
         Buffer.WriteInt32(index)
@@ -158,7 +158,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendEditorLoadOk(index As Integer)
+    Sub SendEditorLoadOk(index as integer)
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SLoginOk)
         Buffer.WriteInt32(index)
@@ -170,7 +170,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendInGame(Index As Integer)
+    Sub SendInGame(index as integer)
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SInGame)
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
@@ -181,9 +181,9 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendClasses(Index As Integer)
+    Sub SendClasses(index as integer)
         Dim i As Integer, n As Integer, q As Integer
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SClassesData)
         Buffer.WriteInt32(Max_Classes)
@@ -246,7 +246,7 @@ Module ServerNetworkSend
 
     Sub SendClassesToAll()
         Dim i As Integer, n As Integer, q As Integer
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SClassesData)
         Buffer.WriteInt32(Max_Classes)
@@ -307,9 +307,9 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendInventory(Index As Integer)
+    Sub SendInventory(index as integer)
         Dim i As Integer, n As Integer
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPlayerInv)
@@ -335,7 +335,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendItems(Index As Integer)
+    Sub SendItems(index as integer)
         Dim i As Integer
 
         For i = 1 To MAX_ITEMS
@@ -348,8 +348,8 @@ Module ServerNetworkSend
 
     End Sub
 
-    Sub SendUpdateItemTo(Index As Integer, itemNum As Integer)
-        Dim Buffer As ByteStream
+    Sub SendUpdateItemTo(index as integer, itemNum As Integer)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateItem)
         Buffer.WriteInt32(itemNum)
@@ -416,7 +416,7 @@ Module ServerNetworkSend
     End Sub
 
     Sub SendUpdateItemToAll(itemNum As Integer)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateItem)
         Buffer.WriteInt32(itemNum)
@@ -482,8 +482,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendLeftMap(Index As Integer)
-        Dim Buffer As New ByteStream(4)
+    Sub SendLeftMap(index as integer)
+        dim buffer as New ByteStream(4)
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SLeftMap)
         Buffer.WriteInt32(Index)
@@ -495,8 +495,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendLeftGame(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendLeftGame(index as integer)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SLeftGame)
 
@@ -504,8 +504,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendMapEquipment(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendMapEquipment(index as integer)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapWornEq)
@@ -525,8 +525,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendMapEquipmentTo(PlayerNum As Integer, Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendMapEquipmentTo(PlayerNum As Integer, index as integer)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapWornEq)
@@ -546,7 +546,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendNpcs(Index As Integer)
+    Sub SendNpcs(index as integer)
         Dim i As Integer
 
         For i = 1 To MAX_NPCS
@@ -559,8 +559,8 @@ Module ServerNetworkSend
 
     End Sub
 
-    Sub SendUpdateNpcTo(Index As Integer, NpcNum As Integer)
-        Dim Buffer As ByteStream, i As Integer
+    Sub SendUpdateNpcTo(index as integer, NpcNum As Integer)
+        dim buffer as ByteStream, i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateNpc)
 
@@ -605,7 +605,7 @@ Module ServerNetworkSend
     End Sub
 
     Sub SendUpdateNpcToAll(NpcNum As Integer)
-        Dim Buffer As ByteStream, i As Integer
+        dim buffer as ByteStream, i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateNpc)
 
@@ -649,19 +649,19 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendResourceCacheTo(Index As Integer, Resource_num As Integer)
-        Dim Buffer As ByteStream
+    Sub SendResourceCacheTo(index as integer, Resource_num As Integer)
+        dim buffer as ByteStream
         Dim i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SResourceCache)
-        Buffer.WriteInt32(ResourceCache(GetPlayerMap(Index)).Resource_Count)
+        Buffer.WriteInt32(ResourceCache(GetPlayerMap(Index)).ResourceCount)
 
         Addlog("Sent SMSG: SResourcesCahce", PACKET_LOG)
         Console.WriteLine("Sent SMSG: SResourcesCache")
 
-        If ResourceCache(GetPlayerMap(Index)).Resource_Count > 0 Then
+        If ResourceCache(GetPlayerMap(Index)).ResourceCount > 0 Then
 
-            For i = 0 To ResourceCache(GetPlayerMap(Index)).Resource_Count
+            For i = 0 To ResourceCache(GetPlayerMap(Index)).ResourceCount
                 Buffer.WriteInt32(ResourceCache(GetPlayerMap(Index)).ResourceData(i).ResourceState)
                 Buffer.WriteInt32(ResourceCache(GetPlayerMap(Index)).ResourceData(i).X)
                 Buffer.WriteInt32(ResourceCache(GetPlayerMap(Index)).ResourceData(i).Y)
@@ -673,7 +673,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendResources(Index As Integer)
+    Sub SendResources(index as integer)
         Dim i As Integer
 
         For i = 1 To MAX_RESOURCES
@@ -686,8 +686,8 @@ Module ServerNetworkSend
 
     End Sub
 
-    Sub SendUpdateResourceTo(Index As Integer, ResourceNum As Integer)
-        Dim Buffer As ByteStream
+    Sub SendUpdateResourceTo(index as integer, ResourceNum As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -715,7 +715,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendShops(Index As Integer)
+    Sub SendShops(index as integer)
         Dim i As Integer
 
         For i = 1 To MAX_SHOPS
@@ -728,8 +728,8 @@ Module ServerNetworkSend
 
     End Sub
 
-    Sub SendUpdateShopTo(Index As Integer, shopNum As Integer)
-        Dim Buffer As ByteStream
+    Sub SendUpdateShopTo(index as integer, shopNum As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -754,7 +754,7 @@ Module ServerNetworkSend
     End Sub
 
     Sub SendUpdateShopToAll(shopNum As Integer)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -778,7 +778,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendSkills(Index As Integer)
+    Sub SendSkills(index as integer)
         Dim i As Integer
 
         For i = 1 To MAX_SKILLS
@@ -791,8 +791,8 @@ Module ServerNetworkSend
 
     End Sub
 
-    Sub SendUpdateSkillTo(Index As Integer, skillnum As Integer)
-        Dim Buffer As ByteStream
+    Sub SendUpdateSkillTo(index as integer, skillnum As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -836,7 +836,7 @@ Module ServerNetworkSend
     End Sub
 
     Sub SendUpdateSkillToAll(skillnum As Integer)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -879,8 +879,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendStats(Index As Integer)
-        Dim Buffer As New ByteStream(4)
+    Sub SendStats(index as integer)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPlayerStats)
         Buffer.WriteInt32(Index)
@@ -898,8 +898,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendUpdateAnimationTo(Index As Integer, AnimationNum As Integer)
-        Dim Buffer As New ByteStream(4)
+    Sub SendUpdateAnimationTo(index as integer, AnimationNum As Integer)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SUpdateAnimation)
         Buffer.WriteInt32(AnimationNum)
@@ -931,7 +931,7 @@ Module ServerNetworkSend
     End Sub
 
     Sub SendUpdateAnimationToAll(AnimationNum As Integer)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -964,14 +964,14 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendVitals(Index As Integer)
+    Sub SendVitals(index as integer)
         For i = 1 To VitalType.Count - 1
             SendVital(Index, i)
         Next
     End Sub
 
-    Sub SendVital(Index As Integer, Vital As VitalType)
-        Dim Buffer As ByteStream
+    Sub SendVital(index as integer, Vital As VitalType)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         ' Get our packet type.
@@ -998,7 +998,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendWelcome(Index As Integer)
+    Sub SendWelcome(index as integer)
 
         ' Send them MOTD
         If Len(Options.Motd) > 0 Then
@@ -1009,7 +1009,7 @@ Module ServerNetworkSend
         SendWhosOnline(Index)
     End Sub
 
-    Sub SendWhosOnline(Index As Integer)
+    Sub SendWhosOnline(index as integer)
         Dim s As String
         Dim n As Integer
         Dim i As Integer
@@ -1035,8 +1035,8 @@ Module ServerNetworkSend
         PlayerMsg(Index, s, ColorType.White)
     End Sub
 
-    Sub SendWornEquipment(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendWornEquipment(index as integer)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPlayerWornEq)
@@ -1064,8 +1064,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendMapData(Index As Integer, MapNum As Integer, SendMap As Boolean)
-        Dim Buffer As ByteStream
+    Sub SendMapData(index as integer, mapNum as Integer, SendMap As Boolean)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
         Dim data() As Byte
 
@@ -1250,11 +1250,11 @@ Module ServerNetworkSend
         Next
 
         'send Resource cache
-        If ResourceCache(GetPlayerMap(Index)).Resource_Count > 0 Then
+        If ResourceCache(GetPlayerMap(Index)).ResourceCount > 0 Then
             Buffer.WriteInt32(1)
-            Buffer.WriteInt32(ResourceCache(GetPlayerMap(Index)).Resource_Count)
+            Buffer.WriteInt32(ResourceCache(GetPlayerMap(Index)).ResourceCount)
 
-            For i = 0 To ResourceCache(GetPlayerMap(Index)).Resource_Count
+            For i = 0 To ResourceCache(GetPlayerMap(Index)).ResourceCount
                 Buffer.WriteInt32(ResourceCache(GetPlayerMap(Index)).ResourceData(i).ResourceState)
                 Buffer.WriteInt32(ResourceCache(GetPlayerMap(Index)).ResourceData(i).X)
                 Buffer.WriteInt32(ResourceCache(GetPlayerMap(Index)).ResourceData(i).Y)
@@ -1275,7 +1275,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendJoinMap(Index As Integer)
+    Sub SendJoinMap(index as integer)
         Dim i As Integer
         Dim data As Byte()
         ' Send all players on current map to index
@@ -1295,8 +1295,8 @@ Module ServerNetworkSend
         SendDataToMap(GetPlayerMap(Index), data, data.Length)
     End Sub
 
-    Function PlayerData(Index As Integer) As Byte()
-        Dim Buffer As ByteStream, i As Integer
+    Function PlayerData(index as integer) As Byte()
+        dim buffer as ByteStream, i As Integer
         PlayerData = Nothing
         If Index > MAX_PLAYERS Then Exit Function
         Buffer = New ByteStream(4)
@@ -1339,9 +1339,9 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Function
 
-    Sub SendMapItemsTo(Index As Integer, MapNum As Integer)
+    Sub SendMapItemsTo(index as integer, mapNum as Integer)
         Dim i As Integer
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapItemData)
@@ -1361,9 +1361,9 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendMapNpcsTo(Index As Integer, MapNum As Integer)
+    Sub SendMapNpcsTo(index as integer, mapNum as Integer)
         Dim i As Integer
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapNpcData)
@@ -1385,8 +1385,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendMapNpcTo(MapNum As Integer, MapNpcNum As Integer)
-        Dim Buffer As ByteStream
+    Sub SendMapNpcTo(mapNum as Integer, MapNpcNum As Integer)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapNpcUpdate)
@@ -1410,8 +1410,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendPlayerXY(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendPlayerXY(index as integer)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPlayerXY)
         Buffer.WriteInt32(GetPlayerX(Index))
@@ -1425,8 +1425,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendPlayerMove(Index As Integer, Movement As Integer)
-        Dim Buffer As ByteStream
+    Sub SendPlayerMove(index as integer, Movement As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SPlayerMove)
@@ -1443,8 +1443,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendDoorAnimation(MapNum As Integer, X As Integer, Y As Integer)
-        Dim Buffer As ByteStream
+    Sub SendDoorAnimation(mapNum as Integer, X As Integer, Y As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SDoorAnimation)
@@ -1459,8 +1459,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendMapKey(Index As Integer, X As Integer, Y As Integer, Value As Byte)
-        Dim Buffer As ByteStream
+    Sub SendMapKey(index as integer, X As Integer, Y As Integer, Value As Byte)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SMapKey)
@@ -1476,8 +1476,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub MapMsg(MapNum As Integer, Msg As String, Color As Byte)
-        Dim Buffer As ByteStream
+    Sub MapMsg(mapNum as Integer, Msg As String, Color As Byte)
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapMsg)
@@ -1492,8 +1492,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendActionMsg(MapNum As Integer, Message As String, Color As Integer, MsgType As Integer, X As Integer, Y As Integer, Optional PlayerOnlyNum As Integer = 0)
-        Dim Buffer As ByteStream
+    Sub SendActionMsg(mapNum as Integer, Message As String, Color As Integer, MsgType As Integer, X As Integer, Y As Integer, Optional PlayerOnlyNum As Integer = 0)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SActionMsg)
@@ -1516,8 +1516,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SayMsg_Map(MapNum As Integer, Index As Integer, Message As String, SayColour As Integer)
-        Dim Buffer As ByteStream
+    Sub SayMsg_Map(mapNum as Integer, index as integer, Message As String, SayColour As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SSayMsg)
@@ -1537,13 +1537,13 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendPlayerData(Index As Integer)
+    Sub SendPlayerData(index as integer)
         Dim data = PlayerData(Index)
         SendDataToMap(GetPlayerMap(Index), data, data.Length)
     End Sub
 
     Sub SendUpdateResourceToAll(ResourceNum As Integer)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -1572,9 +1572,9 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendMapNpcVitals(MapNum As Integer, MapNpcNum As Byte)
+    Sub SendMapNpcVitals(mapNum as Integer, MapNpcNum As Byte)
         Dim i As Integer
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapNpcVitals)
@@ -1592,8 +1592,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendMapKeyToMap(MapNum As Integer, X As Integer, Y As Integer, Value As Byte)
-        Dim Buffer As ByteStream
+    Sub SendMapKeyToMap(mapNum as Integer, X As Integer, Y As Integer, Value As Byte)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SMapKey)
@@ -1608,19 +1608,19 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendResourceCacheToMap(MapNum As Integer, Resource_num As Integer)
-        Dim Buffer As ByteStream
+    Sub SendResourceCacheToMap(mapNum as Integer, Resource_num As Integer)
+        dim buffer as ByteStream
         Dim i As Integer
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SResourceCache)
-        Buffer.WriteInt32(ResourceCache(MapNum).Resource_Count)
+        Buffer.WriteInt32(ResourceCache(MapNum).ResourceCount)
 
         Addlog("Sent SMSG: SResourceCache", PACKET_LOG)
         Console.WriteLine("Sent SMSG: SResourceCache")
 
-        If ResourceCache(MapNum).Resource_Count > 0 Then
+        If ResourceCache(MapNum).ResourceCount > 0 Then
 
-            For i = 0 To ResourceCache(MapNum).Resource_Count
+            For i = 0 To ResourceCache(MapNum).ResourceCount
                 Buffer.WriteInt32(ResourceCache(MapNum).ResourceData(i).ResourceState)
                 Buffer.WriteInt32(ResourceCache(MapNum).ResourceData(i).X)
                 Buffer.WriteInt32(ResourceCache(MapNum).ResourceData(i).Y)
@@ -1632,8 +1632,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendGameData(index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendGameData(index as integer)
+        dim buffer as ByteStream
         Dim i As Integer
         Dim data() As Byte
         Buffer = New ByteStream(4)
@@ -1723,8 +1723,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SayMsg_Global(Index As Integer, Message As String, SayColour As Integer)
-        Dim Buffer As ByteStream
+    Sub SayMsg_Global(index as integer, Message As String, SayColour As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SSayMsg)
@@ -1744,8 +1744,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendInventoryUpdate(Index As Integer, InvSlot As Integer)
-        Dim Buffer As ByteStream, n As Integer
+    Sub SendInventoryUpdate(index as integer, InvSlot As Integer)
+        dim buffer as ByteStream, n As Integer
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SPlayerInvUpdate)
@@ -1770,8 +1770,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendAnimation(MapNum As Integer, Anim As Integer, X As Integer, Y As Integer, Optional LockType As Byte = 0, Optional LockIndex As Integer = 0)
-        Dim Buffer As ByteStream
+    Sub SendAnimation(mapNum as Integer, Anim As Integer, X As Integer, Y As Integer, Optional LockType As Byte = 0, Optional Lockindex as integer = 0)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SAnimation)
@@ -1789,8 +1789,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendOpenShop(Index As Integer, ShopNum As Integer)
-        Dim Buffer As ByteStream
+    Sub SendOpenShop(index as integer, ShopNum As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SOpenShop)
@@ -1803,8 +1803,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub ResetShopAction(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub ResetShopAction(index as integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SResetShopAction)
@@ -1817,8 +1817,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendBank(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendBank(index as integer)
+        dim buffer as ByteStream
         Dim i As Integer
 
         Buffer = New ByteStream(4)
@@ -1847,8 +1847,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendClearSkillBuffer(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendClearSkillBuffer(index as integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SClearSkillBuffer)
@@ -1861,8 +1861,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendClearTradeTimer(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendClearTradeTimer(index as integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SClearTradeTimer)
@@ -1875,8 +1875,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendTradeInvite(Index As Integer, TradeIndex As Integer)
-        Dim Buffer As ByteStream
+    Sub SendTradeInvite(index as integer, Tradeindex as integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.STradeInvite)
@@ -1891,8 +1891,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendTrade(Index As Integer, TradeTarget As Integer)
-        Dim Buffer As ByteStream
+    Sub SendTrade(index as integer, TradeTarget As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.STrade)
@@ -1906,8 +1906,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendTradeUpdate(Index As Integer, DataType As Byte)
-        Dim Buffer As ByteStream
+    Sub SendTradeUpdate(index as integer, DataType As Byte)
+        dim buffer as ByteStream
         Dim i As Integer
         Dim tradeTarget As Integer
         Dim totalWorth As Integer
@@ -1965,8 +1965,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendTradeStatus(Index As Integer, Status As Byte)
-        Dim Buffer As ByteStream
+    Sub SendTradeStatus(index as integer, Status As Byte)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.STradeStatus)
@@ -1979,9 +1979,9 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendMapItemsToAll(MapNum As Integer)
+    Sub SendMapItemsToAll(mapNum as Integer)
         Dim i As Integer
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SMapItemData)
@@ -2001,8 +2001,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendStunned(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendStunned(index as integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SStunned)
@@ -2016,8 +2016,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendBlood(MapNum As Integer, X As Integer, Y As Integer)
-        Dim Buffer As ByteStream
+    Sub SendBlood(mapNum as Integer, X As Integer, Y As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SBlood)
@@ -2032,9 +2032,9 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendPlayerSkills(Index As Integer)
+    Sub SendPlayerSkills(index as integer)
         Dim i As Integer
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SSkills)
 
@@ -2049,8 +2049,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendCooldown(Index As Integer, Slot As Integer)
-        Dim Buffer As ByteStream
+    Sub SendCooldown(index as integer, Slot As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SCooldown)
@@ -2064,8 +2064,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendTarget(Index As Integer, Target As Integer, TargetType As Integer)
-        Dim Buffer As ByteStream
+    Sub SendTarget(index as integer, Target As Integer, TargetType As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.STarget)
@@ -2081,8 +2081,8 @@ Module ServerNetworkSend
     End Sub
 
     'Mapreport
-    Sub SendMapReport(Index As Integer)
-        Dim Buffer As ByteStream, I As Integer
+    Sub SendMapReport(index as integer)
+        dim buffer as ByteStream, I As Integer
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SMapReport)
@@ -2099,8 +2099,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendAdminPanel(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendAdminPanel(index as integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SAdmin)
@@ -2113,8 +2113,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendMapNames(Index As Integer)
-        Dim Buffer As ByteStream, I As Integer
+    Sub SendMapNames(index as integer)
+        dim buffer as ByteStream, I As Integer
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SMapNames)
@@ -2131,8 +2131,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendHotbar(Index As Integer)
-        Dim Buffer As ByteStream, i As Integer
+    Sub SendHotbar(index as integer)
+        dim buffer as ByteStream, i As Integer
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SHotbar)
@@ -2150,8 +2150,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendCritical(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendCritical(index as integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SCritical)
@@ -2164,8 +2164,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendKeyPair(index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendKeyPair(index as integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SKeyPair)
@@ -2175,8 +2175,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendNews(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendNews(index as integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SNews)
@@ -2192,8 +2192,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendRightClick(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendRightClick(index as integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SrClick)
@@ -2206,8 +2206,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendClassEditor(Index As Integer)
-        Dim Buffer As ByteStream
+    Sub SendClassEditor(index as integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SClassEditor)
@@ -2220,8 +2220,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendAutoMapper(Index As Integer)
-        Dim Buffer As ByteStream, Prefab As Integer
+    Sub SendAutoMapper(index as integer)
+        dim buffer as ByteStream, Prefab As Integer
         Dim myXml As New XmlClass With {
             .Filename = Application.StartupPath & "\Data\AutoMapper.xml",
             .Root = "Options"
@@ -2261,8 +2261,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendEmote(Index As Integer, Emote As Integer)
-        Dim Buffer As ByteStream
+    Sub SendEmote(index as integer, Emote As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SEmote)
@@ -2278,8 +2278,8 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendChatBubble(MapNum As Integer, Target As Integer, TargetType As Integer, Message As String, Colour As Integer)
-        Dim Buffer As ByteStream
+    Sub SendChatBubble(mapNum as Integer, Target As Integer, TargetType As Integer, Message As String, Colour As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SChatBubble)
@@ -2298,7 +2298,7 @@ Module ServerNetworkSend
 
     End Sub
 
-    Sub SendPlayerAttack(Index As Integer)
+    Sub SendPlayerAttack(index as integer)
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SAttack)
 
@@ -2310,7 +2310,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendNpcAttack(Index As Integer, NpcNum As Integer)
+    Sub SendNpcAttack(index as integer, NpcNum As Integer)
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SAttack)
 
@@ -2322,7 +2322,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendNpcDead(MapNum As Integer, Index As Integer)
+    Sub SendNpcDead(mapNum as Integer, index as integer)
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SNpcDead)
 
@@ -2334,7 +2334,7 @@ Module ServerNetworkSend
         Buffer.Dispose()
     End Sub
 
-    Sub SendTotalOnlineTo(Index As Integer)
+    Sub SendTotalOnlineTo(index as integer)
         Dim Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.STotalOnline)

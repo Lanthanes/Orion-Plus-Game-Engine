@@ -42,7 +42,7 @@ Friend Module modHotBar
     End Function
 
     Friend Sub SendSetHotbarSlot(Slot As Integer, Num As Integer, Type As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSetHotbarSlot)
 
@@ -55,7 +55,7 @@ Friend Module modHotBar
     End Sub
 
     Friend Sub SendDeleteHotbar(Slot As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CDeleteHotbarSlot)
 
         Buffer.WriteInt32(Slot)
@@ -65,7 +65,7 @@ Friend Module modHotBar
     End Sub
 
     Friend Sub SendUseHotbarSlot(Slot As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CUseHotbarSlot)
 

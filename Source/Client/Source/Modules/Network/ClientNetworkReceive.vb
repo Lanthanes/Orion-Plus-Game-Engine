@@ -149,9 +149,9 @@ Module ClientNetworkReceive
         Socket.PacketId(ServerPackets.STime) = AddressOf Packet_Time
     End Sub
 
-    Private Sub Packet_AlertMSG(ByRef Data() As Byte)
+    Private Sub Packet_AlertMSG(ByRef data() As Byte)
         Dim Msg As String
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         pnlloadvisible = False
 
         If FrmMenu.Visible = False Then
@@ -172,14 +172,14 @@ Module ClientNetworkReceive
         DestroyGame()
     End Sub
 
-    Private Sub Packet_KeyPair(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_KeyPair(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         EKeyPair.ImportKeyString(Buffer.ReadString())
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_LoadCharOk(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_LoadCharOk(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         ' Now we can receive game data
         MyIndex = Buffer.ReadInt32
 
@@ -189,7 +189,7 @@ Module ClientNetworkReceive
         SetStatus(Strings.Get("gamegui", "datarecieve"))
     End Sub
 
-    Private Sub Packet_LoginOk(ByRef Data() As Byte)
+    Private Sub Packet_LoginOk(ByRef data() As Byte)
         Dim CharName As String, Sprite As Integer
         Dim Level As Integer, ClassName As String, Gender As Byte
 
@@ -208,7 +208,7 @@ Module ClientNetworkReceive
         ' Request classes.
         SendRequestClasses()
 
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         ' Now we can receive char data
         MaxChars = Buffer.ReadInt32
         ReDim CharSelection(MaxChars)
@@ -256,12 +256,12 @@ Module ClientNetworkReceive
 
     End Sub
 
-    Private Sub Packet_NewCharClasses(ByRef Data() As Byte)
+    Private Sub Packet_NewCharClasses(ByRef data() As Byte)
         Dim i As Integer, z As Integer, X As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         ' Max classes
         Max_Classes = Buffer.ReadInt32
-        ReDim Classes(0 To Max_Classes)
+        ReDim Classes(Max_Classes)
 
         SelectedChar = 1
 
@@ -271,7 +271,7 @@ Module ClientNetworkReceive
                 .Name = Trim(Buffer.ReadString)
                 .Desc = Trim(Buffer.ReadString)
 
-                ReDim .Vital(0 To VitalType.Count - 1)
+                ReDim .Vital(VitalType.Count - 1)
 
                 .Vital(VitalType.HP) = Buffer.ReadInt32
                 .Vital(VitalType.MP) = Buffer.ReadInt32
@@ -280,7 +280,7 @@ Module ClientNetworkReceive
                 ' get array size
                 z = Buffer.ReadInt32
                 ' redim array
-                ReDim .MaleSprite(0 To z + 1)
+                ReDim .MaleSprite(z + 1)
                 ' loop-receive data
                 For X = 1 To z + 1
                     .MaleSprite(X) = Buffer.ReadInt32
@@ -289,13 +289,13 @@ Module ClientNetworkReceive
                 ' get array size
                 z = Buffer.ReadInt32
                 ' redim array
-                ReDim .FemaleSprite(0 To z + 1)
+                ReDim .FemaleSprite(z + 1)
                 ' loop-receive data
                 For X = 1 To z + 1
                     .FemaleSprite(X) = Buffer.ReadInt32
                 Next
 
-                ReDim .Stat(0 To StatType.Count - 1)
+                ReDim .Stat(StatType.Count - 1)
 
                 .Stat(StatType.Strength) = Buffer.ReadInt32
                 .Stat(StatType.Endurance) = Buffer.ReadInt32
@@ -330,7 +330,7 @@ Module ClientNetworkReceive
         pnlCharCreateVisible = True
         pnlLoginVisible = False
 
-        ReDim cmbclass(0 To Max_Classes)
+        ReDim cmbclass(Max_Classes)
 
         For i = 1 To Max_Classes
             cmbclass(i) = Classes(i).Name
@@ -341,12 +341,12 @@ Module ClientNetworkReceive
         newCharSprite = 1
     End Sub
 
-    Private Sub Packet_ClassesData(ByRef Data() As Byte)
+    Private Sub Packet_ClassesData(ByRef data() As Byte)
         Dim i As Integer, z As Integer, X As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         ' Max classes
         Max_Classes = Buffer.ReadInt32
-        ReDim Classes(0 To Max_Classes)
+        ReDim Classes(Max_Classes)
 
         SelectedChar = 1
 
@@ -356,7 +356,7 @@ Module ClientNetworkReceive
                 .Name = Trim(Buffer.ReadString)
                 .Desc = Trim(Buffer.ReadString)
 
-                ReDim .Vital(0 To VitalType.Count - 1)
+                ReDim .Vital(VitalType.Count - 1)
 
                 .Vital(VitalType.HP) = Buffer.ReadInt32
                 .Vital(VitalType.MP) = Buffer.ReadInt32
@@ -365,7 +365,7 @@ Module ClientNetworkReceive
                 ' get array size
                 z = Buffer.ReadInt32
                 ' redim array
-                ReDim .MaleSprite(0 To z + 1)
+                ReDim .MaleSprite(z + 1)
                 ' loop-receive data
                 For X = 1 To z + 1
                     .MaleSprite(X) = Buffer.ReadInt32
@@ -374,13 +374,13 @@ Module ClientNetworkReceive
                 ' get array size
                 z = Buffer.ReadInt32
                 ' redim array
-                ReDim .FemaleSprite(0 To z + 1)
+                ReDim .FemaleSprite(z + 1)
                 ' loop-receive data
                 For X = 1 To z + 1
                     .FemaleSprite(X) = Buffer.ReadInt32
                 Next
 
-                ReDim .Stat(0 To StatType.Count - 1)
+                ReDim .Stat(StatType.Count - 1)
 
                 .Stat(StatType.Strength) = Buffer.ReadInt32
                 .Stat(StatType.Endurance) = Buffer.ReadInt32
@@ -405,7 +405,7 @@ Module ClientNetworkReceive
 
         Next
 
-        ReDim cmbclass(0 To Max_Classes)
+        ReDim cmbclass(Max_Classes)
         For i = 1 To Max_Classes
             cmbclass(i) = Classes(i).Name
         Next
@@ -415,15 +415,15 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_InGame(ByRef Data() As Byte)
+    Private Sub Packet_InGame(ByRef data() As Byte)
         InGame = True
         CanMoveNow = True
         GameInit()
     End Sub
 
-    Private Sub Packet_PlayerInv(ByRef Data() As Byte)
+    Private Sub Packet_PlayerInv(ByRef data() As Byte)
         Dim i As Integer, InvNum As Integer, Amount As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For i = 1 To MAX_INV
             InvNum = Buffer.ReadInt32
             Amount = Buffer.ReadInt32
@@ -449,9 +449,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_PlayerInvUpdate(ByRef Data() As Byte)
+    Private Sub Packet_PlayerInvUpdate(ByRef data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         n = Buffer.ReadInt32
         SetPlayerInvItemNum(MyIndex, n, Buffer.ReadInt32)
         SetPlayerInvItemValue(MyIndex, n, Buffer.ReadInt32)
@@ -474,9 +474,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_PlayerWornEquipment(ByRef Data() As Byte)
+    Private Sub Packet_PlayerWornEquipment(ByRef data() As Byte)
         Dim i As Integer, n As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For i = 1 To EquipmentType.Count - 1
             SetPlayerEquipment(MyIndex, Buffer.ReadInt32, i)
         Next
@@ -503,8 +503,8 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_PlayerHP(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_PlayerHP(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         Player(MyIndex).MaxHP = Buffer.ReadInt32
 
         SetPlayerVital(MyIndex, VitalType.HP, Buffer.ReadInt32)
@@ -518,8 +518,8 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_PlayerMP(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_PlayerMP(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         Player(MyIndex).MaxMP = Buffer.ReadInt32
         SetPlayerVital(MyIndex, VitalType.MP, Buffer.ReadInt32)
 
@@ -532,17 +532,17 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_PlayerSP(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_PlayerSP(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         Player(MyIndex).MaxSP = Buffer.ReadInt32
         SetPlayerVital(MyIndex, VitalType.SP, Buffer.ReadInt32)
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_PlayerStats(ByRef Data() As Byte)
-        Dim i As Integer, index As Integer
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_PlayerStats(ByRef data() As Byte)
+        Dim i As Integer, index as integer
+        dim buffer as New ByteStream(Data)
         index = Buffer.ReadInt32
         For i = 1 To StatType.Count - 1
             SetPlayerStat(index, i, Buffer.ReadInt32)
@@ -552,9 +552,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_PlayerData(ByRef Data() As Byte)
+    Private Sub Packet_PlayerData(ByRef data() As Byte)
         Dim i As Integer, X As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
         SetPlayerName(i, Buffer.ReadString)
         SetPlayerClass(i, Buffer.ReadInt32)
@@ -605,10 +605,10 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_PlayerMove(ByRef Data() As Byte)
+    Private Sub Packet_PlayerMove(ByRef data() As Byte)
         Dim i As Integer, X As Integer, Y As Integer
         Dim Dir As Integer, n As Byte
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
         X = Buffer.ReadInt32
         Y = Buffer.ReadInt32
@@ -636,10 +636,10 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_NpcMove(ByRef Data() As Byte)
+    Private Sub Packet_NpcMove(ByRef data() As Byte)
         Dim MapNpcNum As Integer, Movement As Integer
         Dim X As Integer, Y As Integer, Dir As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         MapNpcNum = Buffer.ReadInt32
         X = Buffer.ReadInt32
         Y = Buffer.ReadInt32
@@ -669,9 +669,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_PlayerDir(ByRef Data() As Byte)
+    Private Sub Packet_PlayerDir(ByRef data() As Byte)
         Dim Dir As Integer, i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
         Dir = Buffer.ReadInt32
 
@@ -686,9 +686,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_NpcDir(ByRef Data() As Byte)
+    Private Sub Packet_NpcDir(ByRef data() As Byte)
         Dim Dir As Integer, i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
         Dir = Buffer.ReadInt32
 
@@ -702,9 +702,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_PlayerXY(ByRef Data() As Byte)
+    Private Sub Packet_PlayerXY(ByRef data() As Byte)
         Dim X As Integer, Y As Integer, Dir As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         X = Buffer.ReadInt32
         Y = Buffer.ReadInt32
         Dir = Buffer.ReadInt32
@@ -721,9 +721,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Attack(ByRef Data() As Byte)
+    Private Sub Packet_Attack(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
 
         ' Set player to attacking
@@ -733,9 +733,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_NpcAttack(ByRef Data() As Byte)
+    Private Sub Packet_NpcAttack(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
 
         ' Set npc to attacking
@@ -745,10 +745,10 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_CheckMap(ByRef Data() As Byte)
+    Private Sub Packet_CheckMap(ByRef data() As Byte)
         Dim X As Integer, Y As Integer, i As Integer
         Dim NeedMap As Byte
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         GettingMap = True
 
         ' Erase all players except self
@@ -781,9 +781,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_MapData(ByRef Data() As Byte)
-        Dim X As Integer, Y As Integer, i As Integer, MapNum As Integer
-        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
+    Private Sub Packet_MapData(ByRef data() As Byte)
+        Dim X As Integer, Y As Integer, i As Integer, mapNum as Integer
+        dim buffer as New ByteStream(Compression.DecompressBytes(Data))
 
         MapData = False
 
@@ -821,7 +821,7 @@ Module ClientNetworkReceive
                 Map.Panorama = Buffer.ReadInt32
                 Map.Parallax = Buffer.ReadInt32
 
-                ReDim Map.Tile(0 To Map.MaxX, 0 To Map.MaxY)
+                ReDim Map.Tile(Map.MaxX,Map.MaxY)
 
                 For X = 1 To MAX_MAP_NPCS
                     Map.Npc(X) = Buffer.ReadInt32
@@ -834,7 +834,7 @@ Module ClientNetworkReceive
                         Map.Tile(X, Y).Data3 = Buffer.ReadInt32
                         Map.Tile(X, Y).DirBlock = Buffer.ReadInt32
 
-                        ReDim Map.Tile(X, Y).Layer(0 To LayerType.Count - 1)
+                        ReDim Map.Tile(X, Y).Layer(LayerType.Count - 1)
 
                         For i = 0 To LayerType.Count - 1
                             Map.Tile(X, Y).Layer(i).Tileset = Buffer.ReadInt32
@@ -852,7 +852,7 @@ Module ClientNetworkReceive
                 Map.EventCount = Buffer.ReadInt32
 
                 If Map.EventCount > 0 Then
-                    ReDim Map.Events(0 To Map.EventCount)
+                    ReDim Map.Events(Map.EventCount)
                     For i = 1 To Map.EventCount
                         With Map.Events(i)
                             .Name = Trim(Buffer.ReadString)
@@ -862,7 +862,7 @@ Module ClientNetworkReceive
                             .PageCount = Buffer.ReadInt32
                         End With
                         If Map.Events(i).PageCount > 0 Then
-                            ReDim Map.Events(i).Pages(0 To Map.Events(i).PageCount)
+                            ReDim Map.Events(i).Pages(Map.Events(i).PageCount)
                             For X = 1 To Map.Events(i).PageCount
                                 With Map.Events(i).Pages(X)
                                     .chkVariable = Buffer.ReadInt32
@@ -899,7 +899,7 @@ Module ClientNetworkReceive
                                     .RepeatMoveRoute = Buffer.ReadInt32
 
                                     If .MoveRouteCount > 0 Then
-                                        ReDim Map.Events(i).Pages(X).MoveRoute(0 To .MoveRouteCount)
+                                        ReDim Map.Events(i).Pages(X).MoveRoute(.MoveRouteCount)
                                         For Y = 1 To .MoveRouteCount
                                             .MoveRoute(Y).Index = Buffer.ReadInt32
                                             .MoveRoute(Y).Data1 = Buffer.ReadInt32
@@ -925,12 +925,12 @@ Module ClientNetworkReceive
                                 End With
 
                                 If Map.Events(i).Pages(X).CommandListCount > 0 Then
-                                    ReDim Map.Events(i).Pages(X).CommandList(0 To Map.Events(i).Pages(X).CommandListCount)
+                                    ReDim Map.Events(i).Pages(X).CommandList(Map.Events(i).Pages(X).CommandListCount)
                                     For Y = 1 To Map.Events(i).Pages(X).CommandListCount
                                         Map.Events(i).Pages(X).CommandList(Y).CommandCount = Buffer.ReadInt32
                                         Map.Events(i).Pages(X).CommandList(Y).ParentList = Buffer.ReadInt32
                                         If Map.Events(i).Pages(X).CommandList(Y).CommandCount > 0 Then
-                                            ReDim Map.Events(i).Pages(X).CommandList(Y).Commands(0 To Map.Events(i).Pages(X).CommandList(Y).CommandCount)
+                                            ReDim Map.Events(i).Pages(X).CommandList(Y).Commands(Map.Events(i).Pages(X).CommandList(Y).CommandCount)
                                             For z = 1 To Map.Events(i).Pages(X).CommandList(Y).CommandCount
                                                 With Map.Events(i).Pages(X).CommandList(Y).Commands(z)
                                                     .Index = Buffer.ReadInt32
@@ -997,7 +997,7 @@ Module ClientNetworkReceive
                 Resources_Init = False
 
                 If Resource_Index > 0 Then
-                    ReDim MapResource(0 To Resource_Index)
+                    ReDim MapResource(Resource_Index)
 
                     For i = 0 To Resource_Index
                         MapResource(i).ResourceState = Buffer.ReadInt32
@@ -1007,7 +1007,7 @@ Module ClientNetworkReceive
 
                     Resources_Init = True
                 Else
-                    ReDim MapResource(0 To 1)
+                    ReDim MapResource(1)
                 End If
             End If
 
@@ -1044,9 +1044,9 @@ Module ClientNetworkReceive
 
     End Sub
 
-    Private Sub Packet_MapNPCData(ByRef Data() As Byte)
+    Private Sub Packet_MapNPCData(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For i = 1 To MAX_MAP_NPCS
 
             With MapNpc(i)
@@ -1063,9 +1063,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_MapNPCUpdate(ByRef Data() As Byte)
+    Private Sub Packet_MapNPCUpdate(ByRef data() As Byte)
         Dim NpcNum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         NpcNum = Buffer.ReadInt32
 
         With MapNpc(NpcNum)
@@ -1080,7 +1080,7 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_MapDone(ByRef Data() As Byte)
+    Private Sub Packet_MapDone(ByRef data() As Byte)
         Dim i As Integer
         Dim MusicFile As String
 
@@ -1108,9 +1108,9 @@ Module ClientNetworkReceive
 
     End Sub
 
-    Private Sub Packet_GlobalMessage(ByRef Data() As Byte)
+    Private Sub Packet_GlobalMessage(ByRef data() As Byte)
         Dim Msg As String
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         'Msg = Trim(Buffer.ReadString)
         Msg = Trim(ReadUnicodeString(Buffer.ReadBytes()))
 
@@ -1119,9 +1119,9 @@ Module ClientNetworkReceive
         AddText(Msg, QColorType.GlobalColor)
     End Sub
 
-    Private Sub Packet_MapMessage(ByRef Data() As Byte)
+    Private Sub Packet_MapMessage(ByRef data() As Byte)
         Dim Msg As String
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
 
         'Msg = Trim(Buffer.ReadString)
         Msg = Trim(ReadUnicodeString(Buffer.ReadBytes))
@@ -1132,9 +1132,9 @@ Module ClientNetworkReceive
 
     End Sub
 
-    Private Sub Packet_SpawnItem(ByRef Data() As Byte)
+    Private Sub Packet_SpawnItem(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
 
         i = Buffer.ReadInt32
 
@@ -1148,9 +1148,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_PlayerMessage(ByRef Data() As Byte)
+    Private Sub Packet_PlayerMessage(ByRef data() As Byte)
         Dim Msg As String, colour As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         'Msg = Trim(Buffer.ReadString)
         Msg = Trim(ReadUnicodeString(Buffer.ReadBytes))
 
@@ -1161,9 +1161,9 @@ Module ClientNetworkReceive
         AddText(Msg, colour)
     End Sub
 
-    Private Sub Packet_UpdateItem(ByRef Data() As Byte)
+    Private Sub Packet_UpdateItem(ByRef data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         n = Buffer.ReadInt32
 
         ' Update the item
@@ -1230,9 +1230,9 @@ Module ClientNetworkReceive
 
     End Sub
 
-    Private Sub Packet_SpawnNPC(ByRef Data() As Byte)
+    Private Sub Packet_SpawnNPC(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
 
         With MapNpc(i)
@@ -1253,18 +1253,18 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_NpcDead(ByRef Data() As Byte)
+    Private Sub Packet_NpcDead(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
         ClearMapNpc(i)
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_UpdateNPC(ByRef Data() As Byte)
+    Private Sub Packet_UpdateNPC(ByRef data() As Byte)
         Dim i As Integer, x As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
 
         ' Update the Npc
@@ -1308,9 +1308,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_MapKey(ByRef Data() As Byte)
+    Private Sub Packet_MapKey(ByRef data() As Byte)
         Dim n As Integer, X As Integer, Y As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         X = Buffer.ReadInt32
         Y = Buffer.ReadInt32
         n = Buffer.ReadInt32
@@ -1319,16 +1319,16 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_EditMap(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_EditMap(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         InitMapEditor = True
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_UpdateShop(ByRef Data() As Byte)
+    Private Sub Packet_UpdateShop(ByRef data() As Byte)
         Dim shopnum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         shopnum = Buffer.ReadInt32
 
         Shop(shopnum).BuyRate = Buffer.ReadInt32()
@@ -1347,9 +1347,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_UpdateSkill(ByRef Data() As Byte)
+    Private Sub Packet_UpdateSkill(ByRef data() As Byte)
         Dim skillnum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         skillnum = Buffer.ReadInt32
 
         Skill(skillnum).AccessReq = Buffer.ReadInt32()
@@ -1387,9 +1387,9 @@ Module ClientNetworkReceive
 
     End Sub
 
-    Private Sub Packet_Skills(ByRef Data() As Byte)
+    Private Sub Packet_Skills(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For i = 1 To MAX_PLAYER_SKILLS
             PlayerSkills(i) = Buffer.ReadInt32
         Next
@@ -1397,21 +1397,21 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_LeftMap(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_LeftMap(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         ClearPlayer(Buffer.ReadInt32)
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_ResourceCache(ByRef Data() As Byte)
+    Private Sub Packet_ResourceCache(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         Resource_Index = Buffer.ReadInt32
         Resources_Init = False
 
         If Resource_Index > 0 Then
-            ReDim Preserve MapResource(0 To Resource_Index)
+            ReDim Preserve MapResource(Resource_Index)
 
             For i = 0 To Resource_Index
                 MapResource(i).ResourceState = Buffer.ReadInt32
@@ -1421,20 +1421,20 @@ Module ClientNetworkReceive
 
             Resources_Init = True
         Else
-            ReDim MapResource(0 To 1)
+            ReDim MapResource(1)
         End If
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Ping(ByRef Data() As Byte)
+    Private Sub Packet_Ping(ByRef data() As Byte)
         PingEnd = GetTickCount()
         Ping = PingEnd - PingStart
     End Sub
 
-    Private Sub Packet_DoorAnimation(ByRef Data() As Byte)
+    Private Sub Packet_DoorAnimation(ByRef data() As Byte)
         Dim X As Integer, Y As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         X = Buffer.ReadInt32
         Y = Buffer.ReadInt32
         With TempTile(X, Y)
@@ -1446,9 +1446,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_ActionMessage(ByRef Data() As Byte)
+    Private Sub Packet_ActionMessage(ByRef data() As Byte)
         Dim X As Integer, Y As Integer, message As String, color As Integer, tmpType As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         message = Trim(ReadUnicodeString(Buffer.ReadBytes))
         color = Buffer.ReadInt32
         tmpType = Buffer.ReadInt32
@@ -1460,9 +1460,9 @@ Module ClientNetworkReceive
         CreateActionMsg(message, color, tmpType, X, Y)
     End Sub
 
-    Private Sub Packet_UpdateResource(ByRef Data() As Byte)
+    Private Sub Packet_UpdateResource(ByRef data() As Byte)
         Dim ResourceNum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         ResourceNum = Buffer.ReadInt32
 
         Resource(ResourceNum).Animation = Buffer.ReadInt32()
@@ -1487,9 +1487,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_PlayerExp(ByRef Data() As Byte)
-        Dim index As Integer, TNL As Integer
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_PlayerExp(ByRef data() As Byte)
+        Dim index as integer, TNL As Integer
+        dim buffer as New ByteStream(Data)
         index = Buffer.ReadInt32
         SetPlayerExp(index, Buffer.ReadInt32)
         TNL = Buffer.ReadInt32
@@ -1500,9 +1500,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Blood(ByRef Data() As Byte)
+    Private Sub Packet_Blood(ByRef data() As Byte)
         Dim X As Integer, Y As Integer, Sprite As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         X = Buffer.ReadInt32
         Y = Buffer.ReadInt32
 
@@ -1522,9 +1522,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_UpdateAnimation(ByRef Data() As Byte)
+    Private Sub Packet_UpdateAnimation(ByRef data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         n = Buffer.ReadInt32
         ' Update the Animation
         For i = 0 To UBound(Animation(n).Frames)
@@ -1551,8 +1551,8 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Animation(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_Animation(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         AnimationIndex = AnimationIndex + 1
         If AnimationIndex >= Byte.MaxValue Then AnimationIndex = 1
 
@@ -1569,9 +1569,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_NPCVitals(ByRef Data() As Byte)
+    Private Sub Packet_NPCVitals(ByRef data() As Byte)
         Dim MapNpcNum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         MapNpcNum = Buffer.ReadInt32
         For i = 1 To VitalType.Count - 1
             MapNpc(MapNpcNum).Vital(i) = Buffer.ReadInt32
@@ -1580,27 +1580,27 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Cooldown(ByRef Data() As Byte)
+    Private Sub Packet_Cooldown(ByRef data() As Byte)
         Dim slot As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         slot = Buffer.ReadInt32
         SkillCD(slot) = GetTickCount()
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_ClearSkillBuffer(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_ClearSkillBuffer(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         SkillBuffer = 0
         SkillBufferTimer = 0
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_SayMessage(ByRef Data() As Byte)
+    Private Sub Packet_SayMessage(ByRef data() As Byte)
         Dim Access As Integer, Name As String, message As String
         Dim Header As String, PK As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         Name = Trim(Buffer.ReadString)
         Access = Buffer.ReadInt32
         PK = Buffer.ReadInt32
@@ -1613,9 +1613,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_OpenShop(ByRef Data() As Byte)
+    Private Sub Packet_OpenShop(ByRef data() As Byte)
         Dim shopnum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         shopnum = Buffer.ReadInt32
 
         NeedToOpenShop = True
@@ -1624,20 +1624,20 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_ResetShopAction(ByRef Data() As Byte)
+    Private Sub Packet_ResetShopAction(ByRef data() As Byte)
         ShopAction = 0
     End Sub
 
-    Private Sub Packet_Stunned(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_Stunned(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         StunDuration = Buffer.ReadInt32
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_MapWornEquipment(ByRef Data() As Byte)
+    Private Sub Packet_MapWornEquipment(ByRef data() As Byte)
         Dim playernum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         playernum = Buffer.ReadInt32
         SetPlayerEquipment(playernum, Buffer.ReadInt32, EquipmentType.Armor)
         SetPlayerEquipment(playernum, Buffer.ReadInt32, EquipmentType.Weapon)
@@ -1649,9 +1649,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_OpenBank(ByRef Data() As Byte)
+    Private Sub Packet_OpenBank(ByRef data() As Byte)
         Dim i As Integer, x As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For i = 1 To MAX_BANK
             Bank.Item(i).Num = Buffer.ReadInt32
             Bank.Item(i).Value = Buffer.ReadInt32
@@ -1672,17 +1672,17 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_ClearTradeTimer(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_ClearTradeTimer(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         TradeRequest = False
         TradeTimer = 0
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_TradeInvite(ByRef Data() As Byte)
+    Private Sub Packet_TradeInvite(ByRef data() As Byte)
         Dim requester As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         requester = Buffer.ReadInt32
 
         DialogType = DIALOGUE_TYPE_TRADE
@@ -1694,8 +1694,8 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Trade(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_Trade(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         NeedToOpenTrade = True
         Buffer.ReadInt32()
         Tradername = Trim(Buffer.ReadString)
@@ -1704,13 +1704,13 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_CloseTrade(ByRef Data() As Byte)
+    Private Sub Packet_CloseTrade(ByRef data() As Byte)
         NeedtoCloseTrade = True
     End Sub
 
-    Private Sub Packet_TradeUpdate(ByRef Data() As Byte)
+    Private Sub Packet_TradeUpdate(ByRef data() As Byte)
         Dim datatype As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         datatype = Buffer.ReadInt32
 
         If datatype = 0 Then ' ours!
@@ -1732,9 +1732,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_TradeStatus(ByRef Data() As Byte)
+    Private Sub Packet_TradeStatus(ByRef data() As Byte)
         Dim tradestatus As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         tradestatus = Buffer.ReadInt32
 
         Select Case tradestatus
@@ -1749,22 +1749,22 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_GameData(ByRef Data() As Byte)
+    Private Sub Packet_GameData(ByRef data() As Byte)
         Dim n As Integer, i As Integer, z As Integer, x As Integer, a As Integer, b As Integer
-        Dim Buffer As New ByteStream(Compression.DecompressBytes(Data))
+        dim buffer as New ByteStream(Compression.DecompressBytes(Data))
 
         '\\\Read Class Data\\\
 
         ' Max classes
         Max_Classes = Buffer.ReadInt32
-        ReDim Classes(0 To Max_Classes)
+        ReDim Classes(Max_Classes)
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Stat(0 To StatType.Count - 1)
+            ReDim Classes(i).Stat(StatType.Count - 1)
         Next
 
         For i = 0 To Max_Classes
-            ReDim Classes(i).Vital(0 To VitalType.Count - 1)
+            ReDim Classes(i).Vital(VitalType.Count - 1)
         Next
 
         For i = 1 To Max_Classes
@@ -1780,7 +1780,7 @@ Module ClientNetworkReceive
                 ' get array size
                 z = Buffer.ReadInt32
                 ' redim array
-                ReDim .MaleSprite(0 To z)
+                ReDim .MaleSprite(z)
                 ' loop-receive data
                 For x = 0 To z
                     .MaleSprite(x) = Buffer.ReadInt32
@@ -1789,7 +1789,7 @@ Module ClientNetworkReceive
                 ' get array size
                 z = Buffer.ReadInt32
                 ' redim array
-                ReDim .FemaleSprite(0 To z)
+                ReDim .FemaleSprite(z)
                 ' loop-receive data
                 For x = 0 To z
                     .FemaleSprite(x) = Buffer.ReadInt32
@@ -2094,17 +2094,17 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Target(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_Target(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         myTarget = Buffer.ReadInt32
         myTargetType = Buffer.ReadInt32
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Mapreport(ByRef Data() As Byte)
+    Private Sub Packet_Mapreport(ByRef data() As Byte)
         Dim I As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For I = 1 To MAX_MAPS
             MapNames(I) = Trim(Buffer.ReadString())
         Next
@@ -2114,13 +2114,13 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Admin(ByRef Data() As Byte)
+    Private Sub Packet_Admin(ByRef data() As Byte)
         Adminvisible = True
     End Sub
 
-    Private Sub Packet_MapNames(ByRef Data() As Byte)
+    Private Sub Packet_MapNames(ByRef data() As Byte)
         Dim I As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For I = 1 To MAX_MAPS
             MapNames(I) = Trim(Buffer.ReadString())
         Next
@@ -2128,9 +2128,9 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Hotbar(ByRef Data() As Byte)
+    Private Sub Packet_Hotbar(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For i = 1 To MAX_HOTBAR
             Player(MyIndex).Hotbar(i).Slot = Buffer.ReadInt32
             Player(MyIndex).Hotbar(i).sType = Buffer.ReadInt32
@@ -2139,13 +2139,13 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Critical(ByRef Data() As Byte)
+    Private Sub Packet_Critical(ByRef data() As Byte)
         ShakeTimerEnabled = True
         ShakeTimer = GetTickCount()
     End Sub
 
-    Private Sub Packet_News(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_News(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         GAME_NAME = Buffer.ReadString
         News = Buffer.ReadString
 
@@ -2154,20 +2154,20 @@ Module ClientNetworkReceive
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_RClick(ByRef Data() As Byte)
+    Private Sub Packet_RClick(ByRef data() As Byte)
         ShowRClick = True
     End Sub
 
-    Private Sub Packet_TotalOnline(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_TotalOnline(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         TotalOnline = Buffer.ReadInt32
 
         Buffer.Dispose()
     End Sub
 
-    Private Sub Packet_Emote(ByRef Data() As Byte)
-        Dim index As Integer, emote As Integer
-        Dim Buffer As New ByteStream(Data)
+    Private Sub Packet_Emote(ByRef data() As Byte)
+        Dim index as integer, emote As Integer
+        dim buffer as New ByteStream(Data)
         index = Buffer.ReadInt32
         emote = Buffer.ReadInt32
 
@@ -2180,9 +2180,9 @@ Module ClientNetworkReceive
 
     End Sub
 
-    Private Sub Packet_ChatBubble(ByRef Data() As Byte)
+    Private Sub Packet_ChatBubble(ByRef data() As Byte)
         Dim targetType As Integer, target As Integer, Message As String, colour As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         target = Buffer.ReadInt32
         targetType = Buffer.ReadInt32
         'Message = buffer.ReadString
@@ -2194,7 +2194,7 @@ Module ClientNetworkReceive
 
     End Sub
 
-    Private Sub Packet_LeftGame(ByRef Data() As Byte)
+    Private Sub Packet_LeftGame(ByRef data() As Byte)
         DestroyGame()
     End Sub
 End Module

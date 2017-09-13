@@ -3,16 +3,16 @@ Imports ASFW
 Imports Orion
 
 Friend Module modTime
-    Sub Packet_Clock(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Sub Packet_Clock(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         Time.Instance.GameSpeed = Buffer.ReadInt32()
         Time.Instance.Time = New Date(BitConverter.ToInt64(Buffer.ReadBytes(), 0))
 
         Buffer.Dispose()
     End Sub
 
-    Sub Packet_Time(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Sub Packet_Time(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
 
         Time.Instance.TimeOfDay = Buffer.ReadByte
 

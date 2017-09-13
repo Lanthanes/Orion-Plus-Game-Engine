@@ -1,6 +1,4 @@
-﻿Imports ASFW
-
-Module ServerTypes
+﻿Module modTypes
     Friend Options As New ServerOptions()
     ' Friend data structures
     Friend Map(MAX_CACHED_MAPS) As MapRec
@@ -99,7 +97,7 @@ Module ServerTypes
         Dim GettingMap As Byte
         Dim SkillBuffer As Integer
         Dim SkillBufferTimer As Integer
-        Dim SkillCD() As Integer
+        Dim SkillCd() As Integer
         Dim InShop As Integer
         Dim StunTimer As Integer
         Dim StunDuration As Integer
@@ -111,9 +109,9 @@ Module ServerTypes
         Dim AcceptTrade As Boolean
 
         'Housing
-        Dim BuyHouseIndex As Integer
+        Dim BuyHouseindex as integer
 
-        Dim InvitationIndex As Integer
+        Dim Invitationindex as integer
         Dim InvitationTimer As Integer
 
         Dim EventMap As EventMapStruct
@@ -154,7 +152,7 @@ Module ServerTypes
         Dim PetStunDuration As Integer
         Dim PetAttackTimer As Integer
 
-        Dim PetSkillCD() As Integer
+        Dim PetSkillCd() As Integer
         Dim PetskillBuffer As SkillBufferRec
 
         Dim PetDoT() As DoTRec
@@ -193,7 +191,7 @@ Module ServerTypes
         Dim Events() As EventStruct
 
         Dim WeatherType As Byte
-        Dim FogIndex As Integer
+        Dim Fogindex as integer
         Dim WeatherIntensity As Integer
         Dim FogAlpha As Byte
         Dim FogSpeed As Byte
@@ -248,7 +246,7 @@ Module ServerTypes
         Dim StunTimer As Integer
         Dim SkillBuffer As Integer
         Dim SkillBufferTimer As Integer
-        Dim SkillCD() As Integer
+        Dim SkillCd() As Integer
         Dim StopRegen As Byte
         Dim StopRegenTimer As Integer
     End Structure
@@ -267,11 +265,11 @@ Module ServerTypes
         Dim ResourceTimer As Integer
         Dim X As Integer
         Dim Y As Integer
-        Dim Cur_Health As Byte
+        Dim CurHealth As Byte
     End Structure
 
     Friend Structure ResourceCacheRec
-        Dim Resource_Count As Integer
+        Dim ResourceCount As Integer
         Dim ResourceData() As MapResourceRec
     End Structure
 

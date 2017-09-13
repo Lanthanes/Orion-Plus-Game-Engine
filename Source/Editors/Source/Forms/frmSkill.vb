@@ -1,7 +1,7 @@
 ﻿Friend Class frmSkill
 
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
-        Dim tmpIndex As Integer
+        Dim tmpindex as integer
 
         If EditorIndex = 0 Then Exit Sub
         tmpIndex = lstIndex.SelectedIndex
@@ -110,7 +110,7 @@
     End Sub
 
     Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-        Dim tmpIndex As Integer
+        Dim tmpindex as integer
 
         ClearSkill(EditorIndex)
 

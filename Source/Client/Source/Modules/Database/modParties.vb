@@ -16,9 +16,9 @@ Module modParties
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_PartyInvite(ByRef Data() As Byte)
+    Sub Packet_PartyInvite(ByRef data() As Byte)
         Dim Name As String
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         Name = Buffer.ReadString
 
         DialogType = DIALOGUE_TYPE_PARTY
@@ -31,9 +31,9 @@ Module modParties
         Buffer.Dispose()
     End Sub
 
-    Sub Packet_PartyUpdate(ByRef Data() As Byte)
+    Sub Packet_PartyUpdate(ByRef data() As Byte)
         Dim I As Integer, InParty As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         InParty = Buffer.ReadInt32
 
         ' exit out if we're not in a party
@@ -54,9 +54,9 @@ Module modParties
         Buffer.Dispose()
     End Sub
 
-    Sub Packet_PartyVitals(ByRef Data() As Byte)
-        Dim playerNum As Integer, partyIndex As Integer
-        Dim Buffer As New ByteStream(Data)
+    Sub Packet_PartyVitals(ByRef data() As Byte)
+        Dim playerNum As Integer, partyindex as integer
+        dim buffer as New ByteStream(Data)
         ' which player?
         playerNum = Buffer.ReadInt32
 
@@ -86,7 +86,7 @@ Module modParties
 
 #Region "Outgoing Packets"
     Friend Sub SendPartyRequest(Name As String)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CRequestParty)
         Buffer.WriteString(Name)
 
@@ -95,7 +95,7 @@ Module modParties
     End Sub
 
     Friend Sub SendAcceptParty()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CAcceptParty)
 
@@ -104,7 +104,7 @@ Module modParties
     End Sub
 
     Friend Sub SendDeclineParty()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CDeclineParty)
 
@@ -113,7 +113,7 @@ Module modParties
     End Sub
 
     Friend Sub SendLeaveParty()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CLeaveParty)
 
@@ -122,7 +122,7 @@ Module modParties
     End Sub
 
     Friend Sub SendPartyChatMsg(Text As String)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPartyChatMsg)
         Buffer.WriteString(Text)
@@ -141,7 +141,7 @@ Module modParties
     End Sub
 
     Friend Sub DrawParty()
-        Dim I As Long, X As Long, Y As Long, barwidth As Long, playerNum As Long, theName As String
+        Dim I As Integer, X As Integer, Y As Integer, barwidth As Integer, playerNum As Integer, theName As String
         Dim rec(1) As Rectangle
 
         ' render the window

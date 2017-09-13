@@ -19,7 +19,7 @@ Friend Class frmPet
     End Sub
 
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
-        Dim tmpIndex As Integer
+        Dim tmpindex as integer
         If EditorIndex <= 0 OrElse EditorIndex > MAX_PETS Then Exit Sub
         tmpIndex = lstIndex.SelectedIndex
         Pet(EditorIndex).Name = Trim$(txtName.Text)

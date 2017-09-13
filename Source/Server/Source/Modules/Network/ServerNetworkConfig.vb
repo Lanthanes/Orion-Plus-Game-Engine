@@ -33,11 +33,11 @@ Friend Module ServerNetworkConfig
         End Try
     End Function
 
-    Function IsLoggedIn(Index As Integer) As Boolean
+    Function IsLoggedIn(index as integer) As Boolean
         Return Len(Trim$(Player(Index).Login)) > 0
     End Function
 
-    Function IsPlaying(Index As Integer) As Boolean
+    Function IsPlaying(index as integer) As Boolean
         Return TempPlayer(Index).InGame
     End Function
 
@@ -57,7 +57,7 @@ Friend Module ServerNetworkConfig
         Next
     End Sub
 
-    Sub SendDataToAllBut(Index As Integer, ByRef Data() As Byte, head As Integer)
+    Sub SendDataToAllBut(index as integer, ByRef data() As Byte, head As Integer)
         For i As Integer = 1 To GetPlayersOnline()
             If IsPlaying(i) AndAlso i <> Index Then
                 Socket.SendDataTo(i, Data, head)
@@ -65,7 +65,7 @@ Friend Module ServerNetworkConfig
         Next
     End Sub
 
-    Sub SendDataToMapBut(Index As Integer, MapNum As Integer, ByRef Data() As Byte, head As Integer)
+    Sub SendDataToMapBut(index as integer, mapNum as Integer, ByRef data() As Byte, head As Integer)
         For i As Integer = 1 To GetPlayersOnline()
             If IsPlaying(i) AndAlso GetPlayerMap(i) = MapNum AndAlso i <> Index Then
                 Socket.SendDataTo(i, Data, head)
@@ -73,7 +73,7 @@ Friend Module ServerNetworkConfig
         Next
     End Sub
 
-    Sub SendDataToMap(MapNum As Integer, ByRef Data() As Byte, head As Integer)
+    Sub SendDataToMap(mapNum as Integer, ByRef data() As Byte, head As Integer)
         Dim i As Integer
 
         For i = 1 To GetPlayersOnline()
@@ -89,18 +89,18 @@ Friend Module ServerNetworkConfig
     End Sub
 
 #Region " Events "
-    Friend Sub Socket_ConnectionReceived(index As Integer) Handles Socket.ConnectionReceived
+    Friend Sub Socket_ConnectionReceived(index as integer) Handles Socket.ConnectionReceived
         Console.WriteLine("Connection received on index[" & index & "] - IP[" & Socket.ClientIp(index) & "]")
         SendKeyPair(index)
         SendNews(index)
     End Sub
 
-    Friend Sub Socket_ConnectionLost(index As Integer) Handles Socket.ConnectionLost
+    Friend Sub Socket_ConnectionLost(index as integer) Handles Socket.ConnectionLost
         Console.WriteLine("Connection lost on index[" & index & "] - IP[" & Socket.ClientIp(index) & "]")
         LeftGame(index)
     End Sub
 
-    Friend Sub Socket_CrashReport(index As Integer, err As String) Handles Socket.CrashReport
+    Friend Sub Socket_CrashReport(index as integer, err As String) Handles Socket.CrashReport
         Console.WriteLine("There was a network error -> Index[" & index & "]")
         Console.WriteLine("Report: " & err)
         LeftGame(index)

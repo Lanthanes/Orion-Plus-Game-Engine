@@ -172,7 +172,7 @@ Friend Module modGuiFunctions
     Friend Function CheckGuiClick(X As Integer, Y As Integer, e As MouseEventArgs) As Boolean
         Dim EqNum As Integer, InvNum As Integer
         Dim slotnum As Integer, hotbarslot As Integer
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         CheckGuiClick = False
         'action panel
@@ -1084,7 +1084,7 @@ Friend Module modGuiFunctions
                     ' check for close button
                     If X > ShopWindowX + ShopButtonCloseX AndAlso X < ShopWindowX + ShopButtonCloseX + ButtonGFXInfo.Width Then
                         If Y > ShopWindowY + ShopButtonCloseY AndAlso Y < ShopWindowY + ShopButtonCloseY + ButtonGFXInfo.Height Then
-                            Dim Buffer As ByteStream
+                            dim buffer as ByteStream
                             Buffer = New ByteStream(4)
                             Buffer.WriteInt32(ClientPackets.CCloseShop)
                             Socket.SendData(Buffer.Data, Buffer.Head)

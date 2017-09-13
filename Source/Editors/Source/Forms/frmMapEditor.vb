@@ -597,10 +597,10 @@ Friend Class frmMapEditor
         With Map
 
             ' set the data before changing it
-            ReDim tempArr(0 To .MaxX, 0 To .MaxY)
+            ReDim tempArr(.MaxX,.MaxY)
             For X = 0 To .MaxX
                 For Y = 0 To .MaxY
-                    ReDim tempArr(X, Y).Layer(0 To LayerType.Count - 1)
+                    ReDim tempArr(X, Y).Layer(LayerType.Count - 1)
 
                     tempArr(X, Y).Data1 = .Tile(X, Y).Data1
                     tempArr(X, Y).Data2 = .Tile(X, Y).Data2
@@ -623,17 +623,17 @@ Friend Class frmMapEditor
             .MaxX = nudMaxX.Value
             .MaxY = nudMaxY.Value
 
-            ReDim Map.Tile(0 To .MaxX, 0 To .MaxY)
-            ReDim Autotile(0 To .MaxX, 0 To .MaxY)
+            ReDim Map.Tile(.MaxX,.MaxY)
+            ReDim Autotile(.MaxX,.MaxY)
 
             If x2 > .MaxX Then x2 = .MaxX
             If y2 > .MaxY Then y2 = .MaxY
 
             For X = 0 To .MaxX
                 For Y = 0 To .MaxY
-                    ReDim Preserve .Tile(X, Y).Layer(0 To LayerType.Count - 1)
+                    ReDim Preserve .Tile(X, Y).Layer(LayerType.Count - 1)
 
-                    ReDim Preserve Autotile(X, Y).Layer(0 To LayerType.Count - 1)
+                    ReDim Preserve Autotile(X, Y).Layer(LayerType.Count - 1)
 
                     If X <= x2 Then
                         If Y <= y2 Then

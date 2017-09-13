@@ -2,9 +2,9 @@
 
 Module ServerNpc
 #Region "Npcombat"
-    Friend Sub TryNpcAttackPlayer(mapnpcnum As Integer, Index As Integer)
+    Friend Sub TryNpcAttackPlayer(mapnpcnum As Integer, index as integer)
 
-        Dim MapNum As Integer, npcnum As Integer, Damage As Integer, i As Integer, armor As Integer
+        Dim mapNum as Integer, npcnum As Integer, Damage As Integer, i As Integer, armor As Integer
 
         ' Can the npc attack the player?
 
@@ -55,8 +55,8 @@ Module ServerNpc
 
     End Sub
 
-    Function CanNpcAttackPlayer(MapNpcNum As Integer, Index As Integer) As Boolean
-        Dim MapNum As Integer
+    Function CanNpcAttackPlayer(MapNpcNum As Integer, index as integer) As Boolean
+        Dim mapNum as Integer
         Dim NpcNum As Integer
 
         ' Check for subscript out of range
@@ -117,7 +117,7 @@ Module ServerNpc
 
     End Function
 
-    Function CanNpcAttackNpc(MapNum As Integer, Attacker As Integer, Victim As Integer) As Boolean
+    Function CanNpcAttackNpc(mapNum as Integer, Attacker As Integer, Victim As Integer) As Boolean
         Dim aNpcNum As Integer, vNpcNum As Integer, VictimX As Integer
         Dim VictimY As Integer, AttackerX As Integer, AttackerY As Integer
 
@@ -193,9 +193,9 @@ Module ServerNpc
     End Function
 
     Friend Sub NpcAttackPlayer(MapNpcNum As Integer, Victim As Integer, Damage As Integer)
-        Dim Name As String, MapNum As Integer
+        Dim Name As String, mapNum as Integer
         Dim z As Integer, InvCount As Integer, EqCount As Integer, j As Integer, x As Integer
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         ' Check for subscript out of range
 
@@ -309,8 +309,8 @@ Module ServerNpc
 
     End Sub
 
-    Sub NpcAttackNpc(MapNum As Integer, Attacker As Integer, Victim As Integer, Damage As Integer)
-        Dim Buffer As New ByteStream(4)
+    Sub NpcAttackNpc(mapNum as Integer, Attacker As Integer, Victim As Integer, Damage As Integer)
+        dim buffer as New ByteStream(4)
         Dim aNpcNum As Integer
         Dim vNpcNum As Integer
         Dim n As Integer
@@ -370,7 +370,7 @@ Module ServerNpc
 
     End Sub
 
-    Friend Sub KnockBackNpc(Index As Integer, NpcNum As Integer, Optional IsSkill As Integer = 0)
+    Friend Sub KnockBackNpc(index as integer, NpcNum As Integer, Optional IsSkill As Integer = 0)
         If IsSkill > 0 Then
             For i = 1 To Skill(IsSkill).KnockBackTiles
                 If CanNpcMove(GetPlayerMap(Index), NpcNum, GetPlayerDir(Index)) Then
@@ -392,7 +392,7 @@ Module ServerNpc
         End If
     End Sub
 
-    Friend Function RandomNpcAttack(MapNum As Integer, MapNpcNum As Integer) As Integer
+    Friend Function RandomNpcAttack(mapNum as Integer, MapNpcNum As Integer) As Integer
         Dim i As Integer, SkillList As New List(Of Byte)
 
         RandomNpcAttack = 0
@@ -417,7 +417,7 @@ Module ServerNpc
         GetNpcSkill = Npc(NpcNum).Skill(skillslot)
     End Function
 
-    Friend Sub BufferNpcSkill(MapNum As Integer, MapNpcNum As Integer, skillslot As Integer)
+    Friend Sub BufferNpcSkill(mapNum as Integer, MapNpcNum As Integer, skillslot As Integer)
         Dim skillnum As Integer
         Dim MPCost As Integer
         Dim SkillCastType As Integer
@@ -567,9 +567,9 @@ Module ServerNpc
 
     End Function
 
-    Friend Sub SpellNpc_Effect(Vital As Byte, increment As Boolean, Index As Integer, Damage As Integer, Skillnum As Integer, MapNum As Integer)
+    Friend Sub SpellNpc_Effect(Vital As Byte, increment As Boolean, index as integer, Damage As Integer, Skillnum As Integer, mapNum as Integer)
         Dim sSymbol As String
-        Dim Colour As Long
+        Dim Colour As Integer
 
         If Damage > 0 Then
             If increment Then
@@ -602,13 +602,13 @@ Module ServerNpc
 
     End Sub
 
-    Friend Function IsNpcDead(MapNum As Integer, MapNpcNum As Integer)
+    Friend Function IsNpcDead(mapNum as Integer, MapNpcNum As Integer)
         IsNpcDead = False
         If MapNum < 0 OrElse MapNum > MAX_MAPS OrElse MapNpcNum < 0 OrElse MapNpcNum > MAX_MAP_NPCS Then Exit Function
         If MapNpc(MapNum).Npc(MapNpcNum).Vital(VitalType.HP) <= 0 Then IsNpcDead = True
     End Function
 
-    Friend Sub DropNpcItems(MapNum As Integer, MapNpcNum As Integer)
+    Friend Sub DropNpcItems(mapNum as Integer, MapNpcNum As Integer)
         Dim NpcNum = MapNpc(MapNum).Npc(MapNpcNum).Num
         Dim tmpitem = Random(1, 5)
         Dim n = Int(Rnd() * Npc(NpcNum).DropChance(tmpitem)) + 1

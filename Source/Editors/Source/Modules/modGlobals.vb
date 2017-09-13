@@ -1,6 +1,6 @@
 ﻿Module modGlobals
-    Friend Const INSTANCED_MAP_MASK As Long = 16777216 '1 << 24
-    Friend Const MAP_NUMBER_MASK As Long = INSTANCED_MAP_MASK - 1
+    Friend Const INSTANCED_MAP_MASK As Integer = 16777216 '1 << 24
+    Friend Const MAP_NUMBER_MASK As Integer = INSTANCED_MAP_MASK - 1
 
     Friend SelectedTab As Byte
     Friend HideCursor As Boolean
@@ -29,7 +29,7 @@
     Friend MapData As Boolean
     ' Cache the Resources in an array
     Friend MapResource() As MapResourceRec
-    Friend Resource_Index As Integer
+    Friend Resource_index as integer
     Friend Resources_Init As Boolean
 
     ' fog
@@ -48,12 +48,12 @@
     Friend DrawThunder As Integer
 
     ' Editor edited items array
-    Friend Item_Changed(0 To MAX_ITEMS) As Boolean
-    Friend NPC_Changed(0 To MAX_NPCS) As Boolean
-    Friend Resource_Changed(0 To MAX_NPCS) As Boolean
-    Friend Animation_Changed(0 To MAX_ANIMATIONS) As Boolean
-    Friend Skill_Changed(0 To MAX_SKILLS) As Boolean
-    Friend Shop_Changed(0 To MAX_SHOPS) As Boolean
+    Friend Item_Changed(MAX_ITEMS) As Boolean
+    Friend NPC_Changed(MAX_NPCS) As Boolean
+    Friend Resource_Changed(MAX_NPCS) As Boolean
+    Friend Animation_Changed(MAX_ANIMATIONS) As Boolean
+    Friend Skill_Changed(MAX_SKILLS) As Boolean
+    Friend Shop_Changed(MAX_SHOPS) As Boolean
 
     'Editors
     Friend InitEditor As Boolean
@@ -86,9 +86,9 @@
 
     ' Game editors
     Friend Editor As Byte
-    Friend EditorIndex As Integer
-    Friend AnimEditorFrame(0 To 1) As Integer
-    Friend AnimEditorTimer(0 To 1) As Integer
+    Friend Editorindex as integer
+    Friend AnimEditorFrame(1) As Integer
+    Friend AnimEditorTimer(1) As Integer
 
     ' Used to check if in editor or not and variables for use in editor
     Friend InMapEditor As Boolean
@@ -153,8 +153,8 @@
     Friend TileView As Rect
 
     ' for directional blocking
-    Friend DirArrowX(0 To 4) As Byte
-    Friend DirArrowY(0 To 4) As Byte
+    Friend DirArrowX(4) As Byte
+    Friend DirArrowY(4) As Byte
 
     Friend HalfX As Integer = ((SCREEN_MAPX + 1) \ 2) * PIC_X
     Friend HalfY As Integer = ((SCREEN_MAPY + 1) \ 2) * PIC_Y

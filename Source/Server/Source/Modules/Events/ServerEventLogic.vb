@@ -3,7 +3,7 @@ Imports Orion
 
 Friend Module ServerEventLogic
     Friend Sub RemoveDeadEvents()
-        Dim i As Integer, MapNum As Integer, Buffer As New ByteStream(4), x As Integer, id As Integer, page As Integer, compare As Integer
+        Dim i As Integer, mapNum as Integer, Buffer As New ByteStream(4), x As Integer, id As Integer, page As Integer, compare As Integer
 
         For i = 1 To GetPlayersOnline()
             If Gettingmap = True Then Exit Sub
@@ -132,7 +132,7 @@ Friend Module ServerEventLogic
     End Sub
 
     Friend Sub SpawnNewEvents()
-        Dim pageID As Integer, id As Integer, compare As Integer, i As Integer, MapNum As Integer
+        Dim pageID As Integer, id As Integer, compare As Integer, i As Integer, mapNum as Integer
         Dim n As Integer, x As Integer, z As Integer, spawnevent As Boolean, p As Integer
 
         'That was only removing events... now we gotta worry about spawning them again, luckily, it is almost the same exact thing, but backwards!
@@ -282,7 +282,7 @@ Friend Module ServerEventLogic
                                 If .MoveType = 2 Then
                                     .MoveRouteCount = Map(MapNum).Events(id).Pages(z).MoveRouteCount
                                     If .MoveRouteCount > 0 Then
-                                        ReDim .MoveRoute(0 To Map(MapNum).Events(id).Pages(z).MoveRouteCount)
+                                        ReDim .MoveRoute(Map(MapNum).Events(id).Pages(z).MoveRouteCount)
                                         For p = 0 To Map(MapNum).Events(id).Pages(z).MoveRouteCount
                                             .MoveRoute(p) = Map(MapNum).Events(id).Pages(z).MoveRoute(p)
                                         Next
@@ -351,7 +351,7 @@ Friend Module ServerEventLogic
     End Sub
 
     Friend Sub ProcessEventMovement()
-        Dim rand As Integer, x As Integer, i As Integer, playerID As Integer, eventID As Integer, WalkThrough As Integer, isglobal As Boolean, MapNum As Integer
+        Dim rand As Integer, x As Integer, i As Integer, playerID As Integer, eventID As Integer, WalkThrough As Integer, isglobal As Boolean, mapNum as Integer
         Dim actualmovespeed As Integer, Buffer As ByteStream, z As Integer, sendupdate As Boolean
         Dim donotprocessmoveroute As Boolean, pageNum As Integer
 
@@ -735,7 +735,7 @@ Friend Module ServerEventLogic
 
     Friend Sub ProcessLocalEventMovement()
         Dim rand As Integer, x As Integer, i As Integer, playerID As Integer, eventID As Integer, WalkThrough As Integer
-        Dim isglobal As Boolean, MapNum As Integer, actualmovespeed As Integer, Buffer As ByteStream, z As Integer, sendupdate As Boolean
+        Dim isglobal As Boolean, mapNum as Integer, actualmovespeed As Integer, Buffer As ByteStream, z As Integer, sendupdate As Boolean
         Dim donotprocessmoveroute As Boolean
 
         For i = 1 To GetPlayersOnline()
@@ -868,7 +868,7 @@ Friend Module ServerEventLogic
                                                                                 TempPlayer(playerID).EventProcessing(eventID).EventID = eventID
                                                                                 TempPlayer(playerID).EventProcessing(eventID).PageID = TempPlayer(playerID).EventMap.EventPages(eventID).PageID
                                                                                 TempPlayer(playerID).EventProcessing(eventID).WaitingForResponse = 0
-                                                                                ReDim TempPlayer(playerID).EventProcessing(eventID).ListLeftOff(0 To Map(GetPlayerMap(playerID)).Events(TempPlayer(playerID).EventMap.EventPages(eventID).EventID).Pages(TempPlayer(playerID).EventMap.EventPages(eventID).PageID).CommandListCount)
+                                                                                ReDim TempPlayer(playerID).EventProcessing(eventID).ListLeftOff(Map(GetPlayerMap(playerID)).Events(TempPlayer(playerID).EventMap.EventPages(eventID).EventID).Pages(TempPlayer(playerID).EventMap.EventPages(eventID).PageID).CommandListCount)
                                                                             End If
                                                                         End If
                                                                         If .IgnoreIfCannotMove = 0 Then
@@ -1131,7 +1131,7 @@ Friend Module ServerEventLogic
     End Sub
 
     Friend Sub ProcessEventCommands()
-        Dim Buffer As New ByteStream(4), i As Integer, x As Integer, removeEventProcess As Boolean, w As Integer, v As Integer, p As Integer
+        dim buffer as New ByteStream(4), i As Integer, x As Integer, removeEventProcess As Boolean, w As Integer, v As Integer, p As Integer
         Dim restartlist As Boolean, restartloop As Boolean, endprocess As Boolean
 
         'Now, we process the damn things for commands :P
@@ -1155,7 +1155,7 @@ Friend Module ServerEventLogic
                                             .EventID = TempPlayer(i).EventMap.EventPages(x).EventID
                                             .PageID = TempPlayer(i).EventMap.EventPages(x).PageID
                                             .WaitingForResponse = 0
-                                            ReDim .ListLeftOff(0 To Map(GetPlayerMap(i)).Events(TempPlayer(i).EventMap.EventPages(x).EventID).Pages(TempPlayer(i).EventMap.EventPages(x).PageID).CommandListCount)
+                                            ReDim .ListLeftOff(Map(GetPlayerMap(i)).Events(TempPlayer(i).EventMap.EventPages(x).EventID).Pages(TempPlayer(i).EventMap.EventPages(x).PageID).CommandListCount)
                                         End With
                                     End If
                                 End If
@@ -1170,7 +1170,7 @@ Friend Module ServerEventLogic
                                         .EventID = TempPlayer(i).EventMap.EventPages(x).EventID
                                         .PageID = TempPlayer(i).EventMap.EventPages(x).PageID
                                         .WaitingForResponse = 0
-                                        ReDim .ListLeftOff(0 To Map(GetPlayerMap(i)).Events(TempPlayer(i).EventMap.EventPages(x).EventID).Pages(TempPlayer(i).EventMap.EventPages(x).PageID).CommandListCount)
+                                        ReDim .ListLeftOff(Map(GetPlayerMap(i)).Events(TempPlayer(i).EventMap.EventPages(x).EventID).Pages(TempPlayer(i).EventMap.EventPages(x).PageID).CommandListCount)
                                     End With
                                 End If
                             End If
@@ -2017,7 +2017,7 @@ Friend Module ServerEventLogic
 
     End Sub
 
-    Function ParseEventText(Index As Integer, txt As String) As String
+    Function ParseEventText(index as integer, txt As String) As String
         Dim i As Integer, x As Integer, newtxt As String, parsestring As String, z As Integer
 
         txt = Replace(txt, "/name", Trim$(Player(Index).Character(TempPlayer(Index).CurChar).Name))
@@ -2043,7 +2043,7 @@ Friend Module ServerEventLogic
 
     End Function
 
-    Sub FindEventLabel(Label As String, MapNum As Integer, eventID As Integer, pageID As Integer, ByRef CurSlot As Integer, ByRef CurList As Integer, ByRef ListLeftOff() As Integer)
+    Sub FindEventLabel(Label As String, mapNum as Integer, eventID As Integer, pageID As Integer, ByRef CurSlot As Integer, ByRef CurList As Integer, ByRef ListLeftOff() As Integer)
         Dim tmpCurSlot As Integer, tmpCurList As Integer, CurrentListOption() As Integer
         Dim removeEventProcess As Boolean, tmpListLeftOff() As Integer, restartlist As Boolean, w As Integer
 
@@ -2149,7 +2149,7 @@ Friend Module ServerEventLogic
 
     End Sub
 
-    Function FindNpcPath(MapNum As Integer, mapnpcnum As Integer, targetx As Integer, targety As Integer) As Integer
+    Function FindNpcPath(mapNum as Integer, mapnpcnum As Integer, targetx As Integer, targety As Integer) As Integer
         Dim tim As Integer, sX As Integer, sY As Integer, pos(,) As Integer, reachable As Boolean, j As Integer, LastSum As Integer, Sum As Integer, FX As Integer, FY As Integer, i As Integer
         Dim path() As Point, LastX As Integer, LastY As Integer, did As Boolean
 
@@ -2166,7 +2166,7 @@ Friend Module ServerEventLogic
         If FX = -1 Then FX = 0
         If FY = -1 Then FY = 0
 
-        ReDim pos(0 To Map(MapNum).MaxX, 0 To Map(MapNum).MaxY)
+        ReDim pos(Map(MapNum).MaxX,Map(MapNum).MaxY)
         'pos = MapBlocks(MapNum).Blocks
 
         pos(sX, sY) = 100 + tim
@@ -2347,7 +2347,7 @@ Friend Module ServerEventLogic
 
     End Sub
 
-    Sub SpawnGlobalEvents(MapNum As Integer)
+    Sub SpawnGlobalEvents(mapNum as Integer)
         Dim i As Integer, z As Integer
 
         If Map(MapNum).EventCount > 0 Then
@@ -2355,7 +2355,7 @@ Friend Module ServerEventLogic
             ReDim TempEventMap(MapNum).Events(0)
             For i = 1 To Map(MapNum).EventCount
                 TempEventMap(MapNum).EventCount = TempEventMap(MapNum).EventCount + 1
-                ReDim Preserve TempEventMap(MapNum).Events(0 To TempEventMap(MapNum).EventCount)
+                ReDim Preserve TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount)
                 If Map(MapNum).Events(i).PageCount > 0 Then
                     If Map(MapNum).Events(i).Globals = 1 Then
                         TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).X = Map(MapNum).Events(i).X
@@ -2380,7 +2380,7 @@ Friend Module ServerEventLogic
 
                         If TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).MoveType = 2 Then
                             TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).MoveRouteCount = Map(MapNum).Events(i).Pages(1).MoveRouteCount
-                            ReDim TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).MoveRoute(0 To Map(MapNum).Events(i).Pages(1).MoveRouteCount)
+                            ReDim TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).MoveRoute(Map(MapNum).Events(i).Pages(1).MoveRouteCount)
                             For z = 0 To Map(MapNum).Events(i).Pages(1).MoveRouteCount
                                 TempEventMap(MapNum).Events(TempEventMap(MapNum).EventCount).MoveRoute(z) = Map(MapNum).Events(i).Pages(1).MoveRoute(z)
                             Next
@@ -2407,13 +2407,13 @@ Friend Module ServerEventLogic
 
     End Sub
 
-    Friend Sub SpawnMapEventsFor(Index As Integer, MapNum As Integer)
+    Friend Sub SpawnMapEventsFor(index as integer, mapNum as Integer)
         Dim i As Integer, z As Integer, spawncurrentevent As Boolean, p As Integer, compare As Integer
 
         TempPlayer(Index).EventMap.CurrentEvents = 0
         ReDim TempPlayer(Index).EventMap.EventPages(0)
         If Map(MapNum).EventCount > 0 Then
-            ReDim TempPlayer(Index).EventProcessing(0 To Map(MapNum).EventCount)
+            ReDim TempPlayer(Index).EventProcessing(Map(MapNum).EventCount)
             TempPlayer(Index).EventProcessingCount = Map(MapNum).EventCount
         Else
             ReDim TempPlayer(Index).EventProcessing(0)
@@ -2553,7 +2553,7 @@ Friend Module ServerEventLogic
                                 .MoveType = Map(MapNum).Events(i).Pages(z).MoveType
                                 If .MoveType = 2 Then
                                     .MoveRouteCount = Map(MapNum).Events(i).Pages(z).MoveRouteCount
-                                    ReDim .MoveRoute(0 To Map(MapNum).Events(i).Pages(z).MoveRouteCount)
+                                    ReDim .MoveRoute(Map(MapNum).Events(i).Pages(z).MoveRouteCount)
                                     If Map(MapNum).Events(i).Pages(z).MoveRouteCount > 0 Then
                                         For p = 0 To Map(MapNum).Events(i).Pages(z).MoveRouteCount
                                             .MoveRoute(p) = Map(MapNum).Events(i).Pages(z).MoveRoute(p)
@@ -2583,7 +2583,7 @@ Friend Module ServerEventLogic
             End If
         Next
 
-        Dim buffer As ByteStream
+        dim buffer as ByteStream
         If TempPlayer(Index).EventMap.CurrentEvents > 0 Then
             For i = 1 To TempPlayer(Index).EventMap.CurrentEvents
                 Buffer = New ByteStream(4)

@@ -6,14 +6,14 @@
     Friend Map As MapRec
     Friend TempTile(,) As TempTileRec
     Friend MapLock As New Object()
-    Friend MapItem(0 To MAX_MAP_ITEMS) As MapItemRec
-    Friend MapNpc(0 To MAX_MAP_NPCS) As MapNpcRec
+    Friend MapItem(MAX_MAP_ITEMS) As MapItemRec
+    Friend MapNpc(MAX_MAP_NPCS) As MapNpcRec
 
     'Mapreport
-    Friend MapNames(0 To MAX_MAPS) As String
+    Friend MapNames(MAX_MAPS) As String
 
     Friend Structure MapRec
-        Dim MapNum As Integer
+        Dim mapNum as Integer
         Dim Name As String
         Dim Music As String
 
@@ -39,7 +39,7 @@
         Dim Events() As EventRec
 
         Dim WeatherType As Byte
-        Dim FogIndex As Integer
+        Dim Fogindex as integer
         Dim WeatherIntensity As Integer
         Dim FogAlpha As Byte
         Dim FogSpeed As Byte

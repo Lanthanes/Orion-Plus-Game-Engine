@@ -7,7 +7,7 @@ Friend Module ServerProjectiles
 
 #Region "Defines"
     Friend Const MAX_PROJECTILES As Integer = 255
-    Friend Projectiles(0 To MAX_PROJECTILES) As ProjectileRec
+    Friend Projectiles(MAX_PROJECTILES) As ProjectileRec
     Friend MapProjectiles(,) As MapProjectileRec
 #End Region
 
@@ -104,7 +104,7 @@ Friend Module ServerProjectiles
 
     End Sub
 
-    Sub ClearMapProjectile(MapNum As Integer, Index As Integer)
+    Sub ClearMapProjectile(mapNum as Integer, index as integer)
 
         MapProjectiles(MapNum, Index).ProjectileNum = 0
         MapProjectiles(MapNum, Index).Owner = 0
@@ -116,7 +116,7 @@ Friend Module ServerProjectiles
 
     End Sub
 
-    Sub ClearProjectile(Index As Integer)
+    Sub ClearProjectile(index as integer)
 
         Projectiles(Index).Name = ""
         Projectiles(Index).Sprite = 0
@@ -140,8 +140,8 @@ Friend Module ServerProjectiles
 #End Region
 
 #Region "Incoming"
-    Sub HandleRequestEditProjectiles(Index As Integer, ByRef data() As Byte)
-        Dim Buffer As New ByteStream(4)
+    Sub HandleRequestEditProjectiles(index as integer, ByRef data() As Byte)
+        dim buffer as New ByteStream(4)
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
@@ -153,9 +153,9 @@ Friend Module ServerProjectiles
 
     End Sub
 
-    Sub HandleSaveProjectile(Index As Integer, ByRef data() As Byte)
+    Sub HandleSaveProjectile(index as integer, ByRef data() As Byte)
         Dim ProjectileNum As Integer
-        Dim Buffer As New ByteStream(data)
+        dim buffer as New ByteStream(data)
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
 
         ProjectileNum = Buffer.ReadInt32
@@ -179,22 +179,22 @@ Friend Module ServerProjectiles
 
     End Sub
 
-    Sub HandleRequestProjectiles(Index As Integer, ByRef data() As Byte)
+    Sub HandleRequestProjectiles(index as integer, ByRef data() As Byte)
 
         SendProjectiles(Index)
 
     End Sub
 
-    Sub HandleClearProjectile(Index As Integer, ByRef data() As Byte)
+    Sub HandleClearProjectile(index as integer, ByRef data() As Byte)
         Dim ProjectileNum As Integer
-        Dim TargetIndex As Integer
+        Dim Targetindex as integer
         Dim TargetType As TargetType
         Dim TargetZone As Integer
-        Dim MapNum As Integer
+        Dim mapNum as Integer
         Dim Damage As Integer
         Dim armor As Integer
         Dim npcnum As Integer
-        Dim Buffer As New ByteStream(data)
+        dim buffer as New ByteStream(data)
         ProjectileNum = Buffer.ReadInt32
         TargetIndex = Buffer.ReadInt32
         TargetType = Buffer.ReadInt32
@@ -260,7 +260,7 @@ Friend Module ServerProjectiles
 
 #Region "Outgoing"
     Sub SendUpdateProjectileToAll(ProjectileNum As Integer)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -277,8 +277,8 @@ Friend Module ServerProjectiles
 
     End Sub
 
-    Sub SendUpdateProjectileTo(Index As Integer, ProjectileNum As Integer)
-        Dim Buffer As ByteStream
+    Sub SendUpdateProjectileTo(index as integer, ProjectileNum As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -295,7 +295,7 @@ Friend Module ServerProjectiles
 
     End Sub
 
-    Sub SendProjectiles(Index As Integer)
+    Sub SendProjectiles(index as integer)
         Dim i As Integer
 
         For i = 1 To MAX_PROJECTILES
@@ -306,8 +306,8 @@ Friend Module ServerProjectiles
 
     End Sub
 
-    Sub SendProjectileToMap(MapNum As Integer, ProjectileNum As Integer)
-        Dim Buffer As ByteStream
+    Sub SendProjectileToMap(mapNum as Integer, ProjectileNum As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SMapProjectile)
@@ -330,10 +330,10 @@ Friend Module ServerProjectiles
 #End Region
 
 #Region "Functions"
-    Friend Sub PlayerFireProjectile(Index As Integer, Optional IsSkill As Integer = 0)
+    Friend Sub PlayerFireProjectile(index as integer, Optional IsSkill As Integer = 0)
         Dim ProjectileSlot As Integer
         Dim ProjectileNum As Integer
-        Dim MapNum As Integer
+        Dim mapNum as Integer
         Dim i As Integer
 
         MapNum = GetPlayerMap(Index)

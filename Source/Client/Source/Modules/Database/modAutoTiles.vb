@@ -220,14 +220,14 @@ Friend Module modAutoTiles
         ' We also give letters to each subtile for easy rendering tweaks. ;]
         ' First, we need to re-size the array
 
-        ReDim Autotile(0 To Map.MaxX, 0 To Map.MaxY)
+        ReDim Autotile(Map.MaxX,Map.MaxY)
         For X = 0 To Map.MaxX
             For Y = 0 To Map.MaxY
-                ReDim Autotile(X, Y).Layer(0 To LayerType.Count - 1)
+                ReDim Autotile(X, Y).Layer(LayerType.Count - 1)
                 For i = 0 To LayerType.Count - 1
-                    ReDim Autotile(X, Y).Layer(i).srcX(0 To 4)
-                    ReDim Autotile(X, Y).Layer(i).srcY(0 To 4)
-                    ReDim Autotile(X, Y).Layer(i).QuarterTile(0 To 4)
+                    ReDim Autotile(X, Y).Layer(i).srcX(4)
+                    ReDim Autotile(X, Y).Layer(i).srcY(4)
+                    ReDim Autotile(X, Y).Layer(i).QuarterTile(4)
                 Next
             Next
         Next
@@ -338,7 +338,7 @@ Friend Module modAutoTiles
             End If
             ' check if it needs to be rendered as an autotile
             If .Layer(layerNum).AutoTile = AUTOTILE_NONE OrElse .Layer(layerNum).AutoTile = AUTOTILE_FAKE Then
-                'ReDim Autotile(X, Y).Layer(0 To MapLayer.Count - 1)
+                'ReDim Autotile(X, Y).Layer(MapLayer.Count - 1)
                 ' default to... default
                 Autotile(X, Y).Layer(layerNum).renderState = RENDER_STATE_NORMAL
             Else
@@ -407,7 +407,7 @@ Friend Module modAutoTiles
 
     ' Normal autotiling
     Friend Sub CalculateNW_Normal(layerNum As Integer, X As Integer, Y As Integer)
-        Dim tmpTile(0 To 3) As Boolean
+        Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
         ' North West
@@ -444,7 +444,7 @@ Friend Module modAutoTiles
     End Sub
 
     Friend Sub CalculateNE_Normal(layerNum As Integer, X As Integer, Y As Integer)
-        Dim tmpTile(0 To 3) As Boolean
+        Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
         ' North
@@ -481,7 +481,7 @@ Friend Module modAutoTiles
     End Sub
 
     Friend Sub CalculateSW_Normal(layerNum As Integer, X As Integer, Y As Integer)
-        Dim tmpTile(0 To 3) As Boolean
+        Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
         ' West
@@ -518,7 +518,7 @@ Friend Module modAutoTiles
     End Sub
 
     Friend Sub CalculateSE_Normal(layerNum As Integer, X As Integer, Y As Integer)
-        Dim tmpTile(0 To 3) As Boolean
+        Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
         ' South
@@ -621,7 +621,7 @@ Friend Module modAutoTiles
 
     ' Cliff autotiling
     Friend Sub CalculateNW_Cliff(layerNum As Integer, X As Integer, Y As Integer)
-        Dim tmpTile(0 To 3) As Boolean
+        Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
         ' North West
@@ -655,7 +655,7 @@ Friend Module modAutoTiles
     End Sub
 
     Friend Sub CalculateNE_Cliff(layerNum As Integer, X As Integer, Y As Integer)
-        Dim tmpTile(0 To 3) As Boolean
+        Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
         ' North
@@ -689,7 +689,7 @@ Friend Module modAutoTiles
     End Sub
 
     Friend Sub CalculateSW_Cliff(layerNum As Integer, X As Integer, Y As Integer)
-        Dim tmpTile(0 To 3) As Boolean
+        Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
         ' West
@@ -723,7 +723,7 @@ Friend Module modAutoTiles
     End Sub
 
     Friend Sub CalculateSE_Cliff(layerNum As Integer, X As Integer, Y As Integer)
-        Dim tmpTile(0 To 3) As Boolean
+        Dim tmpTile(3) As Boolean
         Dim situation As Byte
 
         ' South

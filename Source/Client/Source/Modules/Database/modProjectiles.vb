@@ -40,7 +40,7 @@ Friend Module modProjectiles
 #Region "Sending"
 
     Sub SendRequestProjectiles()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestProjectiles)
 
@@ -49,8 +49,8 @@ Friend Module modProjectiles
 
     End Sub
 
-    Sub SendClearProjectile(ProjectileNum As Integer, CollisionIndex As Integer, CollisionType As Byte, CollisionZone As Integer)
-        Dim Buffer As New ByteStream(4)
+    Sub SendClearProjectile(ProjectileNum As Integer, Collisionindex as integer, CollisionType As Byte, CollisionZone As Integer)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CClearProjectile)
         Buffer.WriteInt32(ProjectileNum)
@@ -67,9 +67,9 @@ Friend Module modProjectiles
 
 #Region "Recieving"
 
-    Friend Sub HandleUpdateProjectile(ByRef Data() As Byte)
+    Friend Sub HandleUpdateProjectile(ByRef data() As Byte)
         Dim ProjectileNum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         ProjectileNum = Buffer.ReadInt32
 
         Projectiles(ProjectileNum).Name = Buffer.ReadString
@@ -82,9 +82,9 @@ Friend Module modProjectiles
 
     End Sub
 
-    Friend Sub HandleMapProjectile(ByRef Data() As Byte)
+    Friend Sub HandleMapProjectile(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
 
         With MapProjectiles(i)
@@ -114,7 +114,7 @@ Friend Module modProjectiles
 
     End Sub
 
-    Sub ClearProjectile(Index As Integer)
+    Sub ClearProjectile(index as integer)
 
         Projectiles(Index).Name = ""
         Projectiles(Index).Sprite = 0
@@ -158,7 +158,7 @@ Friend Module modProjectiles
     Friend Sub DrawProjectile(ProjectileNum As Integer)
         Dim rec As Rect
         Dim CanClearProjectile As Boolean
-        Dim CollisionIndex As Integer
+        Dim Collisionindex as integer
         Dim CollisionType As Byte
         Dim CollisionZone As Integer
         Dim XOffset As Integer, YOffset As Integer

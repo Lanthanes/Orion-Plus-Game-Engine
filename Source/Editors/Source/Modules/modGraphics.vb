@@ -216,7 +216,7 @@ Module modGraphics
 
     End Sub
 
-    Friend Sub LoadTexture(Index As Integer, TexType As Byte)
+    Friend Sub LoadTexture(index as integer, TexType As Byte)
 
         If TexType = 1 Then 'tilesets
             If Index <= 0 OrElse Index > NumTileSets Then Exit Sub

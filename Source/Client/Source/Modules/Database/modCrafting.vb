@@ -26,7 +26,7 @@ Friend Module modCrafting
 
     Friend CraftAmountValue As Byte
     Friend CraftProgressValue As Integer
-    Friend picProductIndex As Integer
+    Friend picProductindex as integer
     Friend lblProductNameText As String
     Friend lblProductAmountText As String
 
@@ -83,9 +83,9 @@ Friend Module modCrafting
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_UpdateRecipe(ByRef Data() As Byte)
+    Sub Packet_UpdateRecipe(ByRef data() As Byte)
         Dim n As Integer, i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         'recipe index
         n = Buffer.ReadInt32
 
@@ -106,13 +106,13 @@ Friend Module modCrafting
 
     End Sub
 
-    Sub Packet_RecipeEditor(ByRef Data() As Byte)
+    Sub Packet_RecipeEditor(ByRef data() As Byte)
         InitRecipeEditor = True
     End Sub
 
-    Sub Packet_SendPlayerRecipe(ByRef Data() As Byte)
+    Sub Packet_SendPlayerRecipe(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For i = 1 To MAX_RECIPE
             Player(MyIndex).RecipeLearned(i) = Buffer.ReadInt32
         Next
@@ -120,13 +120,13 @@ Friend Module modCrafting
         Buffer.Dispose()
     End Sub
 
-    Sub Packet_OpenCraft(ByRef Data() As Byte)
+    Sub Packet_OpenCraft(ByRef data() As Byte)
         InitCrafting = True
     End Sub
 
-    Sub Packet_UpdateCraft(ByRef Data() As Byte)
+    Sub Packet_UpdateCraft(ByRef data() As Byte)
         Dim done As Byte
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         done = Buffer.ReadInt32
 
         If done = 1 Then
@@ -142,7 +142,7 @@ Friend Module modCrafting
 
 #Region "OutGoing Packets"
     Sub SendRequestRecipes()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestRecipes)
 
@@ -151,7 +151,7 @@ Friend Module modCrafting
     End Sub
 
     Sub SendRequestEditRecipes()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditRecipes)
 
@@ -160,7 +160,7 @@ Friend Module modCrafting
     End Sub
 
     Sub SendSaveRecipe(RecipeNum As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveRecipe)
 
@@ -183,8 +183,8 @@ Friend Module modCrafting
     End Sub
 
     Friend Sub SendCraftIt(RecipeName As String, Amount As Integer)
-        Dim Buffer As New ByteStream(4), i As Integer
-        Dim recipeindex As Integer
+        dim buffer as New ByteStream(4), i As Integer
+        Dim recipeindex as integer
 
         recipeindex = GetRecipeIndex(RecipeName)
 
@@ -226,7 +226,7 @@ Friend Module modCrafting
     End Sub
 
     Sub SendCloseCraft()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CCloseCraft)
 
@@ -266,7 +266,7 @@ Friend Module modCrafting
     End Sub
 
     Sub LoadRecipe(RecipeName As String)
-        Dim recipeindex As Integer
+        Dim recipeindex as integer
 
         recipeindex = GetRecipeIndex(RecipeName)
 

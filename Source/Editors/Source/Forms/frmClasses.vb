@@ -26,9 +26,9 @@ Friend Class frmClasses
 
         Classes(Max_Classes).Name = "New Class"
 
-        ReDim Classes(Max_Classes).Stat(0 To StatType.Count - 1)
+        ReDim Classes(Max_Classes).Stat(StatType.Count - 1)
 
-        ReDim Classes(Max_Classes).Vital(0 To VitalType.Count - 1)
+        ReDim Classes(Max_Classes).Vital(VitalType.Count - 1)
 
         ReDim Classes(Max_Classes).MaleSprite(1)
         ReDim Classes(Max_Classes).FemaleSprite(1)
@@ -82,7 +82,7 @@ Friend Class frmClasses
     End Sub
 
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
-        Dim tmpIndex As Integer
+        Dim tmpindex as integer
         If EditorIndex = 0 OrElse EditorIndex > Max_Classes Then Exit Sub
 
         tmpIndex = lstIndex.SelectedIndex

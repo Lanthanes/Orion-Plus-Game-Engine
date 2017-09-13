@@ -17,7 +17,7 @@
     End Sub
 
     Private Sub TxtName_TextChanged(sender As System.Object, e As EventArgs) Handles txtName.TextChanged
-        Dim tmpIndex As Integer
+        Dim tmpindex as integer
 
         If EditorIndex < 1 OrElse EditorIndex > MAX_PROJECTILES Then Exit Sub
 

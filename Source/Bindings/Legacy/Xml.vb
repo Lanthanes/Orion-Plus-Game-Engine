@@ -4,34 +4,13 @@ Imports System.Text
 
 Friend Class XmlClass
     Private xmlDoc As New XmlDocument()
-    Private m_Filename As String = vbNullString
-    Private m_Root As String = "Settings"
 
-    Friend Property Root As String
-        Get
-            Return m_Root
-        End Get
-
-        Set(value As String)
-            m_Root = value
-        End Set
-
-    End Property
-
-    Friend Property Filename As String
-        Get
-            Return m_Filename
-        End Get
-
-        Set(value As String)
-            m_Filename = value
-        End Set
-
-    End Property
+    Friend Property Root As String = "Settings"
+    Friend Property Filename As String = vbNullString
 
     Sub NewXmlDocument()
 
-        Dim xmlTextWrite As New XmlTextWriter(Me.Filename, Encoding.UTF8)
+        Dim xmlTextWrite As New XmlTextWriter(Filename, Encoding.UTF8)
 
         'Write blank xml document.
         With xmlTextWrite
@@ -49,7 +28,7 @@ Friend Class XmlClass
         'Dim xmlDoc As New XmlDocument()
 
         'Check if xml filename is here.
-        If Not File.Exists(Me.Filename) Then
+        If Not File.Exists(Filename) Then
             'Create new blank xml file.
             NewXmlDocument()
         End If
@@ -88,7 +67,7 @@ Friend Class XmlClass
     Friend Function ReadString(Selection As String, Name As String, Optional DefaultValue As String = "") As String
         'Dim xmlDoc As New XmlDocument()
 
-        If Not File.Exists(Me.Filename) Then
+        If Not File.Exists(Filename) Then
             Return DefaultValue
         Else
             'Load xml document.
@@ -113,7 +92,7 @@ Friend Class XmlClass
         'Dim xmlDoc As New XmlDocument()
 
         'Remove xml node
-        If File.Exists(Me.Filename) Then
+        If File.Exists(Filename) Then
             'Load xml document.
             ' xmlDoc.Load(Filename)
             'Read node value.
@@ -129,7 +108,7 @@ Friend Class XmlClass
 
     Friend Sub LoadXml()
         'Load xml document.
-        xmlDoc.Load(Me.Filename)
+        xmlDoc.Load(Filename)
     End Sub
 
     Friend Sub CloseXml(Save As Boolean)

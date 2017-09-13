@@ -57,7 +57,7 @@ Friend Module modQuest
     Friend QuestAcceptTag As Integer
 
     'Types
-    Friend Quest(0 To MAX_QUESTS) As QuestRec
+    Friend Quest(MAX_QUESTS) As QuestRec
 
     Friend Structure PlayerQuestRec
         Dim Status As Integer '0=not started, 1=started, 2=completed, 3=completed but repeatable
@@ -172,13 +172,13 @@ Friend Module modQuest
 #End Region
 
 #Region "Incoming Packets"
-    Friend Sub Packet_QuestEditor(ByRef Data() As Byte)
+    Friend Sub Packet_QuestEditor(ByRef data() As Byte)
         QuestEditorShow = True
     End Sub
 
-    Friend Sub Packet_UpdateQuest(ByRef Data() As Byte)
+    Friend Sub Packet_UpdateQuest(ByRef data() As Byte)
         Dim QuestNum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         QuestNum = Buffer.ReadInt32
 
         ' Update the Quest
@@ -232,9 +232,9 @@ Friend Module modQuest
         Buffer.Dispose()
     End Sub
 
-    Friend Sub Packet_PlayerQuest(ByRef Data() As Byte)
+    Friend Sub Packet_PlayerQuest(ByRef data() As Byte)
         Dim QuestNum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         QuestNum = Buffer.ReadInt32
 
         Player(MyIndex).PlayerQuest(QuestNum).Status = Buffer.ReadInt32
@@ -246,9 +246,9 @@ Friend Module modQuest
         Buffer.Dispose()
     End Sub
 
-    Friend Sub Packet_PlayerQuests(ByRef Data() As Byte)
+    Friend Sub Packet_PlayerQuests(ByRef data() As Byte)
         Dim I As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For I = 1 To MAX_QUESTS
             Player(MyIndex).PlayerQuest(I).Status = Buffer.ReadInt32
             Player(MyIndex).PlayerQuest(I).ActualTask = Buffer.ReadInt32
@@ -260,8 +260,8 @@ Friend Module modQuest
         Buffer.Dispose()
     End Sub
 
-    Friend Sub Packet_QuestMessage(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Friend Sub Packet_QuestMessage(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         QuestNum = Buffer.ReadInt32
         QuestMessage = Trim$(Buffer.ReadString)
         QuestMessage = QuestMessage.Replace("$playername$", GetPlayerName(MyIndex))
@@ -276,7 +276,7 @@ Friend Module modQuest
 #Region "Outgoing Packets"
 
     Sub SendRequestQuests()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestQuests)
 
@@ -286,7 +286,7 @@ Friend Module modQuest
     End Sub
 
     Friend Sub UpdateQuestLog()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CQuestLogUpdate)
 
@@ -296,7 +296,7 @@ Friend Module modQuest
     End Sub
 
     Friend Sub PlayerHandleQuest(QuestNum As Integer, Order As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CPlayerHandleQuest)
         Buffer.WriteInt32(QuestNum)
@@ -307,7 +307,7 @@ Friend Module modQuest
     End Sub
 
     Friend Sub QuestReset(QuestNum As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CQuestReset)
         Buffer.WriteInt32(QuestNum)
@@ -391,7 +391,7 @@ Friend Module modQuest
         End If
     End Function
 
-    Friend Function CanEndQuest(Index As Integer, QuestNum As Integer) As Boolean
+    Friend Function CanEndQuest(index as integer, QuestNum As Integer) As Boolean
         CanEndQuest = False
 
         If Player(Index).PlayerQuest(QuestNum).ActualTask >= Quest(QuestNum).Task.Length Then
@@ -402,7 +402,7 @@ Friend Module modQuest
         End If
     End Function
 
-    Function HasItem(Index As Integer, itemNum As Integer) As Integer
+    Function HasItem(index as integer, itemNum As Integer) As Integer
         Dim i As Integer
 
         ' Check for subscript out of range

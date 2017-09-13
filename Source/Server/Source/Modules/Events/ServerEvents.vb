@@ -23,7 +23,7 @@ Friend Module ServerEvents
 
 #Region "Structures"
     Structure MoveRouteStruct
-        Dim Index As Integer
+        Dim index as integer
         Dim Data1 As Integer
         Dim Data2 As Integer
         Dim Data3 As Integer
@@ -109,20 +109,20 @@ Friend Module ServerEvents
     Structure EventPageStruct
         'These are condition variables that decide if the event even appears to the player.
         Dim chkVariable As Integer
-        Dim VariableIndex As Integer
+        Dim Variableindex as integer
         Dim VariableCondition As Integer
         Dim VariableCompare As Integer
 
         Dim chkSwitch As Integer
-        Dim SwitchIndex As Integer
+        Dim Switchindex as integer
         Dim SwitchCompare As Integer
 
         Dim chkHasItem As Integer
-        Dim HasItemIndex As Integer
+        Dim HasItemindex as integer
         Dim HasItemAmount As Integer
 
         Dim chkSelfSwitch As Integer
-        Dim SelfSwitchIndex As Integer
+        Dim SelfSwitchindex as integer
         Dim SelfSwitchCompare As Integer
         Dim chkPlayerGender As Integer
         'End Conditions
@@ -465,7 +465,7 @@ Friend Module ServerEvents
 #End Region
 
 #Region "Movement"
-    Function CanEventMove(Index As Integer, MapNum As Integer, x As Integer, y As Integer, eventID As Integer, WalkThrough As Integer, Dir As Byte, Optional globalevent As Boolean = False) As Boolean
+    Function CanEventMove(index as integer, mapNum as Integer, x As Integer, y As Integer, eventID As Integer, WalkThrough As Integer, Dir As Byte, Optional globalevent As Boolean = False) As Boolean
         Dim i As Integer
         Dim n As Integer, z As Integer, begineventprocessing As Boolean
 
@@ -521,7 +521,7 @@ Friend Module ServerEvents
                                             TempPlayer(Index).EventProcessing(eventID).EventID = eventID
                                             TempPlayer(Index).EventProcessing(eventID).PageID = TempPlayer(Index).EventMap.EventPages(eventID).PageID
                                             TempPlayer(Index).EventProcessing(eventID).WaitingForResponse = 0
-                                            ReDim TempPlayer(Index).EventProcessing(eventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(eventID).EventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount)
+                                            ReDim TempPlayer(Index).EventProcessing(eventID).ListLeftOff(Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(eventID).EventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount)
                                         End If
                                         begineventprocessing = False
                                     End If
@@ -606,7 +606,7 @@ Friend Module ServerEvents
                                             TempPlayer(Index).EventProcessing(eventID).EventID = eventID
                                             TempPlayer(Index).EventProcessing(eventID).PageID = TempPlayer(Index).EventMap.EventPages(eventID).PageID
                                             TempPlayer(Index).EventProcessing(eventID).WaitingForResponse = 0
-                                            ReDim TempPlayer(Index).EventProcessing(eventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(eventID).EventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount)
+                                            ReDim TempPlayer(Index).EventProcessing(eventID).ListLeftOff(Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(eventID).EventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount)
                                         End If
                                         begineventprocessing = False
                                     End If
@@ -692,7 +692,7 @@ Friend Module ServerEvents
                                             TempPlayer(Index).EventProcessing(eventID).EventID = eventID
                                             TempPlayer(Index).EventProcessing(eventID).PageID = TempPlayer(Index).EventMap.EventPages(eventID).PageID
                                             TempPlayer(Index).EventProcessing(eventID).WaitingForResponse = 0
-                                            ReDim TempPlayer(Index).EventProcessing(eventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(eventID).EventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount)
+                                            ReDim TempPlayer(Index).EventProcessing(eventID).ListLeftOff(Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(eventID).EventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount)
                                         End If
                                         begineventprocessing = False
                                     End If
@@ -778,7 +778,7 @@ Friend Module ServerEvents
                                             TempPlayer(Index).EventProcessing(eventID).EventID = eventID
                                             TempPlayer(Index).EventProcessing(eventID).PageID = TempPlayer(Index).EventMap.EventPages(eventID).PageID
                                             TempPlayer(Index).EventProcessing(eventID).WaitingForResponse = 0
-                                            ReDim TempPlayer(Index).EventProcessing(eventID).ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(eventID).EventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount)
+                                            ReDim TempPlayer(Index).EventProcessing(eventID).ListLeftOff(Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(eventID).EventID).Pages(TempPlayer(Index).EventMap.EventPages(eventID).PageID).CommandListCount)
                                         End If
                                         begineventprocessing = False
                                     End If
@@ -828,9 +828,9 @@ Friend Module ServerEvents
 
     End Function
 
-    Sub EventDir(PlayerIndex As Integer, MapNum As Integer, eventID As Integer, Dir As Integer, Optional globalevent As Boolean = False)
-        Dim Buffer As New ByteStream(4)
-        Dim eventIndex As Integer, i As Integer
+    Sub EventDir(Playerindex as integer, mapNum as Integer, eventID As Integer, Dir As Integer, Optional globalevent As Boolean = False)
+        dim buffer as New ByteStream(4)
+        Dim eventindex as integer, i As Integer
 
         ' Check for subscript out of range
 
@@ -878,9 +878,9 @@ Friend Module ServerEvents
 
     End Sub
 
-    Sub EventMove(Index As Integer, MapNum As Integer, eventID As Integer, Dir As Integer, movementspeed As Integer, Optional globalevent As Boolean = False)
-        Dim Buffer As New ByteStream(4)
-        Dim eventIndex As Integer, i As Integer
+    Sub EventMove(index as integer, mapNum as Integer, eventID As Integer, Dir As Integer, movementspeed As Integer, Optional globalevent As Boolean = False)
+        dim buffer as New ByteStream(4)
+        Dim eventindex as integer, i As Integer
 
         ' Check for subscript out of range
         If Gettingmap = True Then Exit Sub
@@ -1129,7 +1129,7 @@ Friend Module ServerEvents
 
     End Function
 
-    Function CanEventMoveTowardsPlayer(playerID As Integer, MapNum As Integer, eventID As Integer) As Integer
+    Function CanEventMoveTowardsPlayer(playerID As Integer, mapNum as Integer, eventID As Integer) As Integer
         Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, didwalk As Boolean, WalkThrough As Integer
         Dim tim As Integer, sX As Integer, sY As Integer, pos(,) As Integer, reachable As Boolean, j As Integer, LastSum As Integer, Sum As Integer, FX As Integer, FY As Integer
         Dim path() As Point, LastX As Integer, LastY As Integer, did As Boolean
@@ -1313,7 +1313,7 @@ Friend Module ServerEvents
             FX = x
             FY = y
 
-            ReDim pos(0 To Map(MapNum).MaxX, 0 To Map(MapNum).MaxY)
+            ReDim pos(Map(MapNum).MaxX,Map(MapNum).MaxY)
 
             For i = 1 To TempPlayer(playerID).EventMap.CurrentEvents
                 If TempPlayer(playerID).EventMap.EventPages(i).Visible Then
@@ -1493,7 +1493,7 @@ Friend Module ServerEvents
 
     End Function
 
-    Function CanEventMoveAwayFromPlayer(playerID As Integer, MapNum As Integer, eventID As Integer) As Integer
+    Function CanEventMoveAwayFromPlayer(playerID As Integer, mapNum as Integer, eventID As Integer) As Integer
         Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, didwalk As Boolean, WalkThrough As Integer
         'This does not work for global events so this MUST be a player one....
 
@@ -1670,7 +1670,7 @@ Friend Module ServerEvents
 
     End Function
 
-    Function GetDirToPlayer(playerID As Integer, MapNum As Integer, eventID As Integer) As Integer
+    Function GetDirToPlayer(playerID As Integer, mapNum as Integer, eventID As Integer) As Integer
         Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, distance As Integer
         'This does not work for global events so this MUST be a player one....
 
@@ -1713,7 +1713,7 @@ Friend Module ServerEvents
 
     End Function
 
-    Function GetDirAwayFromPlayer(playerID As Integer, MapNum As Integer, eventID As Integer) As Integer
+    Function GetDirAwayFromPlayer(playerID As Integer, mapNum as Integer, eventID As Integer) As Integer
         Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, distance As Integer
         'This does not work for global events so this MUST be a player one....
 
@@ -1759,9 +1759,9 @@ Friend Module ServerEvents
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_EventChatReply(Index As Integer, ByRef data() As Byte)
+    Sub Packet_EventChatReply(index as integer, ByRef data() As Byte)
         Dim eventID As Integer, pageID As Integer, reply As Integer, i As Integer
-        Dim Buffer As New ByteStream(data)
+        dim buffer as New ByteStream(data)
         Addlog("Recieved CMSG: CEventChatReply", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CEventChatReply")
 
@@ -1810,10 +1810,10 @@ Friend Module ServerEvents
 
     End Sub
 
-    Sub Packet_Event(Index As Integer, ByRef data() As Byte)
+    Sub Packet_Event(index as integer, ByRef data() As Byte)
         Dim i As Integer, begineventprocessing As Boolean, z As Integer
         Dim x As Integer, y As Integer
-        Dim Buffer As New ByteStream(data)
+        dim buffer as New ByteStream(data)
         Addlog("Recieved CMSG: CEvent", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CEvent")
 
@@ -1865,7 +1865,7 @@ Friend Module ServerEvents
                         .EventID = TempPlayer(Index).EventMap.EventPages(i).EventID
                         .PageID = TempPlayer(Index).EventMap.EventPages(i).PageID
                         .WaitingForResponse = 0
-                        ReDim .ListLeftOff(0 To Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
+                        ReDim .ListLeftOff(Map(GetPlayerMap(Index)).Events(TempPlayer(Index).EventMap.EventPages(i).EventID).Pages(TempPlayer(Index).EventMap.EventPages(i).PageID).CommandListCount)
                     End With
                 End If
             End If
@@ -1874,15 +1874,15 @@ Friend Module ServerEvents
 
     End Sub
 
-    Sub Packet_RequestSwitchesAndVariables(Index As Integer, ByRef data() As Byte)
+    Sub Packet_RequestSwitchesAndVariables(index as integer, ByRef data() As Byte)
         Addlog("Recieved CMSG: CRequestSwitchesAndVariables", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CRequestSwitchesAndVariables")
         SendSwitchesAndVariables(Index)
     End Sub
 
-    Sub Packet_SwitchesAndVariables(Index As Integer, ByRef data() As Byte)
+    Sub Packet_SwitchesAndVariables(index as integer, ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(data)
+        dim buffer as New ByteStream(data)
 
         Addlog("Recieved CMSG: CSwitchesAndVariables", PACKET_LOG)
         Console.WriteLine("Recieved CMSG: CSwitchesAndVariables")
@@ -1907,8 +1907,8 @@ Friend Module ServerEvents
 #End Region
 
 #Region "Outgoing Packets"
-    Sub SendSpecialEffect(Index As Integer, EffectType As Integer, Optional Data1 As Integer = 0, Optional Data2 As Integer = 0, Optional Data3 As Integer = 0, Optional Data4 As Integer = 0)
-        Dim Buffer As New ByteStream(4)
+    Sub SendSpecialEffect(index as integer, EffectType As Integer, Optional Data1 As Integer = 0, Optional Data2 As Integer = 0, Optional Data3 As Integer = 0, Optional Data4 As Integer = 0)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SSpecialEffect)
 
@@ -1944,8 +1944,8 @@ Friend Module ServerEvents
 
     End Sub
 
-    Sub SendSwitchesAndVariables(Index As Integer, Optional everyone As Boolean = False)
-        Dim Buffer As New ByteStream(4), i As Integer
+    Sub SendSwitchesAndVariables(index as integer, Optional everyone As Boolean = False)
+        dim buffer as New ByteStream(4), i As Integer
 
         Buffer.WriteInt32(ServerPackets.SSwitchesAndVariables)
 
@@ -1970,9 +1970,9 @@ Friend Module ServerEvents
 
     End Sub
 
-    Sub SendMapEventData(Index As Integer)
-        Dim Buffer As New ByteStream(4), i As Integer, x As Integer, y As Integer
-        Dim z As Integer, MapNum As Integer, w As Integer
+    Sub SendMapEventData(index as integer)
+        dim buffer as New ByteStream(4), i As Integer, x As Integer, y As Integer
+        Dim z As Integer, mapNum as Integer, w As Integer
 
         Buffer.WriteInt32(ServerPackets.SMapEventData)
         MapNum = GetPlayerMap(Index)
@@ -2106,7 +2106,7 @@ Friend Module ServerEvents
 #End Region
 
 #Region "Misc"
-    Friend Sub GivePlayerEXP(Index As Integer, Exp As Integer)
+    Friend Sub GivePlayerEXP(index as integer, Exp As Integer)
         ' give the exp
 
         SetPlayerExp(Index, GetPlayerExp(Index) + Exp)
@@ -2128,7 +2128,7 @@ Friend Module ServerEvents
 
     End Sub
 
-    Friend Sub CustomScript(Index As Integer, caseID As Integer, MapNum As Integer, EventId As Integer)
+    Friend Sub CustomScript(index as integer, caseID As Integer, mapNum as Integer, EventId As Integer)
 
         Select Case caseID
 

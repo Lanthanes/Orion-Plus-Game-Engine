@@ -18,8 +18,8 @@
     Friend Const MAX_SKILLS As Byte = 255
     Friend Const MAX_TRADES As Byte = 20
     Friend Const NAME_LENGTH As Byte = 20
-    Friend Const MAX_PARTIES As Long = 35
-    Friend Const MAX_PARTY_MEMBERS As Long = 4
+    Friend Const MAX_PARTIES As Integer = 35
+    Friend Const MAX_PARTY_MEMBERS As Integer = 4
     Friend Const MAX_RANDOM_TYPES As Byte = 16
     Friend Const MAX_PETS As Integer = 100
     Friend Const MAX_DOTS As Integer = 30

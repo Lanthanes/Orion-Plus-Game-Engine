@@ -7,7 +7,7 @@ Module ServerGeneral
     Friend MyIPAddress As String
     Friend myStopWatch As New Stopwatch()
 
-    Friend Function GetTimeMs() As Long
+    Friend Function GetTimeMs() As Integer
         Return myStopWatch.ElapsedMilliseconds
     End Function
 
@@ -16,8 +16,6 @@ Module ServerGeneral
         Dim time1 As Integer, time2 As Integer
 
         myStopWatch.Start()
-
-        x = 0
 
         If Debugger.IsAttached Then
             ' Since there is a debugger attached,
@@ -56,8 +54,8 @@ Module ServerGeneral
 
         ReDim MapNpc(MAX_CACHED_MAPS)
         For i = 0 To MAX_CACHED_MAPS
-            ReDim MapNpc(i).Npc(0 To MAX_MAP_NPCS)
-            ReDim Map(i).Npc(0 To MAX_MAP_NPCS)
+            ReDim MapNpc(i).Npc(MAX_MAP_NPCS)
+            ReDim Map(i).Npc(MAX_MAP_NPCS)
         Next
 
         'quests
@@ -65,20 +63,20 @@ Module ServerGeneral
         ClearQuests()
 
         'event
-        ReDim Switches(0 To MAX_SWITCHES)
-        ReDim Variables(0 To MAX_VARIABLES)
+        ReDim Switches(MAX_SWITCHES)
+        ReDim Variables(MAX_VARIABLES)
         ReDim TempEventMap(MAX_CACHED_MAPS)
 
         'Housing
-        ReDim HouseConfig(0 To MAX_HOUSES)
+        ReDim HouseConfig(MAX_HOUSES)
 
         For i = 0 To MAX_CACHED_MAPS
             For x = 0 To MAX_MAP_NPCS
-                ReDim MapNpc(i).Npc(x).Vital(0 To VitalType.Count)
+                ReDim MapNpc(i).Npc(x).Vital(VitalType.Count)
             Next
         Next
 
-        ReDim Bank(0 To MAX_PLAYERS)
+        ReDim Bank(MAX_PLAYERS)
 
         For i = 1 To MAX_PLAYERS
             ReDim Bank(i).Item(MAX_BANK)
@@ -88,7 +86,7 @@ Module ServerGeneral
             Next
         Next
 
-        ReDim Player(0 To MAX_PLAYERS)
+        ReDim Player(MAX_PLAYERS)
 
         For i = 1 To MAX_PLAYERS
             'multi char
@@ -114,42 +112,42 @@ Module ServerGeneral
             Next
         Next
 
-        ReDim TempPlayer(0 To MAX_PLAYERS)
+        ReDim TempPlayer(MAX_PLAYERS)
 
         For i = 1 To MAX_PLAYERS
-            ReDim TempPlayer(i).SkillCD(0 To MAX_PLAYER_SKILLS)
+            ReDim TempPlayer(i).SkillCD(MAX_PLAYER_SKILLS)
             ReDim TempPlayer(i).PetSkillCD(4)
         Next
 
         For i = 1 To MAX_PLAYERS
-            ReDim TempPlayer(i).TradeOffer(0 To MAX_INV)
+            ReDim TempPlayer(i).TradeOffer(MAX_INV)
         Next
 
         LoadTilePrefab()
 
-        ReDim Classes(0 To Max_Classes)
+        ReDim Classes(Max_Classes)
         For i = 0 To Max_Classes
-            ReDim Classes(i).Stat(0 To StatType.Count - 1)
-            ReDim Classes(i).StartItem(0 To 5)
-            ReDim Classes(i).StartValue(0 To 5)
+            ReDim Classes(i).Stat(StatType.Count - 1)
+            ReDim Classes(i).StartItem(5)
+            ReDim Classes(i).StartValue(5)
         Next
 
         For i = 0 To MAX_ITEMS
-            ReDim Item(i).Add_Stat(0 To StatType.Count - 1)
-            ReDim Item(i).Stat_Req(0 To StatType.Count - 1)
-            ReDim Item(i).FurnitureBlocks(0 To 3, 0 To 3)
-            ReDim Item(i).FurnitureFringe(0 To 3, 0 To 3)
+            ReDim Item(i).Add_Stat(StatType.Count - 1)
+            ReDim Item(i).Stat_Req(StatType.Count - 1)
+            ReDim Item(i).FurnitureBlocks(3, 3)
+            ReDim Item(i).FurnitureFringe(3, 3)
         Next
-        ReDim Npc(0 To MAX_NPCS).Stat(0 To StatType.Count - 1)
+        ReDim Npc(MAX_NPCS).Stat(StatType.Count - 1)
 
-        ReDim Shop(0 To MAX_SHOPS).TradeItem(0 To MAX_TRADES)
+        ReDim Shop(MAX_SHOPS).TradeItem(MAX_TRADES)
 
-        ReDim Animation(0 To MAX_ANIMATIONS).Sprite(0 To 1)
-        ReDim Animation(0 To MAX_ANIMATIONS).Frames(0 To 1)
-        ReDim Animation(0 To MAX_ANIMATIONS).LoopCount(0 To 1)
-        ReDim Animation(0 To MAX_ANIMATIONS).LoopTime(0 To 1)
+        ReDim Animation(MAX_ANIMATIONS).Sprite(1)
+        ReDim Animation(MAX_ANIMATIONS).Frames(1)
+        ReDim Animation(MAX_ANIMATIONS).LoopCount(1)
+        ReDim Animation(MAX_ANIMATIONS).LoopTime(1)
 
-        ReDim MapProjectiles(MAX_CACHED_MAPS, 0 To MAX_PROJECTILES)
+        ReDim MapProjectiles(MAX_CACHED_MAPS, MAX_PROJECTILES)
         ReDim Projectiles(MAX_PROJECTILES)
 
         'parties
@@ -220,7 +218,7 @@ Module ServerGeneral
         'resource system
         LoadSkillExp()
 
-        ServerTime.InitTime()
+        InitTime()
 
         UpdateCaption()
         time2 = GetTimeMs()
@@ -370,10 +368,10 @@ Module ServerGeneral
         Dim Result As String
         Dim hr As Integer = Runtime.InteropServices.Marshal.GetHRForException(ex)
         Result = ex.GetType.ToString & "(0x" & hr.ToString("X8") & "): " & ex.Message & Environment.NewLine & ex.StackTrace & Environment.NewLine
-        Dim st As StackTrace = New StackTrace(ex, True)
+        Dim st As New StackTrace(ex, True)
         For Each sf As StackFrame In st.GetFrames
             If sf.GetFileLineNumber() > 0 Then
-                Result &= "Line:" & sf.GetFileLineNumber() & " Filename: " & IO.Path.GetFileName(sf.GetFileName) & Environment.NewLine
+                Result &= "Line:" & sf.GetFileLineNumber() & " Filename: " & Path.GetFileName(sf.GetFileName) & Environment.NewLine
             End If
         Next
         Return Result

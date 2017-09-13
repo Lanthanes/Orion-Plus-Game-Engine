@@ -253,8 +253,8 @@
     Friend TradeTimer As Integer
     Friend TradeRequest As Boolean
     Friend InTrade As Boolean
-    Friend TradeYourOffer(0 To MAX_INV) As PlayerInvRec
-    Friend TradeTheirOffer(0 To MAX_INV) As PlayerInvRec
+    Friend TradeYourOffer(MAX_INV) As PlayerInvRec
+    Friend TradeTheirOffer(MAX_INV) As PlayerInvRec
     Friend TradeX As Integer
     Friend TradeY As Integer
     Friend TheirWorth As String

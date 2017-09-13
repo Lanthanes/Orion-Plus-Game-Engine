@@ -6,7 +6,7 @@ Imports SFML.Window
 Friend Module modWeather
     Friend Const MAX_WEATHER_PARTICLES As Integer = 100
 
-    Friend WeatherParticle(0 To MAX_WEATHER_PARTICLES) As WeatherParticleRec
+    Friend WeatherParticle(MAX_WEATHER_PARTICLES) As WeatherParticleRec
     Friend WeatherSoundPlayer As Sound
     Friend CurWeatherMusic As String
 
@@ -153,7 +153,7 @@ Friend Module modWeather
         If Not Options.Sound = 1 OrElse Not File.Exists(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
         If CurWeatherMusic = FileName Then Exit Sub
 
-        Dim buffer As SoundBuffer
+        dim buffer as SoundBuffer
         If WeatherSoundPlayer Is Nothing Then
             WeatherSoundPlayer = New Sound()
         Else

@@ -5,12 +5,12 @@ Imports ASFW
 Friend Module modProjectiles
 #Region "Defines"
     Friend Const MAX_PROJECTILES As Integer = 255
-    Friend Projectiles(0 To MAX_PROJECTILES) As ProjectileRec
-    Friend MapProjectiles(0 To MAX_PROJECTILES) As MapProjectileRec
+    Friend Projectiles(MAX_PROJECTILES) As ProjectileRec
+    Friend MapProjectiles(MAX_PROJECTILES) As MapProjectileRec
     Friend NumProjectiles As Integer
     Friend InitProjectileEditor As Boolean
     Friend Const EDITOR_PROJECTILE As Byte = 10
-    Friend Projectile_Changed(0 To MAX_PROJECTILES) As Boolean
+    Friend Projectile_Changed(MAX_PROJECTILES) As Boolean
 #End Region
 
 #Region "Types"
@@ -37,7 +37,7 @@ Friend Module modProjectiles
 
 #Region "Sending"
     Sub SendRequestEditProjectiles()
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(EditorPackets.RequestEditProjectiles)
@@ -47,7 +47,7 @@ Friend Module modProjectiles
     End Sub
 
     Sub SendSaveProjectile(ProjectileNum As Integer)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -66,7 +66,7 @@ Friend Module modProjectiles
     End Sub
 
     Sub SendRequestProjectiles()
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CRequestProjectiles)
@@ -75,8 +75,8 @@ Friend Module modProjectiles
 
     End Sub
 
-    Sub SendClearProjectile(ProjectileNum As Integer, CollisionIndex As Integer, CollisionType As Byte, CollisionZone As Integer)
-        Dim Buffer As ByteStream
+    Sub SendClearProjectile(ProjectileNum As Integer, Collisionindex as integer, CollisionType As Byte, CollisionZone As Integer)
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CClearProjectile)
@@ -92,15 +92,15 @@ Friend Module modProjectiles
 #End Region
 
 #Region "Recieving"
-    Friend Sub HandleProjectileEditor(ByRef Data() As Byte)
+    Friend Sub HandleProjectileEditor(ByRef data() As Byte)
 
         InitProjectileEditor = True
 
     End Sub
 
-    Friend Sub HandleUpdateProjectile(ByRef Data() As Byte)
+    Friend Sub HandleUpdateProjectile(ByRef data() As Byte)
         Dim ProjectileNum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         ProjectileNum = Buffer.ReadInt32
 
         Projectiles(ProjectileNum).Name = Buffer.ReadString
@@ -113,9 +113,9 @@ Friend Module modProjectiles
 
     End Sub
 
-    Friend Sub HandleMapProjectile(ByRef Data() As Byte)
+    Friend Sub HandleMapProjectile(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
 
         With MapProjectiles(i)
@@ -145,7 +145,7 @@ Friend Module modProjectiles
 
     End Sub
 
-    Sub ClearProjectile(Index As Integer)
+    Sub ClearProjectile(index as integer)
 
         Projectiles(Index).Name = ""
         Projectiles(Index).Sprite = 0

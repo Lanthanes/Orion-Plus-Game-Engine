@@ -1,6 +1,6 @@
 ﻿Module ServerInstances
     Structure InstancedMap
-        Dim OriginalMap As Long
+        Dim OriginalMap As Integer
     End Structure
 
     'Consts
@@ -35,7 +35,7 @@
         FindFreeInstanceMapSlot = -1
     End Function
 
-    Friend Function CreateInstance(MapNum As Integer) As Integer
+    Friend Function CreateInstance(mapNum as Integer) As Integer
         Dim i As Integer, slot As Integer
 
         If MapNum <= 0 OrElse MapNum > MAX_MAPS Then
@@ -87,11 +87,11 @@
         InstancedMaps(Slot).OriginalMap = 0
     End Sub
 
-    Friend Function IsInstancedMap(MapNum As Integer) As Boolean
+    Friend Function IsInstancedMap(mapNum as Integer) As Boolean
         IsInstancedMap = MapNum > MAX_MAPS AndAlso MapNum <= MAX_CACHED_MAPS
     End Function
 
-    Friend Function GetInstanceBaseMap(MapNum As Integer) As Integer
+    Friend Function GetInstanceBaseMap(mapNum as Integer) As Integer
         GetInstanceBaseMap = InstancedMaps(MapNum - MAX_MAPS).OriginalMap
     End Function
 End Module

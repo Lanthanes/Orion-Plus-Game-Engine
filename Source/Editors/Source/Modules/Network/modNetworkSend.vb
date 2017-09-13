@@ -4,7 +4,7 @@ Imports ASFW.IO
 
 Module modNetworkSend
     Friend Sub SendEditorLogin(Name As String, Password As String)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.EditorLogin)
         Buffer.WriteString(EKeyPair.EncryptString(Name))
@@ -17,7 +17,7 @@ Module modNetworkSend
     Friend Sub SendEditorMap()
         Dim X As Integer, Y As Integer, i As Integer
         Dim data() As Byte
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(Map.MapNum)
 
@@ -188,7 +188,7 @@ Module modNetworkSend
     End Sub
 
     Sub SendRequestItems()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestItems)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -196,7 +196,7 @@ Module modNetworkSend
     End Sub
 
     Sub SendSaveItem(itemNum As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveItem)
         Buffer.WriteInt32(itemNum)
@@ -260,7 +260,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendRequestEditItem()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditItem)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -268,7 +268,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendRequestEditResource()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditResource)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -276,7 +276,7 @@ Module modNetworkSend
     End Sub
 
     Sub SendRequestResources()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestResources)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -284,7 +284,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendSaveResource(ResourceNum As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveResource)
 
@@ -309,7 +309,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendRequestEditNpc()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditNpc)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -317,7 +317,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendSaveNpc(NpcNum As Integer)
-        Dim Buffer As New ByteStream(4), i As Integer
+        dim buffer as New ByteStream(4), i As Integer
 
         Buffer.WriteInt32(EditorPackets.SaveNpc)
         Buffer.WriteInt32(NpcNum)
@@ -358,7 +358,7 @@ Module modNetworkSend
     End Sub
 
     Sub SendRequestNPCS()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestNPCS)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -366,7 +366,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendRequestEditSkill()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditSkill)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -374,7 +374,7 @@ Module modNetworkSend
     End Sub
 
     Sub SendRequestSkills()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestSkills)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -382,7 +382,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendSaveSkill(skillnum As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveSkill)
         Buffer.WriteInt32(skillnum)
@@ -422,7 +422,7 @@ Module modNetworkSend
     End Sub
 
     Sub SendRequestShops()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestShops)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -430,7 +430,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendSaveShop(shopnum As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveShop)
         Buffer.WriteInt32(shopnum)
@@ -452,7 +452,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendRequestEditShop()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditShop)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -460,7 +460,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendSaveAnimation(Animationnum As Integer)
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveAnimation)
         Buffer.WriteInt32(Animationnum)
@@ -489,7 +489,7 @@ Module modNetworkSend
     End Sub
 
     Sub SendRequestAnimations()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestAnimations)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -497,7 +497,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendRequestEditAnimation()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditAnimation)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -505,7 +505,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendRequestMapreport()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CMapReport)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -513,7 +513,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendRequestClasses()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestClasses)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -521,7 +521,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendRequestEditClass()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestEditClasses)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -530,7 +530,7 @@ Module modNetworkSend
 
     Friend Sub SendSaveClasses()
         Dim i As Integer, n As Integer, q As Integer
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveClasses)
 
@@ -586,15 +586,15 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendLeaveGame()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CQuit)
         Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
     End Sub
 
-    Friend Sub SendEditorRequestMap(MapNum As Integer)
-        Dim Buffer As New ByteStream(4)
+    Friend Sub SendEditorRequestMap(mapNum as Integer)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.EditorRequestMap)
         Buffer.WriteInt32(MapNum)
@@ -603,7 +603,7 @@ Module modNetworkSend
     End Sub
 
     Friend Sub SendRequestAutoMapper()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.RequestAutoMap)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -615,7 +615,7 @@ Module modNetworkSend
             .Filename = Application.StartupPath & "\Data\AutoMapper.xml",
             .Root = "Options"
         }
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(EditorPackets.SaveAutoMap)
 

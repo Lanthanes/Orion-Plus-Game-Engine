@@ -10,8 +10,8 @@ Module modText
     Friend Const AllChatLineWidth As Integer = 40
     Friend Const ChatboxPadding As Integer = 10 + 16 + 2 ' 10 = left and right border padding +2 each (3+2+3+2), 16 = scrollbar width, +2 for padding between scrollbar and text
     Friend Const ChatEntryPadding As Integer = 10 ' 5 on left and right
-    Friend FirstLineIndex As Integer = 0
-    Friend LastLineIndex As Integer = 0
+    Friend FirstLineindex as integer = 0
+    Friend LastLineindex as integer = 0
     Friend ScrollMod As Integer = 0
 
     Friend Sub DrawText(X As Integer, Y As Integer, text As String, color As Color, BackColor As Color, ByRef target As RenderWindow, Optional TextSize As Byte = FONT_SIZE)
@@ -38,7 +38,7 @@ Module modText
         target.Draw(FrontString)
     End Sub
 
-    Friend Sub DrawPlayerName(Index As Integer)
+    Friend Sub DrawPlayerName(index as integer)
         Dim TextX As Integer
         Dim TextY As Integer
         Dim color As Color, backcolor As Color
@@ -115,7 +115,7 @@ Module modText
         DrawText(TextX, TextY, Trim$(Npc(npcNum).Name), color, backcolor, GameWindow)
     End Sub
 
-    Friend Sub DrawEventName(Index As Integer)
+    Friend Sub DrawEventName(index as integer)
         Dim TextX As Integer
         Dim TextY As Integer
         Dim color As Color, backcolor As Color
@@ -178,7 +178,7 @@ Module modText
 
     End Sub
 
-    Sub DrawActionMsg(Index As Integer)
+    Sub DrawActionMsg(index as integer)
         Dim X As Integer, y As Integer, i As Integer, Time As Integer
 
         ' how long we want each message to appear
@@ -414,13 +414,13 @@ Module modText
     Friend Function Explode(str As String, splitChars As Char()) As String()
 
         Dim parts As New List(Of String)()
-        Dim startIndex As Integer = 0
+        Dim startindex as integer = 0
         Explode = Nothing
 
         If str = Nothing Then Exit Function
 
         While True
-            Dim index As Integer = str.IndexOfAny(splitChars, startIndex)
+            Dim index as integer = str.IndexOfAny(splitChars, startIndex)
 
             If index = -1 Then
                 parts.Add(str.Substring(startIndex))
@@ -612,7 +612,7 @@ Module modText
 
     'End Function
 
-    Friend Sub DrawChatBubble(Index As Integer)
+    Friend Sub DrawChatBubble(index as integer)
         Dim theArray As List(Of String), X As Integer, Y As Integer, i As Integer, MaxWidth As Integer, X2 As Integer, Y2 As Integer
 
         With chatBubble(Index)

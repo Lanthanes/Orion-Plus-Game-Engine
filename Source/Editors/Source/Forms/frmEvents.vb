@@ -422,7 +422,7 @@ Friend Class frmEvents
                 fraMoveRoute.Visible = True
                 lstMoveRoute.Items.Clear()
                 cmbEvent.Items.Clear()
-                ReDim ListOfEvents(0 To Map.EventCount)
+                ReDim ListOfEvents(Map.EventCount)
                 ListOfEvents(0) = EditorEvent
                 cmbEvent.Items.Add("This Event")
                 cmbEvent.SelectedIndex = 0
@@ -445,7 +445,7 @@ Friend Class frmEvents
             'Wait for Route Completion
             Case "Wait for Route Completion"
                 cmbMoveWait.Items.Clear()
-                ReDim ListOfEvents(0 To Map.EventCount)
+                ReDim ListOfEvents(Map.EventCount)
                 ListOfEvents(0) = EditorEvent
                 cmbMoveWait.Items.Add("This Event")
                 cmbMoveWait.SelectedIndex = 0
@@ -1346,7 +1346,7 @@ Friend Class frmEvents
         End If
     End Sub
 
-    Sub AddMoveRouteCommand(Index As Integer)
+    Sub AddMoveRouteCommand(index as integer)
         Dim i As Integer, X As Integer
 
         Index = Index + 1
@@ -1386,7 +1386,7 @@ Friend Class frmEvents
 
     End Sub
 
-    Sub RemoveMoveRouteCommand(Index As Integer)
+    Sub RemoveMoveRouteCommand(index as integer)
         Dim i As Integer
 
         Index = Index + 1

@@ -7,8 +7,8 @@ Module modSound
     Friend ExtraSoundPlayer As Sound
     Friend MusicPlayer As Music
     Friend PreviewPlayer As Music
-    Friend MusicCache(0 To 100) As String
-    Friend SoundCache(0 To 100) As String
+    Friend MusicCache(100) As String
+    Friend SoundCache(100) As String
 
     Friend FadeInSwitch As Boolean
     Friend FadeOutSwitch As Boolean
@@ -85,7 +85,7 @@ Module modSound
     Sub PlaySound(FileName As String, Optional Looped As Boolean = False)
         If Not Options.Sound = 1 OrElse Not File.Exists(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
 
-        Dim buffer As SoundBuffer
+        dim buffer as SoundBuffer
         If SoundPlayer Is Nothing Then
             SoundPlayer = New Sound()
             buffer = New SoundBuffer(Application.StartupPath & SOUND_PATH & FileName)
@@ -121,7 +121,7 @@ Module modSound
         If Not Options.Sound = 1 OrElse Not File.Exists(Application.StartupPath & SOUND_PATH & FileName) Then Exit Sub
         'If FileName = CurExtraSound Then Exit Sub
 
-        Dim buffer As SoundBuffer
+        dim buffer as SoundBuffer
         If ExtraSoundPlayer Is Nothing Then
             ExtraSoundPlayer = New Sound()
             buffer = New SoundBuffer(Application.StartupPath & SOUND_PATH & FileName)

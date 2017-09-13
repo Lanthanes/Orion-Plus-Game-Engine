@@ -19,9 +19,9 @@ Friend Module ServerResources
         myXml.CloseXml(False)
     End Sub
 
-    Sub CheckResource(Index As Integer, x As Integer, y As Integer)
+    Sub CheckResource(index as integer, x As Integer, y As Integer)
         Dim Resource_num As Integer, ResourceType As Byte
-        Dim Resource_index As Integer
+        Dim Resource_index as integer
         Dim rX As Integer, rY As Integer
         Dim Damage As Integer
 
@@ -31,7 +31,7 @@ Friend Module ServerResources
             ResourceType = Resource(Resource_index).ResourceType
 
             ' Get the cache number
-            For i = 0 To ResourceCache(GetPlayerMap(Index)).Resource_Count
+            For i = 0 To ResourceCache(GetPlayerMap(Index)).ResourceCount
                 If ResourceCache(GetPlayerMap(Index)).ResourceData(i).x = x Then
                     If ResourceCache(GetPlayerMap(Index)).ResourceData(i).y = y Then
                         Resource_num = i
@@ -72,7 +72,7 @@ Friend Module ServerResources
                             ' check if damage is more than health
                             If Damage > 0 Then
                                 ' cut it down!
-                                If ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).Cur_Health - Damage <= 0 Then
+                                If ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).CurHealth - Damage <= 0 Then
                                     ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).ResourceState = 1 ' Cut
                                     ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).ResourceTimer = GetTimeMs()
                                     SendResourceCacheToMap(GetPlayerMap(Index), Resource_num)
@@ -87,7 +87,7 @@ Friend Module ServerResources
                                     CheckResourceLevelUp(Index, ResourceType)
                                 Else
                                     ' just do the damage
-                                    ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).Cur_Health = ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).Cur_Health - Damage
+                                    ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).CurHealth = ResourceCache(GetPlayerMap(Index)).ResourceData(Resource_num).CurHealth - Damage
                                     SendActionMsg(GetPlayerMap(Index), "-" & Damage, ColorType.BrightRed, 1, (rX * 32), (rY * 32))
                                     SendAnimation(GetPlayerMap(Index), Resource(Resource_index).Animation, rX, rY)
                                 End If
@@ -109,7 +109,7 @@ Friend Module ServerResources
         End If
     End Sub
 
-    Function GetPlayerGatherSkillLvl(Index As Integer, SkillSlot As Integer) As Integer
+    Function GetPlayerGatherSkillLvl(index as integer, SkillSlot As Integer) As Integer
 
         GetPlayerGatherSkillLvl = 0
 
@@ -118,7 +118,7 @@ Friend Module ServerResources
         GetPlayerGatherSkillLvl = Player(Index).Character(TempPlayer(Index).CurChar).GatherSkills(SkillSlot).SkillLevel
     End Function
 
-    Function GetPlayerGatherSkillExp(Index As Integer, SkillSlot As Integer) As Integer
+    Function GetPlayerGatherSkillExp(index as integer, SkillSlot As Integer) As Integer
 
         GetPlayerGatherSkillExp = 0
 
@@ -127,7 +127,7 @@ Friend Module ServerResources
         GetPlayerGatherSkillExp = Player(Index).Character(TempPlayer(Index).CurChar).GatherSkills(SkillSlot).SkillCurExp
     End Function
 
-    Function GetPlayerGatherSkillMaxExp(Index As Integer, SkillSlot As Integer) As Integer
+    Function GetPlayerGatherSkillMaxExp(index as integer, SkillSlot As Integer) As Integer
 
         GetPlayerGatherSkillMaxExp = 0
 
@@ -136,25 +136,25 @@ Friend Module ServerResources
         GetPlayerGatherSkillMaxExp = Player(Index).Character(TempPlayer(Index).CurChar).GatherSkills(SkillSlot).SkillNextLvlExp
     End Function
 
-    Sub SetPlayerGatherSkillLvl(Index As Integer, SkillSlot As Integer, lvl As Integer)
+    Sub SetPlayerGatherSkillLvl(index as integer, SkillSlot As Integer, lvl As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
 
         Player(Index).Character(TempPlayer(Index).CurChar).GatherSkills(SkillSlot).SkillLevel = lvl
     End Sub
 
-    Sub SetPlayerGatherSkillExp(Index As Integer, SkillSlot As Integer, Exp As Integer)
+    Sub SetPlayerGatherSkillExp(index as integer, SkillSlot As Integer, Exp As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
 
         Player(Index).Character(TempPlayer(Index).CurChar).GatherSkills(SkillSlot).SkillCurExp = Exp
     End Sub
 
-    Sub SetPlayerGatherSkillMaxExp(Index As Integer, SkillSlot As Integer, MaxExp As Integer)
+    Sub SetPlayerGatherSkillMaxExp(index as integer, SkillSlot As Integer, MaxExp As Integer)
         If Index > MAX_PLAYERS Then Exit Sub
 
         Player(Index).Character(TempPlayer(Index).CurChar).GatherSkills(SkillSlot).SkillNextLvlExp = MaxExp
     End Sub
 
-    Sub CheckResourceLevelUp(Index As Integer, SkillSlot As Integer)
+    Sub CheckResourceLevelUp(index as integer, SkillSlot As Integer)
         Dim expRollover As Integer, skillname As String = ""
         Dim level_count As Integer
 
@@ -199,7 +199,7 @@ Friend Module ServerResources
         End Select
     End Function
 
-    Function GetSkillNextLevel(Index As Integer, SkillSlot As Integer) As Integer
+    Function GetSkillNextLevel(index as integer, SkillSlot As Integer) As Integer
         GetSkillNextLevel = 0
         If Index < 0 OrElse Index > MAX_PLAYERS Then Exit Function
 

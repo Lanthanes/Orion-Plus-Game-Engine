@@ -33,14 +33,14 @@ Friend Module modEventSystem
     Friend EventChatFace As Integer
 
     Friend RenameType As Integer
-    Friend RenameIndex As Integer
+    Friend Renameindex as integer
     Friend EventChatTimer As Integer
 
     Friend EventChat As Boolean
     Friend EventText As String
     Friend ShowEventLbl As Boolean
-    Friend EventChoices(0 To 4) As String
-    Friend EventChoiceVisible(0 To 4) As Boolean
+    Friend EventChoices(4) As String
+    Friend EventChoiceVisible(4) As Boolean
     Friend EventChatType As Integer
     Friend AnotherChat As Integer 'Determines if another showtext/showchoices is comming up, if so, dont close the event chatbox...
 
@@ -63,7 +63,7 @@ Friend Module modEventSystem
 
 #Region "Types"
     Friend Structure EventCommandRec
-        Dim Index As Integer
+        Dim index as integer
         Dim Text1 As String
         Dim Text2 As String
         Dim Text3 As String
@@ -81,7 +81,7 @@ Friend Module modEventSystem
     End Structure
 
     Friend Structure MoveRouteRec
-        Dim Index As Integer
+        Dim index as integer
         Dim Data1 As Integer
         Dim Data2 As Integer
         Dim Data3 As Integer
@@ -108,17 +108,17 @@ Friend Module modEventSystem
     Friend Structure EventPageRec
         'These are condition variables that decide if the event even appears to the player.
         Dim chkVariable As Integer
-        Dim VariableIndex As Integer
+        Dim Variableindex as integer
         Dim VariableCondition As Integer
         Dim VariableCompare As Integer
         Dim chkSwitch As Integer
-        Dim SwitchIndex As Integer
+        Dim Switchindex as integer
         Dim SwitchCompare As Integer
         Dim chkHasItem As Integer
-        Dim HasItemIndex As Integer
+        Dim HasItemindex as integer
         Dim HasItemAmount As Integer
         Dim chkSelfSwitch As Integer
-        Dim SelfSwitchIndex As Integer
+        Dim SelfSwitchindex as integer
         Dim SelfSwitchCompare As Integer
         Dim chkPlayerGender As Integer
         'End Conditions
@@ -317,9 +317,9 @@ Friend Module modEventSystem
 #End Region
 
 #Region "Incoming Packets"
-    Sub Packet_SpawnEvent(ByRef Data() As Byte)
+    Sub Packet_SpawnEvent(ByRef data() As Byte)
         Dim id As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         id = Buffer.ReadInt32
         If id > Map.CurrentEvents Then
             Map.CurrentEvents = id
@@ -354,13 +354,13 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub Packet_EventMove(ByRef Data() As Byte)
+    Sub Packet_EventMove(ByRef data() As Byte)
         Dim id As Integer
         Dim X As Integer
         Dim Y As Integer
         Dim dir As Integer, ShowDir As Integer
         Dim MovementSpeed As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         id = Buffer.ReadInt32
         X = Buffer.ReadInt32
         Y = Buffer.ReadInt32
@@ -394,10 +394,10 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub Packet_EventDir(ByRef Data() As Byte)
+    Sub Packet_EventDir(ByRef data() As Byte)
         Dim i As Integer
         Dim dir As Byte
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         i = Buffer.ReadInt32
         dir = Buffer.ReadInt32
         If i > Map.CurrentEvents Then Exit Sub
@@ -412,9 +412,9 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub Packet_SwitchesAndVariables(ByRef Data() As Byte)
+    Sub Packet_SwitchesAndVariables(ByRef data() As Byte)
         Dim i As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         For i = 1 To MAX_SWITCHES
             Switches(i) = Buffer.ReadString
         Next
@@ -426,13 +426,13 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub Packet_MapEventData(ByRef Data() As Byte)
+    Sub Packet_MapEventData(ByRef data() As Byte)
         Dim i As Integer, X As Integer, Y As Integer, z As Integer, w As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         'Event Data!
         Map.EventCount = Buffer.ReadInt32
         If Map.EventCount > 0 Then
-            ReDim Map.Events(0 To Map.EventCount)
+            ReDim Map.Events(Map.EventCount)
             For i = 1 To Map.EventCount
                 With Map.Events(i)
                     .Name = Buffer.ReadString
@@ -442,7 +442,7 @@ Friend Module modEventSystem
                     .PageCount = Buffer.ReadInt32
                 End With
                 If Map.Events(i).PageCount > 0 Then
-                    ReDim Map.Events(i).Pages(0 To Map.Events(i).PageCount)
+                    ReDim Map.Events(i).Pages(Map.Events(i).PageCount)
                     For X = 1 To Map.Events(i).PageCount
                         With Map.Events(i).Pages(X)
                             .chkVariable = Buffer.ReadInt32
@@ -471,7 +471,7 @@ Friend Module modEventSystem
                             .IgnoreMoveRoute = Buffer.ReadInt32
                             .RepeatMoveRoute = Buffer.ReadInt32
                             If .MoveRouteCount > 0 Then
-                                ReDim Map.Events(i).Pages(X).MoveRoute(0 To .MoveRouteCount)
+                                ReDim Map.Events(i).Pages(X).MoveRoute(.MoveRouteCount)
                                 For Y = 1 To .MoveRouteCount
                                     .MoveRoute(Y).Index = Buffer.ReadInt32
                                     .MoveRoute(Y).Data1 = Buffer.ReadInt32
@@ -492,12 +492,12 @@ Friend Module modEventSystem
                             .Questnum = Buffer.ReadInt32
                         End With
                         If Map.Events(i).Pages(X).CommandListCount > 0 Then
-                            ReDim Map.Events(i).Pages(X).CommandList(0 To Map.Events(i).Pages(X).CommandListCount)
+                            ReDim Map.Events(i).Pages(X).CommandList(Map.Events(i).Pages(X).CommandListCount)
                             For Y = 1 To Map.Events(i).Pages(X).CommandListCount
                                 Map.Events(i).Pages(X).CommandList(Y).CommandCount = Buffer.ReadInt32
                                 Map.Events(i).Pages(X).CommandList(Y).ParentList = Buffer.ReadInt32
                                 If Map.Events(i).Pages(X).CommandList(Y).CommandCount > 0 Then
-                                    ReDim Map.Events(i).Pages(X).CommandList(Y).Commands(0 To Map.Events(i).Pages(X).CommandList(Y).CommandCount)
+                                    ReDim Map.Events(i).Pages(X).CommandList(Y).Commands(Map.Events(i).Pages(X).CommandList(Y).CommandCount)
                                     For z = 1 To Map.Events(i).Pages(X).CommandList(Y).CommandCount
                                         With Map.Events(i).Pages(X).CommandList(Y).Commands(z)
                                             .Index = Buffer.ReadInt32
@@ -545,10 +545,10 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub Packet_EventChat(ByRef Data() As Byte)
+    Sub Packet_EventChat(ByRef data() As Byte)
         Dim i As Integer
         Dim choices As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         EventReplyID = Buffer.ReadInt32
         EventReplyPage = Buffer.ReadInt32
         EventChatFace = Buffer.ReadInt32
@@ -577,16 +577,16 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub Packet_EventStart(ByRef Data() As Byte)
+    Sub Packet_EventStart(ByRef data() As Byte)
         InEvent = True
     End Sub
 
-    Sub Packet_EventEnd(ByRef Data() As Byte)
+    Sub Packet_EventEnd(ByRef data() As Byte)
         InEvent = False
     End Sub
 
-    Sub Packet_HoldPlayer(ByRef Data() As Byte)
-        Dim Buffer As New ByteStream(Data)
+    Sub Packet_HoldPlayer(ByRef data() As Byte)
+        dim buffer as New ByteStream(Data)
         If Buffer.ReadInt32 = 0 Then
             HoldPlayer = True
         Else
@@ -597,9 +597,9 @@ Friend Module modEventSystem
 
     End Sub
 
-    Sub Packet_PlayBGM(ByRef Data() As Byte)
+    Sub Packet_PlayBGM(ByRef data() As Byte)
         Dim music As String
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         music = Buffer.ReadString
 
         PlayMusic(music)
@@ -607,14 +607,14 @@ Friend Module modEventSystem
         Buffer.Dispose()
     End Sub
 
-    Sub Packet_FadeOutBGM(ByRef Data() As Byte)
+    Sub Packet_FadeOutBGM(ByRef data() As Byte)
         CurMusic = ""
         FadeOutSwitch = True
     End Sub
 
-    Sub Packet_PlaySound(ByRef Data() As Byte)
+    Sub Packet_PlaySound(ByRef data() As Byte)
         Dim sound As String
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         sound = Buffer.ReadString
 
         PlaySound(sound)
@@ -622,13 +622,13 @@ Friend Module modEventSystem
         Buffer.Dispose()
     End Sub
 
-    Sub Packet_StopSound(ByRef Data() As Byte)
+    Sub Packet_StopSound(ByRef data() As Byte)
         StopSound()
     End Sub
 
-    Sub Packet_SpecialEffect(ByRef Data() As Byte)
+    Sub Packet_SpecialEffect(ByRef data() As Byte)
         Dim effectType As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         effectType = Buffer.ReadInt32
 
         Select Case effectType
@@ -664,7 +664,7 @@ Friend Module modEventSystem
 
 #Region "Outgoing Packets"
     Sub RequestSwitchesAndVariables()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CRequestSwitchesAndVariables)
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -674,7 +674,7 @@ Friend Module modEventSystem
 
     Sub SendSwitchesAndVariables()
         Dim i As Integer
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CSwitchesAndVariables)
 

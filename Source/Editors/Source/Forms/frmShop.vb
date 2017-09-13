@@ -3,7 +3,7 @@
 Friend Class frmShop
 
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
-        Dim tmpIndex As Integer
+        Dim tmpindex as integer
 
         If EditorIndex = 0 Then Exit Sub
         tmpIndex = lstIndex.SelectedIndex
@@ -18,7 +18,7 @@ Friend Class frmShop
     End Sub
 
     Private Sub BtnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
-        Dim Index As Integer
+        Dim index as integer
         Index = lstTradeItem.SelectedIndex + 1
         If Index = 0 Then Exit Sub
         With Shop(EditorIndex).TradeItem(Index)
@@ -31,7 +31,7 @@ Friend Class frmShop
     End Sub
 
     Private Sub BtnDeleteTrade_Click(sender As Object, e As EventArgs) Handles btnDeleteTrade.Click
-        Dim Index As Integer
+        Dim index as integer
         Index = lstTradeItem.SelectedIndex + 1
         If Index = 0 Then Exit Sub
         With Shop(EditorIndex).TradeItem(Index)
@@ -60,7 +60,7 @@ Friend Class frmShop
     End Sub
 
     Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-        Dim tmpIndex As Integer
+        Dim tmpindex as integer
 
         ClearShop(EditorIndex)
 

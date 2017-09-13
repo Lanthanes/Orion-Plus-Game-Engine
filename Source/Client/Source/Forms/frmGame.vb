@@ -360,7 +360,7 @@ Friend Class frmGame
     Private ReadOnly NonAcceptableKeys() As Keys = {Keys.NumPad0, Keys.NumPad1, Keys.NumPad2, Keys.NumPad3, Keys.NumPad4, Keys.NumPad5, Keys.NumPad6, Keys.NumPad7, Keys.NumPad8, Keys.NumPad9}
 
     Friend Function IsAcceptable(keyData As Keys) As Boolean
-        Dim index As Integer = Array.IndexOf(NonAcceptableKeys, keyData)
+        Dim index as integer = Array.IndexOf(NonAcceptableKeys, keyData)
         Return index >= 0
     End Function
 

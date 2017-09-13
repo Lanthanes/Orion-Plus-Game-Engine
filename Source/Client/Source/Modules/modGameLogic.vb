@@ -325,7 +325,7 @@ Module modGameLogic
     Sub ClearTempTile()
         Dim X As Integer
         Dim Y As Integer
-        ReDim TempTile(0 To Map.MaxX, 0 To Map.MaxY)
+        ReDim TempTile(Map.MaxX,Map.MaxY)
 
         For X = 0 To Map.MaxX
             For Y = 0 To Map.MaxY
@@ -482,7 +482,7 @@ Module modGameLogic
         Dim i As Integer
         Dim n As Integer
         Dim Command() As String
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
         ChatText = Trim$(ChatInput.CurrentMessage)
         Name = ""
 
@@ -917,7 +917,7 @@ Continue1:
     End Sub
 
     Sub CheckMapGetItem()
-        Dim Buffer As New ByteStream(4)
+        dim buffer as New ByteStream(4)
         Buffer = New ByteStream(4)
 
         If GetTickCount() > Player(MyIndex).MapGetTimer + 250 Then
@@ -1343,7 +1343,7 @@ Continue1:
 
     End Sub
 
-    Friend Sub CheckAnimInstance(Index As Integer)
+    Friend Sub CheckAnimInstance(index as integer)
         Dim looptime As Integer
         Dim Layer As Integer, Sound As String
         Dim FrameCount As Integer
@@ -1408,8 +1408,8 @@ Continue1:
         g.Dispose()
     End Sub
 
-    Friend Sub AddChatBubble(target As Long, targetType As Byte, Msg As String, colour As Long)
-        Dim i As Long, Index As Long
+    Friend Sub AddChatBubble(target As Integer, targetType As Byte, Msg As String, colour As Integer)
+        Dim i As Integer, index as integer
 
         ' set the global index
 

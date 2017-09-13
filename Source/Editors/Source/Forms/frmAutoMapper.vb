@@ -7,7 +7,7 @@
 
     Private Sub ResourcesToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles ResourcesToolStripMenuItem.Click
         Dim Resources() As String
-        Dim i As Long
+        Dim i As Integer
 
         pnlResources.Visible = True
 
@@ -67,7 +67,7 @@
             .Filename = IO.Path.Combine(Application.StartupPath, "Data", "AutoMapper.xml"),
             .Root = "Options"
         }
-        Dim i As Long
+        Dim i As Integer
 
         For i = 0 To lstResources.Items.Count - 1
             ResourceStr = CStr(ResourceStr & lstResources.Items(i))
@@ -81,7 +81,7 @@
 
 #Region "TileSet"
     Private Sub CmbPrefab_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPrefab.SelectedIndexChanged
-        Dim Layer As Long
+        Dim Layer As Integer
 
         For Layer = 1 To LayerType.Count
             If Tile(cmbPrefab.SelectedIndex + 1).Layer(Layer).Tileset > 0 Then
@@ -94,8 +94,8 @@
     End Sub
 
     Private Sub CmbLayer_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbLayer.SelectedIndexChanged
-        Dim Prefab As Long
-        Dim Layer As Long
+        Dim Prefab As Integer
+        Dim Layer As Integer
         Prefab = cmbPrefab.SelectedIndex + 1
         Layer = cmbLayer.SelectedIndex + 1
         txtTileset.Text = Tile(Prefab).Layer(Layer).Tileset

@@ -56,7 +56,7 @@ Friend Module modQuest
     Friend QuestAcceptTag As Integer
 
     'Types
-    Friend Quest(0 To MAX_QUESTS) As QuestRec
+    Friend Quest(MAX_QUESTS) As QuestRec
 
     Friend Structure PlayerQuestRec
         Dim Status As Integer '0=not started, 1=started, 2=completed, 3=completed but repeatable
@@ -285,13 +285,13 @@ Friend Module modQuest
 #End Region
 
 #Region "Incoming Packets"
-    Friend Sub Packet_QuestEditor(ByRef Data() As Byte)
+    Friend Sub Packet_QuestEditor(ByRef data() As Byte)
         QuestEditorShow = True
     End Sub
 
-    Friend Sub Packet_UpdateQuest(ByRef Data() As Byte)
+    Friend Sub Packet_UpdateQuest(ByRef data() As Byte)
         Dim QuestNum As Integer
-        Dim Buffer As New ByteStream(Data)
+        dim buffer as New ByteStream(Data)
         QuestNum = Buffer.ReadInt32
 
         ' Update the Quest
@@ -349,7 +349,7 @@ Friend Module modQuest
 
 #Region "Outgoing Packets"
     Friend Sub SendRequestEditQuest()
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(EditorPackets.RequestEditQuest)
@@ -359,7 +359,7 @@ Friend Module modQuest
     End Sub
 
     Friend Sub SendSaveQuest(QuestNum As Integer)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -414,7 +414,7 @@ Friend Module modQuest
     End Sub
 
     Sub SendRequestQuests()
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CRequestQuests)
@@ -424,7 +424,7 @@ Friend Module modQuest
     End Sub
 
     Friend Sub UpdateQuestLog()
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CQuestLogUpdate)
@@ -434,7 +434,7 @@ Friend Module modQuest
     End Sub
 
     Friend Sub PlayerHandleQuest(QuestNum As Integer, Order As Integer)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
 
@@ -446,7 +446,7 @@ Friend Module modQuest
     End Sub
 
     Friend Sub QuestReset(QuestNum As Integer)
-        Dim Buffer As ByteStream
+        dim buffer as ByteStream
 
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CQuestReset)
