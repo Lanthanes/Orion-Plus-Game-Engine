@@ -12,7 +12,7 @@
         If Socket.IsConnected() = True Then
             lblConnectionStatus.ForeColor = Color.Green
             lblConnectionStatus.Text = "Online..."
-
+            tmrConnect.Enabled = False
         Else
             lblConnectionStatus.ForeColor = Color.Red
             i = i + 1

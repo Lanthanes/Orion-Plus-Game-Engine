@@ -45,7 +45,8 @@ Friend Module modHousing
 #Region "Incoming Packets"
     Sub Packet_HouseConfigurations(ByRef data() As Byte)
         Dim i As Integer
-        dim buffer as New ByteStream(Data)
+        Dim buffer As New ByteStream(data)
+
         For i = 1 To MAX_HOUSES
             HouseConfig(i).ConfigName = Buffer.ReadString
             HouseConfig(i).BaseMap = Buffer.ReadInt32

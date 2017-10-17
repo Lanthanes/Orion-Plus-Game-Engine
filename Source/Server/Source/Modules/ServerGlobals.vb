@@ -1,6 +1,6 @@
 ﻿Module ServerGlobals
     Friend Debugging As Boolean
-
+    Friend DebugTxt As Boolean = False
     Friend ConsoleText As String
     Friend ErrorCount As Integer
 

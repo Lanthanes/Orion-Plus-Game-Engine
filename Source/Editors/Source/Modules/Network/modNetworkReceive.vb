@@ -46,8 +46,8 @@ Module modNetworkReceive
         Socket.PacketId(ServerPackets.SUpdateQuest) = AddressOf Packet_UpdateQuest
 
         'Housing
-        'Socket.PacketID(ServerPackets.SHouseConfigs) = AddressOf Packet_HouseConfigurations
-        'Socket.PacketID(ServerPackets.SFurniture) = AddressOf Packet_Furniture
+        Socket.PacketId(ServerPackets.SHouseConfigs) = AddressOf Packet_HouseConfigurations
+        Socket.PacketId(ServerPackets.SFurniture) = AddressOf Packet_Furniture
         Socket.PacketId(ServerPackets.SHouseEdit) = AddressOf Packet_EditHouses
 
         'Events

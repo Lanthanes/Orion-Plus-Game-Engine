@@ -371,4 +371,12 @@ Module ServerGeneral
         Next
         Return Result
     End Function
+
+    Friend Sub AddDebug(Msg As String)
+        If DebugTxt = True Then
+            Addlog(Msg, PACKET_LOG)
+            Console.WriteLine(Msg)
+        End If
+
+    End Sub
 End Module

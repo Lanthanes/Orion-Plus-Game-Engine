@@ -111,14 +111,18 @@ Friend Module ServerNetworkConfig
     Private Sub Socket_TrafficReceived(size As Integer, ByRef data() As Byte) Handles Socket.TrafficReceived
         Console.WriteLine("Traffic Received : [Size: " & size & "]")
         Dim tmpData = data
+#Disable Warning BC42024 ' Unused local variable
         Dim BreakPointDummy As Integer
+#Enable Warning BC42024 ' Unused local variable
         'Put breakline on BreakPointDummy to look at what is contained in data at runtime in the VS logger.
     End Sub
 
     Private Sub Socket_PacketReceived(size As Integer, header As Integer, ByRef data() As Byte) Handles Socket.PacketReceived
         Console.WriteLine("Packet Received : [Size: " & size & "| Packet: " & CType(header, ServerPackets).ToString() & "]")
         Dim tmpData = data
+#Disable Warning BC42024 ' Unused local variable
         Dim BreakPointDummy As Integer
+#Enable Warning BC42024 ' Unused local variable
         'Put breakline on BreakPointDummy to look at what is contained in data at runtime in the VS logger.
     End Sub
 #End If

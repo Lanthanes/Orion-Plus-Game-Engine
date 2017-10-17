@@ -180,9 +180,9 @@ Module ServerNetworkReceive
     Private Sub Packet_NewAccount(index as integer, ByRef data() As Byte)
         Dim username As String, password As String
         Dim i As Integer, n As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CNewAccount", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CNewAccount")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CNewAccount")
 
         If Not IsPlaying(index) AndAlso Not IsLoggedIn(index) Then
             'Get the Data
@@ -238,9 +238,9 @@ Module ServerNetworkReceive
 
     Private Sub Packet_DeleteAccount(index as integer, ByRef data() As Byte)
         Dim Name As String
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CDelChar", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CDelChar")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CDelChar")
 
         ' Get the data
         Name = Buffer.ReadString
@@ -263,9 +263,9 @@ Module ServerNetworkReceive
     Private Sub Packet_Login(index as integer, ByRef data() As Byte)
         Dim Name As String
         Dim Password As String
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CLogin", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CLogin")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CLogin")
 
         If Not IsPlaying(index) Then
             If Not IsLoggedIn(index) Then
@@ -310,8 +310,7 @@ Module ServerNetworkReceive
                 Buffer.WriteInt32(ServerPackets.SLoginOk)
                 Buffer.WriteInt32(MAX_CHARS)
 
-                Addlog("Sent SMSG: SLoginOk", PACKET_LOG)
-                Console.WriteLine("Sent SMSG: SLoginOk")
+                AddDebug("Sent SMSG: SLoginOk")
 
                 For i = 1 To MAX_CHARS
                     If Player(index).Character(i).Classes <= 0 Then
@@ -354,9 +353,9 @@ Module ServerNetworkReceive
 
     Private Sub Packet_UseChar(index as integer, ByRef data() As Byte)
         Dim slot As Byte
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CUseChar", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CUseChar")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CUseChar")
 
         If Not IsPlaying(index) Then
             If IsLoggedIn(index) Then
@@ -390,9 +389,9 @@ Module ServerNetworkReceive
         Dim i As Integer
         Dim n As Integer
 
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CAddChar", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CAddChar")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CAddChar")
 
         If Not IsPlaying(index) Then
             slot = Buffer.ReadInt32
@@ -448,9 +447,9 @@ Module ServerNetworkReceive
 
     Private Sub Packet_DeleteChar(index as integer, ByRef data() As Byte)
         Dim slot As Byte
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CDelChar", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CDelChar")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CDelChar")
 
         If Not IsPlaying(index) Then
             If IsLoggedIn(index) Then
@@ -469,8 +468,7 @@ Module ServerNetworkReceive
                     Buffer.WriteInt32(ServerPackets.SLoginOk)
                     Buffer.WriteInt32(MAX_CHARS)
 
-                    Addlog("Sent SMSG: SLoginOk", PACKET_LOG)
-                    Console.WriteLine("Sent SMSG: SLoginOk")
+                    AddDebug("Sent SMSG: SLoginOk")
 
                     For i = 1 To MAX_CHARS
                         If Player(index).Character(i).Classes <= 0 Then
@@ -498,9 +496,9 @@ Module ServerNetworkReceive
 
     Private Sub Packet_SayMessage(index as integer, ByRef data() As Byte)
         Dim msg As String
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CSayMsg", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CSayMsg")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CSayMsg")
 
         'msg = Buffer.ReadString
         msg = ReadUnicodeString(Buffer.ReadBytes)
@@ -516,9 +514,9 @@ Module ServerNetworkReceive
     Private Sub Packet_BroadCastMsg(index as integer, ByRef data() As Byte)
         Dim msg As String
         Dim s As String
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CBroadcastMsg", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CBroadcastMsg")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CBroadcastMsg")
 
         'msg = Buffer.ReadString
         msg = ReadUnicodeString(Buffer.ReadBytes)
@@ -532,10 +530,10 @@ Module ServerNetworkReceive
     End Sub
 
     Friend Sub Packet_PlayerMsg(index as integer, ByRef data() As Byte)
-        Dim OtherPlayer As String, Msg As String, OtherPlayerindex as integer
-        dim buffer as New ByteStream(Data)
-        Addlog("Recieved CMSG: CPlayerMsg", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CPlayerMsg")
+        Dim OtherPlayer As String, Msg As String, OtherPlayerindex as Integer
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CPlayerMsg")
 
         OtherPlayer = Buffer.ReadString
         'Msg = buffer.ReadString
@@ -560,9 +558,9 @@ Module ServerNetworkReceive
         Dim Dir As Integer
         Dim movement As Integer
         Dim tmpX As Integer, tmpY As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CPlayerMove", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CPlayerMove")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CPlayerMove")
 
         If TempPlayer(index).GettingMap = True Then Exit Sub
 
@@ -622,9 +620,9 @@ Module ServerNetworkReceive
 
     Sub Packet_PlayerDirection(index as integer, ByRef data() As Byte)
         Dim dir As Integer
-        dim buffer as New ByteStream(Data)
-        Addlog("Recieved CMSG: CPlayerDir", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CPlayerDir")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CPlayerDir")
 
         If TempPlayer(Index).GettingMap = True Then Exit Sub
 
@@ -642,18 +640,17 @@ Module ServerNetworkReceive
         Buffer.WriteInt32(GetPlayerDir(Index))
         SendDataToMapBut(Index, GetPlayerMap(Index), Buffer.Data, Buffer.Head)
 
-        Addlog("Sent SMSG: SPlayerDir", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SPlayerDir")
+        AddDebug("Sent SMSG: SPlayerDir")
 
-        Buffer.Dispose()
+        buffer.Dispose()
 
     End Sub
 
     Sub Packet_UseItem(index as integer, ByRef data() As Byte)
         Dim invnum As Integer
-        dim buffer as New ByteStream(Data)
-        Addlog("Recieved CMSG: CUseItem", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CUseItem")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CUseItem")
 
         invnum = Buffer.ReadInt32
         Buffer.Dispose()
@@ -665,9 +662,9 @@ Module ServerNetworkReceive
         Dim i As Integer
         Dim Tempindex as integer
         Dim x As Integer, y As Integer
-        dim buffer as New ByteStream(Data)
-        Addlog("Recieved CMSG: CAttack", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CAttack")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CAttack")
 
         ' can't attack whilst casting
         If TempPlayer(Index).SkillBuffer > 0 Then Exit Sub
@@ -750,9 +747,9 @@ Module ServerNetworkReceive
     Sub Packet_PlayerInfo(index as integer, ByRef data() As Byte)
         Dim i As Integer, n As Integer
         Dim name As String
-        dim buffer as New ByteStream(Data)
-        Addlog("Recieved CMSG: CPlayerInfoRequest", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CPlayerInfoRequest")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CPlayerInfoRequest")
 
         name = Buffer.ReadString
         i = FindPlayer(name)
@@ -782,9 +779,9 @@ Module ServerNetworkReceive
 
     Sub Packet_WarpMeTo(index as integer, ByRef data() As Byte)
         Dim n As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CWarpMeTo", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CWarpMeTo")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CWarpMeTo")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
@@ -811,9 +808,9 @@ Module ServerNetworkReceive
 
     Sub Packet_WarpToMe(index as integer, ByRef data() As Byte)
         Dim n As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CWarpToMe", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CWarpToMe")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CWarpToMe")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
@@ -840,9 +837,9 @@ Module ServerNetworkReceive
 
     Sub Packet_WarpTo(index as integer, ByRef data() As Byte)
         Dim n As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CWarpTo", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CWarpTo")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CWarpTo")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
@@ -862,9 +859,9 @@ Module ServerNetworkReceive
 
     Sub Packet_SetSprite(index as integer, ByRef data() As Byte)
         Dim n As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CSetSprite", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CSetSprite")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CSetSprite")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
@@ -881,9 +878,9 @@ Module ServerNetworkReceive
     Sub Packet_GetStats(index as integer, ByRef data() As Byte)
         Dim i As Integer
         Dim n As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CGetStats", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CGetStats")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CGetStats")
 
         PlayerMsg(Index, "-=- Stats for " & GetPlayerName(Index) & " -=-", ColorType.Yellow)
         PlayerMsg(Index, "Level: " & GetPlayerLevel(Index) & "  Exp: " & GetPlayerExp(Index) & "/" & GetPlayerNextLevel(Index), ColorType.Yellow)
@@ -900,9 +897,9 @@ Module ServerNetworkReceive
 
     Sub Packet_RequestNewMap(index as integer, ByRef data() As Byte)
         Dim dir As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CRequestNewMap", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CRequestNewMap")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CRequestNewMap")
 
         dir = Buffer.ReadInt32
         Buffer.Dispose()
@@ -919,10 +916,9 @@ Module ServerNetworkReceive
         Dim x As Integer
         Dim y As Integer
 
-        Addlog("Recieved CMSG: CSaveMap", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CSaveMap")
+        AddDebug("Recieved CMSG: CSaveMap")
 
-        dim buffer as New ByteStream(Compression.DecompressBytes(data))
+        Dim buffer as New ByteStream(Compression.DecompressBytes(data))
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
@@ -1163,9 +1159,9 @@ Module ServerNetworkReceive
 
     Private Sub Packet_NeedMap(index as integer, ByRef data() As Byte)
         Dim s As String
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CNeedMap", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CNeedMap")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CNeedMap")
 
         ' Get yes/no value
         s = Buffer.ReadInt32
@@ -1184,17 +1180,16 @@ Module ServerNetworkReceive
     End Sub
 
     Private Sub Packet_GetItem(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CMapGetItem", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CMapGetItem")
+        AddDebug("Recieved CMSG: CMapGetItem")
 
         PlayerMapGetItem(Index)
     End Sub
 
     Private Sub Packet_DropItem(index as integer, ByRef data() As Byte)
         Dim InvNum As Integer, Amount As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CMapDropItem", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CMapDropItem")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CMapDropItem")
 
         InvNum = Buffer.ReadInt32
         Amount = Buffer.ReadInt32
@@ -1215,9 +1210,9 @@ Module ServerNetworkReceive
 
     Sub Packet_RespawnMap(index as integer, ByRef data() As Byte)
         Dim i As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CMapRespawn", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CMapRespawn")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CMapRespawn")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
@@ -1248,9 +1243,9 @@ Module ServerNetworkReceive
     ' ::::::::::::::::::::::::
     Sub Packet_KickPlayer(index as integer, ByRef data() As Byte)
         Dim n As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CKickPlayer", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CKickPlayer")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CKickPlayer")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) <= 0 Then
@@ -1281,8 +1276,7 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_Banlist(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CBanList", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CBanList")
+        AddDebug("Recieved CMSG: CBanList")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then
@@ -1295,13 +1289,10 @@ Module ServerNetworkReceive
     Sub Packet_DestroyBans(index as integer, ByRef data() As Byte)
         Dim filename As String
 
-        Addlog("Recieved CMSG: CBanDestory", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CBanDestory")
+        AddDebug("Recieved CMSG: CBanDestory")
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Creator Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Creator Then Exit Sub
 
         filename = Application.StartupPath & "\data\banlist.txt"
 
@@ -1315,14 +1306,12 @@ Module ServerNetworkReceive
     ' :::::::::::::::::::::::
     Sub Packet_BanPlayer(index as integer, ByRef data() As Byte)
         Dim n As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CBanPlayer", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CBanPlayer")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CBanPlayer")
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Mapper Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
 
         ' The player index
         n = FindPlayer(Buffer.ReadString)
@@ -1347,8 +1336,7 @@ Module ServerNetworkReceive
     End Sub
 
     Private Sub Packet_EditMapRequest(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CRequestEditMap", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CRequestEditMap")
+        AddDebug("Recieved CMSG: CRequestEditMap")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
@@ -1357,6 +1345,7 @@ Module ServerNetworkReceive
             PlayerMsg(Index, "Cant edit instanced maps!", ColorType.BrightRed)
             Exit Sub
         End If
+
         SendMapEventData(Index)
 
         Dim Buffer = New ByteStream(4)
@@ -1366,39 +1355,33 @@ Module ServerNetworkReceive
     End Sub
 
     Private Sub Packet_EditItem(index as integer, ByRef data() As Byte)
-        Addlog("Recieved EMSG: RequestEditItem", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: RequestEditItem")
+        AddDebug("Recieved EMSG: RequestEditItem")
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Mapper Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
 
         Dim Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ServerPackets.SItemEditor)
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Addlog("Sent SMSG: SItemEditor", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SItemEditor")
+        AddDebug("Sent SMSG: SItemEditor")
 
         Buffer.Dispose()
     End Sub
 
     Private Sub Packet_SaveItem(index as integer, ByRef data() As Byte)
         Dim n As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved EMSG: SaveItem", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: SaveItem")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved EMSG: SaveItem")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
 
         n = Buffer.ReadInt32
 
-        If n < 0 OrElse n > MAX_ITEMS Then
-            Exit Sub
-        End If
+        If n < 0 OrElse n > MAX_ITEMS Then Exit Sub
 
         ' Update the item
         Item(n).AccessReq = Buffer.ReadInt32()
@@ -1464,34 +1447,28 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_EditNpc(index as integer, ByRef data() As Byte)
-        Addlog("Recieved EMSG: RequestEditNpc", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: RequestEditNpc")
+        AddDebug("Recieved EMSG: RequestEditNpc")
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Developer Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
 
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SNpcEditor)
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Addlog("Sent SMSG: SNpcEditor", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SNpcEditor")
+        AddDebug("Sent SMSG: SNpcEditor")
 
         Buffer.Dispose()
     End Sub
 
     Sub Packet_SaveNPC(index as integer, ByRef data() As Byte)
         Dim NpcNum As Integer, i As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved EMSG: SaveNpc", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: SaveNpc")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved EMSG: SaveNpc")
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Developer Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
 
         NpcNum = Buffer.ReadInt32
 
@@ -1536,41 +1513,33 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_EditShop(index as integer, ByRef data() As Byte)
-        Addlog("Recieved EMSG: RequestEditShop", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: RequestEditShop")
+        AddDebug("Recieved EMSG: RequestEditShop")
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Developer Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
 
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SShopEditor)
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Addlog("Sent SMSG: SShopEditor", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SShopEditor")
+        AddDebug("Sent SMSG: SShopEditor")
 
         Buffer.Dispose()
     End Sub
 
     Sub Packet_SaveShop(index as integer, ByRef data() As Byte)
         Dim ShopNum As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved EMSG: SaveShop", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: SaveShop")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved EMSG: SaveShop")
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Developer Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
 
         ShopNum = Buffer.ReadInt32
 
         ' Prevent hacking
-        If ShopNum < 0 OrElse ShopNum > MAX_SHOPS Then
-            Exit Sub
-        End If
+        If ShopNum < 0 OrElse ShopNum > MAX_SHOPS Then Exit Sub
 
         Shop(ShopNum).BuyRate = Buffer.ReadInt32()
         Shop(ShopNum).Name = Buffer.ReadString()
@@ -1585,44 +1554,39 @@ Module ServerNetworkReceive
 
         If Shop(ShopNum).Name Is Nothing Then Shop(ShopNum).Name = ""
 
-        Buffer.Dispose()
+        buffer.Dispose()
+
         ' Save it
-        Call SendUpdateShopToAll(ShopNum)
-        Call SaveShop(ShopNum)
-        Call Addlog(GetPlayerLogin(Index) & " saving shop #" & ShopNum & ".", ADMIN_LOG)
+        SendUpdateShopToAll(ShopNum)
+        SaveShop(ShopNum)
+        Addlog(GetPlayerLogin(index) & " saving shop #" & ShopNum & ".", ADMIN_LOG)
     End Sub
 
     Sub Packet_EditSkill(index as integer, ByRef data() As Byte)
-        Addlog("Recieved EMSG: RequestEditSkill", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: RequestEditSkill")
+        AddDebug("Recieved EMSG: RequestEditSkill")
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Developer Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
 
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SSkillEditor)
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Addlog("Sent SMSG: SSkillEditor", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SSkillEditor")
+        AddDebug("Sent SMSG: SSkillEditor")
 
         Buffer.Dispose()
     End Sub
 
     Sub Packet_SaveSkill(index as integer, ByRef data() As Byte)
         Dim skillnum As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved EMSG: SaveSkill", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: SaveSkill")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved EMSG: SaveSkill")
 
         skillnum = Buffer.ReadInt32
 
         ' Prevent hacking
-        If skillnum < 0 OrElse skillnum > MAX_SKILLS Then
-            Exit Sub
-        End If
+        If skillnum < 0 OrElse skillnum > MAX_SKILLS Then Exit Sub
 
         Skill(skillnum).AccessReq = Buffer.ReadInt32()
         Skill(skillnum).AoE = Buffer.ReadInt32()
@@ -1663,12 +1627,11 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_SetAccess(index as integer, ByRef data() As Byte)
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CSetAccess", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CSetAccess")
-
+        Dim buffer As New ByteStream(data)
         Dim n As Integer
         Dim i As Integer
+
+        AddDebug("Recieved CMSG: CSetAccess")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Creator Then Exit Sub
@@ -1709,21 +1672,18 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_WhosOnline(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CWhosOnline", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CWhosOnline")
+        AddDebug("Recieved CMSG: CWhosOnline")
 
         SendWhosOnline(Index)
     End Sub
 
     Sub Packet_SetMotd(index as integer, ByRef data() As Byte)
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CSetMotd", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CSetMotd")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CSetMotd")
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Mapper Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
 
         Options.Motd = Trim$(Buffer.ReadString)
         SaveOptions()
@@ -1737,9 +1697,9 @@ Module ServerNetworkReceive
     Sub Packet_PlayerSearch(index as integer, ByRef data() As Byte)
         Dim TargetFound As Byte, rclick As Byte
         Dim x As Integer, y As Integer, i As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CSearch", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CSearch")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CSearch")
 
         x = Buffer.ReadInt32
         y = Buffer.ReadInt32
@@ -1870,17 +1830,16 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_Skills(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CSkills", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CSkills")
+        AddDebug("Recieved CMSG: CSkills")
 
         SendPlayerSkills(Index)
     End Sub
 
     Sub Packet_Cast(index as integer, ByRef data() As Byte)
         Dim n As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CCast", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CCast")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CCast")
 
         ' Skill slot
         n = Buffer.ReadInt32
@@ -1893,8 +1852,7 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_QuitGame(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CQuit", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CQuit")
+        AddDebug("Recieved CMSG: CQuit")
 
         SendLeftGame(Index)
         Socket.Disconnect(Index)
@@ -1902,9 +1860,9 @@ Module ServerNetworkReceive
 
     Sub Packet_SwapInvSlots(index as integer, ByRef data() As Byte)
         Dim oldSlot As Integer, newSlot As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CSwapInvSlots", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CSwapInvSlots")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CSwapInvSlots")
 
         If TempPlayer(Index).InTrade > 0 OrElse TempPlayer(Index).InBank OrElse TempPlayer(Index).InShop Then Exit Sub
 
@@ -1919,8 +1877,7 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_EditResource(index as integer, ByRef data() As Byte)
-        Addlog("Recieved EMSG: RequestEditResource", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: RequestEditResource")
+        AddDebug("Recieved EMSG: RequestEditResource")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
@@ -1929,17 +1886,16 @@ Module ServerNetworkReceive
         Buffer.WriteInt32(ServerPackets.SResourceEditor)
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Addlog("Sent SMSG: SResourceEditor", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SResourceEditor")
+        AddDebug("Sent SMSG: SResourceEditor")
 
         Buffer.Dispose()
     End Sub
 
     Sub Packet_SaveResource(index as integer, ByRef data() As Byte)
         Dim resourcenum As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved EMSG: SaveResource", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: SaveResource")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved EMSG: SaveResource")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
@@ -1979,16 +1935,15 @@ Module ServerNetworkReceive
         Buffer.WriteInt32(ServerPackets.SSendPing)
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Addlog("Sent SMSG: SSendPing", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SSendPing")
+        AddDebug("Sent SMSG: SSendPing")
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 
     Sub Packet_Unequip(index as integer, ByRef data() As Byte)
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CUnequip", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CUnequip")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CUnequip")
 
         PlayerUnequipItem(Index, Buffer.ReadInt32)
 
@@ -1996,56 +1951,51 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_RequestPlayerData(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CRequestPlayerData", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CRequestPlayerData")
+        AddDebug("Recieved CMSG: CRequestPlayerData")
 
         SendPlayerData(Index)
     End Sub
 
     Sub Packet_RequestItems(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CRequestItems", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CRequestItems")
+        AddDebug("Recieved CMSG: CRequestItems")
 
         SendItems(Index)
     End Sub
 
     Sub Packet_RequestNpcs(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CRequestNPCS", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CRequestNPCS")
+        AddDebug("Recieved CMSG: CRequestNPCS")
 
         SendNpcs(Index)
     End Sub
 
     Sub Packet_RequestResources(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CRequestResources", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CRequestResources")
+        AddDebug("Recieved CMSG: CRequestResources")
 
         SendResources(Index)
     End Sub
 
-    Sub Packet_SpawnItem(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CSpawnItem", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CSpawnItem")
-
+    Sub Packet_SpawnItem(index As Integer, ByRef data() As Byte)
         Dim tmpItem As Integer
         Dim tmpAmount As Integer
-        dim buffer as New ByteStream(data)
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CSpawnItem")
 
         ' item
-        tmpItem = Buffer.ReadInt32
-        tmpAmount = Buffer.ReadInt32
+        tmpItem = buffer.ReadInt32
+        tmpAmount = buffer.ReadInt32
 
-        If GetPlayerAccess(Index) < AdminType.Creator Then Exit Sub
+        If GetPlayerAccess(index) < AdminType.Creator Then Exit Sub
 
-        SpawnItem(tmpItem, tmpAmount, GetPlayerMap(Index), GetPlayerX(Index), GetPlayerY(Index))
-        Buffer.Dispose()
+        SpawnItem(tmpItem, tmpAmount, GetPlayerMap(index), GetPlayerX(index), GetPlayerY(index))
+        buffer.Dispose()
     End Sub
 
     Sub Packet_TrainStat(index as integer, ByRef data() As Byte)
         Dim tmpstat As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CTrainStat", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CTrainStat")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CTrainStat")
 
         ' check points
         If GetPlayerPOINTS(Index) = 0 Then Exit Sub
@@ -2065,13 +2015,10 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_EditAnimation(index as integer, ByRef data() As Byte)
-        Addlog("Recieved EMSG: RequestEditAnimation", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: RequestEditAnimation")
+        AddDebug("Recieved EMSG: RequestEditAnimation")
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Developer Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
 
         Dim Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SAnimationEditor)
@@ -2081,9 +2028,9 @@ Module ServerNetworkReceive
 
     Sub Packet_SaveAnimation(index as integer, ByRef data() As Byte)
         Dim AnimNum As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved EMSG: SaveAnimation", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: SaveAnimation")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved EMSG: SaveAnimation")
 
         AnimNum = Buffer.ReadInt32
 
@@ -2120,34 +2067,28 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_RequestAnimations(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CRequestAnimations", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CRequestAnimations")
+        AddDebug("Recieved CMSG: CRequestAnimations")
 
         SendAnimations(Index)
     End Sub
 
     Sub Packet_RequestSkills(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CRequestSkills", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CRequestSkills")
+        AddDebug("Recieved CMSG: CRequestSkills")
 
         SendSkills(Index)
     End Sub
 
     Sub Packet_RequestShops(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CRequestShops", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CRequestShops")
+        AddDebug("Recieved CMSG: CRequestShops")
 
         SendShops(Index)
     End Sub
 
     Sub Packet_RequestLevelUp(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CRequestLevelUp", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CRequestLevelUp")
+        AddDebug("Recieved CMSG: CRequestLevelUp")
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Creator Then
-            Exit Sub
-        End If
+        If GetPlayerAccess(index) < AdminType.Creator Then Exit Sub
 
         SetPlayerExp(Index, GetPlayerNextLevel(Index))
         CheckPlayerLevelUp(Index)
@@ -2155,16 +2096,14 @@ Module ServerNetworkReceive
 
     Sub Packet_ForgetSkill(index as integer, ByRef data() As Byte)
         Dim skillslot As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CForgetSkill", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CForgetSkill")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CForgetSkill")
 
         skillslot = Buffer.ReadInt32
 
         ' Check for subscript out of range
-        If skillslot < 1 OrElse skillslot > MAX_PLAYER_SKILLS Then
-            Exit Sub
-        End If
+        If skillslot < 1 OrElse skillslot > MAX_PLAYER_SKILLS Then Exit Sub
 
         ' dont let them forget a skill which is in CD
         If TempPlayer(Index).SkillCD(skillslot) > 0 Then
@@ -2185,17 +2124,16 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_CloseShop(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CCloseShop", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CCloseShop")
+        AddDebug("Recieved CMSG: CCloseShop")
 
         TempPlayer(Index).InShop = 0
     End Sub
 
     Sub Packet_BuyItem(index as integer, ByRef data() As Byte)
         Dim shopslot As Integer, shopnum As Integer, itemamount As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CBuyItem", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CBuyItem")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CBuyItem")
 
         shopslot = Buffer.ReadInt32
 
@@ -2234,8 +2172,7 @@ Module ServerNetworkReceive
         Dim multiplier As Double
         dim buffer as New ByteStream(data)
 
-        Addlog("Recieved CMSG: CSellItem", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CSellItem")
+        AddDebug("Recieved CMSG: CSellItem")
 
         invSlot = Buffer.ReadInt32
 
@@ -2272,9 +2209,9 @@ Module ServerNetworkReceive
 
     Sub Packet_ChangeBankSlots(index as integer, ByRef data() As Byte)
         Dim oldslot As Integer, newslot As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CChangeBankSlots", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CChangeBankSlots")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CChangeBankSlots")
 
         oldslot = Buffer.ReadInt32
         newslot = Buffer.ReadInt32
@@ -2286,9 +2223,9 @@ Module ServerNetworkReceive
 
     Sub Packet_DepositItem(index as integer, ByRef data() As Byte)
         Dim invslot As Integer, amount As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CDepositItem", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CDepositItem")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CDepositItem")
 
         invslot = Buffer.ReadInt32
         amount = Buffer.ReadInt32
@@ -2300,9 +2237,9 @@ Module ServerNetworkReceive
 
     Sub Packet_WithdrawItem(index as integer, ByRef data() As Byte)
         Dim bankslot As Integer, amount As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CWithdrawItem", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CWithdrawItem")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CWithdrawItem")
 
         bankslot = Buffer.ReadInt32
         amount = Buffer.ReadInt32
@@ -2313,8 +2250,7 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_CloseBank(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CCloseBank", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CCloseBank")
+        AddDebug("Recieved CMSG: CCloseBank")
 
         SaveBank(Index)
         SavePlayer(Index)
@@ -2324,9 +2260,9 @@ Module ServerNetworkReceive
 
     Sub Packet_AdminWarp(index as integer, ByRef data() As Byte)
         Dim x As Integer, y As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CAdminWarp", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CAdminWarp")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CAdminWarp")
 
         x = Buffer.ReadInt32
         y = Buffer.ReadInt32
@@ -2345,9 +2281,9 @@ Module ServerNetworkReceive
 
     Sub Packet_TradeInvite(index as integer, ByRef data() As Byte)
         Dim Name As String, tradetarget As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CTradeInvite", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CTradeInvite")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CTradeInvite")
 
         Name = Buffer.ReadString
 
@@ -2379,9 +2315,9 @@ Module ServerNetworkReceive
 
     Sub Packet_TradeInviteAccept(index as integer, ByRef data() As Byte)
         Dim tradetarget As Integer, status As Byte
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CTradeInviteAccept", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CTradeInviteAccept")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CTradeInviteAccept")
 
         status = Buffer.ReadInt32
 
@@ -2434,8 +2370,8 @@ Module ServerNetworkReceive
         Dim tradeTarget As Integer, i As Integer
         Dim tmpTradeItem(MAX_INV) As PlayerInvRec
         Dim tmpTradeItem2(MAX_INV) As PlayerInvRec
-        Addlog("Recieved CMSG: CAcceptTrade", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CAcceptTrade")
+
+        AddDebug("Recieved CMSG: CAcceptTrade")
 
         TempPlayer(Index).AcceptTrade = True
 
@@ -2511,8 +2447,8 @@ Module ServerNetworkReceive
 
     Sub Packet_DeclineTrade(index as integer, ByRef data() As Byte)
         Dim tradeTarget As Integer
-        Addlog("Recieved CMSG: CDeclineTrade", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CDeclineTrade")
+
+        AddDebug("Recieved CMSG: CDeclineTrade")
 
         tradeTarget = TempPlayer(Index).InTrade
 
@@ -2536,9 +2472,9 @@ Module ServerNetworkReceive
     Sub Packet_TradeItem(index as integer, ByRef data() As Byte)
         Dim itemnum As Integer
         Dim invslot As Integer, amount As Integer, emptyslot As Integer, i As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CTradeItem", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CTradeItem")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CTradeItem")
 
         invslot = Buffer.ReadInt32
         amount = Buffer.ReadInt32
@@ -2614,9 +2550,9 @@ Module ServerNetworkReceive
 
     Sub Packet_UntradeItem(index as integer, ByRef data() As Byte)
         Dim tradeslot As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CUntradeItem", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CUntradeItem")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CUntradeItem")
 
         tradeslot = Buffer.ReadInt32
 
@@ -2650,8 +2586,7 @@ Module ServerNetworkReceive
 
     'Mapreport
     Sub Packet_MapReport(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CMapReport", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CMapReport")
+        AddDebug("Recieved CMSG: CMapReport")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
@@ -2660,8 +2595,7 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_Admin(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CAdmin", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CAdmin")
+        AddDebug("Recieved CMSG: CAdmin")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
@@ -2671,9 +2605,9 @@ Module ServerNetworkReceive
 
     Sub Packet_SetHotBarSlot(index as integer, ByRef data() As Byte)
         Dim slot As Integer, skill As Integer, type As Byte
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CSetHotbarSlot", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CSetHotbarSlot")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CSetHotbarSlot")
 
         slot = Buffer.ReadInt32
         skill = Buffer.ReadInt32
@@ -2689,9 +2623,9 @@ Module ServerNetworkReceive
 
     Sub Packet_DeleteHotBarSlot(index as integer, ByRef data() As Byte)
         Dim slot As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CDeleteHotbarSlot", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CDeleteHotbarSlot")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CDeleteHotbarSlot")
 
         slot = Buffer.ReadInt32
 
@@ -2705,9 +2639,9 @@ Module ServerNetworkReceive
 
     Sub Packet_UseHotBarSlot(index as integer, ByRef data() As Byte)
         Dim slot As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CUseHotbarSlot", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CUseHotbarSlot")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CUseHotbarSlot")
 
         slot = Buffer.ReadInt32
         Buffer.Dispose()
@@ -2725,15 +2659,13 @@ Module ServerNetworkReceive
     End Sub
 
     Sub Packet_RequestClasses(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CRequestClasses", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CRequestClasses")
+        AddDebug("Recieved CMSG: CRequestClasses")
 
         SendClasses(Index)
     End Sub
 
     Sub Packet_RequestEditClasses(index as integer, ByRef data() As Byte)
-        Addlog("Recieved EMSG: RequestEditClasses", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: RequestEditClasses")
+        AddDebug("Recieved EMSG: RequestEditClasses")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
@@ -2745,9 +2677,9 @@ Module ServerNetworkReceive
 
     Sub Packet_SaveClasses(index as integer, ByRef data() As Byte)
         Dim i As Integer, z As Integer, x As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved EMSG: SaveClasses", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: SaveClasses")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved EMSG: SaveClasses")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
@@ -2819,9 +2751,9 @@ Module ServerNetworkReceive
 
     Private Sub Packet_EditorLogin(index as integer, ByRef data() As Byte)
         Dim Name As String, Password As String, Version As String
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved EMSG: EditorLogin", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: EditorLogin")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved EMSG: EditorLogin")
 
         If Not IsLoggedIn(Index) Then
 
@@ -2862,13 +2794,13 @@ Module ServerNetworkReceive
             If GetPlayerAccess(Index) > AdminType.Player Then
                 SendEditorLoadOk(Index)
                 'SendMapData(index, 1, True)
-                SendGameData(Index)
-                SendMapNames(Index)
-                SendProjectiles(Index)
-                SendQuests(Index)
-                SendRecipes(Index)
-                SendHouseConfigs(Index)
-                SendPets(Index)
+                SendGameData(index)
+                SendMapNames(index)
+                SendProjectiles(index)
+                SendQuests(index)
+                SendRecipes(index)
+                SendHouseConfigs(index)
+                SendPets(index)
             Else
                 AlertMsg(Index, "not authorized.")
                 Exit Sub
@@ -2886,11 +2818,11 @@ Module ServerNetworkReceive
 
     Private Sub Packet_EditorRequestMap(index as integer, ByRef data() As Byte)
         Dim mapNum as Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved EMSG: EditorRequestMap", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: EditorRequestMap")
+        Dim buffer As New ByteStream(data)
 
-        MapNum = Buffer.ReadInt32
+        AddDebug("Recieved EMSG: EditorRequestMap")
+
+        mapNum = Buffer.ReadInt32
 
         Buffer.Dispose()
 
@@ -2902,10 +2834,9 @@ Module ServerNetworkReceive
             Buffer.WriteInt32(ServerPackets.SEditMap)
             Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-            Addlog("Sent SMSG: SEditMap", PACKET_LOG)
-            Console.WriteLine("Sent SMSG: SEditMap")
+            AddDebug("Sent SMSG: SEditMap")
 
-            Buffer.Dispose()
+            buffer.Dispose()
         Else
             AlertMsg(Index, "Not Allowed!")
         End If
@@ -2918,14 +2849,12 @@ Module ServerNetworkReceive
         Dim x As Integer
         Dim y As Integer
 
-        Addlog("Recieved EMSG: EditorSaveMap", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: EditorSaveMap")
+        AddDebug("Recieved EMSG: EditorSaveMap")
 
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
 
         dim buffer as New ByteStream(Compression.DecompressBytes(data))
-
 
         Gettingmap = True
 
@@ -3161,8 +3090,7 @@ Module ServerNetworkReceive
     End Sub
 
     Private Sub Packet_RequestAutoMap(index as integer, ByRef data() As Byte)
-        Addlog("Recieved EMSG: RequestAutoMap", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: RequestAutoMap")
+        AddDebug("Recieved EMSG: RequestAutoMap")
 
         If GetPlayerAccess(Index) = AdminType.Player Then Exit Sub
 
@@ -3171,9 +3099,9 @@ Module ServerNetworkReceive
 
     Private Sub Packet_SaveAutoMap(index as integer, ByRef data() As Byte)
         Dim Layer As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved EMSG: SaveAutoMap", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: SaveAutoMap")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved EMSG: SaveAutoMap")
 
         If GetPlayerAccess(Index) = AdminType.Player Then Exit Sub
 
@@ -3212,9 +3140,9 @@ Module ServerNetworkReceive
 
     Private Sub Packet_Emote(index as integer, ByRef data() As Byte)
         Dim Emote As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CEmote", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CEmote")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CEmote")
 
         Emote = Buffer.ReadInt32
 
