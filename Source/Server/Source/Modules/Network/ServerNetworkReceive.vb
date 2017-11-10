@@ -3049,7 +3049,9 @@ Module ServerNetworkReceive
         'End Event Data
 
         ' Save the map
-        SaveMap(MapNum)
+        SaveMap(mapNum)
+
+        SaveMapEvent(mapNum)
 
         Gettingmap = False
 

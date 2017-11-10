@@ -334,8 +334,6 @@ Partial Class frmMapEditor
         '
         'pnlTiles
         '
-        Me.pnlTiles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top OrElse System.Windows.Forms.AnchorStyles.Bottom) _
-            OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.pnlTiles.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(63, Byte), Integer), CType(CType(65, Byte), Integer))
         Me.pnlTiles.Controls.Add(Me.cmbAutoTile)
         Me.pnlTiles.Controls.Add(Me.cmbTileSets)
@@ -354,7 +352,6 @@ Partial Class frmMapEditor
         '
         'cmbAutoTile
         '
-        Me.cmbAutoTile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmbAutoTile.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
         Me.cmbAutoTile.BorderColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
         Me.cmbAutoTile.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid
@@ -377,7 +374,6 @@ Partial Class frmMapEditor
         '
         'cmbTileSets
         '
-        Me.cmbTileSets.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmbTileSets.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
         Me.cmbTileSets.BorderColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
         Me.cmbTileSets.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid
@@ -399,7 +395,6 @@ Partial Class frmMapEditor
         '
         'cmbLayers
         '
-        Me.cmbLayers.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmbLayers.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
         Me.cmbLayers.BorderColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
         Me.cmbLayers.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid
@@ -422,7 +417,6 @@ Partial Class frmMapEditor
         '
         'DarkLabel4
         '
-        Me.DarkLabel4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.DarkLabel4.AutoSize = True
         Me.DarkLabel4.BackColor = System.Drawing.Color.Transparent
         Me.DarkLabel4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
@@ -434,8 +428,6 @@ Partial Class frmMapEditor
         '
         'pnlBack
         '
-        Me.pnlBack.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top OrElse System.Windows.Forms.AnchorStyles.Bottom) _
-            OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.pnlBack.BackColor = System.Drawing.Color.Black
         Me.pnlBack.Controls.Add(Me.picBackSelect)
         Me.pnlBack.Location = New System.Drawing.Point(3, 3)
@@ -454,7 +446,6 @@ Partial Class frmMapEditor
         '
         'DarkLabel3
         '
-        Me.DarkLabel3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.DarkLabel3.AutoSize = True
         Me.DarkLabel3.BackColor = System.Drawing.Color.Transparent
         Me.DarkLabel3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
@@ -466,8 +457,6 @@ Partial Class frmMapEditor
         '
         'scrlPictureY
         '
-        Me.scrlPictureY.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top OrElse System.Windows.Forms.AnchorStyles.Bottom) _
-            OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.scrlPictureY.BackColor = System.Drawing.SystemColors.ControlDark
         Me.scrlPictureY.Location = New System.Drawing.Point(292, 3)
         Me.scrlPictureY.Name = "scrlPictureY"
@@ -476,7 +465,6 @@ Partial Class frmMapEditor
         '
         'scrlPictureX
         '
-        Me.scrlPictureX.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.scrlPictureX.BackColor = System.Drawing.SystemColors.ControlDark
         Me.scrlPictureX.Location = New System.Drawing.Point(3, 451)
         Me.scrlPictureX.Name = "scrlPictureX"
@@ -486,7 +474,6 @@ Partial Class frmMapEditor
         '
         'DarkLabel2
         '
-        Me.DarkLabel2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.DarkLabel2.AutoSize = True
         Me.DarkLabel2.BackColor = System.Drawing.Color.Transparent
         Me.DarkLabel2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
@@ -498,7 +485,6 @@ Partial Class frmMapEditor
         '
         'DarkLabel1
         '
-        Me.DarkLabel1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom OrElse System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.DarkLabel1.AutoSize = True
         Me.DarkLabel1.BackColor = System.Drawing.Color.Transparent
         Me.DarkLabel1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
@@ -950,6 +936,7 @@ Partial Class frmMapEditor
         Me.nudFogAlpha.Name = "nudFogAlpha"
         Me.nudFogAlpha.Size = New System.Drawing.Size(49, 20)
         Me.nudFogAlpha.TabIndex = 29
+        Me.nudFogAlpha.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'nudFogSpeed
         '
@@ -959,6 +946,7 @@ Partial Class frmMapEditor
         Me.nudFogSpeed.Name = "nudFogSpeed"
         Me.nudFogSpeed.Size = New System.Drawing.Size(44, 20)
         Me.nudFogSpeed.TabIndex = 28
+        Me.nudFogSpeed.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'nudFog
         '
@@ -968,6 +956,7 @@ Partial Class frmMapEditor
         Me.nudFog.Name = "nudFog"
         Me.nudFog.Size = New System.Drawing.Size(49, 20)
         Me.nudFog.TabIndex = 28
+        Me.nudFog.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'nudIntensity
         '
@@ -977,6 +966,7 @@ Partial Class frmMapEditor
         Me.nudIntensity.Name = "nudIntensity"
         Me.nudIntensity.Size = New System.Drawing.Size(44, 20)
         Me.nudIntensity.TabIndex = 28
+        Me.nudIntensity.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'lblFogAlpha
         '
@@ -1068,6 +1058,7 @@ Partial Class frmMapEditor
         Me.nudMapAlpha.Name = "nudMapAlpha"
         Me.nudMapAlpha.Size = New System.Drawing.Size(47, 20)
         Me.nudMapAlpha.TabIndex = 31
+        Me.nudMapAlpha.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'nudMapBlue
         '
@@ -1078,6 +1069,7 @@ Partial Class frmMapEditor
         Me.nudMapBlue.Name = "nudMapBlue"
         Me.nudMapBlue.Size = New System.Drawing.Size(47, 20)
         Me.nudMapBlue.TabIndex = 30
+        Me.nudMapBlue.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'nudMapGreen
         '
@@ -1088,6 +1080,7 @@ Partial Class frmMapEditor
         Me.nudMapGreen.Name = "nudMapGreen"
         Me.nudMapGreen.Size = New System.Drawing.Size(47, 20)
         Me.nudMapGreen.TabIndex = 29
+        Me.nudMapGreen.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'nudMapRed
         '
@@ -1098,6 +1091,7 @@ Partial Class frmMapEditor
         Me.nudMapRed.Name = "nudMapRed"
         Me.nudMapRed.Size = New System.Drawing.Size(47, 20)
         Me.nudMapRed.TabIndex = 28
+        Me.nudMapRed.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'chkUseTint
         '
@@ -1221,6 +1215,7 @@ Partial Class frmMapEditor
         Me.nudMaxY.Name = "nudMaxY"
         Me.nudMaxY.Size = New System.Drawing.Size(41, 20)
         Me.nudMaxY.TabIndex = 6
+        Me.nudMaxY.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'nudMaxX
         '
@@ -1230,6 +1225,7 @@ Partial Class frmMapEditor
         Me.nudMaxX.Name = "nudMaxX"
         Me.nudMaxX.Size = New System.Drawing.Size(41, 20)
         Me.nudMaxX.TabIndex = 5
+        Me.nudMaxX.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'btnSetSize
         '
@@ -1286,6 +1282,7 @@ Partial Class frmMapEditor
         Me.nudSpawnY.Name = "nudSpawnY"
         Me.nudSpawnY.Size = New System.Drawing.Size(51, 20)
         Me.nudSpawnY.TabIndex = 29
+        Me.nudSpawnY.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'nudSpawnX
         '
@@ -1295,6 +1292,7 @@ Partial Class frmMapEditor
         Me.nudSpawnX.Name = "nudSpawnX"
         Me.nudSpawnX.Size = New System.Drawing.Size(51, 20)
         Me.nudSpawnX.TabIndex = 28
+        Me.nudSpawnX.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'nudSpawnMap
         '
@@ -1304,6 +1302,7 @@ Partial Class frmMapEditor
         Me.nudSpawnMap.Name = "nudSpawnMap"
         Me.nudSpawnMap.Size = New System.Drawing.Size(86, 20)
         Me.nudSpawnMap.TabIndex = 6
+        Me.nudSpawnMap.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'DarkLabel11
         '
@@ -1402,6 +1401,7 @@ Partial Class frmMapEditor
         Me.nudRight.Name = "nudRight"
         Me.nudRight.Size = New System.Drawing.Size(50, 20)
         Me.nudRight.TabIndex = 8
+        Me.nudRight.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'nudLeft
         '
@@ -1411,6 +1411,7 @@ Partial Class frmMapEditor
         Me.nudLeft.Name = "nudLeft"
         Me.nudLeft.Size = New System.Drawing.Size(50, 20)
         Me.nudLeft.TabIndex = 7
+        Me.nudLeft.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'nudDown
         '
@@ -1420,6 +1421,7 @@ Partial Class frmMapEditor
         Me.nudDown.Name = "nudDown"
         Me.nudDown.Size = New System.Drawing.Size(50, 20)
         Me.nudDown.TabIndex = 6
+        Me.nudDown.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'nudUp
         '
@@ -1429,6 +1431,7 @@ Partial Class frmMapEditor
         Me.nudUp.Name = "nudUp"
         Me.nudUp.Size = New System.Drawing.Size(50, 20)
         Me.nudUp.TabIndex = 5
+        Me.nudUp.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'lblMap
         '
@@ -2140,7 +2143,7 @@ Partial Class frmMapEditor
         Me.picScreen.TabIndex = 2
         Me.picScreen.TabStop = False
         '
-        'FrmEditor_MapEditor
+        'frmMapEditor
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -2152,7 +2155,7 @@ Partial Class frmMapEditor
         Me.Controls.Add(Me.ToolStripContainer2)
         Me.Controls.Add(Me.DarkDockPanel1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Name = "FrmEditor_MapEditor"
+        Me.Name = "frmMapEditor"
         Me.Text = "Map Editor"
         Me.ToolStripContainer2.ContentPanel.ResumeLayout(False)
         Me.ToolStripContainer2.ResumeLayout(False)

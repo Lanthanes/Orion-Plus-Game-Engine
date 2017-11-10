@@ -2934,6 +2934,7 @@ Module ServerPlayers
         ClearPlayer(Index)
         ClearBank(Index)
 
+        Socket.Disconnect(index)
         UpdateCaption()
     End Sub
 

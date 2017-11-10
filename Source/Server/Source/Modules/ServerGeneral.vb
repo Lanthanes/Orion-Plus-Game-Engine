@@ -272,6 +272,7 @@ Module ServerGeneral
 
     Sub DestroyServer()
         Socket.StopListening()
+
         Console.WriteLine("Saving players online...")
         SaveAllPlayersOnline()
 
