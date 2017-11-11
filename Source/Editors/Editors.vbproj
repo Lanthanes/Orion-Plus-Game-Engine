@@ -50,8 +50,8 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ASFW, Version=1.0.6463.1050, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CS-ASFW.0.9.9.8\lib\ASFW.dll</HintPath>
+    <Reference Include="ASFW, Version=1.0.6486.30660, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-ASFW.0.9.9.9\lib\ASFW.dll</HintPath>
     </Reference>
     <Reference Include="DarkUI">
       <HintPath>.\DarkUI.dll</HintPath>
