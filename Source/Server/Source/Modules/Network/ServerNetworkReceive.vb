@@ -1855,7 +1855,7 @@ Module ServerNetworkReceive
         AddDebug("Recieved CMSG: CQuit")
 
         SendLeftGame(Index)
-        Socket.Disconnect(Index)
+        LeftGame(index)
     End Sub
 
     Sub Packet_SwapInvSlots(index as integer, ByRef data() As Byte)
