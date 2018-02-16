@@ -140,6 +140,11 @@ Friend Module modQuest
                 .cmbItemReward.Items.Add(i & ": " & Item(i).Name)
             Next
 
+            .cmbStartItem.SelectedIndex = 0
+            .cmbItemReq.SelectedIndex = 0
+            .cmbEndItem.SelectedIndex = 0
+            .cmbItemReward.SelectedIndex = 0
+
             .cmbClassReq.Items.Clear()
             .cmbClassReq.Items.Add("None")
             For i = 1 To Max_Classes

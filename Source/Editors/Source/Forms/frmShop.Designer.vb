@@ -22,6 +22,7 @@ Partial Class frmShop
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmShop))
         Me.DarkGroupBox1 = New DarkUI.Controls.DarkGroupBox()
         Me.lstIndex = New System.Windows.Forms.ListBox()
         Me.DarkGroupBox2 = New DarkUI.Controls.DarkGroupBox()
@@ -182,6 +183,7 @@ Partial Class frmShop
         Me.nudCostValue.Name = "nudCostValue"
         Me.nudCostValue.Size = New System.Drawing.Size(98, 20)
         Me.nudCostValue.TabIndex = 51
+        Me.nudCostValue.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'DarkLabel8
         '
@@ -198,6 +200,10 @@ Partial Class frmShop
         Me.cmbCostItem.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
         Me.cmbCostItem.BorderColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
         Me.cmbCostItem.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid
+        Me.cmbCostItem.ButtonColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(43, Byte), Integer), CType(CType(43, Byte), Integer))
+        Me.cmbCostItem.ButtonIcon = CType(resources.GetObject("cmbCostItem.ButtonIcon"), System.Drawing.Bitmap)
+        Me.cmbCostItem.DrawDropdownHoverOutline = False
+        Me.cmbCostItem.DrawFocusRectangle = False
         Me.cmbCostItem.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
         Me.cmbCostItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbCostItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat
@@ -207,6 +213,8 @@ Partial Class frmShop
         Me.cmbCostItem.Name = "cmbCostItem"
         Me.cmbCostItem.Size = New System.Drawing.Size(165, 21)
         Me.cmbCostItem.TabIndex = 49
+        Me.cmbCostItem.Text = Nothing
+        Me.cmbCostItem.TextPadding = New System.Windows.Forms.Padding(2)
         '
         'DarkLabel7
         '
@@ -226,6 +234,7 @@ Partial Class frmShop
         Me.nudItemValue.Name = "nudItemValue"
         Me.nudItemValue.Size = New System.Drawing.Size(98, 20)
         Me.nudItemValue.TabIndex = 47
+        Me.nudItemValue.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'DarkLabel6
         '
@@ -242,6 +251,10 @@ Partial Class frmShop
         Me.cmbItem.BackColor = System.Drawing.Color.FromArgb(CType(CType(69, Byte), Integer), CType(CType(73, Byte), Integer), CType(CType(74, Byte), Integer))
         Me.cmbItem.BorderColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
         Me.cmbItem.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid
+        Me.cmbItem.ButtonColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(43, Byte), Integer), CType(CType(43, Byte), Integer))
+        Me.cmbItem.ButtonIcon = CType(resources.GetObject("cmbItem.ButtonIcon"), System.Drawing.Bitmap)
+        Me.cmbItem.DrawDropdownHoverOutline = False
+        Me.cmbItem.DrawFocusRectangle = False
         Me.cmbItem.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
         Me.cmbItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat
@@ -251,6 +264,8 @@ Partial Class frmShop
         Me.cmbItem.Name = "cmbItem"
         Me.cmbItem.Size = New System.Drawing.Size(165, 21)
         Me.cmbItem.TabIndex = 45
+        Me.cmbItem.Text = Nothing
+        Me.cmbItem.TextPadding = New System.Windows.Forms.Padding(2)
         '
         'DarkLabel5
         '
@@ -292,6 +307,7 @@ Partial Class frmShop
         Me.nudBuy.Name = "nudBuy"
         Me.nudBuy.Size = New System.Drawing.Size(80, 20)
         Me.nudBuy.TabIndex = 50
+        Me.nudBuy.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'DarkLabel3
         '
@@ -311,6 +327,7 @@ Partial Class frmShop
         Me.nudFace.Name = "nudFace"
         Me.nudFace.Size = New System.Drawing.Size(93, 20)
         Me.nudFace.TabIndex = 48
+        Me.nudFace.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'DarkLabel2
         '
@@ -352,15 +369,17 @@ Partial Class frmShop
         Me.picFace.TabIndex = 44
         Me.picFace.TabStop = False
         '
-        'FrmEditor_Shop
+        'frmShop
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(638, 408)
+        Me.ControlBox = False
         Me.Controls.Add(Me.DarkGroupBox2)
         Me.Controls.Add(Me.DarkGroupBox1)
-        Me.Name = "FrmEditor_Shop"
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.Name = "frmShop"
         Me.Text = "Shop Editor"
         Me.DarkGroupBox1.ResumeLayout(False)
         Me.DarkGroupBox2.ResumeLayout(False)

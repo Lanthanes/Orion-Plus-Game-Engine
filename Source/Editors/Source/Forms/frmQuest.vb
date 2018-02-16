@@ -120,6 +120,8 @@
     Private Sub BtnAddReward_Click(sender As Object, e As EventArgs) Handles btnAddReward.Click
         If EditorIndex <= 0 OrElse EditorIndex > MAX_QUESTS Then Exit Sub
 
+        If cmbItemReward.SelectedIndex < 0 Then Exit Sub
+
         Quest(EditorIndex).RewardCount = Quest(EditorIndex).RewardCount + 1
 
         ReDim Preserve Quest(EditorIndex).RewardItem(Quest(EditorIndex).RewardCount)
@@ -129,8 +131,8 @@
         Quest(EditorIndex).RewardItemAmount(Quest(EditorIndex).RewardCount) = nudItemRewValue.Value
 
         lstRewards.Items.Clear()
-        For i = 1 To Quest(EditorIndex).RewardCount
-            lstRewards.Items.Add(i & ":" & Quest(EditorIndex).RewardItemAmount(i) & " X " & Trim(Item(Quest(EditorIndex).RewardItem(i)).Name))
+        For i = 1 To Quest(Editorindex).RewardCount
+            lstRewards.Items.Add(i & ":" & Quest(Editorindex).RewardItemAmount(i) & " X " & Trim(Item(Quest(Editorindex).RewardItem(i)).Name))
         Next
     End Sub
 
