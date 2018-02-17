@@ -30,8 +30,31 @@ Friend Module ServerHousing
 #End Region
 
 #Region "DataBase"
+    Sub CreateHouses()
+        Dim myXml As New XmlClass With {
+            .Filename = Path.Combine(Application.StartupPath, "data", "houseconfig.xml"),
+            .Root = "Config"
+        }
+
+        myXml.NewXmlDocument()
+
+        myXml.LoadXml()
+
+        myXml.WriteString("House" & 1, "BaseMap", HouseConfig(1).BaseMap)
+        myXml.WriteString("House" & 1, "Name", HouseConfig(1).ConfigName)
+        myXml.WriteString("House" & 1, "MaxFurniture", HouseConfig(1).MaxFurniture)
+        myXml.WriteString("House" & 1, "Price", HouseConfig(1).Price)
+        myXml.WriteString("House" & 1, "X", HouseConfig(1).X)
+        myXml.WriteString("House" & 1, "Y", HouseConfig(1).Y)
+
+        myXml.CloseXml(True)
+    End Sub
+
     Sub LoadHouses()
         Dim i As Integer
+
+        If Not File.Exists(Path.Combine(Application.StartupPath, "data", "houseconfig.xml")) Then CreateHouses()
+
         Dim myXml As New XmlClass With {
             .Filename = Path.Combine(Application.StartupPath, "data", "houseconfig.xml"),
             .Root = "Config"
