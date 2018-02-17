@@ -136,6 +136,8 @@ Module modDatabase
             .Root = "Data"
         }
 
+        myXml.LoadXml()
+
         myXml.WriteString("INIT", "MaxClasses", Str(Max_Classes))
 
         For i = 1 To Max_Classes

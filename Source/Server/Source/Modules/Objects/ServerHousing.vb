@@ -37,6 +37,8 @@ Friend Module ServerHousing
             .Root = "Config"
         }
 
+        myXml.LoadXml()
+
         For i = 1 To MAX_HOUSES
 
             HouseConfig(i).BaseMap = Val(myXml.ReadString("House" & i, "BaseMap"))
@@ -45,8 +47,10 @@ Friend Module ServerHousing
             HouseConfig(i).Price = Val(myXml.ReadString("House" & i, "Price"))
             HouseConfig(i).X = Val(myXml.ReadString("House" & i, "X"))
             HouseConfig(i).Y = Val(myXml.ReadString("House" & i, "Y"))
-            Application.DoEvents()
         Next
+
+        myXml.CloseXml(False)
+
         For i = 1 To GetPlayersOnline()
             If IsPlaying(i) Then
                 SendHouseConfigs(i)
@@ -61,6 +65,8 @@ Friend Module ServerHousing
             .Root = "Config"
         }
 
+        myXml.LoadXml()
+
         If Index > 0 AndAlso Index <= MAX_HOUSES Then
             myXml.WriteString("House" & Index, "BaseMap", HouseConfig(Index).BaseMap)
             myXml.WriteString("House" & Index, "Name", HouseConfig(Index).ConfigName)
@@ -69,6 +75,9 @@ Friend Module ServerHousing
             myXml.WriteString("House" & Index, "X", HouseConfig(Index).X)
             myXml.WriteString("House" & Index, "Y", HouseConfig(Index).Y)
         End If
+
+        myXml.CloseXml(True)
+
         LoadHouses()
 
     End Sub

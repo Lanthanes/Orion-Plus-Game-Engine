@@ -6,12 +6,12 @@ Friend Module ServerNetworkConfig
 
     Friend Sub InitNetwork()
         If Not Socket Is Nothing Then Return
-        Socket = New Server(EditorPackets.Count, MAX_PLAYERS)
-
         ' Establish some Rulez
-        Socket.BufferLimit = 2048000 ' <- this is 2mb max data storage
-        Socket.PacketAcceptLimit = 100 ' Dunno what is a reasonable cap right now so why not? :P
-        Socket.PacketDisconnectCount = 150 ' If the other thing was even remotely reasonable, this is DEFINITELY spam count!
+        Socket = New Server(EditorPackets.Count, MAX_PLAYERS) With {
+            .BufferLimit = 2048000, ' <- this is 2mb max data storage
+            .PacketAcceptLimit = 100, ' Dunno what is a reasonable cap right now so why not? :P
+            .PacketDisconnectCount = 150 ' If the other thing was even remotely reasonable, this is DEFINITELY spam count!
+            }
         ' END THE ESTABLISHMENT! WOOH ANARCHY! ~SpiceyWolf
 
         PacketRouter() ' Need them packet ids boah!
