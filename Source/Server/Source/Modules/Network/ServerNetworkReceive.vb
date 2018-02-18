@@ -2695,8 +2695,8 @@ Module ServerNetworkReceive
         For i = 1 To Max_Classes
 
             With Classes(i)
-                .Name = Buffer.ReadString
-                .Desc = Buffer.ReadString
+                .Name = ReadUnicodeString(buffer.ReadBytes)
+                .Desc = ReadUnicodeString(buffer.ReadBytes)
 
                 ' get array size
                 z = Buffer.ReadInt32

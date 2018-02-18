@@ -127,8 +127,8 @@ Module modNetworkReceive
         For i = 1 To Max_Classes
 
             With Classes(i)
-                .Name = Trim$(Buffer.ReadString)
-                .Desc = Trim$(Buffer.ReadString)
+                .Name = ReadUnicodeString(buffer.ReadBytes)
+                .Desc = ReadUnicodeString(buffer.ReadBytes)
 
                 .Vital(VitalType.HP) = Buffer.ReadInt32
                 .Vital(VitalType.MP) = Buffer.ReadInt32

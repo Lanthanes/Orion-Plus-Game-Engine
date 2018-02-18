@@ -129,8 +129,7 @@ Friend Module modCrafting
 
 #Region "Incoming Packets"
     Sub Packet_RequestRecipes(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CRequestRecipes", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CRequestRecipes")
+        AddDebug("Recieved CMSG: CRequestRecipes")
 
         SendRecipes(Index)
     End Sub
@@ -143,8 +142,7 @@ Friend Module modCrafting
         Buffer.WriteInt32(ServerPackets.SRecipeEditor)
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-        Addlog("Sent SMSG: SRecipeEditor", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SRecipeEditor")
+        AddDebug("Sent SMSG: SRecipeEditor")
 
         Buffer.Dispose()
 
@@ -156,14 +154,13 @@ Friend Module modCrafting
         ' Prevent hacking
         If GetPlayerAccess(Index) < AdminType.Developer Then Exit Sub
         dim buffer as New ByteStream(data)
-        Addlog("Recieved EMSG: SaveRecipe", PACKET_LOG)
-        Console.WriteLine("Recieved EMSG: SaveRecipe")
+        AddDebug("Recieved EMSG: SaveRecipe")
 
         'recipe index
         n = Buffer.ReadInt32
 
         ' Update the Recipe
-        Recipe(n).Name = Trim$(Buffer.ReadString)
+        Recipe(n).Name = ReadUnicodeString(buffer.ReadBytes)
         Recipe(n).RecipeType = Buffer.ReadInt32
         Recipe(n).MakeItemNum = Buffer.ReadInt32
         Recipe(n).MakeItemAmount = Buffer.ReadInt32
@@ -186,17 +183,16 @@ Friend Module modCrafting
     End Sub
 
     Sub Packet_CloseCraft(index as integer, ByRef data() As Byte)
-        Addlog("Recieved CMSG: CCloseCraft", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CCloseCraft")
+        AddDebug("Recieved CMSG: CCloseCraft")
 
         TempPlayer(Index).IsCrafting = False
     End Sub
 
     Sub Packet_StartCraft(index as integer, ByRef data() As Byte)
         Dim recipeindex as integer, amount As Integer
-        dim buffer as New ByteStream(data)
-        Addlog("Recieved CMSG: CStartCraft", PACKET_LOG)
-        Console.WriteLine("Recieved CMSG: CStartCraft")
+        Dim buffer As New ByteStream(data)
+
+        AddDebug("Recieved CMSG: CStartCraft")
 
         recipeindex = Buffer.ReadInt32
         amount = Buffer.ReadInt32
@@ -235,11 +231,10 @@ Friend Module modCrafting
         Buffer.WriteInt32(ServerPackets.SUpdateRecipe)
         Buffer.WriteInt32(RecipeNum)
 
-        Addlog("Sent SMSG: SUpdateRecipe", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SUpdateRecipe")
+        AddDebug("Sent SMSG: SUpdateRecipe")
 
-        Buffer.WriteString(Trim$(Recipe(RecipeNum).Name))
-        Buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
+        buffer.WriteString(WriteUnicodeString(Trim$(Recipe(RecipeNum).Name)))
+        buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
         Buffer.WriteInt32(Recipe(RecipeNum).MakeItemNum)
         Buffer.WriteInt32(Recipe(RecipeNum).MakeItemAmount)
 
@@ -261,11 +256,10 @@ Friend Module modCrafting
         Buffer.WriteInt32(ServerPackets.SUpdateRecipe)
         Buffer.WriteInt32(RecipeNum)
 
-        Addlog("Sent SMSG: SUpdateRecipe To All", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SUpdateRecipe To All")
+        AddDebug("Sent SMSG: SUpdateRecipe To All")
 
-        Buffer.WriteString(Trim$(Recipe(RecipeNum).Name))
-        Buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
+        buffer.WriteString(WriteUnicodeString(Trim$(Recipe(RecipeNum).Name)))
+        buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
         Buffer.WriteInt32(Recipe(RecipeNum).MakeItemNum)
         Buffer.WriteInt32(Recipe(RecipeNum).MakeItemAmount)
 
@@ -287,8 +281,7 @@ Friend Module modCrafting
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SSendPlayerRecipe)
 
-        Addlog("Sent SMSG: SSendPlayerRecipe", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SSendPlayerRecipe")
+        AddDebug("Sent SMSG: SSendPlayerRecipe")
 
         For i = 1 To MAX_RECIPE
             Buffer.WriteInt32(Player(Index).Character(TempPlayer(Index).CurChar).RecipeLearned(i))
@@ -304,8 +297,7 @@ Friend Module modCrafting
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SOpenCraft)
 
-        Addlog("Sent SMSG: SOpenCraft", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SOpenCraft")
+        AddDebug("Sent SMSG: SOpenCraft")
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
@@ -317,10 +309,9 @@ Friend Module modCrafting
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SUpdateCraft)
 
-        Addlog("Sent SMSG: SUpdateCraft", PACKET_LOG)
-        Console.WriteLine("Sent SMSG: SUpdateCraft")
+        AddDebug("Sent SMSG: SUpdateCraft")
 
-        Buffer.WriteInt32(done)
+        buffer.WriteInt32(done)
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 

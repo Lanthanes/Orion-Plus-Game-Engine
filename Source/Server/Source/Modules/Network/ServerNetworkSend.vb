@@ -182,10 +182,10 @@ Module ServerNetworkSend
         AddDebug("Sent SMSG: SClassesData")
 
         For i = 1 To Max_Classes
-            Buffer.WriteString(Trim$(GetClassName(i)))
-            Buffer.WriteString(Trim$(Classes(i).Desc))
+            buffer.WriteBytes(WriteUnicodeString(Trim$(GetClassName(i))))
+            buffer.WriteBytes(WriteUnicodeString(Trim$(Classes(i).Desc)))
 
-            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.HP))
+            buffer.WriteInt32(GetClassMaxVital(i, VitalType.HP))
             Buffer.WriteInt32(GetClassMaxVital(i, VitalType.MP))
             Buffer.WriteInt32(GetClassMaxVital(i, VitalType.SP))
 
@@ -244,10 +244,10 @@ Module ServerNetworkSend
         AddDebug("Sent SMSG: SClassesData To All")
 
         For i = 1 To Max_Classes
-            Buffer.WriteString(GetClassName(i))
-            Buffer.WriteString(Trim$(Classes(i).Desc))
+            buffer.WriteBytes(WriteUnicodeString(Trim$(GetClassName(i))))
+            buffer.WriteBytes(WriteUnicodeString(Trim$(Classes(i).Desc)))
 
-            Buffer.WriteInt32(GetClassMaxVital(i, VitalType.HP))
+            buffer.WriteInt32(GetClassMaxVital(i, VitalType.HP))
             Buffer.WriteInt32(GetClassMaxVital(i, VitalType.MP))
             Buffer.WriteInt32(GetClassMaxVital(i, VitalType.SP))
 

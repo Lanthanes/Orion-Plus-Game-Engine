@@ -537,8 +537,8 @@ Module modNetworkSend
         Buffer.WriteInt32(Max_Classes)
 
         For i = 1 To Max_Classes
-            Buffer.WriteString(Trim$(Classes(i).Name))
-            Buffer.WriteString(Trim$(Classes(i).Desc))
+            buffer.WriteBytes(WriteUnicodeString(Trim$(Classes(i).Name)))
+            buffer.WriteBytes(WriteUnicodeString(Trim$(Classes(i).Desc)))
 
             ' set sprite array size
             n = UBound(Classes(i).MaleSprite)
