@@ -618,7 +618,7 @@ Module ModGameLogic
 
                     Buffer = New ByteStream(4)
                     Buffer.WriteInt32(ClientPackets.CPlayerInfoRequest)
-                    Buffer.WriteString(Command(1))
+                    buffer.WriteString((command(1)))
                     Socket.SendData(Buffer.Data, Buffer.Head)
                     Buffer.Dispose()
                 ' Whos Online

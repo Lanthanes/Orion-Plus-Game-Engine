@@ -154,6 +154,8 @@ Module modLoop
             .Root = "Options"
         }
 
+        myXml.LoadXml()
+
         If Not File.Exists(myXml.Filename) Then
             Options.Password = ""
             Options.SavePass = False
@@ -178,6 +180,8 @@ Module modLoop
             Options.Sound = myXml.ReadString("Sfx", "Sound", "1")
             Options.Volume = Val(myXml.ReadString("Sfx", "Volume", "100"))
         End If
+
+        myXml.CloseXml(False)
 
         frmLogin.txtLogin.Text = Options.Username
         frmLogin.txtPassword.Text = Options.Password

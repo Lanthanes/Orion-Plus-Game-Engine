@@ -266,26 +266,26 @@ Friend Module ServerProjectiles
 
         Buffer.WriteInt32(ServerPackets.SUpdateProjectile)
         Buffer.WriteInt32(ProjectileNum)
-        Buffer.WriteString(Trim(Projectiles(ProjectileNum).Name))
-        Buffer.WriteInt32(Projectiles(ProjectileNum).Sprite)
-        Buffer.WriteInt32(Projectiles(ProjectileNum).Range)
-        Buffer.WriteInt32(Projectiles(ProjectileNum).Speed)
-        Buffer.WriteInt32(Projectiles(ProjectileNum).Damage)
+        buffer.WriteString((Trim(Projectiles(ProjectileNum).Name)))
+        buffer.WriteInt32(Projectiles(ProjectileNum).Sprite)
+        buffer.WriteInt32(Projectiles(ProjectileNum).Range)
+        buffer.WriteInt32(Projectiles(ProjectileNum).Speed)
+        buffer.WriteInt32(Projectiles(ProjectileNum).Damage)
 
-        SendDataToAll(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        SendDataToAll(buffer.Data, buffer.Head)
+        buffer.Dispose()
 
     End Sub
 
-    Sub SendUpdateProjectileTo(index as integer, ProjectileNum As Integer)
-        dim buffer as ByteStream
+    Sub SendUpdateProjectileTo(index As Integer, ProjectileNum As Integer)
+        Dim buffer As ByteStream
 
-        Buffer = New ByteStream(4)
+        buffer = New ByteStream(4)
 
-        Buffer.WriteInt32(ServerPackets.SUpdateProjectile)
-        Buffer.WriteInt32(ProjectileNum)
-        Buffer.WriteString(Trim(Projectiles(ProjectileNum).Name))
-        Buffer.WriteInt32(Projectiles(ProjectileNum).Sprite)
+        buffer.WriteInt32(ServerPackets.SUpdateProjectile)
+        buffer.WriteInt32(ProjectileNum)
+        buffer.WriteString((Trim(Projectiles(ProjectileNum).Name)))
+        buffer.WriteInt32(Projectiles(ProjectileNum).Sprite)
         Buffer.WriteInt32(Projectiles(ProjectileNum).Range)
         Buffer.WriteInt32(Projectiles(ProjectileNum).Speed)
         Buffer.WriteInt32(Projectiles(ProjectileNum).Damage)

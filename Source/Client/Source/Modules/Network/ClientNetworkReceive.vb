@@ -164,9 +164,9 @@ Module ClientNetworkReceive
         pnlRegisterVisible = False
         pnlCharSelectVisible = False
 
-        Msg = Trim(Buffer.ReadString)
+        msg = buffer.ReadString()
 
-        Buffer.Dispose()
+        buffer.Dispose()
 
         MsgBox(Msg, vbOKOnly, GameName)
         DestroyGame()
@@ -225,11 +225,11 @@ Module ClientNetworkReceive
         Next
 
         For i = 1 To MaxChars
-            CharName = Buffer.ReadString
-            Sprite = Buffer.ReadInt32
+            charName = buffer.ReadString
+            sprite = Buffer.ReadInt32
             Level = Buffer.ReadInt32
-            ClassName = Buffer.ReadString
-            Gender = Buffer.ReadInt32
+            className = buffer.ReadString
+            gender = Buffer.ReadInt32
 
             CharSelection(i).Name = CharName
             CharSelection(i).Sprite = Sprite
@@ -1112,9 +1112,9 @@ Module ClientNetworkReceive
         Dim msg As String
         dim buffer as New ByteStream(Data)
         'Msg = Trim(Buffer.ReadString)
-        Msg = Trim(ReadUnicodeString(Buffer.ReadBytes()))
+        msg = Trim(buffer.ReadString)
 
-        Buffer.Dispose()
+        buffer.Dispose()
 
         AddText(Msg, QColorType.GlobalColor)
     End Sub
@@ -1124,9 +1124,9 @@ Module ClientNetworkReceive
         dim buffer as New ByteStream(Data)
 
         'Msg = Trim(Buffer.ReadString)
-        Msg = Trim(ReadUnicodeString(Buffer.ReadBytes))
+        msg = Trim(buffer.ReadString)
 
-        Buffer.Dispose()
+        buffer.Dispose()
 
         AddText(Msg, QColorType.BroadcastColor)
 
@@ -1152,7 +1152,7 @@ Module ClientNetworkReceive
         Dim msg As String, colour As Integer
         dim buffer as New ByteStream(Data)
         'Msg = Trim(Buffer.ReadString)
-        Msg = Trim(ReadUnicodeString(Buffer.ReadBytes))
+        msg = Trim(buffer.ReadString)
 
         colour = Buffer.ReadInt32
 
@@ -1449,7 +1449,7 @@ Module ClientNetworkReceive
     Private Sub Packet_ActionMessage(ByRef data() As Byte)
         Dim x As Integer, y As Integer, message As String, color As Integer, tmpType As Integer
         dim buffer as New ByteStream(Data)
-        message = Trim(ReadUnicodeString(Buffer.ReadBytes))
+        message = Trim(buffer.ReadString)
         color = Buffer.ReadInt32
         tmpType = Buffer.ReadInt32
         X = Buffer.ReadInt32
@@ -1605,8 +1605,8 @@ Module ClientNetworkReceive
         Access = Buffer.ReadInt32
         PK = Buffer.ReadInt32
         'message = Trim(Buffer.ReadString)
-        message = Trim(ReadUnicodeString(Buffer.ReadBytes))
-        Header = Trim(Buffer.ReadString)
+        message = Trim(buffer.ReadString)
+        header = Trim(Buffer.ReadString)
 
         AddText(Header & Name & ": " & message, QColorType.SayColor)
 
@@ -2146,8 +2146,8 @@ Module ClientNetworkReceive
 
     Private Sub Packet_News(ByRef data() As Byte)
         dim buffer as New ByteStream(Data)
-        GameName = Buffer.ReadString
-        News = Buffer.ReadString
+        GameName = buffer.ReadString
+        News = buffer.ReadString
 
         UpdateNews = True
 
@@ -2186,7 +2186,7 @@ Module ClientNetworkReceive
         target = Buffer.ReadInt32
         targetType = Buffer.ReadInt32
         'Message = buffer.ReadString
-        Message = Trim(ReadUnicodeString(Buffer.ReadBytes))
+        message = Trim(buffer.ReadString)
         colour = Buffer.ReadInt32
         AddChatBubble(target, targetType, Message, colour)
 

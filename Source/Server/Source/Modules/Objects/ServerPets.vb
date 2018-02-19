@@ -203,45 +203,45 @@ Module ServerPets
 
         With Pet(PetNum)
             Buffer.WriteInt32(.Num)
-            Buffer.WriteString(Trim$(.Name))
-            Buffer.WriteInt32(.Sprite)
-            Buffer.WriteInt32(.Range)
-            Buffer.WriteInt32(.Level)
-            Buffer.WriteInt32(.MaxLevel)
-            Buffer.WriteInt32(.ExpGain)
-            Buffer.WriteInt32(.LevelPnts)
-            Buffer.WriteInt32(.StatType)
-            Buffer.WriteInt32(.LevelingType)
+            buffer.WriteString((Trim$(.Name)))
+            buffer.WriteInt32(.Sprite)
+            buffer.WriteInt32(.Range)
+            buffer.WriteInt32(.Level)
+            buffer.WriteInt32(.MaxLevel)
+            buffer.WriteInt32(.ExpGain)
+            buffer.WriteInt32(.LevelPnts)
+            buffer.WriteInt32(.StatType)
+            buffer.WriteInt32(.LevelingType)
 
             For i = 1 To StatType.Count - 1
-                Buffer.WriteInt32(.Stat(i))
+                buffer.WriteInt32(.Stat(i))
             Next
 
             For i = 1 To 4
-                Buffer.WriteInt32(.Skill(i))
+                buffer.WriteInt32(.Skill(i))
             Next
 
-            Buffer.WriteInt32(.Evolvable)
-            Buffer.WriteInt32(.EvolveLevel)
-            Buffer.WriteInt32(.EvolveNum)
+            buffer.WriteInt32(.Evolvable)
+            buffer.WriteInt32(.EvolveLevel)
+            buffer.WriteInt32(.EvolveNum)
         End With
 
-        SendDataToAll(Buffer.Data, Buffer.Head)
+        SendDataToAll(buffer.Data, buffer.Head)
 
-        Buffer.Dispose()
+        buffer.Dispose()
 
     End Sub
 
-    Sub SendUpdatePetTo(index as integer, petNum As Integer)
+    Sub SendUpdatePetTo(index As Integer, petNum As Integer)
         Dim buffer = New ByteStream(4)
-        Buffer.WriteInt32(ServerPackets.SUpdatePet)
+        buffer.WriteInt32(ServerPackets.SUpdatePet)
 
-        Buffer.WriteInt32(petNum)
+        buffer.WriteInt32(petNum)
 
         With Pet(petNum)
-            Buffer.WriteInt32(.Num)
-            Buffer.WriteString(Trim$(.Name))
-            Buffer.WriteInt32(.Sprite)
+            buffer.WriteInt32(.Num)
+            buffer.WriteString((Trim$(.Name)))
+            buffer.WriteInt32(.Sprite)
             Buffer.WriteInt32(.Range)
             Buffer.WriteInt32(.Level)
             Buffer.WriteInt32(.MaxLevel)

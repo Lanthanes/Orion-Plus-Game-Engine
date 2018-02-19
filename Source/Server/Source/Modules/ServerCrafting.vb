@@ -160,7 +160,7 @@ Friend Module modCrafting
         n = Buffer.ReadInt32
 
         ' Update the Recipe
-        Recipe(n).Name = ReadUnicodeString(buffer.ReadBytes)
+        Recipe(n).Name = buffer.ReadString
         Recipe(n).RecipeType = Buffer.ReadInt32
         Recipe(n).MakeItemNum = Buffer.ReadInt32
         Recipe(n).MakeItemAmount = Buffer.ReadInt32
@@ -233,32 +233,32 @@ Friend Module modCrafting
 
         AddDebug("Sent SMSG: SUpdateRecipe")
 
-        buffer.WriteString(WriteUnicodeString(Trim$(Recipe(RecipeNum).Name)))
+        buffer.WriteString((Trim$(Recipe(RecipeNum).Name)))
         buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
-        Buffer.WriteInt32(Recipe(RecipeNum).MakeItemNum)
-        Buffer.WriteInt32(Recipe(RecipeNum).MakeItemAmount)
+        buffer.WriteInt32(Recipe(RecipeNum).MakeItemNum)
+        buffer.WriteInt32(Recipe(RecipeNum).MakeItemAmount)
 
         For i = 1 To MAX_INGREDIENT
-            Buffer.WriteInt32(Recipe(RecipeNum).Ingredients(i).ItemNum)
-            Buffer.WriteInt32(Recipe(RecipeNum).Ingredients(i).Value)
+            buffer.WriteInt32(Recipe(RecipeNum).Ingredients(i).ItemNum)
+            buffer.WriteInt32(Recipe(RecipeNum).Ingredients(i).Value)
         Next
 
-        Buffer.WriteInt32(Recipe(RecipeNum).CreateTime)
+        buffer.WriteInt32(Recipe(RecipeNum).CreateTime)
 
-        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+        Socket.SendDataTo(index, buffer.Data, buffer.Head)
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 
     Sub SendUpdateRecipeToAll(RecipeNum As Integer)
-        dim buffer as ByteStream
-        Buffer = New ByteStream(4)
-        Buffer.WriteInt32(ServerPackets.SUpdateRecipe)
-        Buffer.WriteInt32(RecipeNum)
+        Dim buffer As ByteStream
+        buffer = New ByteStream(4)
+        buffer.WriteInt32(ServerPackets.SUpdateRecipe)
+        buffer.WriteInt32(RecipeNum)
 
         AddDebug("Sent SMSG: SUpdateRecipe To All")
 
-        buffer.WriteString(WriteUnicodeString(Trim$(Recipe(RecipeNum).Name)))
+        buffer.WriteString((Trim$(Recipe(RecipeNum).Name)))
         buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
         Buffer.WriteInt32(Recipe(RecipeNum).MakeItemNum)
         Buffer.WriteInt32(Recipe(RecipeNum).MakeItemAmount)

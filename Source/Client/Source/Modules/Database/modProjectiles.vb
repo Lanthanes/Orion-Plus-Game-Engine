@@ -273,9 +273,10 @@ Friend Module ModProjectiles
         X = ConvertMapX(X * PicX)
         Y = ConvertMapY(Y * PicY)
 
-        Dim tmpSprite As Sprite = New Sprite(ProjectileGFX(Sprite))
-        tmpSprite.TextureRect = New IntRect(rec.Left, rec.Top, 32, 32)
-        tmpSprite.Position = New Vector2f(X, Y)
+        Dim tmpSprite As Sprite = New Sprite(ProjectileGFX(Sprite)) With {
+            .TextureRect = New IntRect(rec.Left, rec.Top, 32, 32),
+            .Position = New Vector2f(X, Y)
+        }
         GameWindow.Draw(tmpSprite)
 
     End Sub

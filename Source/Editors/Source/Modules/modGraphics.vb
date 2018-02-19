@@ -1182,10 +1182,11 @@ Module modGraphics
         ' exit out if doesn't exist
         If tileset <= 0 OrElse tileset > NumTileSets Then Exit Sub
 
-        Dim rec2 As New RectangleShape
-        rec2.OutlineColor = New Color(Color.Blue)
-        rec2.OutlineThickness = 0.6
-        rec2.FillColor = New Color(Color.Transparent)
+        Dim rec2 As New RectangleShape With {
+            .OutlineColor = New Color(Color.Blue),
+            .OutlineThickness = 0.6,
+            .FillColor = New Color(Color.Transparent)
+        }
 
         If SelectedTab = 2 Then
             'RenderTexture(MiscGFX, GameWindow, ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y), rec.X, rec.Y, rec.Width, rec.Height)
@@ -1249,11 +1250,11 @@ Module modGraphics
 
         If Map.HasMapTint = 0 Then Exit Sub
 
-        MapTintSprite = New Sprite(New Texture(New SFML.Graphics.Image((Map.MaxX * PIC_X), (Map.MaxY * PIC_Y), SFML.Graphics.Color.White)))
-        MapTintSprite.Color = New Color(CurrentTintR, CurrentTintG, CurrentTintB, CurrentTintA)
-        MapTintSprite.TextureRect = New IntRect(0, 0, (Map.MaxX * PIC_X) + PIC_X, (Map.MaxY * PIC_Y) + PIC_Y)
-
-        MapTintSprite.Position = New Vector2f(0, 0)
+        MapTintSprite = New Sprite(New Texture(New SFML.Graphics.Image((Map.MaxX * PIC_X), (Map.MaxY * PIC_Y), SFML.Graphics.Color.White))) With {
+            .Color = New Color(CurrentTintR, CurrentTintG, CurrentTintB, CurrentTintA),
+            .TextureRect = New IntRect(0, 0, (Map.MaxX * PIC_X) + PIC_X, (Map.MaxY * PIC_Y) + PIC_Y),
+            .Position = New Vector2f(0, 0)
+        }
 
         GameWindow.Draw(MapTintSprite)
 

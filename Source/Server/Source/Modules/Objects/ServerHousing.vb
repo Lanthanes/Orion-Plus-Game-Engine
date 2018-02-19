@@ -425,35 +425,35 @@ Friend Module ServerHousing
         Buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SHouseEdit)
         For i = 1 To MAX_HOUSES
-            Buffer.WriteString(Trim$(HouseConfig(i).ConfigName))
-            Buffer.WriteInt32(HouseConfig(i).BaseMap)
-            Buffer.WriteInt32(HouseConfig(i).X)
-            Buffer.WriteInt32(HouseConfig(i).Y)
-            Buffer.WriteInt32(HouseConfig(i).Price)
-            Buffer.WriteInt32(HouseConfig(i).MaxFurniture)
+            buffer.WriteString((Trim$(HouseConfig(i).ConfigName)))
+            buffer.WriteInt32(HouseConfig(i).BaseMap)
+            buffer.WriteInt32(HouseConfig(i).X)
+            buffer.WriteInt32(HouseConfig(i).Y)
+            buffer.WriteInt32(HouseConfig(i).Price)
+            buffer.WriteInt32(HouseConfig(i).MaxFurniture)
         Next
-        Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendDataTo(index, buffer.Data, buffer.Head)
+        buffer.Dispose()
 
     End Sub
 
-    Sub Packet_SaveHouses(index as integer, ByRef data() As Byte)
+    Sub Packet_SaveHouses(index As Integer, ByRef data() As Byte)
         Dim i As Integer, x As Integer, Count As Integer, z As Integer
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
 
-        dim buffer as New ByteStream(data)
-        Count = Buffer.ReadInt32
+        Dim buffer As New ByteStream(data)
+        Count = buffer.ReadInt32
         If Count > 0 Then
             For z = 1 To Count
-                i = Buffer.ReadInt32
-                HouseConfig(i).ConfigName = Trim$(Buffer.ReadString)
-                HouseConfig(i).BaseMap = Buffer.ReadInt32
-                HouseConfig(i).X = Buffer.ReadInt32
-                HouseConfig(i).Y = Buffer.ReadInt32
-                HouseConfig(i).Price = Buffer.ReadInt32
-                HouseConfig(i).MaxFurniture = Buffer.ReadInt32
+                i = buffer.ReadInt32
+                HouseConfig(i).ConfigName = Trim$(buffer.ReadString)
+                HouseConfig(i).BaseMap = buffer.ReadInt32
+                HouseConfig(i).X = buffer.ReadInt32
+                HouseConfig(i).Y = buffer.ReadInt32
+                HouseConfig(i).Price = buffer.ReadInt32
+                HouseConfig(i).MaxFurniture = buffer.ReadInt32
                 SaveHouse(i)
 
                 For x = 1 To GetPlayersOnline()
@@ -464,56 +464,56 @@ Friend Module ServerHousing
             Next
         End If
 
-        Buffer.Dispose()
+        buffer.Dispose()
 
     End Sub
 
-    Sub Packet_SellHouse(index as integer, ByRef data() As Byte)
+    Sub Packet_SellHouse(index As Integer, ByRef data() As Byte)
         Dim i As Integer, refund As Integer
-        Dim Tmpindex as integer
-        dim buffer as New ByteStream(data)
-        TmpIndex = Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex
-        If TmpIndex > 0 Then
+        Dim Tmpindex As Integer
+        Dim buffer As New ByteStream(data)
+        Tmpindex = Player(index).Character(TempPlayer(index).CurChar).House.Houseindex
+        If Tmpindex > 0 Then
             'get some money back
-            refund = HouseConfig(TmpIndex).Price / 2
+            refund = HouseConfig(Tmpindex).Price / 2
 
-            Player(Index).Character(TempPlayer(Index).CurChar).House.HouseIndex = 0
-            Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount = 0
-            ReDim Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount)
+            Player(index).Character(TempPlayer(index).CurChar).House.Houseindex = 0
+            Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount = 0
+            ReDim Player(index).Character(TempPlayer(index).CurChar).House.Furniture(Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount)
 
-            For i = 0 To Player(Index).Character(TempPlayer(Index).CurChar).House.FurnitureCount
-                Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).ItemNum = 0
-                Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).X = 0
-                Player(Index).Character(TempPlayer(Index).CurChar).House.Furniture(i).Y = 0
+            For i = 0 To Player(index).Character(TempPlayer(index).CurChar).House.FurnitureCount
+                Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).ItemNum = 0
+                Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).X = 0
+                Player(index).Character(TempPlayer(index).CurChar).House.Furniture(i).Y = 0
             Next
 
-            If Player(Index).Character(TempPlayer(Index).CurChar).InHouse = TmpIndex Then
-                PlayerWarp(Index, Player(Index).Character(TempPlayer(Index).CurChar).LastMap, Player(Index).Character(TempPlayer(Index).CurChar).LastX, Player(Index).Character(TempPlayer(Index).CurChar).LastY)
+            If Player(index).Character(TempPlayer(index).CurChar).InHouse = Tmpindex Then
+                PlayerWarp(index, Player(index).Character(TempPlayer(index).CurChar).LastMap, Player(index).Character(TempPlayer(index).CurChar).LastX, Player(index).Character(TempPlayer(index).CurChar).LastY)
             End If
 
-            SavePlayer(Index)
+            SavePlayer(index)
 
-            PlayerMsg(Index, "You sold your House for " & refund & " Gold!", ColorType.BrightGreen)
-            GiveInvItem(Index, 1, refund)
+            PlayerMsg(index, "You sold your House for " & refund & " Gold!", ColorType.BrightGreen)
+            GiveInvItem(index, 1, refund)
         Else
-            PlayerMsg(Index, "You dont own a House!", ColorType.BrightRed)
+            PlayerMsg(index, "You dont own a House!", ColorType.BrightRed)
         End If
 
-        Buffer.Dispose()
+        buffer.Dispose()
 
     End Sub
 
 #End Region
 
 #Region "OutGoing Packets"
-    Sub SendHouseConfigs(index as integer)
-        dim buffer as New ByteStream(4), i As Integer
+    Sub SendHouseConfigs(index As Integer)
+        Dim buffer As New ByteStream(4), i As Integer
 
-        Buffer.WriteInt32(ServerPackets.SHouseConfigs)
+        buffer.WriteInt32(ServerPackets.SHouseConfigs)
 
         For i = 1 To MAX_HOUSES
-            Buffer.WriteString(Trim(HouseConfig(i).ConfigName))
-            Buffer.WriteInt32(HouseConfig(i).BaseMap)
+            buffer.WriteString((Trim(HouseConfig(i).ConfigName)))
+            buffer.WriteInt32(HouseConfig(i).BaseMap)
             Buffer.WriteInt32(HouseConfig(i).MaxFurniture)
             Buffer.WriteInt32(HouseConfig(i).Price)
         Next

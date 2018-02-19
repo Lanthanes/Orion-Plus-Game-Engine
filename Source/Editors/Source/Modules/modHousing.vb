@@ -126,21 +126,21 @@ Friend Module modHousing
         Buffer = New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CVisit)
-        Buffer.WriteString(Name)
-        Socket.SendData(Buffer.Data, Buffer.Head)
+        buffer.WriteString((Name))
+        Socket.SendData(buffer.Data, buffer.Head)
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendVisit(Accepted As Byte)
-        dim buffer as ByteStream
-        Buffer = New ByteStream(4)
+        Dim buffer As ByteStream
+        buffer = New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CAcceptVisit)
-        Buffer.WriteInt32(Accepted)
-        Socket.SendData(Buffer.Data, Buffer.Head)
+        buffer.WriteInt32(ClientPackets.CAcceptVisit)
+        buffer.WriteInt32(Accepted)
+        Socket.SendData(buffer.Data, buffer.Head)
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 #End Region
 
@@ -149,9 +149,9 @@ Friend Module modHousing
 
         If frmHouse.Visible = False Then Exit Sub
 
-        EditorIndex = frmHouse.lstIndex.SelectedIndex + 1
+        Editorindex = frmHouse.lstIndex.SelectedIndex + 1
 
-        With House(EditorIndex)
+        With House(Editorindex)
             frmHouse.txtName.Text = Trim$(.ConfigName)
             If .BaseMap = 0 Then .BaseMap = 1
             frmHouse.nudBaseMap.Value = .BaseMap
@@ -163,7 +163,7 @@ Friend Module modHousing
             frmHouse.nudFurniture.Value = .MaxFurniture
         End With
 
-        House_Changed(EditorIndex) = True
+        House_Changed(Editorindex) = True
 
     End Sub
 
@@ -192,7 +192,7 @@ Friend Module modHousing
             For i = 1 To MAX_HOUSES
                 If House_Changed(i) Then
                     Buffer.WriteInt32(i)
-                    Buffer.WriteString(Trim$(House(i).ConfigName))
+                    Buffer.WriteString((Trim$(House(i).ConfigName)))
                     Buffer.WriteInt32(House(i).BaseMap)
                     Buffer.WriteInt32(House(i).X)
                     Buffer.WriteInt32(House(i).Y)
@@ -235,11 +235,11 @@ Friend Module modHousing
         If NumFurniture = 0 Then Exit Sub
     End Sub
 
-    Friend Sub DrawFurniture(index as integer, Layer As Integer)
+    Friend Sub DrawFurniture(index As Integer, Layer As Integer)
         Dim i As Integer, ItemNum As Integer
         Dim X As Integer, Y As Integer, Width As Integer, Height As Integer, X1 As Integer, Y1 As Integer
 
-        ItemNum = Furniture(Index).ItemNum
+        ItemNum = Furniture(index).ItemNum
 
         If Item(ItemNum).Type <> ItemType.Furniture Then Exit Sub
 
@@ -262,21 +262,22 @@ Friend Module modHousing
         If i <= 0 OrElse i > NumFurniture Then Exit Sub
 
         ' make sure it's not out of map
-        If Furniture(Index).X > Map.MaxX Then Exit Sub
-        If Furniture(Index).Y > Map.MaxY Then Exit Sub
+        If Furniture(index).X > Map.MaxX Then Exit Sub
+        If Furniture(index).Y > Map.MaxY Then Exit Sub
 
         For X1 = 0 To Width - 1
             For Y1 = 0 To Height
-                If Item(Furniture(Index).ItemNum).FurnitureFringe(X1, Y1) = Layer Then
+                If Item(Furniture(index).ItemNum).FurnitureFringe(X1, Y1) = Layer Then
                     ' Set base x + y, then the offset due to size
-                    X = (Furniture(Index).X * 32) + (X1 * 32)
-                    Y = (Furniture(Index).Y * 32 - (Height * 32)) + (Y1 * 32)
+                    X = (Furniture(index).X * 32) + (X1 * 32)
+                    Y = (Furniture(index).Y * 32 - (Height * 32)) + (Y1 * 32)
                     X = ConvertMapX(X)
                     Y = ConvertMapY(Y)
 
-                    Dim tmpSprite As Sprite = New Sprite(FurnitureGFX(i))
-                    tmpSprite.TextureRect = New IntRect(0 + (X1 * 32), 0 + (Y1 * 32), 32, 32)
-                    tmpSprite.Position = New Vector2f(X, Y)
+                    Dim tmpSprite As Sprite = New Sprite(FurnitureGFX(i)) With {
+                        .TextureRect = New IntRect(0 + (X1 * 32), 0 + (Y1 * 32), 32, 32),
+                        .Position = New Vector2f(X, Y)
+                    }
                     GameWindow.Draw(tmpSprite)
                 End If
             Next

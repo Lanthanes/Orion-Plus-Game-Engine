@@ -29,7 +29,7 @@ Module ServerParties
         Addlog("Sent SMSG: SPartyInvite", PACKET_LOG)
         Console.WriteLine("Sent SMSG: SPartyInvite")
 
-        Buffer.WriteString(Trim$(Player(Target).Character(TempPlayer(Target).CurChar).Name))
+        buffer.WriteString((Trim$(Player(target).Character(TempPlayer(target).CurChar).Name)))
 
         Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
         Buffer.Dispose()

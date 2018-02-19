@@ -679,10 +679,10 @@ Friend Module ModEventSystem
         Buffer.WriteInt32(ClientPackets.CSwitchesAndVariables)
 
         For i = 1 To MaxSwitches
-            Buffer.WriteString(Trim$(Switches(i)))
+            buffer.WriteString((Trim$(Switches(i))))
         Next
         For i = 1 To MaxVariables
-            Buffer.WriteString(Trim$(Variables(i)))
+            buffer.WriteString((Trim$(Variables(i))))
         Next
 
         Socket.SendData(Buffer.Data, Buffer.Head)
@@ -712,43 +712,47 @@ Friend Module ModEventSystem
                     .X = 0
                     .Width = PicX
                 End With
-                Dim rec2 As New RectangleShape
-                rec2.OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue)
-                rec2.OutlineThickness = 0.6
-                rec2.FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
-                rec2.Size = New Vector2f(rec.Width, rec.Height)
-                rec2.Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
+
+                Dim rec2 As New RectangleShape With {
+                    .OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue),
+                    .OutlineThickness = 0.6,
+                    .FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent),
+                    .Size = New Vector2f(rec.Width, rec.Height),
+                    .Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
+                }
                 GameWindow.Draw(rec2)
                 GoTo nextevent
             End If
-            X = ConvertMapX(X)
-            Y = ConvertMapY(Y)
+            x = ConvertMapX(x)
+            y = ConvertMapY(y)
             If i > Map.EventCount Then Exit Sub
             If 1 > Map.Events(i).PageCount Then Exit Sub
             Select Case Map.Events(i).Pages(1).GraphicType
                 Case 0
-                    tX = ((X) - 4) + (PicX * 0.5)
-                    tY = ((Y) - 7) + (PicY * 0.5)
+                    tX = ((x) - 4) + (PicX * 0.5)
+                    tY = ((y) - 7) + (PicY * 0.5)
                     DrawText(tX, tY, "EV", (SFML.Graphics.Color.Green), (SFML.Graphics.Color.Black), GameWindow)
                 Case 1
                     If Map.Events(i).Pages(1).Graphic > 0 AndAlso Map.Events(i).Pages(1).Graphic <= NumCharacters Then
-                        If CharacterGFXInfo(Map.Events(i).Pages(1).Graphic).IsLoaded = False Then
+                        If CharacterGfxInfo(Map.Events(i).Pages(1).Graphic).IsLoaded = False Then
                             LoadTexture(Map.Events(i).Pages(1).Graphic, 2)
                         End If
 
                         'seeying we still use it, lets update timer
-                        With CharacterGFXInfo(Map.Events(i).Pages(1).Graphic)
+                        With CharacterGfxInfo(Map.Events(i).Pages(1).Graphic)
                             .TextureTimer = GetTickCount() + 100000
                         End With
                         With rec
-                            .Y = (Map.Events(i).Pages(1).GraphicY * (CharacterGFXInfo(Map.Events(i).Pages(1).Graphic).Height / 4))
+                            .Y = (Map.Events(i).Pages(1).GraphicY * (CharacterGfxInfo(Map.Events(i).Pages(1).Graphic).Height / 4))
                             .Height = .Y + PicY
-                            .X = (Map.Events(i).Pages(1).GraphicX * (CharacterGFXInfo(Map.Events(i).Pages(1).Graphic).Width / 4))
+                            .X = (Map.Events(i).Pages(1).GraphicX * (CharacterGfxInfo(Map.Events(i).Pages(1).Graphic).Width / 4))
                             .Width = .X + PicX
                         End With
-                        Dim tmpSprite As Sprite = New Sprite(CharacterGFX(Map.Events(i).Pages(1).Graphic))
-                        tmpSprite.TextureRect = New IntRect(rec.X, rec.Y, rec.Width, rec.Height)
-                        tmpSprite.Position = New Vector2f(ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY))
+
+                        Dim tmpSprite As Sprite = New Sprite(CharacterGfx(Map.Events(i).Pages(1).Graphic)) With {
+                            .TextureRect = New IntRect(rec.X, rec.Y, rec.Width, rec.Height),
+                            .Position = New Vector2f(ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY))
+                        }
                         GameWindow.Draw(tmpSprite)
                     Else
                         With rec
@@ -757,12 +761,14 @@ Friend Module ModEventSystem
                             .X = 0
                             .Width = PicX
                         End With
-                        Dim rec2 As New RectangleShape
-                        rec2.OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue)
-                        rec2.OutlineThickness = 0.6
-                        rec2.FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
-                        rec2.Size = New Vector2f(rec.Width, rec.Height)
-                        rec2.Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
+
+                        Dim rec2 As New RectangleShape With {
+                            .OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue),
+                            .OutlineThickness = 0.6,
+                            .FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent),
+                            .Size = New Vector2f(rec.Width, rec.Height),
+                            .Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
+                        }
                         GameWindow.Draw(rec2)
                     End If
                 Case 2
@@ -795,12 +801,14 @@ Friend Module ModEventSystem
                             .X = 0
                             .Width = PicX
                         End With
-                        Dim rec2 As New RectangleShape
-                        rec2.OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue)
-                        rec2.OutlineThickness = 0.6
-                        rec2.FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
-                        rec2.Size = New Vector2f(rec.Width, rec.Height)
-                        rec2.Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
+
+                        Dim rec2 As New RectangleShape With {
+                            .OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue),
+                            .OutlineThickness = 0.6,
+                            .FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent),
+                            .Size = New Vector2f(rec.Width, rec.Height),
+                            .Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
+                        }
                         GameWindow.Draw(rec2)
                     End If
             End Select

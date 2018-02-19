@@ -186,7 +186,7 @@ Friend Module modCrafting
         n = Buffer.ReadInt32
 
         ' Update the Recipe
-        Recipe(n).Name = Trim$(Buffer.ReadString)
+        Recipe(n).Name = buffer.ReadString
         Recipe(n).RecipeType = Buffer.ReadInt32
         Recipe(n).MakeItemNum = Buffer.ReadInt32
         Recipe(n).MakeItemAmount = Buffer.ReadInt32
@@ -236,7 +236,7 @@ Friend Module modCrafting
 
         Buffer.WriteInt32(RecipeNum)
 
-        buffer.WriteBytes(WriteUnicodeString(Trim$(Recipe(RecipeNum).Name)))
+        buffer.WriteString((Trim$(Recipe(RecipeNum).Name)))
         buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
         Buffer.WriteInt32(Recipe(RecipeNum).MakeItemNum)
         Buffer.WriteInt32(Recipe(RecipeNum).MakeItemAmount)

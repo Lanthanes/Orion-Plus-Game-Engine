@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Common\Time.vb" />
-    <Compile Include="$(MSBuildThisFileDirectory)Legacy\ByteBuffer.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)Legacy\Constants.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)Legacy\Enums.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)Legacy\Language.vb" />

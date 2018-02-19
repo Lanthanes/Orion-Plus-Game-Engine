@@ -76,11 +76,11 @@ Friend Module modWeather
 
         If DrawThunder > 0 Then
             Dim tmpSprite As Sprite
-            tmpSprite = New Sprite(New Texture(New SFML.Graphics.Image(GameWindow.Size.X, GameWindow.Size.Y, SFML.Graphics.Color.White)))
-            tmpSprite.Color = New Color(255, 255, 255, 150)
-            tmpSprite.TextureRect = New IntRect(0, 0, GameWindow.Size.X, GameWindow.Size.Y)
-
-            tmpSprite.Position = New Vector2f(0, 0)
+            tmpSprite = New Sprite(New Texture(New SFML.Graphics.Image(GameWindow.Size.X, GameWindow.Size.Y, SFML.Graphics.Color.White))) With {
+                .Color = New Color(255, 255, 255, 150),
+                .TextureRect = New IntRect(0, 0, GameWindow.Size.X, GameWindow.Size.Y),
+                .Position = New Vector2f(0, 0)
+            }
 
             GameWindow.Draw(tmpSprite) '
 
@@ -138,12 +138,12 @@ Friend Module modWeather
         End With
 
         Dim tmpSprite As Sprite
-        tmpSprite = New Sprite(FogGFX(fogNum))
-        tmpSprite.Color = New Color(255, 255, 255, CurrentFogOpacity)
-        tmpSprite.TextureRect = New IntRect(0, 0, GameWindow.Size.X + 200, GameWindow.Size.Y + 200)
-
-        tmpSprite.Position = New Vector2f((horz * 2.5) + 50, (vert * 3.5) + 50)
-        tmpSprite.Scale = (New Vector2f(CDbl((GameWindow.Size.X + 200) / FogGFXInfo(fogNum).width), CDbl((GameWindow.Size.Y + 200) / FogGFXInfo(fogNum).height)))
+        tmpSprite = New Sprite(FogGFX(fogNum)) With {
+            .Color = New Color(255, 255, 255, CurrentFogOpacity),
+            .TextureRect = New IntRect(0, 0, GameWindow.Size.X + 200, GameWindow.Size.Y + 200),
+            .Position = New Vector2f((horz * 2.5) + 50, (vert * 3.5) + 50),
+            .Scale = (New Vector2f(CDbl((GameWindow.Size.X + 200) / FogGFXInfo(fogNum).width), CDbl((GameWindow.Size.Y + 200) / FogGFXInfo(fogNum).height)))
+        }
 
         GameWindow.Draw(tmpSprite) '
 

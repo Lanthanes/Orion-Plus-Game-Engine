@@ -1,4 +1,4 @@
-﻿Friend Class frmRecipe
+﻿Friend Class FrmRecipe
 
     Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         RecipeEditorOk()
@@ -9,16 +9,16 @@
     End Sub
 
     Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-        Dim tmpindex as integer
+        Dim tmpindex As Integer
 
-        If EditorIndex = 0 OrElse EditorIndex > MAX_RECIPE Then Exit Sub
+        If Editorindex = 0 OrElse Editorindex > MAX_RECIPE Then Exit Sub
 
-        ClearRecipe(EditorIndex)
+        ClearRecipe(Editorindex)
 
-        tmpIndex = lstIndex.SelectedIndex
-        lstIndex.Items.RemoveAt(EditorIndex - 1)
-        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Recipe(EditorIndex).Name)
-        lstIndex.SelectedIndex = tmpIndex
+        tmpindex = lstIndex.SelectedIndex
+        lstIndex.Items.RemoveAt(Editorindex - 1)
+        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Recipe(Editorindex).Name)
+        lstIndex.SelectedIndex = tmpindex
 
         lstIngredients.Items.Clear()
 
@@ -26,43 +26,43 @@
     End Sub
 
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
-        Dim tmpindex as integer
-        If EditorIndex = 0 OrElse EditorIndex > MAX_RECIPE Then Exit Sub
-        tmpIndex = lstIndex.SelectedIndex
-        Recipe(EditorIndex).Name = Trim$(txtName.Text)
-        lstIndex.Items.RemoveAt(EditorIndex - 1)
-        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Recipe(EditorIndex).Name)
-        lstIndex.SelectedIndex = tmpIndex
+        Dim tmpindex As Integer
+        If Editorindex = 0 OrElse Editorindex > MAX_RECIPE Then Exit Sub
+        tmpindex = lstIndex.SelectedIndex
+        Recipe(Editorindex).Name = Trim$(txtName.Text)
+        lstIndex.Items.RemoveAt(Editorindex - 1)
+        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Recipe(Editorindex).Name)
+        lstIndex.SelectedIndex = tmpindex
     End Sub
 
     Private Sub LstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
-        If EditorIndex = 0 OrElse EditorIndex > MAX_RECIPE Then Exit Sub
+        If Editorindex = 0 OrElse Editorindex > MAX_RECIPE Then Exit Sub
         RecipeEditorInit()
     End Sub
 
     Private Sub BtnIngredientAdd_Click(sender As Object, e As EventArgs) Handles btnIngredientAdd.Click
         If lstIngredients.SelectedIndex < 0 OrElse cmbIngredient.SelectedIndex = 0 Then Exit Sub
 
-        Recipe(EditorIndex).Ingredients(lstIngredients.SelectedIndex + 1).ItemNum = cmbIngredient.SelectedIndex
-        Recipe(EditorIndex).Ingredients(lstIngredients.SelectedIndex + 1).Value = numItemAmount.Value
+        Recipe(Editorindex).Ingredients(lstIngredients.SelectedIndex + 1).ItemNum = cmbIngredient.SelectedIndex
+        Recipe(Editorindex).Ingredients(lstIngredients.SelectedIndex + 1).Value = numItemAmount.Value
 
         UpdateIngredient()
 
     End Sub
 
     Private Sub CmbMakeItem_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbMakeItem.SelectedIndexChanged
-        Recipe(EditorIndex).MakeItemNum = cmbMakeItem.SelectedIndex
+        Recipe(Editorindex).MakeItemNum = cmbMakeItem.SelectedIndex
     End Sub
 
     Private Sub CmbType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbType.SelectedIndexChanged
-        Recipe(EditorIndex).RecipeType = cmbType.SelectedIndex
+        Recipe(Editorindex).RecipeType = cmbType.SelectedIndex
     End Sub
 
     Private Sub NudAmount_ValueChanged(sender As Object, e As EventArgs) Handles nudAmount.ValueChanged
-        Recipe(EditorIndex).MakeItemAmount = nudAmount.Value
+        Recipe(Editorindex).MakeItemAmount = nudAmount.Value
     End Sub
 
     Private Sub NudCreateTime_ValueChanged(sender As Object, e As EventArgs) Handles nudCreateTime.ValueChanged
-        Recipe(EditorIndex).CreateTime = nudCreateTime.Value
+        Recipe(Editorindex).CreateTime = nudCreateTime.Value
     End Sub
 End Class

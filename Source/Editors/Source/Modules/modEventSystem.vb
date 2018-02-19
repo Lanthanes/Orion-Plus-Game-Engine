@@ -2337,14 +2337,14 @@ newlist:
 
         Buffer.WriteInt32(ClientPackets.CSwitchesAndVariables)
         For i = 1 To MaxSwitches
-            Buffer.WriteString(Trim$(Switches(i)))
+            buffer.WriteString((Trim$(Switches(i))))
         Next
         For i = 1 To MaxVariables
-            Buffer.WriteString(Trim$(Variables(i)))
+            buffer.WriteString((Trim$(Variables(i))))
         Next
-        Socket.SendData(Buffer.Data, Buffer.Head)
+        Socket.SendData(buffer.Data, buffer.Head)
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 
 #End Region
@@ -2352,38 +2352,38 @@ newlist:
 #Region "Incoming Packets"
     Sub Packet_SpawnEvent(ByRef data() As Byte)
         Dim id As Integer
-        dim buffer as New ByteStream(Data)
-        id = Buffer.ReadInt32
+        Dim buffer As New ByteStream(data)
+        id = buffer.ReadInt32
         If id > Map.CurrentEvents Then
             Map.CurrentEvents = id
             ReDim Preserve Map.MapEvents(Map.CurrentEvents)
         End If
 
         With Map.MapEvents(id)
-            .Name = Buffer.ReadString
-            .dir = Buffer.ReadInt32
-            .ShowDir = .dir
-            .GraphicNum = Buffer.ReadInt32
-            .GraphicType = Buffer.ReadInt32
-            .GraphicX = Buffer.ReadInt32
-            .GraphicX2 = Buffer.ReadInt32
-            .GraphicY = Buffer.ReadInt32
-            .GraphicY2 = Buffer.ReadInt32
-            .MovementSpeed = Buffer.ReadInt32
+            .Name = buffer.ReadString
+            .Dir = buffer.ReadInt32
+            .ShowDir = .Dir
+            .GraphicNum = buffer.ReadInt32
+            .GraphicType = buffer.ReadInt32
+            .GraphicX = buffer.ReadInt32
+            .GraphicX2 = buffer.ReadInt32
+            .GraphicY = buffer.ReadInt32
+            .GraphicY2 = buffer.ReadInt32
+            .MovementSpeed = buffer.ReadInt32
             .Moving = 0
-            .X = Buffer.ReadInt32
-            .Y = Buffer.ReadInt32
+            .X = buffer.ReadInt32
+            .Y = buffer.ReadInt32
             .XOffset = 0
             .YOffset = 0
-            .Position = Buffer.ReadInt32
-            .Visible = Buffer.ReadInt32
-            .WalkAnim = Buffer.ReadInt32
-            .DirFix = Buffer.ReadInt32
-            .WalkThrough = Buffer.ReadInt32
-            .ShowName = Buffer.ReadInt32
-            .questnum = Buffer.ReadInt32
+            .Position = buffer.ReadInt32
+            .Visible = buffer.ReadInt32
+            .WalkAnim = buffer.ReadInt32
+            .DirFix = buffer.ReadInt32
+            .WalkThrough = buffer.ReadInt32
+            .ShowName = buffer.ReadInt32
+            .Questnum = buffer.ReadInt32
         End With
-        Buffer.Dispose()
+        buffer.Dispose()
 
     End Sub
 
@@ -2393,24 +2393,24 @@ newlist:
         Dim y As Integer
         Dim dir As Integer, showDir As Integer
         Dim movementSpeed As Integer
-        dim buffer as New ByteStream(Data)
-        id = Buffer.ReadInt32
-        X = Buffer.ReadInt32
-        Y = Buffer.ReadInt32
-        dir = Buffer.ReadInt32
-        ShowDir = Buffer.ReadInt32
-        MovementSpeed = Buffer.ReadInt32
+        Dim buffer As New ByteStream(data)
+        id = buffer.ReadInt32
+        x = buffer.ReadInt32
+        y = buffer.ReadInt32
+        dir = buffer.ReadInt32
+        showDir = buffer.ReadInt32
+        movementSpeed = buffer.ReadInt32
         If id > Map.CurrentEvents Then Exit Sub
 
         With Map.MapEvents(id)
-            .X = X
-            .Y = Y
-            .dir = dir
+            .X = x
+            .Y = y
+            .Dir = dir
             .XOffset = 0
             .YOffset = 0
             .Moving = 1
-            .ShowDir = ShowDir
-            .MovementSpeed = MovementSpeed
+            .ShowDir = showDir
+            .MovementSpeed = movementSpeed
 
             Select Case dir
                 Case DirectionType.Up
@@ -2430,13 +2430,13 @@ newlist:
     Sub Packet_EventDir(ByRef data() As Byte)
         Dim i As Integer
         Dim dir As Byte
-        dim buffer as New ByteStream(Data)
-        i = Buffer.ReadInt32
-        dir = Buffer.ReadInt32
+        Dim buffer As New ByteStream(data)
+        i = buffer.ReadInt32
+        dir = buffer.ReadInt32
         If i > Map.CurrentEvents Then Exit Sub
 
         With Map.MapEvents(i)
-            .dir = dir
+            .Dir = dir
             .ShowDir = dir
             .XOffset = 0
             .YOffset = 0
@@ -2447,122 +2447,122 @@ newlist:
 
     Sub Packet_SwitchesAndVariables(ByRef data() As Byte)
         Dim i As Integer
-        dim buffer as New ByteStream(Data)
+        Dim buffer As New ByteStream(data)
         For i = 1 To MaxSwitches
-            Switches(i) = Buffer.ReadString
+            Switches(i) = buffer.ReadString
         Next
         For i = 1 To MaxVariables
-            Variables(i) = Buffer.ReadString
+            Variables(i) = buffer.ReadString
         Next
 
-        Buffer.Dispose()
+        buffer.Dispose()
 
     End Sub
 
     Sub Packet_MapEventData(ByRef data() As Byte)
         Dim i As Integer, x As Integer, y As Integer, z As Integer, w As Integer
 
-        dim buffer as New ByteStream(Data)
+        Dim buffer As New ByteStream(data)
         'Event Data!
-        Map.EventCount = Buffer.ReadInt32
+        Map.EventCount = buffer.ReadInt32
         If Map.EventCount > 0 Then
             ReDim Map.Events(Map.EventCount)
             For i = 1 To Map.EventCount
                 With Map.Events(i)
-                    .Name = Buffer.ReadString
-                    .Globals = Buffer.ReadInt32
-                    .X = Buffer.ReadInt32
-                    .Y = Buffer.ReadInt32
-                    .PageCount = Buffer.ReadInt32
+                    .Name = buffer.ReadString
+                    .Globals = buffer.ReadInt32
+                    .X = buffer.ReadInt32
+                    .Y = buffer.ReadInt32
+                    .PageCount = buffer.ReadInt32
                 End With
                 If Map.Events(i).PageCount > 0 Then
                     ReDim Map.Events(i).Pages(Map.Events(i).PageCount)
-                    For X = 1 To Map.Events(i).PageCount
-                        With Map.Events(i).Pages(X)
-                            .chkVariable = Buffer.ReadInt32
-                            .VariableIndex = Buffer.ReadInt32
-                            .VariableCondition = Buffer.ReadInt32
-                            .VariableCompare = Buffer.ReadInt32
-                            .chkSwitch = Buffer.ReadInt32
-                            .SwitchIndex = Buffer.ReadInt32
-                            .SwitchCompare = Buffer.ReadInt32
-                            .chkHasItem = Buffer.ReadInt32
-                            .HasItemIndex = Buffer.ReadInt32
-                            .HasItemAmount = Buffer.ReadInt32
-                            .chkSelfSwitch = Buffer.ReadInt32
-                            .SelfSwitchIndex = Buffer.ReadInt32
-                            .SelfSwitchCompare = Buffer.ReadInt32
-                            .GraphicType = Buffer.ReadInt32
-                            .Graphic = Buffer.ReadInt32
-                            .GraphicX = Buffer.ReadInt32
-                            .GraphicY = Buffer.ReadInt32
-                            .GraphicX2 = Buffer.ReadInt32
-                            .GraphicY2 = Buffer.ReadInt32
-                            .MoveType = Buffer.ReadInt32
-                            .MoveSpeed = Buffer.ReadInt32
-                            .MoveFreq = Buffer.ReadInt32
-                            .MoveRouteCount = Buffer.ReadInt32
-                            .IgnoreMoveRoute = Buffer.ReadInt32
-                            .RepeatMoveRoute = Buffer.ReadInt32
+                    For x = 1 To Map.Events(i).PageCount
+                        With Map.Events(i).Pages(x)
+                            .ChkVariable = buffer.ReadInt32
+                            .Variableindex = buffer.ReadInt32
+                            .VariableCondition = buffer.ReadInt32
+                            .VariableCompare = buffer.ReadInt32
+                            .ChkSwitch = buffer.ReadInt32
+                            .Switchindex = buffer.ReadInt32
+                            .SwitchCompare = buffer.ReadInt32
+                            .ChkHasItem = buffer.ReadInt32
+                            .HasItemindex = buffer.ReadInt32
+                            .HasItemAmount = buffer.ReadInt32
+                            .ChkSelfSwitch = buffer.ReadInt32
+                            .SelfSwitchindex = buffer.ReadInt32
+                            .SelfSwitchCompare = buffer.ReadInt32
+                            .GraphicType = buffer.ReadInt32
+                            .Graphic = buffer.ReadInt32
+                            .GraphicX = buffer.ReadInt32
+                            .GraphicY = buffer.ReadInt32
+                            .GraphicX2 = buffer.ReadInt32
+                            .GraphicY2 = buffer.ReadInt32
+                            .MoveType = buffer.ReadInt32
+                            .MoveSpeed = buffer.ReadInt32
+                            .MoveFreq = buffer.ReadInt32
+                            .MoveRouteCount = buffer.ReadInt32
+                            .IgnoreMoveRoute = buffer.ReadInt32
+                            .RepeatMoveRoute = buffer.ReadInt32
                             If .MoveRouteCount > 0 Then
-                                ReDim Map.Events(i).Pages(X).MoveRoute(.MoveRouteCount)
-                                For Y = 1 To .MoveRouteCount
-                                    .MoveRoute(Y).Index = Buffer.ReadInt32
-                                    .MoveRoute(Y).Data1 = Buffer.ReadInt32
-                                    .MoveRoute(Y).Data2 = Buffer.ReadInt32
-                                    .MoveRoute(Y).Data3 = Buffer.ReadInt32
-                                    .MoveRoute(Y).Data4 = Buffer.ReadInt32
-                                    .MoveRoute(Y).Data5 = Buffer.ReadInt32
-                                    .MoveRoute(Y).Data6 = Buffer.ReadInt32
+                                ReDim Map.Events(i).Pages(x).MoveRoute(.MoveRouteCount)
+                                For y = 1 To .MoveRouteCount
+                                    .MoveRoute(y).Index = buffer.ReadInt32
+                                    .MoveRoute(y).Data1 = buffer.ReadInt32
+                                    .MoveRoute(y).Data2 = buffer.ReadInt32
+                                    .MoveRoute(y).Data3 = buffer.ReadInt32
+                                    .MoveRoute(y).Data4 = buffer.ReadInt32
+                                    .MoveRoute(y).Data5 = buffer.ReadInt32
+                                    .MoveRoute(y).Data6 = buffer.ReadInt32
                                 Next
                             End If
-                            .WalkAnim = Buffer.ReadInt32
-                            .DirFix = Buffer.ReadInt32
-                            .WalkThrough = Buffer.ReadInt32
-                            .ShowName = Buffer.ReadInt32
-                            .Trigger = Buffer.ReadInt32
-                            .CommandListCount = Buffer.ReadInt32
-                            .Position = Buffer.ReadInt32
-                            .Questnum = Buffer.ReadInt32
+                            .WalkAnim = buffer.ReadInt32
+                            .DirFix = buffer.ReadInt32
+                            .WalkThrough = buffer.ReadInt32
+                            .ShowName = buffer.ReadInt32
+                            .Trigger = buffer.ReadInt32
+                            .CommandListCount = buffer.ReadInt32
+                            .Position = buffer.ReadInt32
+                            .Questnum = buffer.ReadInt32
                         End With
-                        If Map.Events(i).Pages(X).CommandListCount > 0 Then
-                            ReDim Map.Events(i).Pages(X).CommandList(Map.Events(i).Pages(X).CommandListCount)
-                            For Y = 1 To Map.Events(i).Pages(X).CommandListCount
-                                Map.Events(i).Pages(X).CommandList(Y).CommandCount = Buffer.ReadInt32
-                                Map.Events(i).Pages(X).CommandList(Y).ParentList = Buffer.ReadInt32
-                                If Map.Events(i).Pages(X).CommandList(Y).CommandCount > 0 Then
-                                    ReDim Map.Events(i).Pages(X).CommandList(Y).Commands(Map.Events(i).Pages(X).CommandList(Y).CommandCount)
-                                    For z = 1 To Map.Events(i).Pages(X).CommandList(Y).CommandCount
-                                        With Map.Events(i).Pages(X).CommandList(Y).Commands(z)
-                                            .Index = Buffer.ReadInt32
-                                            .Text1 = Buffer.ReadString
-                                            .Text2 = Buffer.ReadString
-                                            .Text3 = Buffer.ReadString
-                                            .Text4 = Buffer.ReadString
-                                            .Text5 = Buffer.ReadString
-                                            .Data1 = Buffer.ReadInt32
-                                            .Data2 = Buffer.ReadInt32
-                                            .Data3 = Buffer.ReadInt32
-                                            .Data4 = Buffer.ReadInt32
-                                            .Data5 = Buffer.ReadInt32
-                                            .Data6 = Buffer.ReadInt32
-                                            .ConditionalBranch.CommandList = Buffer.ReadInt32
-                                            .ConditionalBranch.Condition = Buffer.ReadInt32
-                                            .ConditionalBranch.Data1 = Buffer.ReadInt32
-                                            .ConditionalBranch.Data2 = Buffer.ReadInt32
-                                            .ConditionalBranch.Data3 = Buffer.ReadInt32
-                                            .ConditionalBranch.ElseCommandList = Buffer.ReadInt32
-                                            .MoveRouteCount = Buffer.ReadInt32
+                        If Map.Events(i).Pages(x).CommandListCount > 0 Then
+                            ReDim Map.Events(i).Pages(x).CommandList(Map.Events(i).Pages(x).CommandListCount)
+                            For y = 1 To Map.Events(i).Pages(x).CommandListCount
+                                Map.Events(i).Pages(x).CommandList(y).CommandCount = buffer.ReadInt32
+                                Map.Events(i).Pages(x).CommandList(y).ParentList = buffer.ReadInt32
+                                If Map.Events(i).Pages(x).CommandList(y).CommandCount > 0 Then
+                                    ReDim Map.Events(i).Pages(x).CommandList(y).Commands(Map.Events(i).Pages(x).CommandList(y).CommandCount)
+                                    For z = 1 To Map.Events(i).Pages(x).CommandList(y).CommandCount
+                                        With Map.Events(i).Pages(x).CommandList(y).Commands(z)
+                                            .Index = buffer.ReadInt32
+                                            .Text1 = buffer.ReadString
+                                            .Text2 = buffer.ReadString
+                                            .Text3 = buffer.ReadString
+                                            .Text4 = buffer.ReadString
+                                            .Text5 = buffer.ReadString
+                                            .Data1 = buffer.ReadInt32
+                                            .Data2 = buffer.ReadInt32
+                                            .Data3 = buffer.ReadInt32
+                                            .Data4 = buffer.ReadInt32
+                                            .Data5 = buffer.ReadInt32
+                                            .Data6 = buffer.ReadInt32
+                                            .ConditionalBranch.CommandList = buffer.ReadInt32
+                                            .ConditionalBranch.Condition = buffer.ReadInt32
+                                            .ConditionalBranch.Data1 = buffer.ReadInt32
+                                            .ConditionalBranch.Data2 = buffer.ReadInt32
+                                            .ConditionalBranch.Data3 = buffer.ReadInt32
+                                            .ConditionalBranch.ElseCommandList = buffer.ReadInt32
+                                            .MoveRouteCount = buffer.ReadInt32
                                             If .MoveRouteCount > 0 Then
                                                 ReDim Preserve .MoveRoute(.MoveRouteCount)
                                                 For w = 1 To .MoveRouteCount
-                                                    .MoveRoute(w).Index = Buffer.ReadInt32
-                                                    .MoveRoute(w).Data1 = Buffer.ReadInt32
-                                                    .MoveRoute(w).Data2 = Buffer.ReadInt32
-                                                    .MoveRoute(w).Data3 = Buffer.ReadInt32
-                                                    .MoveRoute(w).Data4 = Buffer.ReadInt32
-                                                    .MoveRoute(w).Data5 = Buffer.ReadInt32
-                                                    .MoveRoute(w).Data6 = Buffer.ReadInt32
+                                                    .MoveRoute(w).Index = buffer.ReadInt32
+                                                    .MoveRoute(w).Data1 = buffer.ReadInt32
+                                                    .MoveRoute(w).Data2 = buffer.ReadInt32
+                                                    .MoveRoute(w).Data3 = buffer.ReadInt32
+                                                    .MoveRoute(w).Data4 = buffer.ReadInt32
+                                                    .MoveRoute(w).Data5 = buffer.ReadInt32
+                                                    .MoveRoute(w).Data6 = buffer.ReadInt32
                                                 Next
                                             End If
                                         End With
@@ -2575,22 +2575,22 @@ newlist:
             Next
         End If
         'End Event Data
-        Buffer.Dispose()
+        buffer.Dispose()
 
     End Sub
 
     Sub Packet_EventChat(ByRef data() As Byte)
         Dim i As Integer
         Dim choices As Integer
-        dim buffer as New ByteStream(Data)
-        EventReplyID = Buffer.ReadInt32
-        EventReplyPage = Buffer.ReadInt32
-        EventChatFace = Buffer.ReadInt32
-        EventText = Buffer.ReadString
+        Dim buffer As New ByteStream(data)
+        EventReplyId = buffer.ReadInt32
+        EventReplyPage = buffer.ReadInt32
+        EventChatFace = buffer.ReadInt32
+        EventText = buffer.ReadString
         If EventText = "" Then EventText = " "
         EventChat = True
         ShowEventLbl = True
-        choices = Buffer.ReadInt32
+        choices = buffer.ReadInt32
         InEvent = True
         For i = 1 To 4
             EventChoices(i) = ""
@@ -2601,13 +2601,13 @@ newlist:
         Else
             EventChatType = 1
             For i = 1 To choices
-                EventChoices(i) = Buffer.ReadString
+                EventChoices(i) = buffer.ReadString
                 EventChoiceVisible(i) = True
             Next
         End If
-        AnotherChat = Buffer.ReadInt32
+        AnotherChat = buffer.ReadInt32
 
-        Buffer.Dispose()
+        buffer.Dispose()
 
     End Sub
 
@@ -2620,14 +2620,14 @@ newlist:
     End Sub
 
     Sub Packet_HoldPlayer(ByRef data() As Byte)
-        dim buffer as New ByteStream(Data)
-        If Buffer.ReadInt32 = 0 Then
+        Dim buffer As New ByteStream(data)
+        If buffer.ReadInt32 = 0 Then
             HoldPlayer = True
         Else
             HoldPlayer = False
         End If
 
-        Buffer.Dispose()
+        buffer.Dispose()
 
     End Sub
 
@@ -2678,9 +2678,9 @@ newlist:
                         sourceBitmap = New Bitmap(Application.StartupPath & "/Data/graphics/tilesets/" & frmEvents.nudGraphic.Value & ".png")
                         targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
 
-                        If tmpEvent.Pages(curPageNum).GraphicX2 = 0 AndAlso tmpEvent.Pages(curPageNum).GraphicY2 = 0 Then
-                            sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
-                            sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
+                        If TmpEvent.Pages(CurPageNum).GraphicX2 = 0 AndAlso TmpEvent.Pages(CurPageNum).GraphicY2 = 0 Then
+                            sRect.Top = TmpEvent.Pages(CurPageNum).GraphicY * 32
+                            sRect.Left = TmpEvent.Pages(CurPageNum).GraphicX * 32
                             sRect.Bottom = sRect.Top + 32
                             sRect.Right = sRect.Left + 32
 
@@ -2692,10 +2692,10 @@ newlist:
                             End With
 
                         Else
-                            sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
-                            sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
-                            sRect.Bottom = sRect.Top + ((tmpEvent.Pages(curPageNum).GraphicY2 - tmpEvent.Pages(curPageNum).GraphicY) * 32)
-                            sRect.Right = sRect.Left + ((tmpEvent.Pages(curPageNum).GraphicX2 - tmpEvent.Pages(curPageNum).GraphicX) * 32)
+                            sRect.Top = TmpEvent.Pages(CurPageNum).GraphicY * 32
+                            sRect.Left = TmpEvent.Pages(CurPageNum).GraphicX * 32
+                            sRect.Bottom = sRect.Top + ((TmpEvent.Pages(CurPageNum).GraphicY2 - TmpEvent.Pages(CurPageNum).GraphicY) * 32)
+                            sRect.Right = sRect.Left + ((TmpEvent.Pages(CurPageNum).GraphicX2 - TmpEvent.Pages(CurPageNum).GraphicX) * 32)
 
                             With dRect
                                 dRect.Top = (193 / 2) - ((sRect.Bottom - sRect.Top) / 2)
@@ -2729,14 +2729,14 @@ newlist:
                     End If
             End Select
         Else
-            If tmpEvent.PageCount > 0 Then
-                Select Case tmpEvent.Pages(curPageNum).GraphicType
+            If TmpEvent.PageCount > 0 Then
+                Select Case TmpEvent.Pages(CurPageNum).GraphicType
                     Case 0
                         frmEvents.picGraphicSel.BackgroundImage = Nothing
                     Case 1
-                        If tmpEvent.Pages(curPageNum).Graphic > 0 AndAlso tmpEvent.Pages(curPageNum).Graphic <= NumCharacters Then
+                        If TmpEvent.Pages(CurPageNum).Graphic > 0 AndAlso TmpEvent.Pages(CurPageNum).Graphic <= NumCharacters Then
                             'Load character from Contents into our sourceBitmap
-                            sourceBitmap = New Bitmap(Application.StartupPath & GFX_PATH & "\characters\" & tmpEvent.Pages(curPageNum).Graphic & ".png")
+                            sourceBitmap = New Bitmap(Application.StartupPath & GFX_PATH & "\characters\" & TmpEvent.Pages(CurPageNum).Graphic & ".png")
                             targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
 
                             g = Graphics.FromImage(targetBitmap)
@@ -2756,14 +2756,14 @@ newlist:
                             Exit Sub
                         End If
                     Case 2
-                        If tmpEvent.Pages(curPageNum).Graphic > 0 AndAlso tmpEvent.Pages(curPageNum).Graphic <= NumTileSets Then
+                        If TmpEvent.Pages(CurPageNum).Graphic > 0 AndAlso TmpEvent.Pages(CurPageNum).Graphic <= NumTileSets Then
                             'Load tilesheet from Contents into our sourceBitmap
-                            sourceBitmap = New Bitmap(Application.StartupPath & GFX_PATH & "tilesets\" & tmpEvent.Pages(curPageNum).Graphic & ".png")
+                            sourceBitmap = New Bitmap(Application.StartupPath & GFX_PATH & "tilesets\" & TmpEvent.Pages(CurPageNum).Graphic & ".png")
                             targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
 
-                            If tmpEvent.Pages(curPageNum).GraphicX2 = 0 AndAlso tmpEvent.Pages(curPageNum).GraphicY2 = 0 Then
-                                sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
-                                sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
+                            If TmpEvent.Pages(CurPageNum).GraphicX2 = 0 AndAlso TmpEvent.Pages(CurPageNum).GraphicY2 = 0 Then
+                                sRect.Top = TmpEvent.Pages(CurPageNum).GraphicY * 32
+                                sRect.Left = TmpEvent.Pages(CurPageNum).GraphicX * 32
                                 sRect.Bottom = sRect.Top + 32
                                 sRect.Right = sRect.Left + 32
 
@@ -2775,10 +2775,10 @@ newlist:
                                 End With
 
                             Else
-                                sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
-                                sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
-                                sRect.Bottom = tmpEvent.Pages(curPageNum).GraphicY2 * 32
-                                sRect.Right = tmpEvent.Pages(curPageNum).GraphicX2 * 32
+                                sRect.Top = TmpEvent.Pages(CurPageNum).GraphicY * 32
+                                sRect.Left = TmpEvent.Pages(CurPageNum).GraphicX * 32
+                                sRect.Bottom = TmpEvent.Pages(CurPageNum).GraphicY2 * 32
+                                sRect.Right = TmpEvent.Pages(CurPageNum).GraphicX2 * 32
 
                                 With dRect
                                     dRect.Top = 0
@@ -2816,10 +2816,10 @@ newlist:
 
         If Map.EventCount <= 0 Then Exit Sub
         For i = 1 To Map.EventCount
-            Width = 32
-            Height = 32
-            X = Map.Events(i).X * 32
-            Y = Map.Events(i).Y * 32
+            width = 32
+            height = 32
+            x = Map.Events(i).X * 32
+            y = Map.Events(i).Y * 32
             If Map.Events(i).PageCount <= 0 Then
                 With rec
                     .Y = 0
@@ -2827,23 +2827,25 @@ newlist:
                     .X = 0
                     .Width = PIC_X
                 End With
-                Dim rec2 As New RectangleShape
-                rec2.OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue)
-                rec2.OutlineThickness = 0.6
-                rec2.FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
-                rec2.Size = New Vector2f(rec.Width, rec.Height)
-                rec2.Position = New Vector2f(ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y))
+
+                Dim rec2 As New RectangleShape With {
+                    .OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue),
+                    .OutlineThickness = 0.6,
+                    .FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent),
+                    .Size = New Vector2f(rec.Width, rec.Height),
+                    .Position = New Vector2f(ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y))
+                }
                 GameWindow.Draw(rec2)
                 GoTo nextevent
             End If
-            X = ConvertMapX(X)
-            Y = ConvertMapY(Y)
+            x = ConvertMapX(x)
+            y = ConvertMapY(y)
             If i > Map.EventCount Then Exit Sub
             If 1 > Map.Events(i).PageCount Then Exit Sub
             Select Case Map.Events(i).Pages(1).GraphicType
                 Case 0
-                    tX = ((X) - 4) + (PIC_X * 0.5)
-                    tY = ((Y) - 7) + (PIC_Y * 0.5)
+                    tX = ((x) - 4) + (PIC_X * 0.5)
+                    tY = ((y) - 7) + (PIC_Y * 0.5)
                     DrawText(tX, tY, "EV", (SFML.Graphics.Color.Green), (SFML.Graphics.Color.Black), GameWindow)
                 Case 1
                     If Map.Events(i).Pages(1).Graphic > 0 AndAlso Map.Events(i).Pages(1).Graphic <= NumCharacters Then
@@ -2861,9 +2863,11 @@ newlist:
                             .X = (Map.Events(i).Pages(1).GraphicX * (CharacterGFXInfo(Map.Events(i).Pages(1).Graphic).width / 4))
                             .Width = .X + PIC_X
                         End With
-                        Dim tmpSprite As Sprite = New Sprite(CharacterGFX(Map.Events(i).Pages(1).Graphic))
-                        tmpSprite.TextureRect = New IntRect(rec.X, rec.Y, rec.Width, rec.Height)
-                        tmpSprite.Position = New Vector2f(ConvertMapX(Map.Events(i).X * PIC_X), ConvertMapY(Map.Events(i).Y * PIC_Y))
+
+                        Dim tmpSprite As Sprite = New Sprite(CharacterGFX(Map.Events(i).Pages(1).Graphic)) With {
+                            .TextureRect = New IntRect(rec.X, rec.Y, rec.Width, rec.Height),
+                            .Position = New Vector2f(ConvertMapX(Map.Events(i).X * PIC_X), ConvertMapY(Map.Events(i).Y * PIC_Y))
+                        }
                         GameWindow.Draw(tmpSprite)
                     Else
                         With rec
@@ -2872,12 +2876,14 @@ newlist:
                             .X = 0
                             .Width = PIC_X
                         End With
-                        Dim rec2 As New RectangleShape
-                        rec2.OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue)
-                        rec2.OutlineThickness = 0.6
-                        rec2.FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
-                        rec2.Size = New Vector2f(rec.Width, rec.Height)
-                        rec2.Position = New Vector2f(ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y))
+
+                        Dim rec2 As New RectangleShape With {
+                            .OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue),
+                            .OutlineThickness = 0.6,
+                            .FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent),
+                            .Size = New Vector2f(rec.Width, rec.Height),
+                            .Position = New Vector2f(ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y))
+                        }
                         GameWindow.Draw(rec2)
                     End If
                 Case 2
@@ -2910,12 +2916,14 @@ newlist:
                             .X = 0
                             .Width = PIC_X
                         End With
-                        Dim rec2 As New RectangleShape
-                        rec2.OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue)
-                        rec2.OutlineThickness = 0.6
-                        rec2.FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
-                        rec2.Size = New Vector2f(rec.Width, rec.Height)
-                        rec2.Position = New Vector2f(ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y))
+
+                        Dim rec2 As New RectangleShape With {
+                            .OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue),
+                            .OutlineThickness = 0.6,
+                            .FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent),
+                            .Size = New Vector2f(rec.Width, rec.Height),
+                            .Position = New Vector2f(ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y))
+                        }
                         GameWindow.Draw(rec2)
                     End If
             End Select

@@ -76,11 +76,11 @@ Friend Module ModWeather
 
         If DrawThunder > 0 Then
             Dim tmpSprite As Sprite
-            tmpSprite = New Sprite(New Texture(New SFML.Graphics.Image(GameWindow.Size.X, GameWindow.Size.Y, SFML.Graphics.Color.White)))
-            tmpSprite.Color = New Color(255, 255, 255, 150)
-            tmpSprite.TextureRect = New IntRect(0, 0, GameWindow.Size.X, GameWindow.Size.Y)
-
-            tmpSprite.Position = New Vector2f(0, 0)
+            tmpSprite = New Sprite(New Texture(New SFML.Graphics.Image(GameWindow.Size.X, GameWindow.Size.Y, SFML.Graphics.Color.White))) With {
+                .Color = New Color(255, 255, 255, 150),
+                .TextureRect = New IntRect(0, 0, GameWindow.Size.X, GameWindow.Size.Y),
+                .Position = New Vector2f(0, 0)
+            }
 
             GameWindow.Draw(tmpSprite) '
 

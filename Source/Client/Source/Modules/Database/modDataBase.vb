@@ -448,8 +448,9 @@ Module ModDataBase
 
     Sub ClearResource(index as integer)
         Resource(Index) = Nothing
-        Resource(Index) = New ResourceRec
-        Resource(Index).Name = ""
+        Resource(Index) = New ResourceRec With {
+            .Name = ""
+        }
     End Sub
 
     Sub ClearResources()
@@ -476,10 +477,10 @@ Module ModDataBase
 
     Sub ClearNpc(index as integer)
         Npc(Index) = Nothing
-        Npc(Index) = New NpcRec
-
-        Npc(Index).Name = ""
-        Npc(Index).AttackSay = ""
+        Npc(Index) = New NpcRec With {
+            .Name = "",
+            .AttackSay = ""
+        }
         For x = 0 To StatType.Count - 1
             ReDim Npc(Index).Stat(x)
         Next
@@ -577,16 +578,18 @@ Module ModDataBase
 
     Sub ClearSkill(index as integer)
         Skill(Index) = Nothing
-        Skill(Index) = New SkillRec
-        Skill(Index).Name = ""
+        Skill(Index) = New SkillRec With {
+            .Name = ""
+        }
     End Sub
 #End Region
 
 #Region "Shops"
     Sub ClearShop(index as integer)
         Shop(Index) = Nothing
-        Shop(Index) = New ShopRec
-        Shop(Index).Name = ""
+        Shop(Index) = New ShopRec With {
+            .Name = ""
+        }
         ReDim Shop(Index).TradeItem(MAX_TRADES)
         For x = 0 To MAX_TRADES
             ReDim Shop(Index).TradeItem(x)

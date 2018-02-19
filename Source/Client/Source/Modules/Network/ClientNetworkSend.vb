@@ -7,207 +7,207 @@ Module ClientNetworkSend
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CNewAccount)
-        Buffer.WriteString(EKeyPair.EncryptString(Name))
-        Buffer.WriteString(EKeyPair.EncryptString(Password))
-        Socket.SendData(Buffer.Data, Buffer.Head)
+        buffer.WriteString((EKeyPair.EncryptString(name)))
+        buffer.WriteString((EKeyPair.EncryptString(password)))
+        Socket.SendData(buffer.Data, buffer.Head)
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendAddChar(slot As Integer, name As String, sex As Integer, classNum As Integer, sprite As Integer)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CAddChar)
-        Buffer.WriteInt32(Slot)
-        Buffer.WriteString(Name)
-        Buffer.WriteInt32(Sex)
-        Buffer.WriteInt32(ClassNum)
-        Buffer.WriteInt32(Sprite)
-        Socket.SendData(Buffer.Data, Buffer.Head)
+        buffer.WriteInt32(ClientPackets.CAddChar)
+        buffer.WriteInt32(slot)
+        buffer.WriteString((name))
+        buffer.WriteInt32(sex)
+        buffer.WriteInt32(classNum)
+        buffer.WriteInt32(sprite)
+        Socket.SendData(buffer.Data, buffer.Head)
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendLogin(name As String, password As String)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CLogin)
-        Buffer.WriteString(EKeyPair.EncryptString(Name))
-        Buffer.WriteString(EKeyPair.EncryptString(Password))
-        Buffer.WriteString(EKeyPair.EncryptString(Application.ProductVersion))
-        Socket.SendData(Buffer.Data, Buffer.Head)
+        buffer.WriteInt32(ClientPackets.CLogin)
+        buffer.WriteString((EKeyPair.EncryptString(name)))
+        buffer.WriteString((EKeyPair.EncryptString(password)))
+        buffer.WriteString((EKeyPair.EncryptString(Application.ProductVersion)))
+        Socket.SendData(buffer.Data, buffer.Head)
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 
     Sub GetPing()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
         PingStart = GetTickCount()
 
-        Buffer.WriteInt32(ClientPackets.CCheckPing)
-        Socket.SendData(Buffer.Data, Buffer.Head)
+        buffer.WriteInt32(ClientPackets.CCheckPing)
+        Socket.SendData(buffer.Data, buffer.Head)
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendRequestEditMap()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CRequestEditMap)
-        Socket.SendData(Buffer.Data, Buffer.Head)
+        buffer.WriteInt32(ClientPackets.CRequestEditMap)
+        Socket.SendData(buffer.Data, buffer.Head)
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendMap()
         Dim x As Integer, y As Integer, i As Integer
         Dim data() As Byte
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
         CanMoveNow = False
 
-        Buffer.WriteString(Trim$(Map.Name))
-        Buffer.WriteString(Trim$(Map.Music))
-        Buffer.WriteInt32(Map.Moral)
-        Buffer.WriteInt32(Map.Tileset)
-        Buffer.WriteInt32(Map.Up)
-        Buffer.WriteInt32(Map.Down)
-        Buffer.WriteInt32(Map.Left)
-        Buffer.WriteInt32(Map.Right)
-        Buffer.WriteInt32(Map.BootMap)
-        Buffer.WriteInt32(Map.BootX)
-        Buffer.WriteInt32(Map.BootY)
-        Buffer.WriteInt32(Map.MaxX)
-        Buffer.WriteInt32(Map.MaxY)
-        Buffer.WriteInt32(Map.WeatherType)
-        Buffer.WriteInt32(Map.FogIndex)
-        Buffer.WriteInt32(Map.WeatherIntensity)
-        Buffer.WriteInt32(Map.FogAlpha)
-        Buffer.WriteInt32(Map.FogSpeed)
-        Buffer.WriteInt32(Map.HasMapTint)
-        Buffer.WriteInt32(Map.MapTintR)
-        Buffer.WriteInt32(Map.MapTintG)
-        Buffer.WriteInt32(Map.MapTintB)
-        Buffer.WriteInt32(Map.MapTintA)
-        Buffer.WriteInt32(Map.Instanced)
-        Buffer.WriteInt32(Map.Panorama)
-        Buffer.WriteInt32(Map.Parallax)
+        buffer.WriteString((Trim$(Map.Name)))
+        buffer.WriteString((Trim$(Map.Music)))
+        buffer.WriteInt32(Map.Moral)
+        buffer.WriteInt32(Map.Tileset)
+        buffer.WriteInt32(Map.Up)
+        buffer.WriteInt32(Map.Down)
+        buffer.WriteInt32(Map.Left)
+        buffer.WriteInt32(Map.Right)
+        buffer.WriteInt32(Map.BootMap)
+        buffer.WriteInt32(Map.BootX)
+        buffer.WriteInt32(Map.BootY)
+        buffer.WriteInt32(Map.MaxX)
+        buffer.WriteInt32(Map.MaxY)
+        buffer.WriteInt32(Map.WeatherType)
+        buffer.WriteInt32(Map.Fogindex)
+        buffer.WriteInt32(Map.WeatherIntensity)
+        buffer.WriteInt32(Map.FogAlpha)
+        buffer.WriteInt32(Map.FogSpeed)
+        buffer.WriteInt32(Map.HasMapTint)
+        buffer.WriteInt32(Map.MapTintR)
+        buffer.WriteInt32(Map.MapTintG)
+        buffer.WriteInt32(Map.MapTintB)
+        buffer.WriteInt32(Map.MapTintA)
+        buffer.WriteInt32(Map.Instanced)
+        buffer.WriteInt32(Map.Panorama)
+        buffer.WriteInt32(Map.Parallax)
 
         For i = 1 To MAX_MAP_NPCS
-            Buffer.WriteInt32(Map.Npc(i))
+            buffer.WriteInt32(Map.Npc(i))
         Next
 
-        For X = 0 To Map.MaxX
-            For Y = 0 To Map.MaxY
-                Buffer.WriteInt32(Map.Tile(X, Y).Data1)
-                Buffer.WriteInt32(Map.Tile(X, Y).Data2)
-                Buffer.WriteInt32(Map.Tile(X, Y).Data3)
-                Buffer.WriteInt32(Map.Tile(X, Y).DirBlock)
+        For x = 0 To Map.MaxX
+            For y = 0 To Map.MaxY
+                buffer.WriteInt32(Map.Tile(x, y).Data1)
+                buffer.WriteInt32(Map.Tile(x, y).Data2)
+                buffer.WriteInt32(Map.Tile(x, y).Data3)
+                buffer.WriteInt32(Map.Tile(x, y).DirBlock)
                 For i = 0 To LayerType.Count - 1
-                    Buffer.WriteInt32(Map.Tile(X, Y).Layer(i).Tileset)
-                    Buffer.WriteInt32(Map.Tile(X, Y).Layer(i).X)
-                    Buffer.WriteInt32(Map.Tile(X, Y).Layer(i).Y)
-                    Buffer.WriteInt32(Map.Tile(X, Y).Layer(i).AutoTile)
+                    buffer.WriteInt32(Map.Tile(x, y).Layer(i).Tileset)
+                    buffer.WriteInt32(Map.Tile(x, y).Layer(i).X)
+                    buffer.WriteInt32(Map.Tile(x, y).Layer(i).Y)
+                    buffer.WriteInt32(Map.Tile(x, y).Layer(i).AutoTile)
                 Next
-                Buffer.WriteInt32(Map.Tile(X, Y).Type)
+                buffer.WriteInt32(Map.Tile(x, y).Type)
             Next
         Next
 
         'Event Data
-        Buffer.WriteInt32(Map.EventCount)
+        buffer.WriteInt32(Map.EventCount)
         If Map.EventCount > 0 Then
             For i = 1 To Map.EventCount
                 With Map.Events(i)
-                    Buffer.WriteString(Trim$(.Name))
-                    Buffer.WriteInt32(.Globals)
-                    Buffer.WriteInt32(.X)
-                    Buffer.WriteInt32(.Y)
-                    Buffer.WriteInt32(.PageCount)
+                    buffer.WriteString((Trim$(.Name)))
+                    buffer.WriteInt32(.Globals)
+                    buffer.WriteInt32(.X)
+                    buffer.WriteInt32(.Y)
+                    buffer.WriteInt32(.PageCount)
                 End With
                 If Map.Events(i).PageCount > 0 Then
-                    For X = 1 To Map.Events(i).PageCount
-                        With Map.Events(i).Pages(X)
-                            Buffer.WriteInt32(.chkVariable)
-                            Buffer.WriteInt32(.VariableIndex)
-                            Buffer.WriteInt32(.VariableCondition)
-                            Buffer.WriteInt32(.VariableCompare)
-                            Buffer.WriteInt32(.chkSwitch)
-                            Buffer.WriteInt32(.SwitchIndex)
-                            Buffer.WriteInt32(.SwitchCompare)
-                            Buffer.WriteInt32(.chkHasItem)
-                            Buffer.WriteInt32(.HasItemIndex)
-                            Buffer.WriteInt32(.HasItemAmount)
-                            Buffer.WriteInt32(.chkSelfSwitch)
-                            Buffer.WriteInt32(.SelfSwitchIndex)
-                            Buffer.WriteInt32(.SelfSwitchCompare)
-                            Buffer.WriteInt32(.GraphicType)
-                            Buffer.WriteInt32(.Graphic)
-                            Buffer.WriteInt32(.GraphicX)
-                            Buffer.WriteInt32(.GraphicY)
-                            Buffer.WriteInt32(.GraphicX2)
-                            Buffer.WriteInt32(.GraphicY2)
-                            Buffer.WriteInt32(.MoveType)
-                            Buffer.WriteInt32(.MoveSpeed)
-                            Buffer.WriteInt32(.MoveFreq)
-                            Buffer.WriteInt32(Map.Events(i).Pages(X).MoveRouteCount)
-                            Buffer.WriteInt32(.IgnoreMoveRoute)
-                            Buffer.WriteInt32(.RepeatMoveRoute)
+                    For x = 1 To Map.Events(i).PageCount
+                        With Map.Events(i).Pages(x)
+                            buffer.WriteInt32(.ChkVariable)
+                            buffer.WriteInt32(.Variableindex)
+                            buffer.WriteInt32(.VariableCondition)
+                            buffer.WriteInt32(.VariableCompare)
+                            buffer.WriteInt32(.ChkSwitch)
+                            buffer.WriteInt32(.Switchindex)
+                            buffer.WriteInt32(.SwitchCompare)
+                            buffer.WriteInt32(.ChkHasItem)
+                            buffer.WriteInt32(.HasItemindex)
+                            buffer.WriteInt32(.HasItemAmount)
+                            buffer.WriteInt32(.ChkSelfSwitch)
+                            buffer.WriteInt32(.SelfSwitchindex)
+                            buffer.WriteInt32(.SelfSwitchCompare)
+                            buffer.WriteInt32(.GraphicType)
+                            buffer.WriteInt32(.Graphic)
+                            buffer.WriteInt32(.GraphicX)
+                            buffer.WriteInt32(.GraphicY)
+                            buffer.WriteInt32(.GraphicX2)
+                            buffer.WriteInt32(.GraphicY2)
+                            buffer.WriteInt32(.MoveType)
+                            buffer.WriteInt32(.MoveSpeed)
+                            buffer.WriteInt32(.MoveFreq)
+                            buffer.WriteInt32(Map.Events(i).Pages(x).MoveRouteCount)
+                            buffer.WriteInt32(.IgnoreMoveRoute)
+                            buffer.WriteInt32(.RepeatMoveRoute)
                             If .MoveRouteCount > 0 Then
-                                For Y = 1 To .MoveRouteCount
-                                    Buffer.WriteInt32(.MoveRoute(Y).Index)
-                                    Buffer.WriteInt32(.MoveRoute(Y).Data1)
-                                    Buffer.WriteInt32(.MoveRoute(Y).Data2)
-                                    Buffer.WriteInt32(.MoveRoute(Y).Data3)
-                                    Buffer.WriteInt32(.MoveRoute(Y).Data4)
-                                    Buffer.WriteInt32(.MoveRoute(Y).Data5)
-                                    Buffer.WriteInt32(.MoveRoute(Y).Data6)
+                                For y = 1 To .MoveRouteCount
+                                    buffer.WriteInt32(.MoveRoute(y).Index)
+                                    buffer.WriteInt32(.MoveRoute(y).Data1)
+                                    buffer.WriteInt32(.MoveRoute(y).Data2)
+                                    buffer.WriteInt32(.MoveRoute(y).Data3)
+                                    buffer.WriteInt32(.MoveRoute(y).Data4)
+                                    buffer.WriteInt32(.MoveRoute(y).Data5)
+                                    buffer.WriteInt32(.MoveRoute(y).Data6)
                                 Next
                             End If
-                            Buffer.WriteInt32(.WalkAnim)
-                            Buffer.WriteInt32(.DirFix)
-                            Buffer.WriteInt32(.WalkThrough)
-                            Buffer.WriteInt32(.ShowName)
-                            Buffer.WriteInt32(.Trigger)
-                            Buffer.WriteInt32(.CommandListCount)
-                            Buffer.WriteInt32(.Position)
-                            Buffer.WriteInt32(.Questnum)
+                            buffer.WriteInt32(.WalkAnim)
+                            buffer.WriteInt32(.DirFix)
+                            buffer.WriteInt32(.WalkThrough)
+                            buffer.WriteInt32(.ShowName)
+                            buffer.WriteInt32(.Trigger)
+                            buffer.WriteInt32(.CommandListCount)
+                            buffer.WriteInt32(.Position)
+                            buffer.WriteInt32(.Questnum)
 
-                            Buffer.WriteInt32(.chkPlayerGender)
+                            buffer.WriteInt32(.ChkPlayerGender)
                         End With
-                        If Map.Events(i).Pages(X).CommandListCount > 0 Then
-                            For Y = 1 To Map.Events(i).Pages(X).CommandListCount
-                                Buffer.WriteInt32(Map.Events(i).Pages(X).CommandList(Y).CommandCount)
-                                Buffer.WriteInt32(Map.Events(i).Pages(X).CommandList(Y).ParentList)
-                                If Map.Events(i).Pages(X).CommandList(Y).CommandCount > 0 Then
-                                    For z = 1 To Map.Events(i).Pages(X).CommandList(Y).CommandCount
-                                        With Map.Events(i).Pages(X).CommandList(Y).Commands(z)
-                                            Buffer.WriteInt32(.Index)
-                                            Buffer.WriteString(Trim$(.Text1))
-                                            Buffer.WriteString(Trim$(.Text2))
-                                            Buffer.WriteString(Trim$(.Text3))
-                                            Buffer.WriteString(Trim$(.Text4))
-                                            Buffer.WriteString(Trim$(.Text5))
-                                            Buffer.WriteInt32(.Data1)
-                                            Buffer.WriteInt32(.Data2)
-                                            Buffer.WriteInt32(.Data3)
-                                            Buffer.WriteInt32(.Data4)
-                                            Buffer.WriteInt32(.Data5)
-                                            Buffer.WriteInt32(.Data6)
-                                            Buffer.WriteInt32(.ConditionalBranch.CommandList)
-                                            Buffer.WriteInt32(.ConditionalBranch.Condition)
-                                            Buffer.WriteInt32(.ConditionalBranch.Data1)
-                                            Buffer.WriteInt32(.ConditionalBranch.Data2)
-                                            Buffer.WriteInt32(.ConditionalBranch.Data3)
-                                            Buffer.WriteInt32(.ConditionalBranch.ElseCommandList)
-                                            Buffer.WriteInt32(.MoveRouteCount)
+                        If Map.Events(i).Pages(x).CommandListCount > 0 Then
+                            For y = 1 To Map.Events(i).Pages(x).CommandListCount
+                                buffer.WriteInt32(Map.Events(i).Pages(x).CommandList(y).CommandCount)
+                                buffer.WriteInt32(Map.Events(i).Pages(x).CommandList(y).ParentList)
+                                If Map.Events(i).Pages(x).CommandList(y).CommandCount > 0 Then
+                                    For z = 1 To Map.Events(i).Pages(x).CommandList(y).CommandCount
+                                        With Map.Events(i).Pages(x).CommandList(y).Commands(z)
+                                            buffer.WriteInt32(.Index)
+                                            buffer.WriteString((Trim$(.Text1)))
+                                            buffer.WriteString((Trim$(.Text2)))
+                                            buffer.WriteString((Trim$(.Text3)))
+                                            buffer.WriteString((Trim$(.Text4)))
+                                            buffer.WriteString((Trim$(.Text5)))
+                                            buffer.WriteInt32(.Data1)
+                                            buffer.WriteInt32(.Data2)
+                                            buffer.WriteInt32(.Data3)
+                                            buffer.WriteInt32(.Data4)
+                                            buffer.WriteInt32(.Data5)
+                                            buffer.WriteInt32(.Data6)
+                                            buffer.WriteInt32(.ConditionalBranch.CommandList)
+                                            buffer.WriteInt32(.ConditionalBranch.Condition)
+                                            buffer.WriteInt32(.ConditionalBranch.Data1)
+                                            buffer.WriteInt32(.ConditionalBranch.Data2)
+                                            buffer.WriteInt32(.ConditionalBranch.Data3)
+                                            buffer.WriteInt32(.ConditionalBranch.ElseCommandList)
+                                            buffer.WriteInt32(.MoveRouteCount)
                                             If .MoveRouteCount > 0 Then
                                                 For w = 1 To .MoveRouteCount
-                                                    Buffer.WriteInt32(.MoveRoute(w).Index)
-                                                    Buffer.WriteInt32(.MoveRoute(w).Data1)
-                                                    Buffer.WriteInt32(.MoveRoute(w).Data2)
-                                                    Buffer.WriteInt32(.MoveRoute(w).Data3)
-                                                    Buffer.WriteInt32(.MoveRoute(w).Data4)
-                                                    Buffer.WriteInt32(.MoveRoute(w).Data5)
-                                                    Buffer.WriteInt32(.MoveRoute(w).Data6)
+                                                    buffer.WriteInt32(.MoveRoute(w).Index)
+                                                    buffer.WriteInt32(.MoveRoute(w).Data1)
+                                                    buffer.WriteInt32(.MoveRoute(w).Data2)
+                                                    buffer.WriteInt32(.MoveRoute(w).Data3)
+                                                    buffer.WriteInt32(.MoveRoute(w).Data4)
+                                                    buffer.WriteInt32(.MoveRoute(w).Data5)
+                                                    buffer.WriteInt32(.MoveRoute(w).Data6)
                                                 Next
                                             End If
                                         End With
@@ -221,433 +221,433 @@ Module ClientNetworkSend
         End If
         'End Event Data
 
-        data = Buffer.ToArray
+        data = buffer.ToArray
 
-        Buffer = New ByteStream(4)
-        Buffer.WriteInt32(ClientPackets.CSaveMap)
-        Buffer.WriteBlock(Compression.CompressBytes(data))
+        buffer = New ByteStream(4)
+        buffer.WriteInt32(ClientPackets.CSaveMap)
+        buffer.WriteBlock(Compression.CompressBytes(data))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendPlayerMove()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CPlayerMove)
-        Buffer.WriteInt32(GetPlayerDir(MyIndex))
-        Buffer.WriteInt32(Player(MyIndex).Moving)
-        Buffer.WriteInt32(Player(MyIndex).X)
-        Buffer.WriteInt32(Player(MyIndex).Y)
+        buffer.WriteInt32(ClientPackets.CPlayerMove)
+        buffer.WriteInt32(GetPlayerDir(Myindex))
+        buffer.WriteInt32(Player(Myindex).Moving)
+        buffer.WriteInt32(Player(Myindex).X)
+        buffer.WriteInt32(Player(Myindex).Y)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SayMsg(text As String)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CSayMsg)
-        'Buffer.WriteString(text)
-        Buffer.WriteBytes(WriteUnicodeString(text))
+        buffer.WriteInt32(ClientPackets.CSayMsg)
+        'buffer.Writestring((text)
+        buffer.WriteString((text))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendKick(name As String)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CKickPlayer)
-        Buffer.WriteString(Name)
+        buffer.WriteInt32(ClientPackets.CKickPlayer)
+        buffer.WriteString((name))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendBan(name As String)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CBanPlayer)
-        Buffer.WriteString(Name)
+        buffer.WriteInt32(ClientPackets.CBanPlayer)
+        buffer.WriteString((name))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub WarpMeTo(name As String)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CWarpMeTo)
-        Buffer.WriteString(Name)
+        buffer.WriteInt32(ClientPackets.CWarpMeTo)
+        buffer.WriteString((name))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub WarpToMe(name As String)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CWarpToMe)
-        Buffer.WriteString(Name)
+        buffer.WriteInt32(ClientPackets.CWarpToMe)
+        buffer.WriteString((name))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
-    Friend Sub WarpTo(mapNum as Integer)
-        dim buffer as New ByteStream(4)
+    Friend Sub WarpTo(mapNum As Integer)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CWarpTo)
-        Buffer.WriteInt32(MapNum)
+        buffer.WriteInt32(ClientPackets.CWarpTo)
+        buffer.WriteInt32(mapNum)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendRequestLevelUp()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CRequestLevelUp)
+        buffer.WriteInt32(ClientPackets.CRequestLevelUp)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Sub SendSpawnItem(tmpItem As Integer, tmpAmount As Integer)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CSpawnItem)
-        Buffer.WriteInt32(tmpItem)
-        Buffer.WriteInt32(tmpAmount)
+        buffer.WriteInt32(ClientPackets.CSpawnItem)
+        buffer.WriteInt32(tmpItem)
+        buffer.WriteInt32(tmpAmount)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendSetSprite(spriteNum As Integer)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CSetSprite)
-        Buffer.WriteInt32(SpriteNum)
+        buffer.WriteInt32(ClientPackets.CSetSprite)
+        buffer.WriteInt32(spriteNum)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendSetAccess(name As String, access As Byte)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CSetAccess)
-        Buffer.WriteString(Name)
-        Buffer.WriteInt32(Access)
+        buffer.WriteInt32(ClientPackets.CSetAccess)
+        buffer.WriteString((name))
+        buffer.WriteInt32(access)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Sub SendAttack()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CAttack)
+        buffer.WriteInt32(ClientPackets.CAttack)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Sub SendRequestItems()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CRequestItems)
+        buffer.WriteInt32(ClientPackets.CRequestItems)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendPlayerDir()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CPlayerDir)
-        Buffer.WriteInt32(GetPlayerDir(MyIndex))
+        buffer.WriteInt32(ClientPackets.CPlayerDir)
+        buffer.WriteInt32(GetPlayerDir(Myindex))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendPlayerRequestNewMap()
         If GettingMap Then Exit Sub
 
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CRequestNewMap)
-        Buffer.WriteInt32(GetPlayerDir(MyIndex))
+        buffer.WriteInt32(ClientPackets.CRequestNewMap)
+        buffer.WriteInt32(GetPlayerDir(Myindex))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
 
     End Sub
 
     Sub SendRequestResources()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CRequestResources)
+        buffer.WriteInt32(ClientPackets.CRequestResources)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Sub SendRequestNpcs()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CRequestNPCS)
+        buffer.WriteInt32(ClientPackets.CRequestNPCS)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Sub SendRequestSkills()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CRequestSkills)
+        buffer.WriteInt32(ClientPackets.CRequestSkills)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Sub SendRequestShops()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CRequestShops)
+        buffer.WriteInt32(ClientPackets.CRequestShops)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Sub SendRequestAnimations()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CRequestAnimations)
+        buffer.WriteInt32(ClientPackets.CRequestAnimations)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendMapRespawn()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CMapRespawn)
+        buffer.WriteInt32(ClientPackets.CMapRespawn)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Sub SendTrainStat(statNum As Byte)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CTrainStat)
-        Buffer.WriteInt32(StatNum)
+        buffer.WriteInt32(ClientPackets.CTrainStat)
+        buffer.WriteInt32(statNum)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Sub SendRequestPlayerData()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CRequestPlayerData)
+        buffer.WriteInt32(ClientPackets.CRequestPlayerData)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub BroadcastMsg(text As String)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CBroadcastMsg)
-        'Buffer.WriteString(text)
-        Buffer.WriteBytes(WriteUnicodeString(text))
+        buffer.WriteInt32(ClientPackets.CBroadcastMsg)
+        'buffer.Writestring((text)
+        buffer.WriteString((text))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub PlayerMsg(text As String, msgTo As String)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CPlayerMsg)
-        Buffer.WriteString(MsgTo)
-        'Buffer.WriteString(text)
-        Buffer.WriteBytes(WriteUnicodeString(text))
+        buffer.WriteInt32(ClientPackets.CPlayerMsg)
+        buffer.WriteString((msgTo))
+        'buffer.Writestring((text)
+        buffer.WriteString((text))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendWhosOnline()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CWhosOnline)
+        buffer.WriteInt32(ClientPackets.CWhosOnline)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendMotdChange(motd As String)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CSetMotd)
-        Buffer.WriteString(MOTD)
+        buffer.WriteInt32(ClientPackets.CSetMotd)
+        buffer.WriteString((motd))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendBanList()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CBanList)
+        buffer.WriteInt32(ClientPackets.CBanList)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Sub SendChangeInvSlots(oldSlot As Integer, newSlot As Integer)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CSwapInvSlots)
-        Buffer.WriteInt32(OldSlot)
-        Buffer.WriteInt32(NewSlot)
+        buffer.WriteInt32(ClientPackets.CSwapInvSlots)
+        buffer.WriteInt32(oldSlot)
+        buffer.WriteInt32(newSlot)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendUseItem(invNum As Integer)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CUseItem)
-        Buffer.WriteInt32(InvNum)
+        buffer.WriteInt32(ClientPackets.CUseItem)
+        buffer.WriteInt32(invNum)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendDropItem(invNum As Integer, amount As Integer)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
         If InBank OrElse InShop Then Exit Sub
 
         ' do basic checks
-        If InvNum < 1 OrElse InvNum > MAX_INV Then Exit Sub
-        If PlayerInv(InvNum).Num < 1 OrElse PlayerInv(InvNum).Num > MAX_ITEMS Then Exit Sub
-        If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(MyIndex, InvNum)).Stackable = 1 Then
-            If Amount < 1 OrElse Amount > PlayerInv(InvNum).Value Then Exit Sub
+        If invNum < 1 OrElse invNum > MAX_INV Then Exit Sub
+        If PlayerInv(invNum).Num < 1 OrElse PlayerInv(invNum).Num > MAX_ITEMS Then Exit Sub
+        If Item(GetPlayerInvItemNum(Myindex, invNum)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(Myindex, invNum)).Stackable = 1 Then
+            If amount < 1 OrElse amount > PlayerInv(invNum).Value Then Exit Sub
         End If
 
-        Buffer.WriteInt32(ClientPackets.CMapDropItem)
-        Buffer.WriteInt32(InvNum)
-        Buffer.WriteInt32(Amount)
+        buffer.WriteInt32(ClientPackets.CMapDropItem)
+        buffer.WriteInt32(invNum)
+        buffer.WriteInt32(amount)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub BuyItem(shopslot As Integer)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CBuyItem)
-        Buffer.WriteInt32(shopslot)
+        buffer.WriteInt32(ClientPackets.CBuyItem)
+        buffer.WriteInt32(shopslot)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SellItem(invslot As Integer)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CSellItem)
-        Buffer.WriteInt32(invslot)
+        buffer.WriteInt32(ClientPackets.CSellItem)
+        buffer.WriteInt32(invslot)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub DepositItem(invslot As Integer, amount As Integer)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CDepositItem)
-        Buffer.WriteInt32(invslot)
-        Buffer.WriteInt32(Amount)
+        buffer.WriteInt32(ClientPackets.CDepositItem)
+        buffer.WriteInt32(invslot)
+        buffer.WriteInt32(amount)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub WithdrawItem(bankslot As Integer, amount As Integer)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CWithdrawItem)
-        Buffer.WriteInt32(bankslot)
-        Buffer.WriteInt32(Amount)
+        buffer.WriteInt32(ClientPackets.CWithdrawItem)
+        buffer.WriteInt32(bankslot)
+        buffer.WriteInt32(amount)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub ChangeBankSlots(oldSlot As Integer, newSlot As Integer)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CChangeBankSlots)
-        Buffer.WriteInt32(OldSlot)
-        Buffer.WriteInt32(NewSlot)
+        buffer.WriteInt32(ClientPackets.CChangeBankSlots)
+        buffer.WriteInt32(oldSlot)
+        buffer.WriteInt32(newSlot)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub CloseBank()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CCloseBank)
+        buffer.WriteInt32(ClientPackets.CCloseBank)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
 
         InBank = False
-        pnlBankVisible = False
+        PnlBankVisible = False
     End Sub
 
     Sub PlayerSearch(curX As Integer, curY As Integer, rClick As Byte)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
         If IsInBounds() Then
-            Buffer.WriteInt32(ClientPackets.CSearch)
-            Buffer.WriteInt32(CurX)
-            Buffer.WriteInt32(CurY)
-            Buffer.WriteInt32(RClick)
-            Socket.SendData(Buffer.Data, Buffer.Head)
+            buffer.WriteInt32(ClientPackets.CSearch)
+            buffer.WriteInt32(curX)
+            buffer.WriteInt32(curY)
+            buffer.WriteInt32(rClick)
+            Socket.SendData(buffer.Data, buffer.Head)
         End If
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 
     Friend Sub AdminWarp(x As Integer, y As Integer)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CAdminWarp)
-        Buffer.WriteInt32(X)
-        Buffer.WriteInt32(Y)
+        buffer.WriteInt32(ClientPackets.CAdminWarp)
+        buffer.WriteInt32(x)
+        buffer.WriteInt32(y)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Sub SendTradeRequest(name As String)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CTradeInvite)
+        buffer.WriteInt32(ClientPackets.CTradeInvite)
 
-        Buffer.WriteString(Name)
+        buffer.WriteString((name))
 
         Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()

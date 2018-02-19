@@ -271,11 +271,11 @@ Module ServerNetworkReceive
             If Not IsLoggedIn(index) Then
 
                 ' Get the data
-                Name = EKeyPair.DecryptString(Buffer.ReadString)
-                Password = EKeyPair.DecryptString(Buffer.ReadString)
+                Name = EKeyPair.DecryptString(buffer.ReadString())
+                Password = EKeyPair.DecryptString(buffer.ReadString())
 
                 ' Check versions
-                If EKeyPair.DecryptString(Buffer.ReadString) <> Application.ProductVersion Then
+                If EKeyPair.DecryptString(buffer.ReadString()) <> Application.ProductVersion Then
                     AlertMsg(index, "Version outdated, please visit " & Options.Website)
                     Exit Sub
                 End If
@@ -314,22 +314,22 @@ Module ServerNetworkReceive
 
                 For i = 1 To MAX_CHARS
                     If Player(index).Character(i).Classes <= 0 Then
-                        Buffer.WriteString(Trim$(Player(index).Character(i).Name))
-                        Buffer.WriteInt32(Player(index).Character(i).Sprite)
-                        Buffer.WriteInt32(Player(index).Character(i).Level)
-                        Buffer.WriteString("")
-                        Buffer.WriteInt32(0)
+                        buffer.WriteString("")
+                        buffer.WriteInt32(Player(index).Character(i).Sprite)
+                        buffer.WriteInt32(Player(index).Character(i).Level)
+                        buffer.WriteString("")
+                        buffer.WriteInt32(0)
                     Else
-                        Buffer.WriteString(Trim$(Player(index).Character(i).Name))
-                        Buffer.WriteInt32(Player(index).Character(i).Sprite)
-                        Buffer.WriteInt32(Player(index).Character(i).Level)
-                        Buffer.WriteString(Trim$(Classes(Player(index).Character(i).Classes).Name))
-                        Buffer.WriteInt32(Player(index).Character(i).Sex)
+                        buffer.WriteString(Trim$(Player(index).Character(i).Name))
+                        buffer.WriteInt32(Player(index).Character(i).Sprite)
+                        buffer.WriteInt32(Player(index).Character(i).Level)
+                        buffer.WriteString(Trim$(Classes(Player(index).Character(i).Classes).Name))
+                        buffer.WriteInt32(Player(index).Character(i).Sex)
                     End If
 
                 Next
 
-                Socket.SendDataTo(index, Buffer.Data, Buffer.Head)
+                Socket.SendDataTo(index, buffer.Data, buffer.Head)
 
                 ' Show the player up on the socket status
                 Addlog(GetPlayerLogin(index) & " has logged in from " & Socket.ClientIp(index) & ".", PLAYER_LOG)
@@ -346,12 +346,12 @@ Module ServerNetworkReceive
                 '    End If
                 'End If
 
-                Buffer.Dispose()
+                buffer.Dispose()
             End If
         End If
     End Sub
 
-    Private Sub Packet_UseChar(index as integer, ByRef data() As Byte)
+    Private Sub Packet_UseChar(index As Integer, ByRef data() As Byte)
         Dim slot As Byte
         Dim buffer As New ByteStream(data)
 
@@ -360,7 +360,7 @@ Module ServerNetworkReceive
         If Not IsPlaying(index) Then
             If IsLoggedIn(index) Then
 
-                slot = Buffer.ReadInt32
+                slot = buffer.ReadInt32
 
                 ' Check if character data has been created
                 If Len(Trim$(Player(index).Character(slot).Name)) > 0 Then
@@ -381,7 +381,7 @@ Module ServerNetworkReceive
 
     End Sub
 
-    Private Sub Packet_AddChar(index as integer, ByRef data() As Byte)
+    Private Sub Packet_AddChar(index As Integer, ByRef data() As Byte)
         Dim Name As String, slot As Byte
         Dim Sex As Integer
         Dim Classes As Integer
@@ -394,11 +394,11 @@ Module ServerNetworkReceive
         AddDebug("Recieved CMSG: CAddChar")
 
         If Not IsPlaying(index) Then
-            slot = Buffer.ReadInt32
-            Name = Buffer.ReadString
-            Sex = Buffer.ReadInt32
-            Classes = Buffer.ReadInt32
-            Sprite = Buffer.ReadInt32
+            slot = buffer.ReadInt32
+            Name = buffer.ReadString
+            Sex = buffer.ReadInt32
+            Classes = buffer.ReadInt32
+            Sprite = buffer.ReadInt32
 
             ' Prevent hacking
             If Len(Name.Trim) < 3 Then
@@ -440,12 +440,12 @@ Module ServerNetworkReceive
             ' log them in!!
             HandleUseChar(index)
 
-            Buffer.Dispose()
+            buffer.Dispose()
         End If
 
     End Sub
 
-    Private Sub Packet_DeleteChar(index as integer, ByRef data() As Byte)
+    Private Sub Packet_DeleteChar(index As Integer, ByRef data() As Byte)
         Dim slot As Byte
         Dim buffer As New ByteStream(data)
 
@@ -454,7 +454,7 @@ Module ServerNetworkReceive
         If Not IsPlaying(index) Then
             If IsLoggedIn(index) Then
 
-                slot = Buffer.ReadInt32
+                slot = buffer.ReadInt32
 
                 ' Check if character data has been created
                 If Len(Trim$(Player(index).Character(slot).Name)) > 0 Then
@@ -463,26 +463,26 @@ Module ServerNetworkReceive
                     ClearCharacter(index, slot)
                     SaveCharacter(index, slot)
 
-                    Buffer.Dispose()
-                    Buffer = New ByteStream(4)
-                    Buffer.WriteInt32(ServerPackets.SLoginOk)
-                    Buffer.WriteInt32(MAX_CHARS)
+                    buffer.Dispose()
+                    buffer = New ByteStream(4)
+                    buffer.WriteInt32(ServerPackets.SLoginOk)
+                    buffer.WriteInt32(MAX_CHARS)
 
                     AddDebug("Sent SMSG: SLoginOk")
 
                     For i = 1 To MAX_CHARS
                         If Player(index).Character(i).Classes <= 0 Then
-                            Buffer.WriteString(Trim$(Player(index).Character(i).Name))
-                            Buffer.WriteInt32(Player(index).Character(i).Sprite)
-                            Buffer.WriteInt32(Player(index).Character(i).Level)
-                            Buffer.WriteString("")
-                            Buffer.WriteInt32(0)
+                            buffer.WriteString((Trim$(Player(index).Character(i).Name)))
+                            buffer.WriteInt32(Player(index).Character(i).Sprite)
+                            buffer.WriteInt32(Player(index).Character(i).Level)
+                            buffer.WriteString((""))
+                            buffer.WriteInt32(0)
                         Else
-                            Buffer.WriteString(Trim$(Player(index).Character(i).Name))
-                            Buffer.WriteInt32(Player(index).Character(i).Sprite)
-                            Buffer.WriteInt32(Player(index).Character(i).Level)
-                            Buffer.WriteString(Trim$(Classes(Player(index).Character(i).Classes).Name))
-                            Buffer.WriteInt32(Player(index).Character(i).Sex)
+                            buffer.WriteString((Trim$(Player(index).Character(i).Name)))
+                            buffer.WriteInt32(Player(index).Character(i).Sprite)
+                            buffer.WriteInt32(Player(index).Character(i).Level)
+                            buffer.WriteString((Trim$(Classes(Player(index).Character(i).Classes).Name)))
+                            buffer.WriteInt32(Player(index).Character(i).Sex)
                         End If
 
                     Next
@@ -501,7 +501,7 @@ Module ServerNetworkReceive
         AddDebug("Recieved CMSG: CSayMsg")
 
         'msg = Buffer.ReadString
-        msg = ReadUnicodeString(Buffer.ReadBytes)
+        msg = buffer.ReadString
 
         Addlog("Map #" & GetPlayerMap(index) & ": " & GetPlayerName(index) & " says, '" & msg & "'", PLAYER_LOG)
 
@@ -519,7 +519,7 @@ Module ServerNetworkReceive
         AddDebug("Recieved CMSG: CBroadcastMsg")
 
         'msg = Buffer.ReadString
-        msg = ReadUnicodeString(Buffer.ReadBytes)
+        msg = buffer.ReadString
 
         s = "[Global]" & GetPlayerName(index) & ": " & msg
         SayMsg_Global(index, msg, ColorType.White)
@@ -537,8 +537,8 @@ Module ServerNetworkReceive
 
         OtherPlayer = Buffer.ReadString
         'Msg = buffer.ReadString
-        Msg = ReadUnicodeString(Buffer.ReadBytes)
-        Buffer.Dispose()
+        Msg = buffer.ReadString
+        buffer.Dispose()
 
         OtherPlayerIndex = FindPlayer(OtherPlayer)
         If OtherPlayerIndex <> index Then
@@ -2695,8 +2695,8 @@ Module ServerNetworkReceive
         For i = 1 To Max_Classes
 
             With Classes(i)
-                .Name = ReadUnicodeString(buffer.ReadBytes)
-                .Desc = ReadUnicodeString(buffer.ReadBytes)
+                .Name = buffer.ReadString
+                .Desc = buffer.ReadString
 
                 ' get array size
                 z = Buffer.ReadInt32

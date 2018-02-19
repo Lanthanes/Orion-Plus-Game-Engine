@@ -109,8 +109,8 @@ Module modPets
 
         With Pet(petNum)
             Buffer.WriteInt32(.Num)
-            Buffer.WriteString(Trim$(.Name))
-            Buffer.WriteInt32(.Sprite)
+            buffer.WriteString((Trim$(.Name)))
+            buffer.WriteInt32(.Sprite)
             Buffer.WriteInt32(.Range)
             Buffer.WriteInt32(.Level)
             Buffer.WriteInt32(.MaxLevel)

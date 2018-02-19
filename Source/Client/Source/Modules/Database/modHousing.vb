@@ -47,7 +47,7 @@ Friend Module ModHousing
         Dim i As Integer
         dim buffer as New ByteStream(Data)
         For i = 1 To MaxHouses
-            HouseConfig(i).ConfigName = Buffer.ReadString
+            HouseConfig(i).ConfigName = buffer.ReadString
             HouseConfig(i).BaseMap = Buffer.ReadInt32
             HouseConfig(i).MaxFurniture = Buffer.ReadInt32
             HouseConfig(i).Price = Buffer.ReadInt32
@@ -164,20 +164,20 @@ Friend Module ModHousing
         dim buffer as New ByteStream(4)
 
         Buffer.WriteInt32(ClientPackets.CVisit)
-        Buffer.WriteString(Name)
+        buffer.WriteString((name))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendVisit(accepted As Byte)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CAcceptVisit)
-        Buffer.WriteInt32(Accepted)
+        buffer.WriteInt32(ClientPackets.CAcceptVisit)
+        buffer.WriteInt32(accepted)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 #End Region
 
@@ -194,48 +194,49 @@ Friend Module ModHousing
         If NumFurniture = 0 Then Exit Sub
     End Sub
 
-    Friend Sub DrawFurniture(index as integer, layer As Integer)
+    Friend Sub DrawFurniture(index As Integer, layer As Integer)
         Dim i As Integer, itemNum As Integer
         Dim x As Integer, y As Integer, width As Integer, height As Integer, x1 As Integer, y1 As Integer
 
-        ItemNum = Furniture(Index).ItemNum
+        itemNum = Furniture(index).ItemNum
 
-        If Item(ItemNum).Type <> ItemType.Furniture Then Exit Sub
+        If Item(itemNum).Type <> ItemType.Furniture Then Exit Sub
 
-        i = Item(ItemNum).Data2
+        i = Item(itemNum).Data2
 
-        If FurnitureGFXInfo(i).IsLoaded = False Then
+        If FurnitureGfxInfo(i).IsLoaded = False Then
             LoadTexture(i, 10)
         End If
 
         'seeying we still use it, lets update timer
-        With SkillIconsGFXInfo(i)
+        With SkillIconsGfxInfo(i)
             .TextureTimer = GetTickCount() + 100000
         End With
 
-        Width = Item(ItemNum).FurnitureWidth
-        Height = Item(ItemNum).FurnitureHeight
+        width = Item(itemNum).FurnitureWidth
+        height = Item(itemNum).FurnitureHeight
 
-        If Width > 4 Then Width = 4
-        If Height > 4 Then Height = 4
+        If width > 4 Then width = 4
+        If height > 4 Then height = 4
         If i <= 0 OrElse i > NumFurniture Then Exit Sub
 
         ' make sure it's not out of map
-        If Furniture(Index).X > Map.MaxX Then Exit Sub
-        If Furniture(Index).Y > Map.MaxY Then Exit Sub
+        If Furniture(index).X > Map.MaxX Then Exit Sub
+        If Furniture(index).Y > Map.MaxY Then Exit Sub
 
-        For X1 = 0 To Width - 1
-            For Y1 = 0 To Height
-                If Item(Furniture(Index).ItemNum).FurnitureFringe(X1, Y1) = Layer Then
+        For x1 = 0 To width - 1
+            For y1 = 0 To height
+                If Item(Furniture(index).ItemNum).FurnitureFringe(x1, y1) = layer Then
                     ' Set base x + y, then the offset due to size
-                    X = (Furniture(Index).X * 32) + (X1 * 32)
-                    Y = (Furniture(Index).Y * 32 - (Height * 32)) + (Y1 * 32)
-                    X = ConvertMapX(X)
-                    Y = ConvertMapY(Y)
+                    x = (Furniture(index).X * 32) + (x1 * 32)
+                    y = (Furniture(index).Y * 32 - (height * 32)) + (y1 * 32)
+                    x = ConvertMapX(x)
+                    y = ConvertMapY(y)
 
-                    Dim tmpSprite As Sprite = New Sprite(FurnitureGFX(i))
-                    tmpSprite.TextureRect = New IntRect(0 + (X1 * 32), 0 + (Y1 * 32), 32, 32)
-                    tmpSprite.Position = New Vector2f(X, Y)
+                    Dim tmpSprite As Sprite = New Sprite(FurnitureGfx(i)) With {
+                        .TextureRect = New IntRect(0 + (x1 * 32), 0 + (y1 * 32), 32, 32),
+                        .Position = New Vector2f(x, y)
+                    }
                     GameWindow.Draw(tmpSprite)
                 End If
             Next

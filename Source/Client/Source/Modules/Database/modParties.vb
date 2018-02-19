@@ -88,47 +88,47 @@ Module ModParties
     Friend Sub SendPartyRequest(name As String)
         dim buffer as New ByteStream(4)
         Buffer.WriteInt32(ClientPackets.CRequestParty)
-        Buffer.WriteString(Name)
+        buffer.WriteString((name))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendAcceptParty()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CAcceptParty)
+        buffer.WriteInt32(ClientPackets.CAcceptParty)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendDeclineParty()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CDeclineParty)
+        buffer.WriteInt32(ClientPackets.CDeclineParty)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendLeaveParty()
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CLeaveParty)
+        buffer.WriteInt32(ClientPackets.CLeaveParty)
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 
     Friend Sub SendPartyChatMsg(text As String)
-        dim buffer as New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ClientPackets.CPartyChatMsg)
-        Buffer.WriteString(Text)
+        buffer.WriteInt32(ClientPackets.CPartyChatMsg)
+        buffer.WriteString((text))
 
-        Socket.SendData(Buffer.Data, Buffer.Head)
-        Buffer.Dispose()
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
     End Sub
 #End Region
 
@@ -153,19 +153,20 @@ Module ModParties
             ' name
             theName = Trim$(GetPlayerName(playerNum))
             ' draw name
-            Y = 100
-            X = 10
-            DrawText(X, Y, theName, SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
+            y = 100
+            x = 10
+            DrawText(x, y, theName, SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black, GameWindow)
 
             ' draw hp
             If Player(playerNum).Vital(VitalType.HP) > 0 Then
                 ' calculate the width to fill
                 barwidth = ((Player(playerNum).Vital(VitalType.HP) / (GetPlayerMaxVital(playerNum, VitalType.HP)) * 64))
                 ' draw bars
-                rec(1) = New Rectangle(X, Y, barwidth, 6)
-                Dim rectShape As New RectangleShape(New Vector2f(barwidth, 6))
-                rectShape.Position = New Vector2f(X, Y + 15)
-                rectShape.FillColor = SFML.Graphics.Color.Red
+                rec(1) = New Rectangle(x, y, barwidth, 6)
+                Dim rectShape As New RectangleShape(New Vector2f(barwidth, 6)) With {
+                    .Position = New Vector2f(x, y + 15),
+                    .FillColor = SFML.Graphics.Color.Red
+                }
                 GameWindow.Draw(rectShape)
             End If
             ' draw mp
@@ -173,10 +174,11 @@ Module ModParties
                 ' calculate the width to fill
                 barwidth = ((Player(playerNum).Vital(VitalType.MP) / (GetPlayerMaxVital(playerNum, VitalType.MP)) * 64))
                 ' draw bars
-                rec(1) = New Rectangle(X, Y, barwidth, 6)
-                Dim rectShape2 As New RectangleShape(New Vector2f(barwidth, 6))
-                rectShape2.Position = New Vector2f(X, Y + 24)
-                rectShape2.FillColor = SFML.Graphics.Color.Blue
+                rec(1) = New Rectangle(x, y, barwidth, 6)
+                Dim rectShape2 As New RectangleShape(New Vector2f(barwidth, 6)) With {
+                    .Position = New Vector2f(x, y + 24),
+                    .FillColor = SFML.Graphics.Color.Blue
+                }
                 GameWindow.Draw(rectShape2)
             End If
 
@@ -189,31 +191,33 @@ Module ModParties
                         ' name
                         theName = Trim$(GetPlayerName(playerNum))
                         ' draw name
-                        Y = 100 + ((I - 1) * 30)
+                        y = 100 + ((I - 1) * 30)
 
-                        DrawText(X, Y, theName, SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
+                        DrawText(x, y, theName, SFML.Graphics.Color.White, SFML.Graphics.Color.Black, GameWindow)
                         ' draw hp
-                        Y = 115 + ((I - 1) * 30)
+                        y = 115 + ((I - 1) * 30)
 
                         ' make sure we actually have the data before rendering
                         If GetPlayerVital(playerNum, VitalType.HP) > 0 AndAlso GetPlayerMaxVital(playerNum, VitalType.HP) > 0 Then
                             barwidth = ((Player(playerNum).Vital(VitalType.HP) / (GetPlayerMaxVital(playerNum, VitalType.HP)) * 64))
                         End If
-                        rec(1) = New Rectangle(X, Y, barwidth, 6)
-                        Dim rectShape As New RectangleShape(New Vector2f(barwidth, 6))
-                        rectShape.Position = New Vector2f(X, Y)
-                        rectShape.FillColor = SFML.Graphics.Color.Red
+                        rec(1) = New Rectangle(x, y, barwidth, 6)
+                        Dim rectShape As New RectangleShape(New Vector2f(barwidth, 6)) With {
+                            .Position = New Vector2f(x, y),
+                            .FillColor = SFML.Graphics.Color.Red
+                        }
                         GameWindow.Draw(rectShape)
                         ' draw mp
-                        Y = 115 + ((I - 1) * 30)
+                        y = 115 + ((I - 1) * 30)
                         ' make sure we actually have the data before rendering
                         If GetPlayerVital(playerNum, VitalType.MP) > 0 AndAlso GetPlayerMaxVital(playerNum, VitalType.MP) > 0 Then
                             barwidth = ((Player(playerNum).Vital(VitalType.MP) / (GetPlayerMaxVital(playerNum, VitalType.MP)) * 64))
                         End If
-                        rec(1) = New Rectangle(X, Y, barwidth, 6)
-                        Dim rectShape2 As New RectangleShape(New Vector2f(barwidth, 6))
-                        rectShape2.Position = New Vector2f(X, Y + 8)
-                        rectShape2.FillColor = SFML.Graphics.Color.Blue
+                        rec(1) = New Rectangle(x, y, barwidth, 6)
+                        Dim rectShape2 As New RectangleShape(New Vector2f(barwidth, 6)) With {
+                            .Position = New Vector2f(x, y + 8),
+                            .FillColor = SFML.Graphics.Color.Blue
+                        }
                         GameWindow.Draw(rectShape2)
                     End If
                 End If

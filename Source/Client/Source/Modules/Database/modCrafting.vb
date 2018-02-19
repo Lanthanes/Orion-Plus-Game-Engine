@@ -166,8 +166,8 @@ Friend Module ModCrafting
 
         Buffer.WriteInt32(RecipeNum)
 
-        Buffer.WriteString(Trim$(Recipe(RecipeNum).Name))
-        Buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
+        buffer.WriteString((Trim$(Recipe(recipeNum).Name)))
+        buffer.WriteInt32(Recipe(RecipeNum).RecipeType)
         Buffer.WriteInt32(Recipe(RecipeNum).MakeItemNum)
         Buffer.WriteInt32(Recipe(RecipeNum).MakeItemAmount)
 

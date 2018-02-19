@@ -71,8 +71,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ASFW, Version=1.0.6615.38203, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CS-ASFW.1.0.0.4\lib\ASFW.dll</HintPath>
+    <Reference Include="ASFW">
+      <HintPath>..\..\ASFW.dll</HintPath>
     </Reference>
     <Reference Include="DarkUI">
       <HintPath>..\Editors\DarkUI.dll</HintPath>

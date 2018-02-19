@@ -2172,9 +2172,10 @@ Module ModGraphics
             barWidth = ((GetTickCount() - SkillBufferTimer) / ((GetTickCount() - SkillBufferTimer) + (Skill(PlayerSkills(SkillBuffer)).CastTime * 1000)) * 64)
             ' draw bars
             rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
-            Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
-            rectShape.Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY))
-            rectShape.FillColor = SFML.Graphics.Color.Cyan
+            Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4)) With {
+                .Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY)),
+                .FillColor = SFML.Graphics.Color.Cyan
+            }
             GameWindow.Draw(rectShape)
         End If
 
@@ -2192,9 +2193,10 @@ Module ModGraphics
                             barWidth = ((MapNpc(i).Vital(VitalType.HP) / (Npc(MapNpc(i).Num).Hp) * 32))
                             ' draw bars
                             rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
-                            Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
-                            rectShape.Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY - 75))
-                            rectShape.FillColor = SFML.Graphics.Color.Red
+                            Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4)) With {
+                                .Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY - 75)),
+                                .FillColor = SFML.Graphics.Color.Red
+                            }
                             GameWindow.Draw(rectShape)
 
                             If MapNpc(i).Vital(VitalType.MP) > 0 Then
@@ -2202,9 +2204,10 @@ Module ModGraphics
                                 barWidth = ((MapNpc(i).Vital(VitalType.MP) / (Npc(MapNpc(i).Num).Stat(StatType.Intelligence) * 2) * 32))
                                 ' draw bars
                                 rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
-                                Dim rectShape2 As New RectangleShape(New Vector2f(barWidth, 4))
-                                rectShape2.Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY - 80))
-                                rectShape2.FillColor = SFML.Graphics.Color.Blue
+                                Dim rectShape2 As New RectangleShape(New Vector2f(barWidth, 4)) With {
+                                    .Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY - 80)),
+                                    .FillColor = SFML.Graphics.Color.Blue
+                                }
                                 GameWindow.Draw(rectShape2)
                             End If
                         End If
@@ -2223,9 +2226,10 @@ Module ModGraphics
                 barWidth = ((Player(MyIndex).Pet.Health) / (Player(MyIndex).Pet.MaxHp)) * 32
                 ' draw bars
                 rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
-                Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
-                rectShape.Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY - 75))
-                rectShape.FillColor = SFML.Graphics.Color.Red
+                Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4)) With {
+                    .Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY - 75)),
+                    .FillColor = SFML.Graphics.Color.Red
+                }
                 GameWindow.Draw(rectShape)
             End If
         End If
@@ -2240,9 +2244,10 @@ Module ModGraphics
                 barWidth = (GetTickCount() - PetSkillBufferTimer) / ((Skill(Pet(Player(MyIndex).Pet.Num).Skill(PetSkillBuffer)).CastTime * 1000)) * 64
                 ' draw bar background
                 rec(1) = New Rectangle(ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, 4)
-                Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4))
-                rectShape.Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY))
-                rectShape.FillColor = SFML.Graphics.Color.Cyan
+                Dim rectShape As New RectangleShape(New Vector2f(barWidth, 4)) With {
+                    .Position = New Vector2f(ConvertMapX(tmpX), ConvertMapY(tmpY)),
+                    .FillColor = SFML.Graphics.Color.Cyan
+                }
                 GameWindow.Draw(rectShape)
             End If
         End If
@@ -2425,12 +2430,13 @@ Module ModGraphics
             .Width = Item(GetPlayerInvItemNum(MyIndex, FurnitureSelected)).FurnitureWidth * PicX
         End With
 
-        Dim rec2 As New RectangleShape
-        rec2.OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue)
-        rec2.OutlineThickness = 0.6
-        rec2.FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
-        rec2.Size = New Vector2f(rec.Width, rec.Height)
-        rec2.Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
+        Dim rec2 As New RectangleShape With {
+            .OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue),
+            .OutlineThickness = 0.6,
+            .FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent),
+            .Size = New Vector2f(rec.Width, rec.Height),
+            .Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
+        }
         GameWindow.Draw(rec2)
     End Sub
 
@@ -2460,11 +2466,11 @@ Module ModGraphics
 
         MapTintGfx.Clear(New SFML.Graphics.Color(CurrentTintR, CurrentTintG, CurrentTintB, CurrentTintA))
 
-        MapTintSprite = New Sprite(MapTintGfx.Texture)
         'MapTintSprite.Color = New SFML.Graphics.Color(CurrentTintR, CurrentTintG, CurrentTintB, CurrentTintA)
-        MapTintSprite.TextureRect = New IntRect(0, 0, GameWindow.Size.X, GameWindow.Size.Y)
-
-        MapTintSprite.Position = New Vector2f(0, 0)
+        MapTintSprite = New Sprite(MapTintGfx.Texture) With {
+            .TextureRect = New IntRect(0, 0, GameWindow.Size.X, GameWindow.Size.Y),
+            .Position = New Vector2f(0, 0)
+        }
 
         MapTintGfx.Display()
 
@@ -2475,11 +2481,11 @@ Module ModGraphics
     Friend Sub DrawMapFade()
         If UseFade = False Then Exit Sub
 
-        MapFadeSprite = New Sprite(New Texture(New SFML.Graphics.Image(GameWindow.Size.X, GameWindow.Size.Y, SFML.Graphics.Color.Black)))
-        MapFadeSprite.Color = New SFML.Graphics.Color(0, 0, 0, FadeAmount)
-        MapFadeSprite.TextureRect = New IntRect(0, 0, GameWindow.Size.X, GameWindow.Size.Y)
-
-        MapFadeSprite.Position = New Vector2f(0, 0)
+        MapFadeSprite = New Sprite(New Texture(New SFML.Graphics.Image(GameWindow.Size.X, GameWindow.Size.Y, SFML.Graphics.Color.Black))) With {
+            .Color = New SFML.Graphics.Color(0, 0, 0, FadeAmount),
+            .TextureRect = New IntRect(0, 0, GameWindow.Size.X, GameWindow.Size.Y),
+            .Position = New Vector2f(0, 0)
+        }
 
         GameWindow.Draw(MapFadeSprite)
 
@@ -2783,12 +2789,13 @@ Module ModGraphics
                         tempRarityColor = ItemRarityColor5
                 End Select
 
-                Dim rec2 As New RectangleShape
-                rec2.OutlineColor = New SFML.Graphics.Color(tempRarityColor)
-                rec2.OutlineThickness = 2
-                rec2.FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
-                rec2.Size = New Vector2f(30, 30)
-                rec2.Position = New Vector2f(recPos.X, recPos.Y)
+                Dim rec2 As New RectangleShape With {
+                    .OutlineColor = New SFML.Graphics.Color(tempRarityColor),
+                    .OutlineThickness = 2,
+                    .FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent),
+                    .Size = New Vector2f(30, 30),
+                    .Position = New Vector2f(recPos.X, recPos.Y)
+                }
                 GameWindow.Draw(rec2)
             End If
 

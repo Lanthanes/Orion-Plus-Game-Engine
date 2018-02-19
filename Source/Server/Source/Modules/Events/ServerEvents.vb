@@ -1953,117 +1953,117 @@ Friend Module ServerEvents
         Console.WriteLine("Sent SMSG: SSwitchesAndVariables")
 
         For i = 1 To MaxSwitches
-            Buffer.WriteString(Trim(Switches(i)))
+            buffer.WriteString((Trim(Switches(i))))
         Next
 
         For i = 1 To MaxVariables
-            Buffer.WriteString(Trim(Variables(i)))
+            buffer.WriteString((Trim(Variables(i))))
         Next
 
         If everyone Then
-            SendDataToAll(Buffer.Data, Buffer.Head)
+            SendDataToAll(buffer.Data, buffer.Head)
         Else
-            Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
+            Socket.SendDataTo(index, buffer.Data, buffer.Head)
         End If
 
-        Buffer.Dispose()
+        buffer.Dispose()
 
     End Sub
 
-    Sub SendMapEventData(index as integer)
-        dim buffer as New ByteStream(4), i As Integer, x As Integer, y As Integer
-        Dim z As Integer, mapNum as Integer, w As Integer
+    Sub SendMapEventData(index As Integer)
+        Dim buffer As New ByteStream(4), i As Integer, x As Integer, y As Integer
+        Dim z As Integer, mapNum As Integer, w As Integer
 
-        Buffer.WriteInt32(ServerPackets.SMapEventData)
-        MapNum = GetPlayerMap(Index)
+        buffer.WriteInt32(ServerPackets.SMapEventData)
+        mapNum = GetPlayerMap(index)
 
         Addlog("Sent SMSG: SMapEventData", PACKET_LOG)
         Console.WriteLine("Sent SMSG: SMapEventData")
 
         'Event Data
-        Buffer.WriteInt32(Map(MapNum).EventCount)
+        buffer.WriteInt32(Map(mapNum).EventCount)
 
-        If Map(MapNum).EventCount > 0 Then
-            For i = 1 To Map(MapNum).EventCount
-                With Map(MapNum).Events(i)
-                    Buffer.WriteString(Trim(.Name))
-                    Buffer.WriteInt32(.Globals)
-                    Buffer.WriteInt32(.X)
-                    Buffer.WriteInt32(.Y)
-                    Buffer.WriteInt32(.PageCount)
+        If Map(mapNum).EventCount > 0 Then
+            For i = 1 To Map(mapNum).EventCount
+                With Map(mapNum).Events(i)
+                    buffer.WriteString((Trim(.Name)))
+                    buffer.WriteInt32(.Globals)
+                    buffer.WriteInt32(.X)
+                    buffer.WriteInt32(.Y)
+                    buffer.WriteInt32(.PageCount)
                 End With
-                If Map(MapNum).Events(i).PageCount > 0 Then
-                    For x = 1 To Map(MapNum).Events(i).PageCount
-                        With Map(MapNum).Events(i).Pages(x)
-                            Buffer.WriteInt32(.chkVariable)
-                            Buffer.WriteInt32(.VariableIndex)
-                            Buffer.WriteInt32(.VariableCondition)
-                            Buffer.WriteInt32(.VariableCompare)
+                If Map(mapNum).Events(i).PageCount > 0 Then
+                    For x = 1 To Map(mapNum).Events(i).PageCount
+                        With Map(mapNum).Events(i).Pages(x)
+                            buffer.WriteInt32(.ChkVariable)
+                            buffer.WriteInt32(.Variableindex)
+                            buffer.WriteInt32(.VariableCondition)
+                            buffer.WriteInt32(.VariableCompare)
 
-                            Buffer.WriteInt32(.chkSwitch)
-                            Buffer.WriteInt32(.SwitchIndex)
-                            Buffer.WriteInt32(.SwitchCompare)
+                            buffer.WriteInt32(.ChkSwitch)
+                            buffer.WriteInt32(.Switchindex)
+                            buffer.WriteInt32(.SwitchCompare)
 
-                            Buffer.WriteInt32(.chkHasItem)
-                            Buffer.WriteInt32(.HasItemIndex)
-                            Buffer.WriteInt32(.HasItemAmount)
+                            buffer.WriteInt32(.ChkHasItem)
+                            buffer.WriteInt32(.HasItemindex)
+                            buffer.WriteInt32(.HasItemAmount)
 
-                            Buffer.WriteInt32(.chkSelfSwitch)
-                            Buffer.WriteInt32(.SelfSwitchIndex)
-                            Buffer.WriteInt32(.SelfSwitchCompare)
+                            buffer.WriteInt32(.ChkSelfSwitch)
+                            buffer.WriteInt32(.SelfSwitchindex)
+                            buffer.WriteInt32(.SelfSwitchCompare)
 
-                            Buffer.WriteInt32(.GraphicType)
-                            Buffer.WriteInt32(.Graphic)
-                            Buffer.WriteInt32(.GraphicX)
-                            Buffer.WriteInt32(.GraphicY)
-                            Buffer.WriteInt32(.GraphicX2)
-                            Buffer.WriteInt32(.GraphicY2)
+                            buffer.WriteInt32(.GraphicType)
+                            buffer.WriteInt32(.Graphic)
+                            buffer.WriteInt32(.GraphicX)
+                            buffer.WriteInt32(.GraphicY)
+                            buffer.WriteInt32(.GraphicX2)
+                            buffer.WriteInt32(.GraphicY2)
 
-                            Buffer.WriteInt32(.MoveType)
-                            Buffer.WriteInt32(.MoveSpeed)
-                            Buffer.WriteInt32(.MoveFreq)
-                            Buffer.WriteInt32(.MoveRouteCount)
+                            buffer.WriteInt32(.MoveType)
+                            buffer.WriteInt32(.MoveSpeed)
+                            buffer.WriteInt32(.MoveFreq)
+                            buffer.WriteInt32(.MoveRouteCount)
 
-                            Buffer.WriteInt32(.IgnoreMoveRoute)
-                            Buffer.WriteInt32(.RepeatMoveRoute)
+                            buffer.WriteInt32(.IgnoreMoveRoute)
+                            buffer.WriteInt32(.RepeatMoveRoute)
 
                             If .MoveRouteCount > 0 Then
                                 For y = 1 To .MoveRouteCount
-                                    Buffer.WriteInt32(.MoveRoute(y).Index)
-                                    Buffer.WriteInt32(.MoveRoute(y).Data1)
-                                    Buffer.WriteInt32(.MoveRoute(y).Data2)
-                                    Buffer.WriteInt32(.MoveRoute(y).Data3)
-                                    Buffer.WriteInt32(.MoveRoute(y).Data4)
-                                    Buffer.WriteInt32(.MoveRoute(y).Data5)
-                                    Buffer.WriteInt32(.MoveRoute(y).Data6)
+                                    buffer.WriteInt32(.MoveRoute(y).Index)
+                                    buffer.WriteInt32(.MoveRoute(y).Data1)
+                                    buffer.WriteInt32(.MoveRoute(y).Data2)
+                                    buffer.WriteInt32(.MoveRoute(y).Data3)
+                                    buffer.WriteInt32(.MoveRoute(y).Data4)
+                                    buffer.WriteInt32(.MoveRoute(y).Data5)
+                                    buffer.WriteInt32(.MoveRoute(y).Data6)
                                 Next
                             End If
 
-                            Buffer.WriteInt32(.WalkAnim)
-                            Buffer.WriteInt32(.DirFix)
-                            Buffer.WriteInt32(.WalkThrough)
-                            Buffer.WriteInt32(.ShowName)
-                            Buffer.WriteInt32(.Trigger)
-                            Buffer.WriteInt32(.CommandListCount)
+                            buffer.WriteInt32(.WalkAnim)
+                            buffer.WriteInt32(.DirFix)
+                            buffer.WriteInt32(.WalkThrough)
+                            buffer.WriteInt32(.ShowName)
+                            buffer.WriteInt32(.Trigger)
+                            buffer.WriteInt32(.CommandListCount)
 
-                            Buffer.WriteInt32(.Position)
-                            Buffer.WriteInt32(.QuestNum)
+                            buffer.WriteInt32(.Position)
+                            buffer.WriteInt32(.QuestNum)
                         End With
 
-                        If Map(MapNum).Events(i).Pages(x).CommandListCount > 0 Then
-                            For y = 1 To Map(MapNum).Events(i).Pages(x).CommandListCount
-                                Buffer.WriteInt32(Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount)
-                                Buffer.WriteInt32(Map(MapNum).Events(i).Pages(x).CommandList(y).ParentList)
-                                If Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount > 0 Then
-                                    For z = 1 To Map(MapNum).Events(i).Pages(x).CommandList(y).CommandCount
-                                        With Map(MapNum).Events(i).Pages(x).CommandList(y).Commands(z)
-                                            Buffer.WriteInt32(.Index)
-                                            Buffer.WriteString(.Text1)
-                                            Buffer.WriteString(.Text2)
-                                            Buffer.WriteString(.Text3)
-                                            Buffer.WriteString(.Text4)
-                                            Buffer.WriteString(.Text5)
-                                            Buffer.WriteInt32(.Data1)
+                        If Map(mapNum).Events(i).Pages(x).CommandListCount > 0 Then
+                            For y = 1 To Map(mapNum).Events(i).Pages(x).CommandListCount
+                                buffer.WriteInt32(Map(mapNum).Events(i).Pages(x).CommandList(y).CommandCount)
+                                buffer.WriteInt32(Map(mapNum).Events(i).Pages(x).CommandList(y).ParentList)
+                                If Map(mapNum).Events(i).Pages(x).CommandList(y).CommandCount > 0 Then
+                                    For z = 1 To Map(mapNum).Events(i).Pages(x).CommandList(y).CommandCount
+                                        With Map(mapNum).Events(i).Pages(x).CommandList(y).Commands(z)
+                                            buffer.WriteInt32(.Index)
+                                            buffer.WriteString((.Text1))
+                                            buffer.WriteString((.Text2))
+                                            buffer.WriteString((.Text3))
+                                            buffer.WriteString((.Text4))
+                                            buffer.WriteString((.Text5))
+                                            buffer.WriteInt32(.Data1)
                                             Buffer.WriteInt32(.Data2)
                                             Buffer.WriteInt32(.Data3)
                                             Buffer.WriteInt32(.Data4)

@@ -54,8 +54,8 @@ Friend Module modProjectiles
         Buffer.WriteInt32(EditorPackets.SaveProjectile)
         Buffer.WriteInt32(ProjectileNum)
 
-        Buffer.WriteString(Trim(Projectiles(ProjectileNum).Name))
-        Buffer.WriteInt32(Projectiles(ProjectileNum).Sprite)
+        buffer.WriteString((Trim(Projectiles(ProjectileNum).Name)))
+        buffer.WriteInt32(Projectiles(ProjectileNum).Sprite)
         Buffer.WriteInt32(Projectiles(ProjectileNum).Range)
         Buffer.WriteInt32(Projectiles(ProjectileNum).Speed)
         Buffer.WriteInt32(Projectiles(ProjectileNum).Damage)

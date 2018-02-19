@@ -16,11 +16,11 @@ Module modText
     Friend MyText As String = ""
 
     Friend Sub DrawText(X As Integer, y As Integer, text As String, color As Color, BackColor As Color, ByRef target As RenderWindow, Optional TextSize As Byte = FONT_SIZE)
-        Dim mystring As Text = New Text(text, SFMLGameFont)
-        mystring.CharacterSize = TextSize
-
-        mystring.Color = BackColor
-        mystring.Position = New Vector2f(X - 1, y - 1)
+        Dim mystring As Text = New Text(text, SFMLGameFont) With {
+            .CharacterSize = TextSize,
+            .Color = BackColor,
+            .Position = New Vector2f(X - 1, y - 1)
+        }
         target.Draw(mystring)
 
         mystring.Position = New Vector2f(X - 1, y + 1)
