@@ -176,7 +176,7 @@ Module ServerPlayers
 
     End Function
 
-    Sub AttackPlayer(Attacker As Integer, Victim As Integer, Damage As Integer, Optional skillnum As Integer = 0, Optional npcnum As Byte = 0)
+    Sub AttackPlayer(Attacker As Integer, Victim As Integer, Damage As Integer, Optional skillnum As Integer = 0, Optional npcnum As integer = 0)
         Dim exp As Integer, mapNum as Integer
         Dim n As Integer
         dim buffer as ByteStream
@@ -951,7 +951,7 @@ Module ServerPlayers
         GetPlayerPK = Player(Index).Character(TempPlayer(Index).CurChar).Pk
     End Function
 
-    Function GetPlayerEquipment(index as integer, EquipmentSlot As EquipmentType) As Byte
+    Function GetPlayerEquipment(index as integer, EquipmentSlot As EquipmentType) As integer
         GetPlayerEquipment = 0
         If Index > MAX_PLAYERS Then Exit Function
         If EquipmentSlot = 0 Then Exit Function

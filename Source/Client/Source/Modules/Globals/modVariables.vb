@@ -135,7 +135,7 @@ Module ModVariables
     Friend AnimEditorTimer(1) As Integer
 
     ' Used to check if in editor or not and variables for use in editor
-    Friend SpawnNpcNum As Byte
+    Friend SpawnNpcNum As Integer
     Friend SpawnNpcDir As Byte
 
     ' Used for map item editor

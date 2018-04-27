@@ -3,7 +3,7 @@
 Friend Module modQuest
 #Region "Global Info"
     'Constants
-    Friend Const MAX_QUESTS As Byte = 250
+    Friend Const MAX_QUESTS As Integer = 250
     'Friend Const MAX_REQUIREMENTS As Byte = 10
     'Friend Const MAX_TASKS As Byte = 10
     Friend Const EDITOR_TASKS As Byte = 7

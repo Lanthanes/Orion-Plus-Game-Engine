@@ -56,7 +56,7 @@
         Dim Stat() As Byte
         Dim Points As Byte
         ' Worn equipment
-        Dim Equipment() As Byte
+        Dim Equipment() As Integer
         ' Position
         Dim Map As Integer
         Dim X As Byte
@@ -168,7 +168,7 @@
     End Structure
 
     Friend Structure MapItemRec
-        Dim Num As Byte
+        Dim Num As Integer
         Dim Value As Integer
         Dim Frame As Byte
         Dim X As Byte
@@ -178,8 +178,8 @@
     End Structure
 
     Friend Structure MapNpcRec
-        Dim Num As Byte
-        Dim Target As Byte
+        Dim Num As Integer
+        Dim Target As Integer
         Dim TargetType As Byte
         Dim Vital() As Integer
         Dim Map As Integer

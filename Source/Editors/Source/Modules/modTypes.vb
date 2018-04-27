@@ -77,7 +77,7 @@
     End Structure
 
     Friend Structure MapItemRec
-        Dim Num As Byte
+        Dim Num As integer
         Dim Value As Integer
         Dim Frame As Byte
         Dim X As Byte
@@ -86,7 +86,7 @@
 
     Friend Structure MapNpcRec
         Dim Num As Byte
-        Dim Target As Byte
+        Dim Target As integer
         Dim TargetType As Byte
         Dim Vital() As Integer
         Dim Map As Integer

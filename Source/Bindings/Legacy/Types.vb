@@ -97,7 +97,7 @@
     End Structure
 
     Friend Structure PlayerInvRec
-        Dim Num As Byte
+        Dim Num As Integer
         Dim Value As Integer
     End Structure
 

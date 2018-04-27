@@ -41,11 +41,11 @@
         Dim Points As Byte
 
         ' Worn equipment
-        Dim Equipment() As Byte
+        Dim Equipment() As Integer
 
         ' Inventory
         Dim Inv() As PlayerInvRec
-        Dim Skill() As Byte
+        Dim Skill() As integer
 
         ' Position
         Dim Map As Integer
@@ -92,7 +92,7 @@
         Dim PartyInvite As Integer
         Dim InParty As Byte
         Dim TargetType As Byte
-        Dim Target As Byte
+        Dim Target As integer
         Dim PartyStarter As Byte
         Dim GettingMap As Byte
         Dim SkillBuffer As Integer
@@ -223,7 +223,7 @@
     End Structure
 
     Friend Structure MapItemRec
-        Dim Num As Byte
+        Dim Num As integer
         Dim Value As Integer
         Dim X As Byte
         Dim Y As Byte

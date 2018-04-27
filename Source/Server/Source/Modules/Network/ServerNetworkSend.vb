@@ -1414,7 +1414,7 @@ Module ServerNetworkSend
         buffer.Dispose()
     End Sub
 
-    Sub SendMapKey(index As Integer, X As Integer, Y As Integer, Value As Byte)
+    Sub SendMapKey(index As Integer, X As Integer, Y As Integer, Value As integer)
         Dim buffer As ByteStream
 
         buffer = New ByteStream(4)
@@ -1541,7 +1541,7 @@ Module ServerNetworkSend
         buffer.Dispose()
     End Sub
 
-    Sub SendMapKeyToMap(mapNum As Integer, X As Integer, Y As Integer, Value As Byte)
+    Sub SendMapKeyToMap(mapNum As Integer, X As Integer, Y As Integer, Value As Integer)
         Dim buffer As ByteStream
 
         buffer = New ByteStream(4)

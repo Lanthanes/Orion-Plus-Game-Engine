@@ -101,7 +101,7 @@
     Friend EditorWarpMap As Integer
     Friend EditorWarpX As Integer
     Friend EditorWarpY As Integer
-    Friend SpawnNpcNum As Byte
+    Friend SpawnNpcNum As integer
     Friend SpawnNpcDir As Byte
     Friend EditorShop As Integer
     Friend EditorTileSelStart As Point

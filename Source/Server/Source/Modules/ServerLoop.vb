@@ -471,7 +471,7 @@ Module modLoop
                                 If IsPlaying(target) AndAlso GetPlayerMap(target) = mapNum Then
                                     If IsPlaying(target) AndAlso GetPlayerMap(target) = mapNum Then
                                         If Random(1, 3) = 1 Then
-                                            Dim skillnum As Byte = RandomNpcAttack(mapNum, x)
+                                            Dim skillnum As integer = RandomNpcAttack(mapNum, x)
                                             If skillnum > 0 Then
                                                 BufferNpcSkill(mapNum, x, skillnum)
                                             Else
