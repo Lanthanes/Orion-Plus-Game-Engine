@@ -2351,12 +2351,12 @@ Module modDatabase
 #End Region
 
 #Region "Banning"
-    Sub ServerBanIndex(BanPlayerindex as integer)
+    Sub ServerBanIndex(BanPlayerindex As Integer)
         Dim filename As String
         Dim IP As String
         Dim F As Integer
         Dim i As Integer
-        filename = Application.StartupPath & "data\banlist.txt"
+        filename = Application.StartupPath & "\data\banlist.txt"
 
         ' Make sure the file exists
         If Not File.Exists("data\banlist.txt") Then
@@ -2376,11 +2376,35 @@ Module modDatabase
         Next
 
         IP = Mid$(IP, 1, i)
-        AddTextToFile(IP & "," & "Server", "banlist.txt")
+        AddTextToFile(IP, "banlist.txt")
         GlobalMsg(GetPlayerName(BanPlayerindex) & " has been banned from " & Options.GameName & " by " & "the Server" & "!")
         Addlog("The Server" & " has banned " & GetPlayerName(BanPlayerindex) & ".", ADMIN_LOG)
         AlertMsg(BanPlayerindex, "You have been banned by " & "The Server" & "!")
     End Sub
+
+    Function IsBanned(IP As String) As Boolean
+        Dim filename As String, line As String
+
+        filename = Application.StartupPath & "\data\banlist.txt"
+
+        ' Check if file exists
+        If Not File.Exists("data\banlist.txt") Then
+            Return False
+        End If
+
+        Dim sr As StreamReader = New StreamReader(filename)
+
+        Do While sr.Peek() >= 0
+            'Console.WriteLine(sr.ReadLine())
+            ' Is banned?
+            line = sr.ReadLine()
+            If Trim$(LCase$(line)) = Trim$(LCase$(Mid$(IP, 1, Len(line)))) Then
+                IsBanned = True
+            End If
+        Loop
+        sr.Close()
+
+    End Function
 
     Sub BanIndex(BanPlayerindex as integer, BannedByindex as integer)
         Dim filename As String = Application.StartupPath & "\Data\banlist.txt"
@@ -2401,7 +2425,7 @@ Module modDatabase
         Next
 
         IP = Mid$(IP, 1, i)
-        AddTextToFile(IP & "," & GetPlayerName(BannedByindex), "banlist.txt")
+        AddTextToFile(IP, "banlist.txt")
         GlobalMsg(GetPlayerName(BanPlayerindex) & " has been banned from " & Options.GameName & " by " & GetPlayerName(BannedByindex) & "!")
         Addlog(GetPlayerName(BannedByindex) & " has banned " & GetPlayerName(BanPlayerindex) & ".", ADMIN_LOG)
         AlertMsg(BanPlayerindex, "You have been banned by " & GetPlayerName(BannedByindex) & "!")

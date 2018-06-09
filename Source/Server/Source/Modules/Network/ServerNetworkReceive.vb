@@ -179,7 +179,7 @@ Module ServerNetworkReceive
 
     Private Sub Packet_NewAccount(index as integer, ByRef data() As Byte)
         Dim username As String, password As String
-        Dim i As Integer, n As Integer
+        Dim i As Integer, n As Integer, IP As String
         Dim buffer As New ByteStream(data)
 
         AddDebug("Recieved CMSG: CNewAccount")
@@ -203,6 +203,24 @@ Module ServerNetworkReceive
                     Exit Sub
                 End If
             Next
+
+            'banned ip?
+
+            ' Cut off last portion of ip
+            IP = Socket.ClientIp(index)
+
+            For i = Len(IP) To 1 Step -1
+
+                If Mid$(IP, i, 1) = "." Then
+                    Exit For
+                End If
+
+            Next
+
+            IP = Mid$(IP, 1, i)
+            If IsBanned(IP) Then
+                AlertMsg(index, "Your Banned!")
+            End If
 
             ' Check to see if account already exists
             If Not AccountExist(username) Then
@@ -261,14 +279,31 @@ Module ServerNetworkReceive
     End Sub
 
     Private Sub Packet_Login(index as integer, ByRef data() As Byte)
-        Dim Name As String
-        Dim Password As String
+        Dim Name As String, IP As String
+        Dim Password As String, i As Integer
         Dim buffer As New ByteStream(data)
 
         AddDebug("Recieved CMSG: CLogin")
 
         If Not IsPlaying(index) Then
             If Not IsLoggedIn(index) Then
+
+                'check if its banned
+                ' Cut off last portion of ip
+                IP = Socket.ClientIp(index)
+
+                For i = Len(IP) To 1 Step -1
+
+                    If Mid$(IP, i, 1) = "." Then
+                        Exit For
+                    End If
+
+                Next
+
+                IP = Mid$(IP, 1, i)
+                If IsBanned(IP) Then
+                    AlertMsg(index, "Your Banned!")
+                End If
 
                 ' Get the data
                 Name = EKeyPair.DecryptString(buffer.ReadString())
@@ -305,10 +340,10 @@ Module ServerNetworkReceive
                 ClearBank(index)
                 LoadBank(index, Name)
 
-                Buffer.Dispose()
-                Buffer = New ByteStream(4)
-                Buffer.WriteInt32(ServerPackets.SLoginOk)
-                Buffer.WriteInt32(MAX_CHARS)
+                buffer.Dispose()
+                buffer = New ByteStream(4)
+                buffer.WriteInt32(ServerPackets.SLoginOk)
+                buffer.WriteInt32(MAX_CHARS)
 
                 AddDebug("Sent SMSG: SLoginOk")
 

@@ -335,8 +335,7 @@ Friend Module ServerEventLogic
                             End With
                             Socket.SendDataTo(i, Buffer.Data, Buffer.Head)
 
-                            Addlog("Sent SMSG: SSpawnEvent Spawn New Events", PACKET_LOG)
-                            Console.WriteLine("Sent SMSG: SSpawnEvent Spawn New Events")
+                            AddDebug("Sent SMSG: SSpawnEvent Spawn New Events")
 
                             Buffer.Dispose()
                             z = 1
@@ -2609,10 +2608,9 @@ Friend Module ServerEventLogic
                 End With
                 Socket.SendDataTo(Index, Buffer.Data, Buffer.Head)
 
-                Addlog("Sent SMSG: SSpawnEvent For Player", PACKET_LOG)
-                Console.WriteLine("Sent SMSG: SSpawnEvent For Player")
+                AddDebug("Sent SMSG: SSpawnEvent For Player")
 
-                Buffer.Dispose()
+                buffer.Dispose()
             Next
         End If
 

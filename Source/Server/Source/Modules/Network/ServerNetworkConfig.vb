@@ -107,14 +107,20 @@ Friend Module ServerNetworkConfig
     End Sub
 
     Private Sub Socket_TrafficReceived(size As Integer, ByRef data() As Byte) Handles Socket.TrafficReceived
-        Console.WriteLine("Traffic Received : [Size: " & size & "]")
+        If DebugTxt = True Then
+            Console.WriteLine("Traffic Received : [Size: " & size & "]")
+        End If
+
         Dim tmpData = data
         Dim BreakPointDummy As Integer = 0
         'Put breakline on BreakPointDummy to look at what is contained in data at runtime in the VS logger.
     End Sub
 
     Private Sub Socket_PacketReceived(size As Integer, header As Integer, ByRef data() As Byte) Handles Socket.PacketReceived
-        Console.WriteLine("Packet Received : [Size: " & size & "| Packet: " & CType(header, ClientPackets).ToString() & "]")
+        If DebugTxt = True Then
+            Console.WriteLine("Packet Received : [Size: " & size & "| Packet: " & CType(header, ClientPackets).ToString() & "]")
+        End If
+
         Dim tmpData = data
         Dim BreakPointDummy As Integer = 0
         'Put breakline on BreakPointDummy to look at what is contained in data at runtime in the VS logger.
