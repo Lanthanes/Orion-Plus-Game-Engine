@@ -132,7 +132,11 @@ Module modLoop
         ClearPets()
 
         ' load options
-        LoadOptions()
+        If File.Exists(Application.StartupPath & "\Data\Config.xml") Then
+            LoadOptions()
+        Else
+            CreateOptions()
+        End If
 
         InitNetwork()
 
@@ -147,6 +151,40 @@ Module modLoop
 #End Region
 
 #Region "Options"
+    Friend Sub CreateOptions()
+        Dim myXml As New XmlClass With {
+            .Filename = Application.StartupPath & "\Data\Config.xml",
+            .Root = "Options"
+        }
+
+        myXml.NewXmlDocument()
+
+        Options.Password = ""
+        Options.SavePass = False
+        Options.Username = ""
+        Options.IP = "Localhost"
+        Options.Port = 7001
+        Options.MenuMusic = ""
+        Options.Music = 1
+        Options.Sound = 1
+        Options.Volume = 100
+
+        myXml.LoadXml()
+
+        myXml.WriteString("UserInfo", "Username", Trim$(Options.Username))
+        myXml.WriteString("UserInfo", "Password", Trim$(Options.Password))
+        myXml.WriteString("UserInfo", "SavePass", Trim$(Options.SavePass))
+
+        myXml.WriteString("Connection", "Ip", Trim$(Options.IP))
+        myXml.WriteString("Connection", "Port", Trim$(Options.Port))
+
+        myXml.WriteString("Sfx", "MenuMusic", Trim$(Options.MenuMusic))
+        myXml.WriteString("Sfx", "Music", Trim$(Options.Music))
+        myXml.WriteString("Sfx", "Sound", Trim$(Options.Sound))
+        myXml.WriteString("Sfx", "Volume", Trim$(Options.Volume))
+
+        myXml.CloseXml(True)
+    End Sub
 
     Friend Sub LoadOptions()
         Dim myXml As New XmlClass With {
@@ -156,34 +194,21 @@ Module modLoop
 
         myXml.LoadXml()
 
-        If Not File.Exists(myXml.Filename) Then
-            Options.Password = ""
-            Options.SavePass = False
-            Options.Username = ""
-            Options.IP = "Localhost"
-            Options.Port = 7001
-            Options.MenuMusic = ""
-            Options.Music = 1
-            Options.Sound = 1
-            Options.Volume = 100
+        Options.Username = myXml.ReadString("UserInfo", "Username", "")
+        Options.Password = myXml.ReadString("UserInfo", "Password", "")
+        Options.SavePass = myXml.ReadString("UserInfo", "SavePass", "False")
 
-        Else
-            Options.Username = myXml.ReadString("UserInfo", "Username", "")
-            Options.Password = myXml.ReadString("UserInfo", "Password", "")
-            Options.SavePass = myXml.ReadString("UserInfo", "SavePass", "False")
+        Options.IP = myXml.ReadString("Connection", "Ip", "127.0.0.1")
+        Options.Port = Val(myXml.ReadString("Connection", "Port", "7001"))
 
-            Options.IP = myXml.ReadString("Connection", "Ip", "127.0.0.1")
-            Options.Port = Val(myXml.ReadString("Connection", "Port", "7001"))
-
-            Options.MenuMusic = myXml.ReadString("Sfx", "MenuMusic", "")
-            Options.Music = myXml.ReadString("Sfx", "Music", "1")
-            Options.Sound = myXml.ReadString("Sfx", "Sound", "1")
-            Options.Volume = Val(myXml.ReadString("Sfx", "Volume", "100"))
-        End If
+        Options.MenuMusic = myXml.ReadString("Sfx", "MenuMusic", "")
+        Options.Music = myXml.ReadString("Sfx", "Music", "1")
+        Options.Sound = myXml.ReadString("Sfx", "Sound", "1")
+        Options.Volume = Val(myXml.ReadString("Sfx", "Volume", "100"))
 
         myXml.CloseXml(False)
 
-        frmLogin.txtLogin.Text = Options.Username
+        FrmLogin.txtLogin.Text = Options.Username
         frmLogin.txtPassword.Text = Options.Password
     End Sub
 #End Region

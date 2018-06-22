@@ -271,21 +271,21 @@ Module ModDataBase
         }
 
         myXml.LoadXml()
-        Options.Username = myXml.ReadString("UserInfo", "Username", "") 'Getvar(FileName, "Options", "Username")
-        Options.Password = myXml.ReadString("UserInfo", "Password", "") 'Getvar(FileName, "Options", "Password")
-        Options.SavePass = myXml.ReadString("UserInfo", "SavePass", "False") 'Getvar(FileName, "Options", "SavePass")
+        Options.Username = myXml.ReadString("UserInfo", "Username", "")
+        Options.Password = myXml.ReadString("UserInfo", "Password", "")
+        Options.SavePass = myXml.ReadString("UserInfo", "SavePass", "False")
 
-        Options.IP = myXml.ReadString("Connection", "Ip", "127.0.0.1") 'Getvar(FileName, "Options", "IP")
-        Options.Port = Val(myXml.ReadString("Connection", "Port", "7001")) 'Getvar(FileName, "Options", "Port"))
+        Options.Ip = myXml.ReadString("Connection", "Ip", "127.0.0.1")
+        Options.Port = Val(myXml.ReadString("Connection", "Port", "7001"))
 
-        Options.MenuMusic = myXml.ReadString("Sfx", "MenuMusic", "") 'Getvar(FileName, "Options", "MenuMusic")
-        Options.Music = myXml.ReadString("Sfx", "Music", "1") 'Getvar(FileName, "Options", "Music")
-        Options.Sound = myXml.ReadString("Sfx", "Sound", "1") 'Getvar(FileName, "Options", "Sound")
-        Options.Volume = Val(myXml.ReadString("Sfx", "Volume", "100")) 'Getvar(FileName, "Options", "Volume"))
+        Options.MenuMusic = myXml.ReadString("Sfx", "MenuMusic", "")
+        Options.Music = myXml.ReadString("Sfx", "Music", "1")
+        Options.Sound = myXml.ReadString("Sfx", "Sound", "1")
+        Options.Volume = Val(myXml.ReadString("Sfx", "Volume", "100"))
 
-        Options.ScreenSize = myXml.ReadString("Misc", "ScreenSize", "0") 'Getvar(FileName, "Options", "ScreenSize")
-        Options.HighEnd = Val(myXml.ReadString("Misc", "HighEnd", "0")) 'Getvar(FileName, "Options", "HighEnd"))
-        Options.ShowNpcBar = Val(myXml.ReadString("Misc", "ShowNpcBar", "1")) 'Getvar(FileName, "Options", "ShowNpcBar"))
+        Options.ScreenSize = myXml.ReadString("Misc", "ScreenSize", "0")
+        Options.HighEnd = Val(myXml.ReadString("Misc", "HighEnd", "0"))
+        Options.ShowNpcBar = Val(myXml.ReadString("Misc", "ShowNpcBar", "1"))
         myXml.CloseXml(True)
 
         ' show in GUI
