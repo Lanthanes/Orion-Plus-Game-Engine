@@ -235,7 +235,7 @@ Friend Class frmEvents
 
         fraDialogue.BringToFront()
 
-        'MsgBox(tvCommands.SelectedNode.Text)
+        MsgBox(tvCommands.SelectedNode.Text)
 
         Select Case tvCommands.SelectedNode.Text
            'Messages
@@ -600,12 +600,12 @@ Friend Class frmEvents
             'Shop, bank etc
 
             'Open bank
-            Case "Open bank"
+            Case "Open Bank"
                 AddCommand(EventType.evOpenBank)
                 fraCommands.Visible = False
                 fraDialogue.Visible = False
             'Open shop
-            Case "Open shop"
+            Case "Open Shop"
                 fraDialogue.Visible = True
                 fraOpenShop.Visible = True
                 cmbOpenShop.SelectedIndex = 0
