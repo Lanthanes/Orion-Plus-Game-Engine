@@ -13,7 +13,7 @@ Module modLoop
 
         If GameStarted = True Then Exit Sub
 
-        SFML.CSFML.Activate()
+        SFML.Portable.Activate()
 
         'Strings.Init(1, "English")
 

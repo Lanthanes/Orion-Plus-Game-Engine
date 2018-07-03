@@ -11,7 +11,7 @@ Module ModGeneral
     End Function
 
     Sub Startup()
-        SFML.CSFML.Activate()
+        SFML.Portable.Activate()
 
         SetStatus(Strings.Get("loadscreen", "loading"))
 

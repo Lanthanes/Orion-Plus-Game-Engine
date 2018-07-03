@@ -235,7 +235,7 @@ Friend Class frmEvents
 
         fraDialogue.BringToFront()
 
-        MsgBox(tvCommands.SelectedNode.Text)
+        'MsgBox(tvCommands.SelectedNode.Text)
 
         Select Case tvCommands.SelectedNode.Text
            'Messages
