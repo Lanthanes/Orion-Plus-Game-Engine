@@ -312,6 +312,11 @@
   <ItemGroup>
     <None Include="Resources\LightPreview.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\AutoMapper.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="..\Bindings\Bindings.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
