@@ -3155,6 +3155,8 @@ Module ServerNetworkReceive
             .Root = "Options"
         }
 
+        myXml.LoadXml()
+
         myXml.WriteString("Resources", "ResourcesNum", Buffer.ReadString())
 
         For Prefab = 1 To TilePrefab.Count - 1
@@ -3170,6 +3172,8 @@ Module ServerNetworkReceive
         Next
 
         Buffer.Dispose()
+
+        myXml.CloseXml(True)
 
         StartAutomapper(MapStart, MapSize, MapX, MapY)
 

@@ -1114,6 +1114,8 @@ Module modNetworkReceive
             .Root = "Options"
         }
 
+        myXml.LoadXml()
+
         myXml.WriteString("Resources", "ResourcesNum", Buffer.ReadString())
 
         For Prefab = 1 To TilePrefab.Count - 1
@@ -1128,7 +1130,9 @@ Module modNetworkReceive
             myXml.WriteString("Prefab" & Prefab, "Type", Buffer.ReadInt32)
         Next
 
-        Buffer.Dispose()
+        myXml.CloseXml(True)
+
+        buffer.Dispose()
 
         InitAutoMapper = True
 

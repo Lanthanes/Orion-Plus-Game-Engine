@@ -1906,12 +1906,12 @@ Module ModGraphics
             If NumCharacters > 0 Then
                 ' Players
                 For I = 1 To TotalOnline 'MAX_PLAYERS
-                    If IsPlaying(I) AndAlso GetPlayerMap(I) = GetPlayerMap(MyIndex) Then
-                        If Player(I).Y = Y Then
+                    If IsPlaying(I) AndAlso GetPlayerMap(I) = GetPlayerMap(Myindex) Then
+                        If Player(I).Y = y Then
                             DrawPlayer(I)
                         End If
                         If PetAlive(I) Then
-                            If Player(I).Pet.Y = Y Then
+                            If Player(I).Pet.Y = y Then
                                 DrawPet(I)
                             End If
                         End If

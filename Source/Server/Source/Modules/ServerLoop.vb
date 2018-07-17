@@ -18,42 +18,42 @@ Module modLoop
             If ServerDestroyed Then End
 
             ' Get all our online players.
-            Dim onlinePlayers = TempPlayer.Where(Function(player) player.InGame).Select(Function(player, index) New With {Key .Index = index + 1, Key .Player = player}).ToArray()
+            Dim onlinePlayers = TempPlayer.Where(Function(player) player.InGame).Select(Function(player, index) New With {Key .Index = index + 1, player}).ToArray()
 
             If tick > tmr25 Then
                 ' Check if any of our players has completed casting and get their skill going if they have.
                 Dim playerskills = (
                     From p In onlinePlayers
-                    Where p.Player.SkillBuffer > 0 AndAlso GetTimeMs() > (p.Player.SkillBufferTimer + Skill(p.Player.SkillBuffer).CastTime * 1000)
-                    Select New With {.Index = p.Index, Key .Success = HandleCastSkill(p.Index)}
+                    Where p.player.SkillBuffer > 0 AndAlso GetTimeMs() > (p.player.SkillBufferTimer + Skill(p.player.SkillBuffer).CastTime * 1000)
+                    Select New With {p.Index, Key .Success = HandleCastSkill(p.Index)}
                 ).ToArray()
 
                 ' Check if we need to clear any of our players from being stunned.
                 Dim playerstuns = (
                     From p In onlinePlayers
-                    Where p.Player.StunDuration > 0 AndAlso p.Player.StunTimer + (p.Player.StunDuration * 1000)
-                    Select New With {Key .Index = p.Index, Key .Success = HandleClearStun(p.Index)}
+                    Where p.player.StunDuration > 0 AndAlso p.player.StunTimer + (p.player.StunDuration * 1000)
+                    Select New With {p.Index, Key .Success = HandleClearStun(p.Index)}
                 ).ToArray()
 
                 ' Check if any of our pets has completed casting and get their skill going if they have.
                 Dim petskills = (
                 From p In onlinePlayers
-                Where Player(p.Index).Character(p.Player.CurChar).Pet.Alive = 1 AndAlso TempPlayer(p.Index).PetskillBuffer.Skill > 0 AndAlso GetTimeMs() > p.Player.PetskillBuffer.Timer + (Skill(Player(p.Index).Character(p.Player.CurChar).Pet.Skill(p.Player.PetskillBuffer.Skill)).CastTime * 1000)
-                Select New With {Key .Index = p.Index, Key .Success = HandlePetSkill(p.Index)}
+                Where Player(p.Index).Character(p.player.CurChar).Pet.Alive = 1 AndAlso TempPlayer(p.Index).PetskillBuffer.Skill > 0 AndAlso GetTimeMs() > p.player.PetskillBuffer.Timer + (Skill(Player(p.Index).Character(p.player.CurChar).Pet.Skill(p.player.PetskillBuffer.Skill)).CastTime * 1000)
+                Select New With {p.Index, Key .Success = HandlePetSkill(p.Index)}
                 ).ToArray()
 
                 ' Check if we need to clear any of our pets from being stunned.
                 Dim petstuns = (
                     From p In onlinePlayers
-                    Where p.Player.PetStunDuration > 0 AndAlso p.Player.PetStunTimer + (p.Player.PetStunDuration * 1000)
-                    Select New With {Key .Index = p.Index, Key .Success = HandleClearPetStun(p.Index)}
+                    Where p.player.PetStunDuration > 0 AndAlso p.player.PetStunTimer + (p.player.PetStunDuration * 1000)
+                    Select New With {p.Index, Key .Success = HandleClearPetStun(p.Index)}
                 ).ToArray()
 
                 ' check pet regen timer
                 Dim petregen = (
                     From p In onlinePlayers
-                    Where p.Player.PetstopRegen = True AndAlso p.Player.PetstopRegenTimer + 5000 < GetTimeMs()
-                    Select New With {Key .Index = p.Index, Key .Success = HandleStopPetRegen(p.Index)}
+                    Where p.player.PetstopRegen = True AndAlso p.player.PetstopRegenTimer + 5000 < GetTimeMs()
+                    Select New With {p.Index, Key .Success = HandleStopPetRegen(p.Index)}
                 ).ToArray()
 
                 ' HoT and DoT logic
@@ -73,8 +73,8 @@ Module modLoop
                 ' Handle our player crafting
                 Dim playercrafts = (
                     From p In onlinePlayers
-                    Where GetTimeMs() > p.Player.CraftTimer + (p.Player.CraftTimeNeeded * 1000) AndAlso p.Player.CraftIt = 1
-                    Select New With {Key .Index = p.Index, .Success = HandlePlayerCraft(p.Index)}
+                    Where GetTimeMs() > p.player.CraftTimer + (p.player.CraftTimeNeeded * 1000) AndAlso p.player.CraftIt = 1
+                    Select New With {p.Index, .Success = HandlePlayerCraft(p.Index)}
                 ).ToArray()
 
                 Time.Instance.Tick()
@@ -88,10 +88,10 @@ Module modLoop
                 ' Handle player housing timers.
                 Dim playerhousing = (
                     From p In onlinePlayers
-                    Where Player(p.Index).Character(p.Player.CurChar).InHouse > 0 AndAlso
-                          IsPlaying(Player(p.Index).Character(p.Player.CurChar).InHouse) AndAlso
-                          Player(Player(p.Index).Character(p.Player.CurChar).InHouse).Character(p.Player.CurChar).InHouse <> Player(p.Index).Character(p.Player.CurChar).InHouse
-                    Select New With {Key .Index = p.Index, Key .Success = HandlePlayerHouse(p.Index)}
+                    Where Player(p.Index).Character(p.player.CurChar).InHouse > 0 AndAlso
+                          IsPlaying(Player(p.Index).Character(p.player.CurChar).InHouse) AndAlso
+                          Player(Player(p.Index).Character(p.player.CurChar).InHouse).Character(p.player.CurChar).InHouse <> Player(p.Index).Character(p.player.CurChar).InHouse
+                    Select New With {p.Index, Key .Success = HandlePlayerHouse(p.Index)}
                 ).ToArray()
 
                 ' Move the timer up 500ms.

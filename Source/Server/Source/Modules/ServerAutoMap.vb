@@ -99,6 +99,8 @@ Module modAutoMap
             .Root = "Options"
         }
 
+        myXml.LoadXml()
+
         ReDim Tile(TilePrefab.Count - 1)
         For prefab = 1 To TilePrefab.Count - 1
 
@@ -251,6 +253,8 @@ Module modAutoMap
             For y = 1 To Map(MapNum).MaxY - 1
                 If CanPlaceResource(MapNum, x, y) AndAlso CanPlaceResource(MapNum, x - 1, y) AndAlso CanPlaceResource(MapNum, x + 1, y) AndAlso CanPlaceResource(MapNum, x, y - 1) AndAlso CanPlaceResource(MapNum, x, y + 1) Then
                     Dim resourceNum As Integer
+
+                    If _resources(0) Is "" Then Exit Sub
 
                     If Random(1, ResourceFreq) = 1 Then
                         resourceNum = Val(_resources(Random(1, UBound(_resources))))
