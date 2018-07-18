@@ -533,7 +533,7 @@ Module modLoop
         End If
 
         If HouseEdit = True Then
-            With frmHouse
+            With FrmHouse
                 Editor = EDITOR_HOUSE
                 .lstIndex.Items.Clear()
 

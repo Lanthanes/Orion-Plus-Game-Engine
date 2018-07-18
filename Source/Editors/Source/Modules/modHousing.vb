@@ -147,20 +147,20 @@ Friend Module modHousing
 #Region "Editor"
     Friend Sub HouseEditorInit()
 
-        If frmHouse.Visible = False Then Exit Sub
+        If FrmHouse.Visible = False Then Exit Sub
 
-        Editorindex = frmHouse.lstIndex.SelectedIndex + 1
+        Editorindex = FrmHouse.lstIndex.SelectedIndex + 1
 
         With House(Editorindex)
-            frmHouse.txtName.Text = Trim$(.ConfigName)
+            FrmHouse.txtName.Text = Trim$(.ConfigName)
             If .BaseMap = 0 Then .BaseMap = 1
-            frmHouse.nudBaseMap.Value = .BaseMap
+            FrmHouse.nudBaseMap.Value = .BaseMap
             If .X = 0 Then .X = 1
-            frmHouse.nudX.Value = .X
+            FrmHouse.nudX.Value = .X
             If .Y = 0 Then .Y = 1
-            frmHouse.nudY.Value = .Y
-            frmHouse.nudPrice.Value = .Price
-            frmHouse.nudFurniture.Value = .MaxFurniture
+            FrmHouse.nudY.Value = .Y
+            FrmHouse.nudPrice.Value = .Price
+            FrmHouse.nudFurniture.Value = .MaxFurniture
         End With
 
         House_Changed(Editorindex) = True
@@ -170,7 +170,7 @@ Friend Module modHousing
     Friend Sub HouseEditorCancel()
 
         Editor = 0
-        frmHouse.Dispose()
+        FrmHouse.Dispose()
 
         ClearChanged_House()
 
@@ -204,7 +204,7 @@ Friend Module modHousing
 
         Socket.SendData(Buffer.Data, Buffer.Head)
         Buffer.Dispose()
-        frmHouse.Dispose()
+        FrmHouse.Dispose()
         Editor = 0
 
         ClearChanged_House()

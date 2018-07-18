@@ -420,9 +420,9 @@ Friend Module ServerHousing
         dim buffer as ByteStream, i As Integer
 
         ' Prevent hacking
-        If GetPlayerAccess(Index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
 
-        Buffer = New ByteStream(4)
+        buffer = New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SHouseEdit)
         For i = 1 To MAX_HOUSES
             buffer.WriteString((Trim$(HouseConfig(i).ConfigName)))

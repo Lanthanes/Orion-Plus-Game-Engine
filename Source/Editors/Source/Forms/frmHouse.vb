@@ -1,57 +1,57 @@
-﻿Friend Class frmHouse
+﻿Friend Class FrmHouse
 
     Private Sub LstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
         HouseEditorInit()
     End Sub
 
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
-        Dim tmpindex as integer
+        Dim tmpindex As Integer
 
-        If EditorIndex <= 0 Then Exit Sub
+        If Editorindex <= 0 Then Exit Sub
 
-        tmpIndex = lstIndex.SelectedIndex
-        House(EditorIndex).ConfigName = Trim$(txtName.Text)
-        lstIndex.Items.RemoveAt(EditorIndex - 1)
-        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & House(EditorIndex).ConfigName)
-        lstIndex.SelectedIndex = tmpIndex
+        tmpindex = lstIndex.SelectedIndex
+        House(Editorindex).ConfigName = Trim$(txtName.Text)
+        lstIndex.Items.RemoveAt(Editorindex - 1)
+        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & House(Editorindex).ConfigName)
+        lstIndex.SelectedIndex = tmpindex
 
     End Sub
 
-    Private Sub NudBaseMap_ValueChanged(sender As Object, e As EventArgs) Handles nudBaseMap.Click
-        If EditorIndex <= 0 Then Exit Sub
+    Private Sub NudBaseMap_ValueChanged(sender As Object, e As EventArgs) Handles nudBaseMap.KeyPress, nudBaseMap.Click
+        If Editorindex <= 0 Then Exit Sub
 
         If nudBaseMap.Value < 1 OrElse nudBaseMap.Value > MAX_MAPS Then Exit Sub
-        House(EditorIndex).BaseMap = nudBaseMap.Value
+        House(Editorindex).BaseMap = nudBaseMap.Value
     End Sub
 
-    Private Sub NudX_ValueChanged(sender As Object, e As EventArgs) Handles nudX.Click
-        If EditorIndex <= 0 Then Exit Sub
+    Private Sub NudX_ValueChanged(sender As Object, e As EventArgs) Handles nudX.KeyPress, nudX.Click
+        If Editorindex <= 0 Then Exit Sub
 
         If nudX.Value < 0 OrElse nudX.Value > 255 Then Exit Sub
-        House(EditorIndex).X = nudX.Value
+        House(Editorindex).X = nudX.Value
 
     End Sub
 
-    Private Sub NudY_ValueChanged(sender As Object, e As EventArgs) Handles nudY.Click
-        If EditorIndex <= 0 Then Exit Sub
+    Private Sub NudY_ValueChanged(sender As Object, e As EventArgs) Handles nudY.KeyPress, nudY.Click
+        If Editorindex <= 0 Then Exit Sub
 
         If nudY.Value < 0 OrElse nudY.Value > 255 Then Exit Sub
-        House(EditorIndex).Y = nudY.Value
+        House(Editorindex).Y = nudY.Value
 
     End Sub
 
-    Private Sub NudPrice_ValueChanged(sender As Object, e As EventArgs) Handles nudPrice.Click
-        If EditorIndex <= 0 Then Exit Sub
+    Private Sub NudPrice_ValueChanged(sender As Object, e As EventArgs) Handles nudPrice.KeyPress, nudPrice.Click
+        If Editorindex <= 0 Then Exit Sub
 
-        House(EditorIndex).Price = nudPrice.Value
+        House(Editorindex).Price = nudPrice.Value
 
     End Sub
 
-    Private Sub NudFurniture_ValueChanged(sender As Object, e As EventArgs) Handles nudFurniture.Click
-        If EditorIndex <= 0 Then Exit Sub
+    Private Sub NudFurniture_ValueChanged(sender As Object, e As EventArgs) Handles nudFurniture.KeyPress, nudFurniture.Click
+        If Editorindex <= 0 Then Exit Sub
 
         If nudFurniture.Value < 0 Then Exit Sub
-        House(EditorIndex).MaxFurniture = nudFurniture.Value
+        House(Editorindex).MaxFurniture = nudFurniture.Value
     End Sub
 
     Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click

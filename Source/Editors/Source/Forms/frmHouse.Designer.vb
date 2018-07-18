@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class frmHouse
+Partial Class FrmHouse
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -104,6 +104,7 @@ Partial Class frmHouse
         Me.nudFurniture.Name = "nudFurniture"
         Me.nudFurniture.Size = New System.Drawing.Size(62, 20)
         Me.nudFurniture.TabIndex = 11
+        Me.nudFurniture.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'DarkLabel6
         '
@@ -236,7 +237,7 @@ Partial Class frmHouse
         Me.btnSave.TabIndex = 3
         Me.btnSave.Text = "Save"
         '
-        'FrmEditor_House
+        'FrmHouse
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -248,7 +249,7 @@ Partial Class frmHouse
         Me.Controls.Add(Me.DarkGroupBox2)
         Me.Controls.Add(Me.DarkGroupBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
-        Me.Name = "FrmEditor_House"
+        Me.Name = "FrmHouse"
         Me.Text = "House Editor"
         Me.DarkGroupBox1.ResumeLayout(False)
         Me.DarkGroupBox2.ResumeLayout(False)
